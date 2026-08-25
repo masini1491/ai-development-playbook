@@ -21,6 +21,14 @@
 
 模型與推理強度由使用者在 Codex UI 手動選擇。Codex 不得自行 Luna→Terra→Sol，也不得自行 Low→Medium→High。
 
+## 回報語言
+
+除非使用者當次另有指定，Codex 的進度、STOP、validation、error explanation、summary 與最終回報一律使用**繁體中文**。
+
+程式碼、identifier、file/path、command、raw log、error string、protocol field、API name、library/tool name 與既有正式技術名詞保持原文；不得為了翻譯而改寫 source semantics、machine contract 或 evidence 原文。
+
+Prompt 不需要為每個 Stage 重複整段語言規則；若 repository governance 已引用本 playbook，通常只需在必要時簡短寫「請使用繁體中文回報」。
+
 ## Prompt execution gates
 
 對一般 project repository，Codex Prompt 應依任務需要引用 `REPOSITORY_EXECUTION.md` 的共通 gates，而不是每份 Prompt 重複全文：
