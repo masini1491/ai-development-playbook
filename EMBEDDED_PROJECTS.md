@@ -115,6 +115,18 @@ Embedded runtime 優先：
 
 不要用 infinite retry 或無限制動態結構掩蓋硬體不確定性。
 
+## 本地／離線管理 UI（Self-contained offline management UI）
+
+若 embedded product 的正式 contract 要求裝置在 local LAN、direct AP、first-setup、provisioning、recovery 或 Internet unavailable 狀態下仍可完成必要管理操作，則 human-facing UI 的核心功能與必要資源應盡量 self-contained。
+
+一般原則：
+
+- 核心設定、狀態、診斷與 recovery flow 不應依賴外部 CDN、remote font、cloud-hosted frontend asset 或必須連 Internet 才能載入的 runtime dependency。
+- 是否允許外部資源由產品 contract 決定；cloud-first product 不因本規則被強迫成 offline-first。
+- 若 local/offline operation 是正式 requirement，外部服務失效不得讓 operator 無法完成必要 setup、configuration、diagnostics 或 recovery。
+- Embedded UI 仍遵守 `RESEARCH_ARCHITECTURE.md` 的 Human-facing UI / Machine Contract Boundary；self-contained 只處理 availability/dependency boundary，不授權 UI 接管 machine/runtime ownership。
+- 資源受限時，優先保留可操作性、可讀狀態、錯誤說明與必要安全流程，再考慮動畫、remote asset、heavy framework 或純裝飾性功能。
+
 ## 安全關鍵生命週期仲裁（Safety-Critical Lifecycle Arbitration）
 
 當 embedded system 同時存在 physical output、door/lock/motor/relay、OTA、provisioning、Web、network maintenance、background telemetry 等 operation 時，不能只靠「non-blocking」就視為安全；需要明確定義 operation priority 與 lifecycle arbitration。
