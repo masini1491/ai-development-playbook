@@ -1,4 +1,4 @@
-# New Chat Initialization
+# 新聊天室初始化（New Chat Initialization）
 
 本檔是新聊天室的最小 bootstrap，不應取代實際專案 repository 的正式規則。
 
@@ -14,7 +14,7 @@
 6. 若涉及 build/test/toolchain，依需要讀 `TOOLCHAIN.md` 與 `DEBUG_VALIDATION.md`。
 7. 若涉及新協議、新硬體、新 SDK 或架構決策，再讀 research/embedded 文件。
 
-## Authority
+## 權威順序（Authority）
 
 一般優先順序：
 
@@ -26,7 +26,7 @@
 
 若兩份同層正式文件互相衝突且無法判定 authority，不得猜；STOP 並指出衝突。
 
-## Prompt Generation Gate
+## Prompt 產生關卡（Prompt Generation Gate）
 
 每份 Codex Prompt 必須在前段明確寫出：
 
@@ -40,7 +40,7 @@
 
 不得只寫「門禁」「Yale」「後端」等可能和其他 repository 混淆的模糊名稱。
 
-## Repository Identity Gate
+## Repository 身分確認關卡（Repository Identity Gate）
 
 任何 Codex 執行在讀取、修改、build、test 或 Git mutation 前，先確認 working repository 與 Prompt 的 `owner/repo` 完全一致。
 
@@ -54,7 +54,7 @@
 
 若 detected repository 與 expected repository 不一致：立即 STOP；回報 expected/detected repository、branch、HEAD；不得修改、不得自行切換/clone repo、不得把 Prompt 套到相似專案。
 
-## Workspace / Remote Permission Gates
+## Workspace／Remote 權限關卡（Workspace / Remote Permission Gates）
 
 若 Stage 需要修改 repository，Codex 在 file mutation 前確認 workspace 具備最小必要寫入能力；read-only workspace 對 write-required Stage 必須 STOP 或主動要求 workspace-write capability，不得進入 coding loop。
 
@@ -62,7 +62,7 @@ Remote Git operation 若 runtime 已知需要 sandbox/network/repository-metadat
 
 詳細規則見 `REPOSITORY_EXECUTION.md`。
 
-## ChatGPT / Codex 寫入分工
+## ChatGPT／Codex 寫入分工
 
 對一般 project repository：
 
@@ -78,7 +78,7 @@ Remote Git operation 若 runtime 已知需要 sandbox/network/repository-metadat
 
 先降低不確定性，再提高模型成本。
 
-## Windows / PowerShell baseline
+## Windows／PowerShell 基準（baseline）
 
 本機互動式開發環境若以 Windows 為主：repository 只要使用自有 `.ps1`，正式 PowerShell runtime 應使用 PowerShell 7 / `pwsh`，不得 silent fallback 至 Windows PowerShell 5.1 / `powershell.exe`。詳細規則見 `TOOLCHAIN.md`。
 
@@ -90,7 +90,7 @@ Remote Git operation 若 runtime 已知需要 sandbox/network/repository-metadat
 
 完成工作以 Git history 為準；已完成項目從 TASKS 移除，不建立 Completed 區段。
 
-## Debug / Validation
+## 除錯／驗證（Debug / Validation）
 
 預設工作流：
 
