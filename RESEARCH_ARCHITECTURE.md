@@ -130,6 +130,29 @@ Library-ready ≠ 現在就拆 library。
 
 好的 abstraction naming 應讓 current implementation 可讀，也讓 future backend replacement 不必誤導性地沿用舊 concrete 名稱。
 
+## External Service 文件 Authority 分離（External-service authority separation）
+
+當專案同時包含 cloud、broker、third-party API、notification service、deployment target 或其他 external service，應避免把 governance、operator steps、service setup 與 protocol contract 混在同一份文件。
+
+推薦分層：
+
+`project governance → service routing/index → Codex/operator runbook → service-specific setup/config authority → protocol/runtime/security authority`
+
+各層責任：
+
+- **Project governance**：定義 repository-wide authority、Task/Stage authorization、permission/capability boundary、Git safety、failure/retry、secret handling 等穩定規則。
+- **Service routing / index**：只回答「這類 service 問題應讀哪份 authority」，不要重複 protocol 或 setup 全文。
+- **Codex / operator runbook**：定義 agent/operator 如何安全操作 service，包括 target selection、read-only/mutation boundary、credential handling、permission flow、validation 與 STOP 條件；不重新定義 product/protocol semantics。
+- **Service-specific setup/config authority**：保存某個 service 真正的 deployment/configuration/resource/secret/setup 流程，可供人類 operator 獨立使用。
+- **Protocol/runtime/security authority**：保存 machine contract、wire/API/topic/schema、runtime ownership、安全與 interoperability semantics；operator runbook 不得覆蓋它。
+
+原則：
+
+- 同一 stable policy 只保留一個主要 authority；其他文件用 routing/reference，避免全文複製造成 drift。
+- Operator runbook 不得因方便操作而把 service credential、deployment target 或 protocol contract 自行重新定義。
+- Service-specific setup 文件可以比共通 playbook 更具體，但不得削弱 repository governance 或 protocol/security authority。
+- 若專案只有單一、簡單、低風險 external service，不必為形式建立完整目錄結構；只有當 service 數量、deployment target、credential、mutation boundary 或 operator workflow 複雜度值得時才拆分。
+
 ## 人機 UI 與 Machine Contract 邊界（Human-facing UI / Machine Contract Boundary）
 
 Human-facing UI 是 presentation / interaction layer；不得因視覺一致性、文案整理、navigation、human-facing route normalization 或 component cleanup，偷偷改變較高權威的 runtime / machine contract。
