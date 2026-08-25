@@ -109,6 +109,18 @@ Commit/push 必須服從使用者當次 launch 或 repository policy 的明確�
 - Credential capability 大於目前 Stage scope 時，實際執行範圍仍以 Stage authorization 為上限。
 - 外部服務操作與 error/reporting 不得輸出 password、token、Authorization header、private key、shared secret、credential material 或不必要的 secret-derived characteristics，也不得把 credential 寫進 Git。
 
+### External service staged operation
+
+當 external service 同時存在 read-only API、live runtime evidence 與 mutation/admin capability 時，優先把 operation 分成明確 Stage，而不是一次取得較大 scope：
+
+1. **Stage 1 — Read-only baseline**：確認 service/account/target identity、非敏感 resource/config metadata、credential 是否存在（不讀 secret value）、API access 與目前 baseline evidence。
+2. **Stage 2 — Live observation**：在真實 application/device/client 正常運作時，使用 read-only capability 觀察 current connection、subscription/session/resource/status、reconnect/disconnect、delivery 或其他 live evidence；不因觀測需要而主動製造 mutation。
+3. **Stage 3 — Explicit mutation**：deploy、publish、configuration change、resource create/delete、disconnect/kick、ACL/auth/credential mutation 或其他 service-side write，只有目前 Task / Stage 明確授權 exact target + exact mutation + validation scope 時才可執行。
+
+Stage 1 / 2 的 read-only approval、evidence 或 credential capability不得自動推導 Stage 3 mutation authorization。若觀測結果不足以判斷 root cause，取得最小下一層 evidence或 STOP；不要為了「方便測試」直接升到 mutation。
+
+External-service validation 必須區分 access/preflight PASS、local/dry-run PASS、remote mutation success、read-only smoke PASS、end-to-end/live runtime PASS 與 production/hardware PASS；低層 PASS 不得翻譯成更高層完成。
+
 ## Remote Git 權限關卡（Remote Git Permission Gate）
 
 對目前 Task / Stage 所必需且**本來已獲授權**的 remote Git operation，套用上述 Authorization / Capability Layers 與 Permission-Gated Operation。
