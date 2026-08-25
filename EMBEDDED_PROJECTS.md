@@ -115,6 +115,27 @@ Embedded runtime 優先：
 
 不要用 infinite retry 或無限制動態結構掩蓋硬體不確定性。
 
+## Safety-Critical Lifecycle Arbitration
+
+當 embedded system 同時存在 physical output、door/lock/motor/relay、OTA、provisioning、Web、network maintenance、background telemetry 等 operation 時，不能只靠「non-blocking」就視為安全；需要明確定義 operation priority 與 lifecycle arbitration。
+
+一般原則：
+
+- safety-critical / physical-output owner 優先於 maintenance/background operation；
+- OTA start/write/end、provisioning startup、network scan、blocking HTTP/TLS、reboot、factory-reset completion 等可能延遲或中斷 safety servicing 的 operation，應在 critical output/session active 時 defer、reject、abort 或等待安全點；
+- 但 safety gate 本身不得阻止必要 lifeline，例如 transport polling、output timeout servicing、watchdog-safe state progression、必要 ACK/teardown；
+- restart / reset / recovery 等 destructive lifecycle action 優先採 deferred safe owner：先完成 transaction，再在 critical activity 清除後執行；
+- physical-presence recovery / one-shot authorization 若屬 security boundary，應與一般 network failure 自動 fallback 分開，不要因網路失聯就自動開放較弱的 recovery mode；
+- gate/priority 必須有 bounded timeout / explicit failure result，不能形成永久 starvation。
+
+設計時建議畫出至少三層 priority：
+
+`Safety/Lifeline → Authorized Control/Transaction → Maintenance/Telemetry/UI`
+
+具體產品可以有不同名稱，但 ownership 與被 gate / 不可被 gate 的 operation 必須可審查。
+
+這類 arbitration 的 compile/static PASS 不代表 timing/hardware PASS；若涉及真實 relay、motor、lock、OTA/reboot timing，仍需 hardware/bench evidence。
+
 ## Hardware validation
 
 Validation 要區分：
