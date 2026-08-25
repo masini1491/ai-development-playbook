@@ -1,6 +1,6 @@
 # TASKS
 
-## Stage A — Workspace / Remote Permission / Agent Write Governance
+## Stage A — Workspace / Remote Permission / Agent Write / README Governance
 
 **Status:** TODO  
 **推薦模型：** Luna  
@@ -18,11 +18,12 @@
 
 ### 目的
 
-把三個已在實際 ChatGPT / Codex 協作中形成、且跨專案都需要一致處理的治理規則收斂成 stable playbook governance：
+把四個已在實際 ChatGPT / Codex 協作中形成、且跨專案都需要一致處理的治理規則收斂成 stable playbook governance：
 
 1. Codex / sandbox 更新後 workspace 可能變成 read-only，導致需要修改 repository 的 Stage 無法正常寫檔。
 2. Remote Git operation（尤其 `git fetch origin`）若需要 sandbox/network/repository-metadata permission，而 Codex 沒有主動要求使用者授權，會直接執行失敗。
 3. ChatGPT 與 Codex 的 repository 寫入責任必須明確分工：ChatGPT 只直接讀寫 root `TASKS.md`；其他 repository path 對 ChatGPT 一律唯讀，真正修改由 Codex 執行；`TASKS.md` 由 ChatGPT 與 Codex 共同維護。
+4. 公開 README 若要說明 AI-assisted 開發方式與專案規模，必須有一致、可重現、不誤導的 development transparency / project-scale contract；但不得為了形式強迫每個 repository 新增不必要 tooling。
 
 ### Repository Identity Gate
 
@@ -172,6 +173,82 @@ Sandbox/network permission approval **不等於 Git mutation authorization**。
 - `TASKS.md` 不是 changelog；Completed 不保留，完成紀錄以 Git history 為準。
 - `TASKS.md` 本身不授權 Codex 自動開始任何 Stage，也不擴張 ChatGPT 對其他 path 的寫入權。
 
+### 必須新增：README Development Transparency
+
+若 repository 明顯採用 ChatGPT / Codex 或其他 coding agent 作為主要開發協作方式，公開 README 應考慮以精簡段落說明 human-in-the-loop 的責任分工；不要把 AI-assisted development 描述成 AI 自動完成且自動驗證。
+
+建議至少表達：
+
+- Human / developer：需求、產品方向、硬體選擇、現實世界 evidence、最終核准與需要人工完成的 validation。
+- ChatGPT：research、需求/架構/規格討論、review、task decomposition、`TASKS.md` / Codex Prompt 規劃；遵守 ChatGPT only-`TASKS.md` write boundary。
+- Codex / coding agent：在明確 Task / Stage scope 內執行 implementation、tests、static/build validation、文件與 repository maintenance。
+- AI 產出或修改不因 command 成功、code generated、test generated 或 build exit 0 就自動等於產品完成；仍需依專案風險完成適當 human review、protocol/network/hardware/production validation。
+- 若 README 提及 OpenAI / ChatGPT / Codex，應避免暗示 OpenAI 對該 repository、硬體、安全、產品或工程決策提供贊助、認證或背書，除非確有正式關係。
+
+這是 transparency guidance，不要求所有 repository 使用完全相同 wording，也不要求私人/實驗 repo 為了形式新增長篇聲明。
+
+### 必須新增：Project Scale Reporting Contract
+
+若 README 或公開文件展示「專案規模」「LOC」「lines」或類似統計，數字必須有清楚且可重現的 counting contract，避免無定義的手動快照。
+
+至少說明：
+
+- 統計基準：Git tracked / canonical ref / commit 或其他明確可重現 source；
+- metric 是 physical lines、logical/executable LOC、file count 或其他定義；
+- physical lines 是否包含 blank/comment；
+- 是否只計 tracked files；
+- 主要排除項目，例如：
+  - `.git`
+  - third-party libraries
+  - downloaded dependencies
+  - build/cache
+  - generated artifacts
+- category 必須依 repository 自己的實際結構定義，不強迫所有專案使用同一分類名稱。
+
+可以依專案需要分類為例如 Firmware、Host Tools、Tests、Validation Tooling、Application、Specs / machine-readable contracts、Technical Documentation、Other tracked project files；不要為追求表面一致而誤分類。
+
+### Deterministic Project-Scale Tooling Trigger
+
+不要規定每個 repository 都必須新增 `project-scale.ps1` 或其他 LOC script。
+
+只有當下列條件使手動維護開始有 drift 風險時，才優先考慮 repository-owned deterministic counter：
+
+- README 長期公開 project-scale statistics；且
+- statistics 會隨正常開發頻繁變動；或
+- 專案規模已足以讓手動計數難以可靠重現；或
+- 同一統計需要同步到多個正式/公開文件。
+
+若 repository 尚小、docs-only、規模統計很少更新，而且 counting method 可以簡單重現，不必為了形式新增 tooling。
+
+若建立 deterministic counter：
+
+- 優先針對指定 Git ref / canonical tracked contents，而不是混入未知 working-tree / generated artifacts；
+- counter 本身必須遵守 repository toolchain contract；
+- 不得因統計工具而擴張成不相關 build/release infrastructure。
+
+### Project-Scale Synchronization
+
+若 repository 已有 canonical deterministic project-scale counter，且 README / technical docs 將其輸出作為正式 current statistics：
+
+1. tracked production/tooling/technical-doc change 完成主要 validation 後，再執行 scale counter；
+2. 若 canonical statistics 沒變，不製造無意義 README change；
+3. 若 statistics 改變，依 repository 自己的 policy 同步正式表格；
+4. 若 README / counter scope 本身被修改，必要時做 fixed-point recheck；
+5. 完成後再進入 focused commit/push。
+
+特定 repository 的跨 repo showcase/private→public aggregate synchronization 屬於 project-specific policy，不要提升成共通 playbook requirement。
+
+### 對既有專案的 scope 邊界
+
+本 Stage 只更新 `ai-development-playbook` 的共通治理，不直接修改：
+
+- `masini1491/access-control-system`
+- `masini1491/esp32-yale-local-bridge`
+- `masini1491/esp32-wfrac-local-bridge`
+- `masini1491/esp32-vag-data-server`
+
+各 repository 是否補「開發方式與專案規模」、是否建立 deterministic counter，應依該 repo 最新 evidence 各自另建 task，避免 scope creep。
+
 ### 預期啟動順序
 
 將共通流程收斂為：
@@ -184,11 +261,12 @@ Read-only Stage 可在 Workspace Write Capability Gate 判定不需要寫入後�
 
 Codex 本 Stage 依最小必要修改原則，優先只修改：
 
-- `AGENTS.md`（本次 **ChatGPT / Codex Repository Write Boundary** 應成為 stable playbook governance，必要時以短且 authoritative 的形式落地）
+- `AGENTS.md`（ChatGPT / Codex Repository Write Boundary 等 stable playbook governance 必要時以短且 authoritative 的形式落地）
 - `REPOSITORY_EXECUTION.md`
 - `CHAT_INIT.md`
 - `CODEX_PROMPT_RULES.md`（僅需短引用 / Prompt generation requirement 時）
-- `README.md`（僅 routing / concise core-summary 真有必要時）
+- `README.md`（GitHub-backed collaboration、development transparency / project-scale summary 或 routing 真有必要時）
+- 必要時新增或調整既有最合適的 methodology 文件來承載 README/project-scale contract，但應優先吸收進既有主題文件，不要為每個小規則新增檔案
 - `TASKS.md`（共同 queue；完成後移除此 Stage，若無其他 unfinished work則刪除）
 
 避免在多檔全文複製同一 policy；stable authority + short references/routing 為主。
@@ -198,11 +276,13 @@ Codex 本 Stage 依最小必要修改原則，優先只修改：
 - 不新增與本 Stage 無關的 governance。
 - 不改模型命名體系。
 - 不改 MIT License。
-- 不建立 scripts / CI / tooling。
+- 不為 playbook 本身或其他 repo 強制建立 project-scale script / CI / tooling。
 - 不改任何其他 project repository。
 - 不把 Windows local baseline 擴張成所有 CI 必須 Windows。
 - 不把 ChatGPT direct-write boundary 放寬到 `TASKS.md` 以外任何 path。
-- 不把 Codex 的 workspace-write capability解讀成自動授權 queue 中其他 task。
+- 不把 Codex 的 workspace-write capability 解讀成自動授權 queue 中其他 task。
+- 不把「使用 AI」描述成 OpenAI endorsement / certification。
+- 不把 project-scale line count 誤寫成 executable LOC 或功能完成度。
 - 不使用 sudo、`chmod -R 777`、reset-hard、force push、auto-stash、autonomous merge/rebase/cherry-pick、delete/discard unknown work。
 
 ### Progressive reading
@@ -214,21 +294,23 @@ Codex 本 Stage 依最小必要修改原則，優先只修改：
 3. `REPOSITORY_EXECUTION.md`
 4. `CHAT_INIT.md`
 5. `CODEX_PROMPT_RULES.md`
-6. 必要時 `README.md`
+6. `README.md`
 
 不要 repo-wide scan。
 
-可把下列既有專案 governance 當語意參考，但只在需要確認 wording 時讀最少必要區段，不要複製專案專屬內容：
+可把下列既有專案 governance / README 當語意參考，但只讀本 Stage 直接相關區段，不要複製專案專屬內容：
 
 - `masini1491/access-control-system` `AGENTS.md` — Permission-Gated Operation / `git fetch origin` 特例
-- `masini1491/esp32-wfrac-local-bridge` `AGENTS.md` — permission escalation / remote sync
-- `masini1491/esp32-vag-data-server` `AGENTS.md` — permission request 必須包含 command、必要性、resource/path、最小 scope
+- `masini1491/access-control-system` `README.md` + `tools/project-scale.ps1` — AI-assisted workflow、Git canonical project-scale 統計、deterministic counter
+- `masini1491/esp32-yale-local-bridge` `README.md` — human / ChatGPT / Codex 分工、project-scale disclosure
+- `masini1491/esp32-wfrac-local-bridge` `README.md` — AI-assisted workflow、physical-lines categories
+- `masini1491/esp32-vag-data-server` `AGENTS.md` — permission request 必須包含 command、必要性、resource/path、最小 scope；README 可作為目前尚未加入 development/scale section 的對照 evidence
 
 ### Validation
 
 最小且充分：
 
-1. 檢查 README / AGENTS / CHAT_INIT / REPOSITORY_EXECUTION / CODEX_PROMPT_RULES 之間沒有 contradiction。
+1. 檢查 README / AGENTS / CHAT_INIT / REPOSITORY_EXECUTION / CODEX_PROMPT_RULES 與承載 README/project-scale contract 的文件之間沒有 contradiction。
 2. 確認 Workspace Write Capability Gate 與 Permission-Gated Operation 不被混成同一概念。
 3. 確認 Remote Git Permission Gate 同時涵蓋：
    - known-in-advance permission need → proactive request
@@ -240,9 +322,13 @@ Codex 本 Stage 依最小必要修改原則，優先只修改：
 5. 確認 ChatGPT 對 repository 的 direct-write authority 僅限 root `TASKS.md`；其他 path 明確唯讀。
 6. 確認非 `TASKS.md` 修改必須透過 scoped task / Codex workflow 執行。
 7. 確認 `TASKS.md` 被明確定義為 ChatGPT + Codex 共同維護的唯一 active unfinished-work queue，且 Completed 仍由 Git history 保存。
-8. 確認不鼓勵 dangerous workaround。
-9. `git diff --check`。
-10. 純 Markdown governance maintenance，不跑不相關 build/test。
+8. 確認 README Development Transparency 清楚區分 human / ChatGPT / Codex responsibility，且沒有暗示 AI output 自動等於 validated completion 或 OpenAI endorsement。
+9. 確認 Project Scale Reporting 要求 reproducible metric/scope/exclusions，但不強迫統一 category。
+10. 確認 deterministic counter 是 evidence-based trigger，不是每個 repo 的硬性 requirement。
+11. 確認 project-scale synchronization 只在已有 canonical counter 時適用，且 project-specific showcase sync 沒被提升成共通規則。
+12. 確認不鼓勵 dangerous workaround。
+13. `git diff --check`。
+14. 純 Markdown governance maintenance，不跑不相關 build/test。
 
 ### Completion
 
