@@ -108,6 +108,7 @@ Commit/push 必須服從使用者當次 launch 或 repository policy 的明確�
 - 若原 Task / Stage 本來已明確授權某項 remote mutation，network approval 也只解除該項 operation 的 execution gate，不擴張到其他 remote action。
 - Credential capability 大於目前 Stage scope 時，實際執行範圍仍以 Stage authorization 為上限。
 - 外部服務操作與 error/reporting 不得輸出 password、token、Authorization header、private key、shared secret、credential material 或不必要的 secret-derived characteristics，也不得把 credential 寫進 Git。
+- 若需要判斷 external-service 文件應如何依 provider、credential、configuration、resource lifecycle、deployment/mutation 或 validation authority 拆分，以 `RESEARCH_ARCHITECTURE.md` 的 **External-service authority separation** 為主要規則；本節不重複維護文件架構 policy。
 
 ### External service staged operation
 
