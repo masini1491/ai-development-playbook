@@ -40,6 +40,18 @@
 
 `masini1491/ai-development-playbook` 本身由 ChatGPT 直接維護，Codex 預設唯讀，不應產生用 Codex 修改 playbook 的 implementation Prompt。
 
+## TASKS Admission / Direct Short Prompt
+
+**產生 Codex Prompt 不代表一定要建立 `TASKS.md`。**
+
+一次性、修改位置與內容／root cause 已知、scope 小、風險低、完成後無追蹤價值，而且不實質影響 behavior、architecture、protocol、security、hardware、persistence、runtime state 或重要 validation state 的 maintenance，通常直接使用最低充分的一次性短 Prompt；不應為了形式先建立 queue item。
+
+這類工作通常可從 **Luna / Low、Context L0→1、Agent 1、Focused patch** 起步，再依實際 evidence 調整。
+
+需要後續追蹤、Blocked / Deferred / Pending-validation、多 Stage、有 dependency / trigger、root cause 未確認、可能接續 implementation、具有 material project/validation effect，或若不記錄便容易遺漏時，才應建立／更新 `TASKS.md`。
+
+完整 Admission threshold 與 lifecycle 以 `REPOSITORY_EXECUTION.md` 為 authority；本節只負責 Prompt-generation routing，不重複維護完整 queue policy。
+
 ## 模型分工
 
 ### Luna
