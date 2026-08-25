@@ -70,6 +70,20 @@
 
 Repository 很大不是使用 Sol 或 High 的理由。
 
+## Reasoning Calibration
+
+「最低充分 reasoning」應以 evidence 校準，而不是只憑直覺往下壓成本。
+
+對**穩定、可重複、已有代表性 validation/eval** 的工作，可定期比較目前 reasoning 與低一級設定：
+
+- 使用相同或可比較的代表性 task / fixture / validation contract；
+- 比較 correctness、required evidence、validation quality 與 task success；
+- 只有在必要品質沒有下降時，才把較低 reasoning 升為新的預設；
+- 若低一級導致漏讀 contract、錯誤 root cause、驗證不足或需要更多 retry，保留較高 reasoning；
+- 不得只為省 Credits 降低已證明必要的 reasoning。
+
+這是**校準既有預設**的方法，不是要求每個 Stage 都先跑一次低一級 reasoning A/B test；不得為了省一次推理成本，反而製造重複 execution 與 validation 浪費。
+
 ## Escalation
 
 Codex 無權自行換模型。達到 escalation condition 時：
@@ -142,3 +156,16 @@ Stage Prompt 只保存：
 - success/STOP condition
 
 以降低 Context inflation。
+
+### Tool / Skill Surface Discipline
+
+若目前 execution surface 可以控制 tools、connectors、MCP、skills 或其他 agent capabilities：
+
+- 只暴露本 Stage 真正需要的能力；
+- 避免把無關 tools / connectors / skills 與冗長 description 帶入 Context；
+- tool description 應精簡但足以讓 agent 正確判斷何時使用、輸入/輸出邊界與限制；
+- 不要為了「可能會用到」預設載入所有 capability。
+
+若目前 surface 不提供 capability filtering / tool trimming，不得為符合此規則而建立額外 workaround、複製工具或改造 task scope。
+
+精簡 Prompt 或 tool surface 後，評估重點不是 Token 單一數字，而是代表性 task 的 task success、correctness、required evidence 與 validation quality 是否維持；若成功率下降或增加 retry / recovery 成本，應恢復必要 Context / capability。
