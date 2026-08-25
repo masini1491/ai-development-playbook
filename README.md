@@ -46,6 +46,45 @@
 
 如果使用者採用純 local Git、GitLab 或其他協作平台，可以保留相同 governance 概念並映射到對應平台；本 repository 的預設說明與範例以 GitHub-backed workflow 為主。
 
+## Project `AGENTS.md` → Playbook routing
+
+若多個 repository 都採用本 playbook 作為共通 baseline，建議在各 project root `AGENTS.md` 保存一份**精簡 routing**，讓 Codex / coding agent 知道共通方法論的 authority 與最低必要讀取路徑；不要在每個專案複製整份 playbook。
+
+核心原則：
+
+- `AGENTS.md` 保存 project-specific governance、正式例外與 routing；共通規則仍只由本 playbook 維護。
+- 不要因為 `AGENTS.md` 引用本 playbook，就預設每個 Stage 完整掃描本 repository；只依目前 Task 讀最低必要章節。
+- 專案自己的 architecture / security / protocol / hardware evidence / technical source of truth 仍高於本 playbook；routing 不改變 authority hierarchy。
+- `AGENTS.md` 中的外部 repository reference 只解決「應讀什麼」，不自動提供 network / filesystem / credential capability。若執行環境尚未取得 playbook 內容，依 `REPOSITORY_EXECUTION.md` 的 Permission-Gated Operation 要求最低必要 access。
+- 若某方法只在特定工作偶爾需要，而不是跨專案 baseline，優先考慮按需載入的 Skill / workflow；不要把所有專門流程都塞進每個 `AGENTS.md`。
+
+建議的最小 routing 範本：
+
+```markdown
+## Common playbook routing
+
+本專案以 `masini1491/ai-development-playbook` 作為共通開發 baseline。
+本 `AGENTS.md` 與本 repository 的正式 technical contract 保存 project-specific authority；
+若與共通 playbook 衝突，依既定 authority hierarchy 處理。
+
+不要完整掃描 playbook，只依目前 Task 讀最低必要章節：
+
+- Git / repository / permission / external-service operation
+  → `REPOSITORY_EXECUTION.md`
+- Debug / root cause / retry / validation
+  → `DEBUG_VALIDATION.md`
+- Architecture / research / external-service authority / UI-machine boundary
+  → `RESEARCH_ARCHITECTURE.md`
+- Embedded / hardware
+  → `EMBEDDED_PROJECTS.md`
+- Codex model / reasoning / context / agent / prompt discipline
+  → `CODEX_PROMPT_RULES.md`
+- Windows / PowerShell / local toolchain contract（需要時）
+  → `TOOLCHAIN.md`
+```
+
+這份 routing 是 baseline discovery，不是要求所有 project `AGENTS.md` 使用逐字相同 wording；project-specific 規則可更嚴格，但不應複製共通 policy 造成 drift。
+
 ## README 開發透明度（README Development Transparency）
 
 公開 repository 若明顯採用 ChatGPT / Codex 或其他 coding agent 作為主要開發方式，建議 README 精簡說明 human-in-the-loop 的責任分工：
