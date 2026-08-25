@@ -21,6 +21,25 @@
 
 模型與推理強度由使用者在 Codex UI 手動選擇。Codex 不得自行 Luna→Terra→Sol，也不得自行 Low→Medium→High。
 
+## Prompt execution gates
+
+對一般 project repository，Codex Prompt 應依任務需要引用 `REPOSITORY_EXECUTION.md` 的共通 gates，而不是每份 Prompt 重複全文：
+
+1. Repository Identity Gate
+2. 若 Stage 需要 mutation：Workspace Write Capability Gate
+3. Git state / unfinished-operation preflight
+4. Remote Git Permission Gate / Permission-Gated Operation
+5. safe `git fetch origin` + fast-forward-only sync
+6. re-read latest `AGENTS.md` / `TASKS.md`
+7. execute scoped Stage
+8. Targeted Validation
+
+若 runtime 已知必要 remote operation 需要 permission escalation，Codex 應主動要求最小權限，不要故意先執行已知會失敗的 command。
+
+一般 project repository 的 ChatGPT direct-write authority 只限 root `TASKS.md`；Prompt 中若需要修改其他 path，應由 Codex 在明確授權 scope 內執行。
+
+`masini1491/ai-development-playbook` 本身由 ChatGPT 直接維護，Codex 預設唯讀，不應產生用 Codex 修改 playbook 的 implementation Prompt。
+
 ## 模型分工
 
 ### Luna
