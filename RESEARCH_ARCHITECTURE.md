@@ -1,6 +1,6 @@
-# Research / Architecture Methodology
+# 研究／架構方法論（Research / Architecture Methodology）
 
-## Research-first principle
+## 研究優先原則（Research-first principle）
 
 > 先降低不確定性，再降低模型成本。
 
@@ -10,7 +10,7 @@ requirements → platform class → target family → external research → loca
 
 不要一開始就讓 coding agent 自行發明成熟協議、driver 或 framework。
 
-## Anti-Reinvent-Wheel Gate
+## 避免重造輪子關卡（Anti-Reinvent-Wheel Gate）
 
 第一次實作成熟 protocol / hardware / SDK / integration 前，檢查：
 
@@ -24,7 +24,7 @@ requirements → platform class → target family → external research → loca
 
 常見 trigger：NFC、HCE、APDU、BLE、CAN、ISO-TP、UDS、Matter、MQTT、Home Assistant、GPS/NMEA、fingerprint、Modbus、RS485、Zigbee、Thread、TLS、OTA、常見 sensor/SDK。
 
-## Local reference knowledge base
+## 本地 Reference 知識庫（Local reference knowledge base）
 
 若研究量開始變大，將外部 evidence 收斂成 repository-local knowledge：
 
@@ -35,7 +35,7 @@ requirements → platform class → target family → external research → loca
 
 後續 coding agent 優先讀 local synthesis，而不是每次重新外查。
 
-## Provenance / license
+## 來源與授權（Provenance / license）
 
 研究不等於 copy permission。
 
@@ -54,7 +54,7 @@ GPL / license 不明預設 `REFERENCE ONLY`，除非專案另有正式 license d
 
 不要以改名、逐行翻譯、mechanical port 假裝成獨立 implementation；也不要隨意宣稱 clean-room。
 
-## Technology stack selection
+## 技術棧選擇（Technology stack selection）
 
 不要因為「ESP32」或某語言習慣就預設 framework。
 
@@ -71,7 +71,7 @@ GPL / license 不明預設 `REFERENCE ONLY`，除非專案另有正式 license d
 
 不同 domain 不需要為了美觀硬統一 framework；更重要的是 contract/boundary/state semantics 清楚。
 
-## Target selection
+## Target 選擇（Target selection）
 
 建議分層：
 
@@ -79,7 +79,7 @@ GPL / license 不明預設 `REFERENCE ONLY`，除非專案另有正式 license d
 
 選「最低充分 target + 合理成長空間」，不要預設最強 MCU/CPU。
 
-## Capability model
+## Capability 模型（Capability model）
 
 `Product requirements → Features → Required capabilities → Target capabilities → Build-time resolution`
 
@@ -91,7 +91,7 @@ Feature 可標：
 
 Required capability 缺失應 fail closed；Optional capability 缺失可以是合法 unavailable，不應用假值掩蓋。
 
-## Resource-aware deployment
+## 資源感知部署（Resource-aware deployment）
 
 新能力不一定要塞進原 MCU。
 
@@ -106,7 +106,7 @@ Required capability 缺失應 fail closed；Optional capability 缺失可以是�
 
 Domain owner 要清楚；gateway/composition layer 不應偷接管 credential、authorization、safety-critical ownership。
 
-## Library-ready, not library-now
+## 可抽成 Library，但不急著抽（Library-ready, not library-now）
 
 Library-ready ≠ 現在就拆 library。
 
@@ -114,7 +114,7 @@ Library-ready ≠ 現在就拆 library。
 
 避免 speculative package/repo/semantic versioning/generalization。
 
-## Abstraction Naming Stability
+## 抽象命名穩定性（Abstraction Naming Stability）
 
 跨層、可重用或預期會替換 backend 的 abstraction，名稱應跟**穩定 contract**走，不要把目前 concrete implementation 不必要地寫死進 public/internal boundary。
 
@@ -130,7 +130,7 @@ Library-ready ≠ 現在就拆 library。
 
 好的 abstraction naming 應讓 current implementation 可讀，也讓 future backend replacement 不必誤導性地沿用舊 concrete 名稱。
 
-## Independent domain repos / composition
+## 獨立 Domain Repository／組合（Independent domain repos / composition）
 
 Repository boundary 可依 domain ownership；deployment boundary 可依實際執行環境。
 
