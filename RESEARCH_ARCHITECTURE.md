@@ -130,6 +130,23 @@ Library-ready ≠ 現在就拆 library。
 
 好的 abstraction naming 應讓 current implementation 可讀，也讓 future backend replacement 不必誤導性地沿用舊 concrete 名稱。
 
+## 人機 UI 與 Machine Contract 邊界（Human-facing UI / Machine Contract Boundary）
+
+Human-facing UI 是 presentation / interaction layer；不得因視覺一致性、文案整理、navigation、human-facing route normalization 或 component cleanup，偷偷改變較高權威的 runtime / machine contract。
+
+一般原則：
+
+- UI 必須忠實呈現 authoritative state。畫面已更新、request 已送出、handler 已回應或按鈕已被觸發，不等於 persistence、readback、restart、remote/network verification 或其他底層 operation 已真正完成。
+- 狀態應依系統需要區分不同 authority 與時間尺度，例如 expected/configured、observed/detected、current health/connection、latest outcome、pending、unknown、history/counter。Evidence 不足時應使用 Pending / Unknown / Unavailable 等誠實狀態，不得猜成 Success / Healthy / Failed。
+- Human-facing UI、navigation、wording、layout 或 route 工作，除非目前 scope 明確授權，不得修改 machine API、wire protocol、message/topic contract、persistence schema/semantics、authentication/authorization、session/CSRF、安全 ownership、runtime lifecycle 或 safety-critical behavior。
+- 若 UI 工作揭露 machine/runtime contract 本身需要改變，停止目前 presentation-only scope；另進 architecture/contract decision 或獨立 scoped task，不得以 UI cleanup 名義順手修改。
+- Secret 預設 write-only。UI、log、error、diagnostics 不得重新顯示 credential、password、token、shared secret 或其他 secret material，除非正式 product/security contract 明確要求且已有相應風險控制。
+- Destructive、security-sensitive 或 physical-effect action 應在執行前清楚說明效果、影響範圍、不可逆性或 restart/recovery consequence，並依風險提供適當 confirmation；不得只依賴顏色或圖示表達危險程度。
+- Status / error / warning / unknown 不得只靠顏色傳達；應提供可讀文字、label 或其他非顏色語意，避免無障礙與誤判問題。
+- Current status、latest outcome、history/log 與 raw engineering diagnostics 應依使用者角色與行動價值分層；不要把 raw debug dump 當作一般 operator UI，也不要用漂亮摘要掩蓋 lower-level failure/evidence。
+
+這些原則只定義 presentation 與 machine/runtime contract 的治理邊界；具體 route namespace、component library、visual style、copywriting、responsive breakpoint 與 device-specific vocabulary 仍由各 repository 的 UI/UX contract 決定。
+
 ## 獨立 Domain Repository／組合（Independent domain repos / composition）
 
 Repository boundary 可依 domain ownership；deployment boundary 可依實際執行環境。
