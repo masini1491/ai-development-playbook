@@ -1,6 +1,6 @@
-# Repository Execution Rules
+# Repository 執行規則（Repository Execution Rules）
 
-## Repository Identity Gate
+## Repository 身分確認關卡（Repository Identity Gate）
 
 每個 Codex Prompt 必須明確指定：
 
@@ -18,7 +18,7 @@
 
 若 identity mismatch：立即 STOP，回報 expected/detected repository、branch、HEAD；不得修改任何檔案、不得自行切換 repository、不得自行 clone、不得將 Prompt 套用到相似專案。
 
-## Workspace Write Capability Gate
+## Workspace 寫入能力關卡（Workspace Write Capability Gate）
 
 在任何**需要修改 repository** 的 Task / Stage 開始 file mutation 前，先確認 execution environment 對目標 working tree 具有完成該 Stage 所需的最小寫入能力。
 
@@ -35,7 +35,7 @@ Write-required work（例如 source/tests/docs 修改、`TASKS.md` bookkeeping�
 
 取得 capability 後只恢復原本已授權 Stage，不代表 scope expansion。
 
-## Safe Remote-Sync Bootstrap
+## 安全 Remote Sync 啟動（Safe Remote-Sync Bootstrap）
 
 執行已授權 Task/Stage 前：
 
@@ -61,7 +61,7 @@ Write-required work（例如 source/tests/docs 修改、`TASKS.md` bookkeeping�
 
 Commit/push 必須服從使用者當次 launch 或 repository policy 的明確授權；TASKS item 本身不自動授權 Git mutation。
 
-## Permission-Gated Operation
+## 權限關卡操作（Permission-Gated Operation）
 
 已授權 Task/Stage 的必要 Git/build/test/toolchain/filesystem operation 若因 sandbox、filesystem、execution permission、`Permission denied` / `Access denied` / `EACCES` / `EPERM` 等受阻：
 
@@ -76,7 +76,7 @@ Commit/push 必須服從使用者當次 launch 或 repository policy 的明確�
 5. `permission denial → request → approval → retry original operation` 不計 operational retry cap。
 6. 若使用者拒絕、環境無法要求權限、或取得權限後仍真正失敗，才依 evidence 進入 operational failure taxonomy。
 
-## Remote Git Permission Gate
+## Remote Git 權限關卡（Remote Git Permission Gate）
 
 對目前 Task / Stage 所必需且**本來已獲授權**的 remote Git operation：
 
@@ -113,7 +113,7 @@ Sandbox/network permission approval **不等於 Git mutation authorization**。
 - 改用另一 repository
 - stash/delete/discard unknown user work
 
-## Canonical Repository Evidence
+## Canonical Repository Evidence（Canonical Repository Evidence）
 
 需要跨機器、跨 OS 或跨工作區重現的 repository evidence，不應無條件依賴 platform-transformed working-tree bytes。
 
@@ -135,7 +135,7 @@ Sandbox/network permission approval **不等於 Git mutation authorization**。
 
 Canonical evidence 解決的是「如何重現 repository 事實」，不取代 runtime/build/hardware validation。
 
-## TASKS.md Lifecycle
+## TASKS.md 生命週期（TASKS.md Lifecycle）
 
 `TASKS.md` 是一般 project repository 的唯一 active unfinished-work / executable scoped Prompt queue（若 repository 採此模式）。
 
@@ -147,7 +147,7 @@ Canonical evidence 解決的是「如何重現 repository 事實」，不取代 
 
 完成紀錄以 Git history 為準；不建立 Completed 區段。
 
-### Admission threshold
+### 收錄門檻（Admission threshold）
 
 以下通常可不進 TASKS：
 - 一次性
@@ -169,7 +169,7 @@ Canonical evidence 解決的是「如何重現 repository 事實」，不取代 
 
 Task 成功驗證後刪除/更新該 unfinished item；完全清空時刪除 `TASKS.md`。
 
-## ChatGPT / Codex Repository Write Boundary
+## ChatGPT／Codex Repository 寫入邊界（ChatGPT / Codex Repository Write Boundary）
 
 對**一般目標 project repository**，預設固定分工：
 
@@ -181,7 +181,7 @@ Task 成功驗證後刪除/更新該 unfinished item；完全清空時刪除 `TA
 - 若非 `TASKS.md` 檔案需要修改：先讀最新 evidence、避免 duplicate task，必要時只在 root `TASKS.md` 建立/更新 scoped unfinished task / executable Prompt，再由 Codex 執行真正修改。
 - 使用者直接要求 ChatGPT 修改 AGENTS/README/source，也不自動越過此 boundary；除非使用者明確修改這條治理規則本身。
 
-### Codex / coding agent
+### Codex／coding agent
 
 - 在使用者當次明確授權的 Task / Stage scope 內，依 repository governance 修改 `TASKS.md` 以外的 allowed files。
 - 同時可維護 `TASKS.md` 的執行狀態：更新 Blocked / Deferred / Pending-validation evidence、成功完成並驗證後移除 entry、queue 清空時刪除 `TASKS.md`。
@@ -197,6 +197,6 @@ Task 成功驗證後刪除/更新該 unfinished item；完全清空時刪除 `TA
 - `TASKS.md` 不是 changelog；Completed 不保留，完成紀錄以 Git history 為準。
 - `TASKS.md` 本身不授權 Codex 自動開始任何 Stage，也不擴張 ChatGPT 對其他 path 的寫入權。
 
-### Playbook repository exception
+### Playbook Repository 例外（Playbook repository exception）
 
 `masini1491/ai-development-playbook` 本身是共通規則來源，由 ChatGPT 直接維護；Codex 對此 repository 預設唯讀。此例外只適用 playbook 自身，不改變一般 project repository 的上述 boundary。
