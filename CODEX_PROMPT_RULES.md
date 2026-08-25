@@ -48,6 +48,32 @@ Prompt 不需要為每個 Stage 重複整段語言規則；若 repository govern
 
 `masini1491/ai-development-playbook` 本身由 ChatGPT 直接維護，Codex 預設唯讀，不應產生用 Codex 修改 playbook 的 implementation Prompt。
 
+### Repository `AGENTS.md` 已完成 Playbook routing 時
+
+若目標 repository 的最新 `AGENTS.md` 已明確：
+
+- 宣告 `masini1491/ai-development-playbook` 為共通 baseline；
+- 保存最低必要的 playbook routing；
+- 說明 project-specific authority / exception；
+- 要求依 Task 只讀必要章節而非完整掃描；
+
+則後續 Stage Prompt **不必再重複列出整套 playbook 文件或貼上共通規則全文**。
+
+Prompt 只需：
+
+1. 要求先讀最新 project `AGENTS.md`；
+2. 依 `AGENTS.md` routing 與本次 Task 讀最低必要 playbook 章節；
+3. 保存本次 task-specific evidence / scope / validation / STOP condition。
+
+只有下列情況才應在 Prompt 額外指定某個 playbook 文件：
+
+- `AGENTS.md` 尚未建立 routing；
+- routing 不完整或存在 ambiguity；
+- 本次 Task 需要一個不容易由 routing 推導的特殊章節；
+- 需要明確 freeze 某個 common contract 作為本 Stage 的判斷基準。
+
+`AGENTS.md` routing 只降低重複 Prompt 與 discovery cost，不代表 playbook repository 內容已自動存在於 execution environment。若需要 external access，仍依 Permission-Gated Operation 處理。
+
 ## TASKS 收錄／直接短 Prompt（TASKS Admission / Direct Short Prompt）
 
 **產生 Codex Prompt 不代表一定要建立 `TASKS.md`。**
