@@ -1,6 +1,6 @@
-# Toolchain / Runtime Contract
+# Toolchain／Runtime 契約（Toolchain / Runtime Contract）
 
-## General rule
+## 一般規則（General rule）
 
 專案依賴的 interpreter、compiler、SDK、CLI、runtime 與主要 build tools，應以**實際支援/驗證的 executable + version contract** 表達；不得只寫模糊產品名稱，也不得假定 OS 內建的同名或相近工具相容。
 
@@ -14,7 +14,7 @@
 - Arduino CLI → `arduino-cli` + version
 - CMake → `cmake` + version
 
-## Toolchain Completeness Gate
+## Toolchain 完整性關卡（Toolchain Completeness Gate）
 
 「找到 executable」不等於 toolchain 已可用。
 
@@ -36,7 +36,7 @@ Diagnostic command 本身也必須 fail closed：核心 toolchain guard 失敗�
 
 不要為了完整性檢查引入與 task 無關的大型 dependency scan；只驗證目前正式 contract 所需的最小 runtime chain。
 
-## Windows / PowerShell 7 baseline
+## Windows／PowerShell 7 基準（baseline）
 
 若互動式本機開發環境以 Windows 為主，而且 repository 使用自有 `.ps1`：
 
@@ -47,7 +47,7 @@ Diagnostic command 本身也必須 fail closed：核心 toolchain guard 失敗�
 - 執行正式 `.ps1` tooling / verifier 前，優先用 `pwsh --version` 做最小 preflight。
 - 若 repository 有更精確的 minimum/supported PS7 version，以 repository contract 為準；否則不需無理由 pin 到某個 patch version。
 
-## Failure handling
+## 失敗處理（Failure handling）
 
 - `pwsh` 不存在 → `TOOLCHAIN` prerequisite missing。
 - `pwsh` version 不符合 contract → `TOOLCHAIN` version mismatch。
@@ -55,11 +55,11 @@ Diagnostic command 本身也必須 fail closed：核心 toolchain guard 失敗�
 - `pwsh` 存在但 sandbox/filesystem/execution permission denied → 先走 `Permission-Gated Operation`，不是直接判定 TOOLCHAIN/SOURCE failure。
 - `pwsh` 存在、版本正確、權限正常後 script 才真正失敗 → 再依 evidence 判斷 SOURCE / TOOLCHAIN / ENVIRONMENT 等。
 
-## No silent host mutation
+## 禁止默默修改 Host（No silent host mutation）
 
 Coding agent 不得自行安裝、升級、降級 PowerShell 或其他 host runtime，除非使用者明確授權。
 
-## Validation evidence
+## 驗證證據（Validation evidence）
 
 需要可重現證據時，記錄：
 - actual runtime/tool version
@@ -70,7 +70,7 @@ Coding agent 不得自行安裝、升級、降級 PowerShell 或其他 host runt
 
 Validation PASS 不只要證明 script/test 有跑，也要證明**使用的是 intended runtime/toolchain**。
 
-## Windows local != Windows-only CI
+## Windows local 不等於 Windows-only CI（Windows local != Windows-only CI）
 
 本機 Windows baseline 不代表 repository 的所有 CI/host tests 都要改成 Windows。
 
@@ -81,7 +81,7 @@ Validation PASS 不只要證明 script/test 有跑，也要證明**使用的是 
 - 為了統一 host 而移除 cross-platform CI
 - 因本機 Windows baseline 宣稱 repository 只支援 Windows，除非 repository 本身就是如此定義
 
-## Windows PowerShell 5.1 compatibility
+## Windows PowerShell 5.1 相容性（compatibility）
 
 預設不要求 dual-support。
 
