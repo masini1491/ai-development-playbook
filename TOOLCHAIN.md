@@ -14,6 +14,28 @@
 - Arduino CLI → `arduino-cli` + version
 - CMake → `cmake` + version
 
+## Toolchain Completeness Gate
+
+「找到 executable」不等於 toolchain 已可用。
+
+對會影響 build/test/validation reproducibility 的正式工具鏈，建議依風險做最小完整性檢查：
+
+`discover executable → verify version → verify required runtime/dependencies → minimal smoke invocation → READY`
+
+需要時確認：
+
+- executable 路徑唯一且符合預期來源
+- version / major/minimum contract
+- required runtime DLL / shared library / interpreter support / SDK component 存在
+- PATH / environment resolution 沒有被另一版本 shadow
+- 最小 `--version`、help、compile probe 或等價 smoke command 能實際成功執行
+
+若 executable 存在但 runtime dependency 缺失、候選版本 ambiguous、smoke invocation 失敗，不得宣稱 toolchain READY。
+
+Diagnostic command 本身也必須 fail closed：核心 toolchain guard 失敗時，總診斷結果不得因其他檢查 PASS 而仍回報整體 PASS。
+
+不要為了完整性檢查引入與 task 無關的大型 dependency scan；只驗證目前正式 contract 所需的最小 runtime chain。
+
 ## Windows / PowerShell 7 baseline
 
 若互動式本機開發環境以 Windows 為主，而且 repository 使用自有 `.ps1`：
