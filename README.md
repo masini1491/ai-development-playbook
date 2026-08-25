@@ -66,8 +66,8 @@
 - Research-first / Anti-Reinvent-Wheel Gate
 - Hardware evidence 與 target/board portability discipline
 
-## 分享與採用
+## 分享、採用與授權
 
 這份 playbook 是實務工作流，不是任何平台或模型供應商的官方規格。不同帳號、方案或開發工具可能沒有相同的模型名稱、權限機制或 UI；採用時應將概念映射到自己的環境，並以最新官方產品文件與自己的 repository rules 為準。
 
-目前 repository 尚未加入授權條款；公開可閱讀不等於已授權再散布、修改或商用。若要正式讓他人重用，建議日後另行選擇適合的 LICENSE。
+本 repository 採用 [MIT License](LICENSE)。你可以在 MIT License 條件下使用、修改、分享與再散布本內容；請保留授權文件要求的 copyright 與 permission notice。
