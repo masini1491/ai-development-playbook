@@ -1,12 +1,12 @@
-# Debug / Validation Methodology
+# 除錯／驗證方法論（Debug / Validation Methodology）
 
-## Default flow
+## 預設流程（Default flow）
 
 `Evidence → Root Cause → Focused Patch → Targeted Validation`
 
 不要先重構再找原因；不要用更大的模型或更多 Agent 取代 evidence。
 
-## Root-cause labels
+## Root Cause 分類標籤（Root-cause labels）
 
 只使用：
 
@@ -18,7 +18,7 @@
 
 `INSUFFICIENT OBSERVABILITY` 時先取得能區分原因的最小 diagnostics / evidence；無法在目前 scope 內安全取得就 STOP。
 
-## Operational failure taxonomy
+## 執行失敗分類（Operational failure taxonomy）
 
 真正 execution/operational failure 分類：
 
@@ -35,7 +35,7 @@
 
 TOOLCHAIN / ENVIRONMENT / INFRASTRUCTURE / SERVICE / HARDWARE_REQUIRED 不得合理化 production source patch，也不是提高模型/Reasoning/Context/Multi-Agent 的理由。
 
-## Retry discipline
+## 重試紀律（Retry discipline）
 
 同一**non-compile operational root cause** 預設最多自動 retry 1 次；第二次仍失敗時 STOP、分類並保存最小可重現 evidence。
 
@@ -43,7 +43,7 @@ Permission denial → request → approval → retry original operation 不算 o
 
 Compile/source-fix loop 若 repository governance、正式 validation contract 或特定 Stage 有自己的 bounded 上限，服從該正式規則；不要用 non-compile cap 覆蓋它。
 
-## Validation ladder
+## 驗證階梯（Validation ladder）
 
 由小到大：
 
@@ -56,7 +56,7 @@ Compile/source-fix loop 若 repository governance、正式 validation contract �
 
 只跑足以驗證目前 scope 的最低充分層級；repository formal merge gate 若明確要求更完整驗證則服從正式 gate。
 
-## Validation Coverage Integrity
+## 驗證涵蓋完整性（Validation Coverage Integrity）
 
 `exit 0` 不等於驗證真的涵蓋目標 implementation。
 
@@ -77,7 +77,7 @@ Compile/source-fix loop 若 repository governance、正式 validation contract �
 
 Local PASS 不等於 remote CI PASS；舊 commit PASS 不等於目前 HEAD PASS。
 
-## Verifier Contract Lifecycle
+## Verifier Contract 生命週期（Verifier Contract Lifecycle）
 
 Verifier / static checker / test harness 本身也是會隨 production architecture 演進的 contract；驗證失敗不自動代表 production source 有 bug。
 
@@ -95,7 +95,7 @@ Verifier / static checker / test harness 本身也是會隨 production architect
 
 Verifier 更新後仍應執行直接相關交叉檢查，避免修正一支 stale verifier 時破壞其他正式 validation contract。
 
-## Evidence tiers
+## Evidence 等級（Evidence tiers）
 
 依專案需要區分：
 - Software PASS
@@ -117,7 +117,7 @@ Verifier 更新後仍應執行直接相關交叉檢查，避免修正一支 stal
 
 相似裝置或 upstream evidence 不得自動改寫成 local hardware confirmed。
 
-## Evidence Supersession Lifecycle
+## Evidence 取代生命週期（Evidence Supersession Lifecycle）
 
 歷史 PASS 應保留可追溯性，但不得因仍存在於文件或 Git history 就自動視為 current evidence。
 
@@ -142,7 +142,7 @@ Validation / evidence record 可依需要標記：
 
 文件可保留歷史測試事實，但 current summary 必須明確指出最新 superseding rule，避免舊 PASS 被誤讀成目前 PASS。
 
-## Correctness before refactor
+## 正確性優先於重構（Correctness before refactor）
 
 發現 correctness bug 時優先：
 
@@ -154,7 +154,7 @@ Validation / evidence record 可依需要標記：
 
 不要預設把 bug fix、architecture redesign、cleanup、library extraction 打包成一次工作。
 
-## Behavior-Preserving Refactor Gate
+## 行為保持重構關卡（Behavior-Preserving Refactor Gate）
 
 宣稱 behavior-preserving 的重構，應先建立可比較 baseline，而不是只在修改後看「有編譯過」。
 
@@ -180,7 +180,7 @@ Validation / evidence record 可依需要標記：
 
 驗證時優先比較 refactor 前後的 protected invariants；若 binary/resource usage 有變化但 behavior 預期不變，需記錄差異並判斷是否 material，不要只因數字不同就宣稱 regression，也不要完全忽略。
 
-## Decision Stage
+## 決策階段（Decision Stage）
 
 若 implementation 前仍有高影響 architecture/security/state/persistence policy 未決：
 
