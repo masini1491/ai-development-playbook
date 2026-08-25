@@ -146,7 +146,20 @@ Library-ready ≠ 現在就拆 library。
 - **Service-specific setup/config authority**：保存某個 service 真正的 deployment/configuration/resource/secret/setup 流程，可供人類 operator 獨立使用。
 - **Protocol/runtime/security authority**：保存 machine contract、wire/API/topic/schema、runtime ownership、安全與 interoperability semantics；operator runbook 不得覆蓋它。
 
-原則：
+### 依 Authority Owner／Lifecycle Boundary 拆分
+
+一條產品功能鏈若跨越多個獨立 provider 或 authority owner，而且各自擁有獨立的 credential、configuration、resource lifecycle、deployment/mutation boundary 或 validation authority，setup/config authority 應依**實際 authority owner / lifecycle boundary** 分離，再以 cross-reference 串接；不要只因多個 provider 共同完成同一產品功能，就把它們塞進同一份 setup 文件。
+
+反過來也不得過度拆分：
+
+- 不是「每個 API / endpoint / token / resource 一份文件」；
+- 只有 authority owner、credential owner、configuration lifecycle、deployment/mutation boundary 或 validation authority 真正獨立時才值得拆；
+- 同一 provider 內高度耦合、共同生命週期且沒有獨立治理價值的 setup 應保持聚合，避免文件碎片化；
+- 文件名稱應反映主要 authority owner / lifecycle，而不是只沿用跨 provider 的產品功能名稱造成責任邊界模糊。
+
+判斷重點是：**按 authority owner / lifecycle boundary 拆，不按產品功能名稱或 API 數量拆。**
+
+一般原則：
 
 - 同一 stable policy 只保留一個主要 authority；其他文件用 routing/reference，避免全文複製造成 drift。
 - Operator runbook 不得因方便操作而把 service credential、deployment target 或 protocol contract 自行重新定義。
