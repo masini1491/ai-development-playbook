@@ -113,6 +113,28 @@ Sandbox/network permission approval **不等於 Git mutation authorization**。
 - 改用另一 repository
 - stash/delete/discard unknown user work
 
+## Canonical Repository Evidence
+
+需要跨機器、跨 OS 或跨工作區重現的 repository evidence，不應無條件依賴 platform-transformed working-tree bytes。
+
+適用範圍例如：
+
+- source hash / integrity manifest
+- project-scale / physical-line 統計
+- canonical baseline snapshot
+- reproducible source inventory
+- retention / required-file manifest 驗證
+
+原則：
+
+1. 若 evidence 的語意是「某個 Git ref/commit 內實際追蹤的內容」，優先以 Git canonical object / tracked content 為 authority，例如 `git ls-tree`、`git cat-file` 或等價機制。
+2. 若必須從 working tree 計算，應明確定義 canonicalization contract；text file 的 CRLF/LF、encoding/BOM 或其他平台轉換若會影響 hash/line count，必須先正規化或明確宣告其語意。
+3. 不得把 `.git`、build/cache、generated artifacts、downloaded dependencies 或未追蹤暫存檔混入 canonical source evidence，除非該 evidence contract 明確要求。
+4. Hash / line count / manifest 的計算方法本身屬 validation contract；跨平台結果不一致時先檢查 canonicalization / tool behavior，不得先推論 source 被修改。
+5. 若 repository 已有 canonical counter/hash tool，後續文件與 validation 優先使用該 authority，不要同時維護另一套手工算法造成 drift。
+
+Canonical evidence 解決的是「如何重現 repository 事實」，不取代 runtime/build/hardware validation。
+
 ## TASKS.md Lifecycle
 
 `TASKS.md` 是一般 project repository 的唯一 active unfinished-work / executable scoped Prompt queue（若 repository 採此模式）。
