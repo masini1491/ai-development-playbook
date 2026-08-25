@@ -114,6 +114,22 @@ Library-ready ≠ 現在就拆 library。
 
 避免 speculative package/repo/semantic versioning/generalization。
 
+## Abstraction Naming Stability
+
+跨層、可重用或預期會替換 backend 的 abstraction，名稱應跟**穩定 contract**走，不要把目前 concrete implementation 不必要地寫死進 public/internal boundary。
+
+例如某層真正語意是 generic wired transport，而 RS485 只是 current PHY，則 transport-level owner / API / timing 名稱可使用 transport-neutral 語意；但 termination、transceiver direction、electrical turnaround 等真正屬於 RS485/PHY 的概念仍應保留 concrete 名稱。
+
+原則：
+
+- 先判斷 semantic owner，再 rename；不要 global search/replace。
+- 只有真正 backend-neutral 的 symbol / interface / document heading 才 neutralize。
+- 不得為了「未來可能換 backend」提前建立 speculative HAL / abstraction layer。
+- behavior-preserving naming refactor 必須保留 value、ordering、timing、wire/API behavior，並依 `DEBUG_VALIDATION.md` 的 Behavior-Preserving Refactor Gate 驗證。
+- 若 rename 發現現有 abstraction 其實洩漏 backend-specific behavior，先記錄 architecture gap，不要用命名掩蓋設計問題。
+
+好的 abstraction naming 應讓 current implementation 可讀，也讓 future backend replacement 不必誤導性地沿用舊 concrete 名稱。
+
 ## Independent domain repos / composition
 
 Repository boundary 可依 domain ownership；deployment boundary 可依實際執行環境。
