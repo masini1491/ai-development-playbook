@@ -1,8 +1,8 @@
-# Embedded / Hardware Project Methodology
+# 嵌入式／硬體專案方法論（Embedded / Hardware Project Methodology）
 
 本檔只保存跨專案 embedded/hardware 方法，不保存任何特定產品的 GPIO、credential 或私密 protocol。
 
-## Hardware truth
+## 硬體事實（Hardware truth）
 
 軟體分析、compile、simulation、相似型號 evidence 都不能自動宣稱真實硬體 PASS。
 
@@ -15,7 +15,7 @@
 
 只有真實 target/board/device evidence 才能提升 local hardware confidence。
 
-## Software-first foundation
+## 軟體優先基礎（Software-first foundation）
 
 硬體尚未到手或 runtime 尚未授權時，可先完成 hardware-independent 部分：
 - protocol constants
@@ -32,7 +32,7 @@
 
 但只能建立在可靠 upstream evidence 或已 freeze project contract 上；未知硬體行為必須保持 UNKNOWN/INFERRED/HARDWARE_TEST_PENDING。
 
-## First-contact diagnostic harness
+## 首次接觸診斷 Harness（First-contact diagnostic harness）
 
 首次接觸新硬體、網路服務或 protocol 時，優先考慮 isolated diagnostic harness / test consumer，而不是直接把未知行為塞進 production runtime。
 
@@ -48,7 +48,7 @@ Diagnostic harness 建議：
 
 真實 hardware/network execution 必須有明確授權。
 
-## Board Profile / Hardware abstraction
+## Board Profile／硬體抽象（Hardware abstraction）
 
 不要讓 application/core 直接散落 raw GPIO。
 
@@ -76,7 +76,7 @@ Resource/Feature Profile 則描述啟用功能、buffers、logs 等；不要把�
 
 Unsupported target 應 fail closed，而不是使用 placeholder GPIO。
 
-## Capability-based target selection
+## 依 Capability 選擇 Target（Capability-based target selection）
 
 先從需求推 capability，再選 target；不要先買最強 MCU 再硬塞需求。
 
@@ -90,7 +90,7 @@ Unsupported target 應 fail closed，而不是使用 placeholder GPIO。
 - official SDK / upstream examples
 - long-term resource margin
 
-## Persistent State Transaction Integrity
+## Persistent State 交易完整性（Persistent State Transaction Integrity）
 
 對 security/identity/auth/routing/hardware behavior/credential/critical config 等重要 persistent state，避免多 key partial success。
 
@@ -102,7 +102,7 @@ Identity change 必須處理依賴它的 stale state；必要時用 generation/t
 
 Reusable helper 應在真實 consumer semantics 證明後再抽象。
 
-## Runtime reliability
+## Runtime 可靠性（Runtime reliability）
 
 Embedded runtime 優先：
 - non-blocking state machine
@@ -115,7 +115,7 @@ Embedded runtime 優先：
 
 不要用 infinite retry 或無限制動態結構掩蓋硬體不確定性。
 
-## Safety-Critical Lifecycle Arbitration
+## 安全關鍵生命週期仲裁（Safety-Critical Lifecycle Arbitration）
 
 當 embedded system 同時存在 physical output、door/lock/motor/relay、OTA、provisioning、Web、network maintenance、background telemetry 等 operation 時，不能只靠「non-blocking」就視為安全；需要明確定義 operation priority 與 lifecycle arbitration。
 
@@ -136,7 +136,7 @@ Embedded runtime 優先：
 
 這類 arbitration 的 compile/static PASS 不代表 timing/hardware PASS；若涉及真實 relay、motor、lock、OTA/reboot timing，仍需 hardware/bench evidence。
 
-## Hardware validation
+## 硬體驗證（Hardware validation）
 
 Validation 要區分：
 - Compile PASS
@@ -150,7 +150,7 @@ Validation 要區分：
 
 若 target-specific implementation 有可能被 build layout/conditional compile 排除，必須遵守 Validation Coverage Integrity，證明 intended backend 真正參與 compile/link/test。
 
-## Deployment / offload
+## 部署／卸載（Deployment / offload）
 
 原 MCU 資源不足時，不一定換更大的單板；比較：
 - swap target
