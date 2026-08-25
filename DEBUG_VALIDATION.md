@@ -27,19 +27,27 @@
 - `ENVIRONMENT`
 - `INFRASTRUCTURE`
 - `SERVICE`
+- `AUTHENTICATION`
+- `AUTHORIZATION`
 - `HARDWARE_REQUIRED`
 
-可由使用者授權解除的 permission gate 在解除前不算真正 operational failure；先依 `REPOSITORY_EXECUTION.md` 的 Permission-Gated Operation 處理。
+可由使用者授權解除的 sandbox / network / filesystem / repository-metadata / execution permission gate，在解除前**不算真正 operational failure**；先依 `REPOSITORY_EXECUTION.md` 的 Authorization / Capability Layers 與 Permission-Gated Operation 處理。
+
+`AUTHENTICATION` 表示已有必要 execution permission，但 service/account 身分驗證本身失敗，例如 credential 缺失、無效、過期或登入/session 無法成立。
+
+`AUTHORIZATION` 表示 authentication 已成立或 service 可辨識身分，但該 identity / credential 對目前已授權 operation 缺少必要 service-side 權限。Credential 技術上具有較大權限時，也不得因此擴張 Task / Stage authorization。
 
 只有 `SOURCE` evidence 可直接成為繼續修改 production source 的理由。
 
-TOOLCHAIN / ENVIRONMENT / INFRASTRUCTURE / SERVICE / HARDWARE_REQUIRED 不得合理化 production source patch，也不是提高模型/Reasoning/Context/Multi-Agent 的理由。
+TOOLCHAIN / ENVIRONMENT / INFRASTRUCTURE / SERVICE / AUTHENTICATION / AUTHORIZATION / HARDWARE_REQUIRED 不得合理化 production source patch，也不是提高模型/Reasoning/Context/Multi-Agent 的理由。
 
 ## 重試紀律（Retry discipline）
 
 同一**non-compile operational root cause** 預設最多自動 retry 1 次；第二次仍失敗時 STOP、分類並保存最小可重現 evidence。
 
 Permission denial → request → approval → retry original operation 不算 operational retry。
+
+Authentication / authorization failure 不應以盲目重試、擴大 network permission 或提高 credential privilege 方式處理；先確認目前 operation 是否在 Stage authorization 內、credential 是否為 intended identity、是否真的缺少 service-side capability。任何 credential/ACL/role mutation 仍需獨立明確授權。
 
 Compile/source-fix loop 若 repository governance、正式 validation contract 或特定 Stage 有自己的 bounded 上限，服從該正式規則；不要用 non-compile cap 覆蓋它。
 
