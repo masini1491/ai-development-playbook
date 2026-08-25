@@ -1,6 +1,6 @@
 # TASKS
 
-## Stage A — Workspace / Remote Permission Governance
+## Stage A — Workspace / Remote Permission / Agent Write Governance
 
 **Status:** TODO  
 **推薦模型：** Luna  
@@ -18,10 +18,11 @@
 
 ### 目的
 
-把兩個已在實際 Codex 工作中發生過、且跨專案都可能重現的 failure mode 收斂成 stable playbook governance：
+把三個已在實際 ChatGPT / Codex 協作中形成、且跨專案都需要一致處理的治理規則收斂成 stable playbook governance：
 
 1. Codex / sandbox 更新後 workspace 可能變成 read-only，導致需要修改 repository 的 Stage 無法正常寫檔。
 2. Remote Git operation（尤其 `git fetch origin`）若需要 sandbox/network/repository-metadata permission，而 Codex 沒有主動要求使用者授權，會直接執行失敗。
+3. ChatGPT 與 Codex 的 repository 寫入責任必須明確分工：ChatGPT 只直接讀寫 root `TASKS.md`；其他 repository path 對 ChatGPT 一律唯讀，真正修改由 Codex 執行；`TASKS.md` 由 ChatGPT 與 Codex 共同維護。
 
 ### Repository Identity Gate
 
@@ -133,6 +134,44 @@ Sandbox/network permission approval **不等於 Git mutation authorization**。
 
 不得把「使用者批准 network/sandbox permission」解讀成「新授權 Codex push」。
 
+### 必須新增：ChatGPT / Codex Repository Write Boundary
+
+將本 playbook 的預設 GitHub-backed collaboration mode 明確定義為以下固定分工：
+
+#### ChatGPT
+
+- 對 repository root `TASKS.md` 具有讀取、建立、更新與刪除權。
+- 除 `TASKS.md` 外，**所有 repository path 對 ChatGPT 一律唯讀**，包括但不限於：
+  - `AGENTS.md`
+  - README / docs / architecture / spec / validation
+  - source / headers / tests
+  - scripts / tooling / workflow / CI
+  - config / manifests / lock files
+  - 其他任意 tracked 或 untracked project files
+- ChatGPT 可以讀取這些檔案、分析 evidence、比較版本、提出修改方案、產生 Codex Prompt；但不得直接建立、更新、刪除或改名。
+- 若判斷非 `TASKS.md` 檔案需要修改：
+  1. 先讀最新 repository evidence；
+  2. 確認是否真的需要 task，並避免建立等價重複項目；
+  3. 必要時只在 root `TASKS.md` 建立或更新 scoped unfinished task / executable Codex Prompt；
+  4. 由 Codex 執行真正的非 `TASKS.md` 修改。
+- 使用者要求「幫我改 AGENTS / README / source」時，ChatGPT 不得因使用者意圖明確就直接越過此邊界；應將需求轉為 `TASKS.md` + Codex execution workflow，除非使用者之後明確改變這條治理規則本身。
+
+#### Codex / coding agent
+
+- Codex 在使用者當次明確授權的 Task / Stage scope 內，依 repository governance 修改 `TASKS.md` 以外的 allowed files。
+- Codex 同時可以維護 `TASKS.md` 的執行狀態：更新 Blocked / Deferred / Pending-validation evidence、在成功完成並驗證後移除對應 item、queue 清空時刪除 `TASKS.md`。
+- Codex 不得因具有 workspace write capability 就自行執行 queue 中其他未授權項目。
+
+#### `TASKS.md` 共同維護語意
+
+`TASKS.md` 是 **ChatGPT 與 Codex 共同維護**的唯一 active unfinished-work / executable scoped Prompt queue：
+
+- ChatGPT 主要負責：分析、admission、scope、建立/調整 future work、避免 duplicate。
+- Codex 主要負責：執行當次授權 Stage 後的 status/evidence bookkeeping、完成後移除 entry。
+- 雙方都必須先讀最新 GitHub / synced local `TASKS.md` 再修改，避免覆蓋彼此的新內容。
+- `TASKS.md` 不是 changelog；Completed 不保留，完成紀錄以 Git history 為準。
+- `TASKS.md` 本身不授權 Codex 自動開始任何 Stage，也不擴張 ChatGPT 對其他 path 的寫入權。
+
 ### 預期啟動順序
 
 將共通流程收斂為：
@@ -143,15 +182,16 @@ Read-only Stage 可在 Workspace Write Capability Gate 判定不需要寫入後�
 
 ### Allowed files
 
-依最小必要修改原則，優先只修改：
+Codex 本 Stage 依最小必要修改原則，優先只修改：
 
+- `AGENTS.md`（本次 **ChatGPT / Codex Repository Write Boundary** 應成為 stable playbook governance，必要時以短且 authoritative 的形式落地）
 - `REPOSITORY_EXECUTION.md`
 - `CHAT_INIT.md`
 - `CODEX_PROMPT_RULES.md`（僅需短引用 / Prompt generation requirement 時）
 - `README.md`（僅 routing / concise core-summary 真有必要時）
-- `TASKS.md`（完成後移除此 Stage；若無其他 unfinished work，刪除）
+- `TASKS.md`（共同 queue；完成後移除此 Stage，若無其他 unfinished work則刪除）
 
-若 `AGENTS.md` 需要短引用才能避免 playbook 自身 governance drift，可在 evidence 證明必要時修改；不要全文重複 policy。
+避免在多檔全文複製同一 policy；stable authority + short references/routing 為主。
 
 ### Forbidden scope
 
@@ -161,6 +201,8 @@ Read-only Stage 可在 Workspace Write Capability Gate 判定不需要寫入後�
 - 不建立 scripts / CI / tooling。
 - 不改任何其他 project repository。
 - 不把 Windows local baseline 擴張成所有 CI 必須 Windows。
+- 不把 ChatGPT direct-write boundary 放寬到 `TASKS.md` 以外任何 path。
+- 不把 Codex 的 workspace-write capability解讀成自動授權 queue 中其他 task。
 - 不使用 sudo、`chmod -R 777`、reset-hard、force push、auto-stash、autonomous merge/rebase/cherry-pick、delete/discard unknown work。
 
 ### Progressive reading
@@ -186,7 +228,7 @@ Read-only Stage 可在 Workspace Write Capability Gate 判定不需要寫入後�
 
 最小且充分：
 
-1. 檢查 README / CHAT_INIT / REPOSITORY_EXECUTION / CODEX_PROMPT_RULES 之間沒有 contradiction。
+1. 檢查 README / AGENTS / CHAT_INIT / REPOSITORY_EXECUTION / CODEX_PROMPT_RULES 之間沒有 contradiction。
 2. 確認 Workspace Write Capability Gate 與 Permission-Gated Operation 不被混成同一概念。
 3. 確認 Remote Git Permission Gate 同時涵蓋：
    - known-in-advance permission need → proactive request
@@ -195,9 +237,12 @@ Read-only Stage 可在 Workspace Write Capability Gate 判定不需要寫入後�
    - permission resolution not counted as retry
    - push permission ≠ push authorization
 4. 確認 `git fetch origin` `.git/FETCH_HEAD` / ref / lock / metadata denial 特例存在。
-5. 確認不鼓勵 dangerous workaround。
-6. `git diff --check`。
-7. 純 Markdown governance maintenance，不跑不相關 build/test。
+5. 確認 ChatGPT 對 repository 的 direct-write authority 僅限 root `TASKS.md`；其他 path 明確唯讀。
+6. 確認非 `TASKS.md` 修改必須透過 scoped task / Codex workflow 執行。
+7. 確認 `TASKS.md` 被明確定義為 ChatGPT + Codex 共同維護的唯一 active unfinished-work queue，且 Completed 仍由 Git history 保存。
+8. 確認不鼓勵 dangerous workaround。
+9. `git diff --check`。
+10. 純 Markdown governance maintenance，不跑不相關 build/test。
 
 ### Completion
 
