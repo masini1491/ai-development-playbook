@@ -2,6 +2,20 @@
 
 本 repository 是公開、可分享的跨專案 AI-assisted development 方法論。維護時優先保持通用、精簡、可路由、可驗證。
 
+## Maintenance ownership
+
+本 repository 是**共通規則來源**，不是一般 product / firmware implementation repository。
+
+固定維護邊界：
+
+- **ChatGPT 是本 repository 的主要 AI maintainer**，可直接讀取、建立、更新、刪除本 playbook 內的規則與文件。
+- **Codex / coding agent 對本 repository 預設唯讀**：可讀取並遵守本 playbook，但不得以一般 project `TASKS.md → Codex implementation` workflow 修改本 repository。
+- 本 repository 的 `TASKS.md` 若存在，只作為 ChatGPT 維護 playbook 時的暫時 unfinished-work queue；不代表要交由 Codex 執行。
+- 對一般目標 project repository，仍適用本 playbook 定義的 ChatGPT / Codex 分工：ChatGPT 只直接寫 root `TASKS.md`，其他 path 唯讀；非 `TASKS.md` 修改由 Codex 在明確授權 scope 內執行。
+- 不得把「一般 project 的 ChatGPT only-`TASKS.md` write boundary」反向套用到本 playbook 自身。
+
+若使用者日後明確變更本 repository 的維護 ownership，再依最新指示調整。
+
 ## Scope
 
 只保存「怎麼開發」的共通方法，不保存任何特定專案的：
@@ -69,7 +83,7 @@
 - links / routing 是否一致
 - 同名規則是否產生 contradiction
 - fenced code / headings 是否完整
-- `git diff --check`（若在 local/Codex 執行）
+- 若在 local workspace 執行，使用 `git diff --check`
 
 不要為純文件 wording 修改跑不相關 build/test。
 
