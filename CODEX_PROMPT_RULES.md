@@ -1,4 +1,4 @@
-# Codex Prompt / Cost Rules
+# Codex Prompt／成本規則（Codex Prompt / Cost Rules）
 
 ## 核心原則
 
@@ -29,7 +29,7 @@
 
 Prompt 不需要為每個 Stage 重複整段語言規則；若 repository governance 已引用本 playbook，通常只需在必要時簡短寫「請使用繁體中文回報」。
 
-## Prompt execution gates
+## Prompt 執行關卡（Prompt execution gates）
 
 對一般 project repository，Codex Prompt 應依任務需要引用 `REPOSITORY_EXECUTION.md` 的共通 gates，而不是每份 Prompt 重複全文：
 
@@ -48,7 +48,7 @@ Prompt 不需要為每個 Stage 重複整段語言規則；若 repository govern
 
 `masini1491/ai-development-playbook` 本身由 ChatGPT 直接維護，Codex 預設唯讀，不應產生用 Codex 修改 playbook 的 implementation Prompt。
 
-## TASKS Admission / Direct Short Prompt
+## TASKS 收錄／直接短 Prompt（TASKS Admission / Direct Short Prompt）
 
 **產生 Codex Prompt 不代表一定要建立 `TASKS.md`。**
 
@@ -90,7 +90,7 @@ Prompt 不需要為每個 Stage 重複整段語言規則；若 repository govern
 
 Repository 很大不是使用 Sol 或 High 的理由。
 
-## Reasoning Calibration
+## 推理強度校準（Reasoning Calibration）
 
 「最低充分 reasoning」應以 evidence 校準，而不是只憑直覺往下壓成本。
 
@@ -104,7 +104,7 @@ Repository 很大不是使用 Sol 或 High 的理由。
 
 這是**校準既有預設**的方法，不是要求每個 Stage 都先跑一次低一級 reasoning A/B test；不得為了省一次推理成本，反而製造重複 execution 與 validation 浪費。
 
-## Escalation
+## 升級處理（Escalation）
 
 Codex 無權自行換模型。達到 escalation condition 時：
 
@@ -140,7 +140,7 @@ Codex 無權自行換模型。達到 escalation condition 時：
 
 不得把加 agent 當作 retry 方法。
 
-## Execution mode
+## 執行模式（Execution mode）
 
 優先選擇符合 task 的最小模式：
 
@@ -153,7 +153,7 @@ Codex 無權自行換模型。達到 escalation condition 時：
 
 不要為了少貼幾次 Prompt 把不同決策階段、implementation、hardware validation 強行打包。
 
-## Scope Expansion ≠ Model Escalation
+## Scope 擴張不等於模型升級（Scope Expansion ≠ Model Escalation）
 
 任務中發現 out-of-scope 問題：
 
@@ -162,7 +162,7 @@ Codex 無權自行換模型。達到 escalation condition 時：
 
 不能因為新問題比較難，就把目前 Stage 自動升成更大的模型/Context/scope。
 
-## Prompt lean
+## 精簡 Prompt（Prompt lean）
 
 穩定規則應放在 repository governance / playbook，不應在每個 Stage 重複全文。
 
@@ -177,7 +177,7 @@ Stage Prompt 只保存：
 
 以降低 Context inflation。
 
-### Tool / Skill Surface Discipline
+### Tool／Skill 暴露面紀律（Tool / Skill Surface Discipline）
 
 若目前 execution surface 可以控制 tools、connectors、MCP、skills 或其他 agent capabilities：
 
