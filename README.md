@@ -14,6 +14,23 @@
 
 因此若本 playbook 與實際專案的 `AGENTS.md`、architecture、security、protocol、hardware evidence 或正式 source of truth 衝突，以實際專案的正式規則為準；若與使用者當次明確指示衝突，依使用者當次指示處理。
 
+## 預設協作模型：GitHub-backed workflow
+
+本 playbook 預設以 **GitHub repository 協作**：
+
+- GitHub `main`（或專案明確指定的預設 branch）是 current source of truth。
+- Repository root 的 `AGENTS.md` 保存穩定、長期的專案治理規則。
+- Repository root 的 `TASKS.md` 是 ChatGPT / Codex / coding agent 共用的 **active unfinished-work / executable scoped Prompt queue**，不是一般 changelog 或永久待辦清單。
+- 尚未完成、Blocked、Deferred、Pending-validation 的工作可留在 `TASKS.md`；成功完成並驗證後應移除對應項目。
+- 已完成工作的永久紀錄以 Git commit/history 為準，不在 `TASKS.md` 建立 Completed 區段。
+- ChatGPT 可依專案自己的寫入政策規劃或維護 `TASKS.md`；真正 source / tests / docs / workflow 修改應遵守該 repository 的正式 governance 與當次授權。
+
+典型流程：
+
+`ChatGPT 讀最新 GitHub → 規劃 / 更新 unfinished queue → Codex 做 Repository Identity Gate + safe sync → 執行指定 Stage → Targeted Validation → 更新 TASKS → commit / push`
+
+如果使用者採用純 local Git、GitLab 或其他協作平台，可以保留相同的 governance 概念並映射到對應平台；但本 repository 的預設說明與範例以 GitHub-backed workflow 為主。
+
 ## 新聊天室最短入口
 
 新開專案聊天室時，先讀：
