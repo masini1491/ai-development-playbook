@@ -1,4 +1,4 @@
-# AI Development Playbook
+# AI 開發 Playbook（AI Development Playbook）
 
 一套可重用的 **ChatGPT + Codex + GitHub** 協作開發方法論，目標是用最低充分成本完成可驗證、可追溯、可安全接續的工程工作。
 
@@ -46,7 +46,7 @@
 
 如果使用者採用純 local Git、GitLab 或其他協作平台，可以保留相同 governance 概念並映射到對應平台；本 repository 的預設說明與範例以 GitHub-backed workflow 為主。
 
-## README Development Transparency
+## README 開發透明度（README Development Transparency）
 
 公開 repository 若明顯採用 ChatGPT / Codex 或其他 coding agent 作為主要開發方式，建議 README 精簡說明 human-in-the-loop 的責任分工：
 
@@ -58,7 +58,7 @@ AI-generated code / analysis 不因生成完成、command 成功或 build exit 0
 
 若 README 提及 OpenAI / ChatGPT / Codex，不應暗示 OpenAI 對專案、產品、硬體或安全決策提供贊助、認證或背書，除非確有正式關係。
 
-## Project Scale Reporting
+## 專案規模報告（Project Scale Reporting）
 
 若 README 或公開文件展示 project size / LOC / line count：
 
@@ -68,7 +68,7 @@ AI-generated code / analysis 不因生成完成、command 成功或 build exit 0
 - 應說明主要排除項目，例如 `.git`、third-party libraries、downloaded dependencies、build/cache、generated artifacts。
 - category 依 repository 實際結構定義，不強迫所有專案使用同一分類。
 
-### Deterministic Counter Trigger
+### 決定性計數器觸發條件（Deterministic Counter Trigger）
 
 不要求每個 repository 都建立 `project-scale.ps1` 或其他 LOC script。
 
@@ -86,7 +86,7 @@ AI-generated code / analysis 不因生成完成、command 成功或 build exit 0
 
 不要為了「熟悉規則」預設完整掃描本 repository。
 
-## 文件 Routing
+## 文件路由（Routing）
 
 | 情境 | 讀取文件 |
 | --- | --- |
