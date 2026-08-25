@@ -54,6 +54,24 @@
 
 若 detected repository 與 expected repository 不一致：立即 STOP；回報 expected/detected repository、branch、HEAD；不得修改、不得自行切換/clone repo、不得把 Prompt 套到相似專案。
 
+## Workspace / Remote Permission Gates
+
+若 Stage 需要修改 repository，Codex 在 file mutation 前確認 workspace 具備最小必要寫入能力；read-only workspace 對 write-required Stage 必須 STOP 或主動要求 workspace-write capability，不得進入 coding loop。
+
+Remote Git operation 若 runtime 已知需要 sandbox/network/repository-metadata permission，應先主動要求最小權限；若事前未知，第一次明確 permission denial 後轉 Permission-Gated Operation。Permission approval 只解除原 operation 的 gate，不等於額外 Git mutation authorization。
+
+詳細規則見 `REPOSITORY_EXECUTION.md`。
+
+## ChatGPT / Codex 寫入分工
+
+對一般 project repository：
+
+- ChatGPT 只直接讀寫 root `TASKS.md`；其他 path 一律唯讀。
+- 非 `TASKS.md` 修改由 Codex 在使用者明確授權的 Task / Stage scope 內執行。
+- `TASKS.md` 由 ChatGPT 與 Codex 共同維護；Completed 不保留，完成紀錄以 Git history 為準。
+
+`masini1491/ai-development-playbook` 本身是例外：它是共通規則來源，由 ChatGPT 直接維護，Codex 預設唯讀。
+
 ## 共通成本原則
 
 > 選擇能安全完成目前授權工作所需的最低成本模型、推理強度、Context、Agent 數量與 Validation scope。
@@ -66,7 +84,7 @@
 
 ## TASKS.md
 
-`TASKS.md` 是 active unfinished-work / executable scoped Prompt queue，不是 changelog。
+對一般 project repository，`TASKS.md` 是 active unfinished-work / executable scoped Prompt queue，不是 changelog。
 
 只有需要未來再次記住、追蹤或執行的工作才進 queue。一次性、已知位置、低風險且沒有後續追蹤價值的小 maintenance 可以直接用最低成本短 Prompt 處理。
 
