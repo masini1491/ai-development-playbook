@@ -61,57 +61,78 @@ Write-required work（例如 source/tests/docs 修改、`TASKS.md` bookkeeping�
 
 Commit/push 必須服從使用者當次 launch 或 repository policy 的明確授權；TASKS item 本身不自動授權 Git mutation。
 
+## 授權與能力分層（Authorization / Capability Layers）
+
+任何 Git、filesystem、toolchain、network 或 external-service operation，都應分開判斷三個互不等價的邊界：
+
+1. **Task / Stage Authorization**：使用者與 repository governance 本次實際允許做什麼。
+2. **Execution Permission**：sandbox / network / filesystem / repository metadata / runtime 是否允許執行該 operation。
+3. **Credential Capability**：目前 account、token、key、session 或 service credential 技術上能做什麼。
+
+真正允許執行的 operation 只能落在三者交集內：
+
+`Allowed operation = Task/Stage authorization ∩ Execution permission ∩ Credential capability`
+
+因此：
+
+- execution permission 比目前 Stage 大，不代表 scope expansion；
+- credential 具備 deploy、write、admin 或 delete 能力，不代表目前 Stage 已授權使用；
+- network approval 只解除目前已授權 operation 的連線 gate，不建立新的 Git / service mutation authorization；
+- Task / Stage 已授權某項 mutation，也仍須滿足必要 execution permission 與 credential capability；
+- 任一層不足時，只處理該層實際缺口，不得以其他層的較大能力補推授權。
+
 ## 權限關卡操作（Permission-Gated Operation）
 
-已授權 Task/Stage 的必要 Git/build/test/toolchain/filesystem operation 若因 sandbox、filesystem、execution permission、`Permission denied` / `Access denied` / `EACCES` / `EPERM` 等受阻：
+本規則適用於目前已授權 Task / Stage 所必要的 Git、build、test、toolchain、filesystem、remote network、external API / CLI / HTTPS、package registry / dependency retrieval 或其他外部服務 operation。
 
-1. 先判斷是否是可由使用者批准解除的 permission gate。
-2. 第一次 permission denial 不得直接判定 source/repository/remote/toolchain/environment/infrastructure 故障。
-3. 若 runtime 支援 permission request，要求完成目前 operation 所需的**最小權限**，說明：
-   - exact command / operation
-   - 為何目前 Stage 必須執行
-   - 被阻擋 resource/path（若已知）
-   - 最小 permission scope/type
-4. 使用者批准後只重試原本被擋的 operation；approval 不等於 scope expansion、額外檔案修改、下一 Stage 或高風險 Git 授權。
-5. `permission denial → request → approval → retry original operation` 不計 operational retry cap。
-6. 若使用者拒絕、環境無法要求權限、或取得權限後仍真正失敗，才依 evidence 進入 operational failure taxonomy。
+1. 必要 operation 若因 sandbox、filesystem、repository metadata、execution permission、network policy、`Permission denied` / `Access denied` / `EACCES` / `EPERM`、唯讀 workspace 或等價 execution gate 受阻，先判斷是否只是可由使用者批准解除的 permission gate。Permission gate 本身不是 source、toolchain、environment、infrastructure、service、authentication 或 authorization failure。
+2. 若**事前已知**該必要 operation 需要額外 sandbox / network / filesystem / metadata permission，應在執行前主動要求最小必要 capability；不得故意先執行已知會被拒絕的 command 來製造一次 failure。
+3. 若事前無法判定是否需要額外 permission，可正常執行一次；第一次明確 permission denial 後立即轉 Permission-Gated Operation，不進入 operational failure taxonomy。
+4. Permission request 應盡量說明：
+   - exact command / operation；
+   - 為何目前 Task / Stage 必須執行；
+   - 被阻擋 resource/path（若已知）；
+   - service host / port（外部連線且能合理限定時）；
+   - 所需的最低 permission scope/type。
+5. 使用者批准後，只重試原本被 gate 阻擋的必要 operation。Approval 不授權 scope expansion、額外檔案修改、下一 Stage、其他 Git workflow、deploy/publish、resource mutation 或任何原 Stage 未授權操作。
+6. `permission denial → request minimum permission → approval → retry original operation` 不計 operational retry cap。只有取得必要 permission 後同一 operation 仍真正失敗，才開始 operational retry accounting 與 failure classification。
+7. 若使用者拒絕、runtime 無法 request/obtain permission，或取得最低必要 permission 後 operation 仍真正失敗，才依 evidence 進入 `DEBUG_VALIDATION.md` 的 operational failure taxonomy。
+8. 不得以 permission 問題為理由自行使用危險 workaround，例如 `sudo`、`chmod -R 777`、未經批准的廣泛 `chmod` / `icacls`、刪除 Git state/lock file、重新 clone 覆蓋 working tree、改 Git metadata location、stash/delete/discard unknown user work、reset-hard、force push、auto merge/rebase/cherry-pick 或改用另一 repository。疑似 stale lock 也不得在沒有 evidence 與明確授權時自行刪除。
+
+### External network / service 邊界
+
+對 remote Git、cloud/service CLI、HTTP API、package registry、dependency download、MQTT/service administration 或其他外部 operation：
+
+- 若已知目前必要 operation 需要 external network，先要求最低 network approval；若未知，首次明確 sandbox/network denial 後再要求。
+- Network/sandbox approval 只允許**目前已授權 operation**建立必要外部連線，不自動授權 deploy、publish、subscribe/disconnect、configuration mutation、authentication/authorization/ACL mutation、secret/credential mutation、resource create/delete 或其他 service-side write。
+- 若原 Task / Stage 本來已明確授權某項 remote mutation，network approval 也只解除該項 operation 的 execution gate，不擴張到其他 remote action。
+- Credential capability 大於目前 Stage scope 時，實際執行範圍仍以 Stage authorization 為上限。
+- 外部服務操作與 error/reporting 不得輸出 password、token、Authorization header、private key、shared secret、credential material 或不必要的 secret-derived characteristics，也不得把 credential 寫進 Git。
 
 ## Remote Git 權限關卡（Remote Git Permission Gate）
 
-對目前 Task / Stage 所必需且**本來已獲授權**的 remote Git operation：
+對目前 Task / Stage 所必需且**本來已獲授權**的 remote Git operation，套用上述 Authorization / Capability Layers 與 Permission-Gated Operation。
 
-- 若 runtime / sandbox policy 已明確知道該 operation 需要額外 sandbox、network、filesystem 或 repository-metadata permission，必須在執行前主動要求最小必要權限；不得故意先執行已知會被拒絕的 command 再把 denial 當 failure。
-- 若事前無法判定是否需要 escalation，可正常執行一次；第一次明確 permission denial 後立即轉 Permission-Gated Operation。
-- approval 後只重試原 operation，不附帶執行其他 Git mutation。
+- 若已知 remote Git operation 需要額外 network / repository-metadata / filesystem permission，執行前先要求實際缺少的最低 capability。
+- 若事前未知，可正常嘗試一次；首次明確 permission denial 後立即進 permission flow。
+- approval 後只重試原 remote Git operation，不附帶執行其他 Git mutation。
 - permission resolution 不計 operational retry。
-- 使用者拒絕、runtime 無 escalation 能力，或取得 permission 後相同 operation 仍真正失敗，才進入 operational failure taxonomy。
+- 使用者拒絕、runtime 無 escalation 能力，或取得 permission 後相同 operation 仍真正失敗，才依 evidence 分類。
 
 ### `git fetch origin` 特例
 
-若出現：
+`git fetch origin` 可能同時需要兩種互相獨立的最低 capability：
 
-- `.git/FETCH_HEAD` write denial
-- Git lock/ref metadata write denial
-- sandbox repository-metadata write denial
-- required network permission gate
+1. remote network access；
+2. 本地 `.git/FETCH_HEAD`、lock/ref 與 repository metadata 的 filesystem / metadata write capability。
 
-先走 Remote Git Permission Gate / Permission-Gated Operation；批准後只重試原 fetch。
+只要求實際缺少的 capability。批准後只重試完全相同的 fetch；不得把 fetch permission 解讀為 pull、merge、rebase、push 或其他 Git mutation authorization。
 
 ### `git push` 邊界
 
 Sandbox/network permission approval **不等於 Git mutation authorization**。
 
 只有當目前 Task / launch / repository policy 原本就已明確授權 push 時，permission escalation 才能解除該 push 的 execution/network gate；不得把 permission approval 解讀成新的 push 授權。
-
-不得用危險 workaround 繞過 permission gate，例如：
-- `sudo`
-- `chmod -R 777`
-- 未經批准的廣泛 `chmod` / `icacls`
-- 刪除 `.git/FETCH_HEAD`
-- 未確認原因刪除 `.git/index.lock` 或其他 lock/state file
-- 重新 clone 覆蓋 working tree
-- 改用另一 repository
-- stash/delete/discard unknown user work
 
 ## Canonical Repository Evidence（Canonical Repository Evidence）
 
