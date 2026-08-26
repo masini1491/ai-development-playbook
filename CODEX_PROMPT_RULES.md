@@ -130,6 +130,20 @@ Repository 很大不是使用 Sol 或 High 的理由。
 
 這是**校準既有預設**的方法，不是要求每個 Stage 都先跑一次低一級 reasoning A/B test；不得為了省一次推理成本，反而製造重複 execution 與 validation 浪費。
 
+## Usage window-aware execution budgeting
+
+若目前使用方案同時存在短期 usage window、週期性／較長期 usage budget、purchased credits 或其他多層 resource constraint，應把它們視為**不同的成本邊界**，不要只看單一總額度。
+
+Condition-triggered 原則：
+
+- 不把任何特定方案名稱、5-hour/weekly 數字、模型 credit rate 或 promotional pricing 寫成穩定 baseline；這些 volatile product facts 以當下官方 Rate Card / Help Center / product UI 為準。
+- 若存在短期 window，大型工作應避免把低價值 discovery、重複 repo-wide exploration、無效 retry、非必要 full regression、verbose tool output 與高成本 reasoning 全集中在同一 window。
+- 優先維持 `最低充分 Evidence → 最低充分 Model/Reasoning/Context → Targeted Validation`；不要為了保留短期額度而降低已證明必要的 reasoning 或跳過 required validation。
+- 可將可安全分離的 workstream 分階段執行，例如先用較便宜模型取得 bounded evidence，再啟動較昂貴 implementation/architecture Stage；但不得只為避開 usage window 人為切碎具有共同 state / root cause / transaction boundary 的工作。
+- 若當前產品沒有短期 window 或類似限制，本節不增加額外 execution ceremony。
+
+核心目標是**降低同一 resource window 裡的浪費，而不是降低必要品質**。
+
 ## 升級處理（Escalation）
 
 Codex 無權自行換模型。達到 escalation condition 時：
@@ -215,3 +229,17 @@ Stage Prompt 只保存：
 若目前 surface 不提供 capability filtering / tool trimming，不得為符合此規則而建立額外 workaround、複製工具或改造 task scope。
 
 精簡 Prompt 或 tool surface 後，評估重點不是 Token 單一數字，而是代表性 task 的 task success、correctness、required evidence 與 validation quality 是否維持；若成功率下降或增加 retry / recovery 成本，應恢復必要 Context / capability。
+
+### 長時間／高頻 Tool Output 紀律（Long-running tool output discipline）
+
+已知會長時間執行、持續顯示 progress/status，或可能產生大量 stdout/stderr 的 command/process，不應預設把全部輸出直接送入 active model Context。
+
+優先在 **command / tool source 層**降低低價值輸出：
+
+1. 若工具原生支援，使用 quiet / silent / no-progress / concise mode。
+2. 需要完整紀錄時，將完整 stdout/stderr redirect 到 log/artifact/file，而不是全部即時回送模型。
+3. 正常成功路徑先取得 exit status、duration、必要 summary 與少量關鍵 evidence。
+4. 失敗時先讀 relevant error、tail、matched region 或 bounded log window；只有 evidence 不足時才逐步擴張。
+5. 不要把「讓模型先接收巨量 log，再要求它摘要」當成主要節流方式；最有效的 Context 控制是在輸出進入 active Context 前就抑制不必要內容。
+
+但 output suppression 不得破壞 validation contract：required diagnostics、audit evidence、failure reproduction、security/safety evidence 或 repository formal gate 所需完整 log 應保留在適當 artifact/file 中，並在需要時可被 targeted read。若工具的 quiet mode 會隱藏判斷 PASS/FAIL 所需 evidence，就不要使用該模式或另保留完整 log。
