@@ -90,6 +90,48 @@ Unsupported target 應 fail closed，而不是使用 placeholder GPIO。
 - official SDK / upstream examples
 - long-term resource margin
 
+Embedded target selection 同時遵守 `RESEARCH_ARCHITECTURE.md` 的 evidence-first minimum-target baseline：先找最低合理候選，再用證據排除不足者，不因「比較保險」預設較大 MCU／module。
+
+### Bring-up Target ≠ Minimum Product Target
+
+較高資源的 development board / module 可以被暫時選為 bring-up target，例如為了先建立 SDK、Matter、BLE、network、filesystem 或 framework 的 compile/runtime baseline；但必須明確標記為 `PROVISIONAL` / `BRING-UP ONLY` 或等價狀態。
+
+Bring-up target 不得自動推導：
+
+- minimum supported MCU/module
+- product BOM requirement
+- required flash / RAM / PSRAM
+- required core count
+- required radio/peripheral capability
+- product-final board/pinout
+
+要把較高資源 target freeze 成 minimum requirement，需要 current product requirements 或 resource/runtime evidence 支持；開發方便、toolchain 成熟、未證實的「未來可能需要」或單純安全 margin 不足以構成 freeze evidence。
+
+反過來，要排除較低資源候選，也應說明實際不足：
+
+- REQUIRED capability 根本不存在或官方 SDK 不支援；
+- compile/link/partition 已超限；
+- runtime heap/stack/resource headroom 不足；
+- concurrent workload、latency、timing 或 reliability evidence 不可接受；
+- 安全、OTA、persistence、radio/peripheral requirement 無法滿足；
+- 其他可重現且與需求直接相關的 evidence。
+
+若只是「可能不夠」，保持 candidate 並取得最低必要 evidence，不要先升級 target。
+
+### Embedded Resource Evidence
+
+對可能受 MCU 資源限制的專案，target freeze 前依需求收集最低充分 evidence：
+
+1. **Capability evidence**：CPU/radio/peripheral/SDK support 是否滿足 REQUIRED feature。
+2. **Compile/static resource evidence**：binary/IRAM/DRAM/flash/partition/link result，證明 selected feature set 能建置。
+3. **Runtime resource evidence（需要時）**：heap、largest block、stack watermark、task count、buffer/queue usage、PSRAM dependency、fragmentation、commissioning/connection peak、OTA peak 或其他 project-relevant peak。
+4. **Representative workload evidence（需要時）**：多 endpoint、多連線、network reconnect、security handshake、sensor/transport burst、Matter commissioning 等真實或代表性 load。
+5. **Hardware/bench evidence**：只有真實 target board/device 才能升成 local hardware confidence。
+
+不是每個專案都要完整量全部指標；只量足以回答「最低候選是否真的足夠」的項目。
+
+若較低 target 已被 evidence 證明足夠，不得只為了多留未定義 headroom 自動升到更大 target；若較低 target evidence 顯示 margin 不合理，再升級到下一候選並保留排除理由。
+
 ## Persistent State 交易完整性（Persistent State Transaction Integrity）
 
 對 security/identity/auth/routing/hardware behavior/credential/critical config 等重要 persistent state，避免多 key partial success。
