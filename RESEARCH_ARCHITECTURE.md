@@ -114,6 +114,38 @@ Library-ready ≠ 現在就拆 library。
 
 避免 speculative package/repo/semantic versioning/generalization。
 
+## Evidence 觸發的複雜度升級（Evidence-triggered complexity escalation）
+
+理論上「可能出問題」不等於應立即增加 architecture complexity。對 arbitration、scheduler、cache、queue、distributed lock、retry subsystem、HA/failover、rate limiter、新 HAL / abstraction layer 或其他會增加 ownership / state / operational complexity 的機制，先證明現有設計在代表性情境下確實不足。
+
+推薦流程：
+
+`Potential risk → Existing-behavior evidence → Representative validation → Unacceptable threshold → Confirmed/high-confidence root cause → Architecture escalation`
+
+一般原則：
+
+- 先定義什麼 evidence 才算「現有設計不可接受」，例如 latency、loss、duplicate、retry rate、starvation、availability、resource exhaustion、consistency violation 或 safety/security invariant breach。
+- 若現有 recovery / retry / fallback / bounded degradation 在真實 workload 下已足夠可靠，可保留較簡單 architecture；不要只因最佳實務、理論碰撞、假想規模或未驗證未來需求就提前加入新機制。
+- 只有 evidence 指向特定缺口，且 root cause 為 `CONFIRMED ROOT CAUSE` 或 `HIGH-CONFIDENCE LIKELY ROOT CAUSE` 時，才把對應 architecture work 從 Deferred 升為 active decision/implementation。
+- 若 evidence 不足，先做 validation-only / observability Stage；不要以 speculative redesign 取代量測。
+- 新機制若被觸發，仍應選能解決已證實問題的最低充分 complexity，不自動採最完整/最通用方案。
+
+這是 condition-triggered baseline，不要求每個專案預先建立所有 resilience / arbitration / abstraction 機制。
+
+## Failure Domain 最小化（Failure-domain minimization）
+
+若某 operation 不需要某個 stateful、consistency-critical、remote、privileged 或 failure-prone dependency，就不應在沒有實際 ownership / contract 理由時強制經過該 dependency；否則該 dependency 的 failure 會不必要地擴大可用性與 blast radius。
+
+判斷原則：
+
+- 先確認 dependency 是否真正擁有該 operation 所需的 state、authorization、ordering、consistency、security 或 lifecycle contract；有正式 ownership 就不能為了「縮小 failure domain」繞過。
+- 若 operation 實際是 stateless / independent，而目前 routing 只是歷史耦合，且已有 failure-domain evidence 或有明確可靠性價值，可考慮 behavior-preserving boundary reduction。
+- Boundary reduction 不得破壞 signature/authentication、authorization、persistence、transactionality、ordering、audit、rate-limit 或其他正式 invariant。
+- 若看似機械式的 dependency bypass 其實會改變 state ownership、consistency 或 security architecture，STOP，轉成獨立 architecture decision；不要把它當小 refactor 偷做。
+- 不因看到 shared dependency 就預設拆分；只有不必要耦合已被 evidence 支持，且可維持 protected invariants 時才處理。
+
+目標是讓 failure domain 與真正 dependency/authority boundary 對齊，而不是追求最多元件或最少共享依賴。
+
 ## 抽象命名穩定性（Abstraction Naming Stability）
 
 跨層、可重用或預期會替換 backend 的 abstraction，名稱應跟**穩定 contract**走，不要把目前 concrete implementation 不必要地寫死進 public/internal boundary。
