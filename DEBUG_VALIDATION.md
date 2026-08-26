@@ -85,6 +85,23 @@ Compile/source-fix loop 若 repository governance、正式 validation contract �
 
 Local PASS 不等於 remote CI PASS；舊 commit PASS 不等於目前 HEAD PASS。
 
+## 真實 Runtime／Backend Contract 驗證（Real-runtime / backend contract validation）
+
+Static、mock、stub 或 host-only harness 只能證明其實際涵蓋的邏輯；若 production correctness 依賴特定 runtime/backend/framework 的 superclass、binding、registration、loader、proxy、lifecycle、serialization、database engine、browser/device API 或其他 runtime contract，mock/static PASS 不得冒充該 runtime contract 已驗證。
+
+Condition-triggered 原則：
+
+- 只有 correctness 確實依賴特定 runtime/backend contract 時，才需要讓對應 authority 參與 validation；純函式或與 runtime 無關的邏輯不必為形式增加 runtime test。
+- 優先使用最低風險、最低成本且足以證明 contract 的真實 runtime/backend，例如 local emulator/runtime、ephemeral database、local service process、test container 或實際 framework test host。
+- 可用 dummy credential、temporary state、loopback/local endpoint 或 sandbox resource 完成時，不要為了驗證 runtime contract 直接升到 production secret、production resource 或 remote mutation。
+- 若 local real-runtime smoke 已能證明本次 contract，就不必無條件升到 remote/production；反之 local runtime PASS 也不得冒充 production/network/hardware PASS。
+
+推薦依需求逐級增加 authority participation：
+
+`Static / Mock → Targeted real-runtime/backend smoke → Integration / Remote service → Production / Hardware`
+
+是否進入下一層仍服從最低充分 Validation scope。
+
 ## Verifier Contract 生命週期（Verifier Contract Lifecycle）
 
 Verifier / static checker / test harness 本身也是會隨 production architecture 演進的 contract；驗證失敗不自動代表 production source 有 bug。
@@ -147,6 +164,15 @@ Validation / evidence record 可依需要標記：
 - implementation path 被重構到可能影響原驗證涵蓋範圍
 
 原 evidence 若只證明舊 contract 或舊 implementation，不得被新狀態繼承；應標成 `SUPERSEDED` / `HISTORICAL`，並把新狀態保持 `REVALIDATION_REQUIRED` 或對應 Pending。
+
+反之，若既有 evidence 仍為 `CURRENT`，而與該 evidence 相關的 source、contract、runtime/toolchain、target、environment assumption 與 validation backend 都沒有 material change，後續 Stage 應**重用既有 evidence**，不要機械式從 Validation ladder 最底層全部重跑。
+
+Evidence reuse 原則：
+
+- 先判斷本次 change / Stage 實際影響哪些 evidence scope；只把受影響部分標為 `REVALIDATION_REQUIRED`。
+- 已驗證且未受影響的 baseline 可以直接沿用，後續 validation 聚焦剩餘未知或更高 authority 層級，例如 software baseline 已 CURRENT 時直接進 hardware/network evidence。
+- 不得因「進入下一 Stage」本身就把所有舊 PASS 作廢；也不得為了省成本沿用已被 material change 影響的 evidence。
+- 若無法判斷舊 evidence 是否仍適用，先縮小 change impact / dependency / contract 差異；仍無法確定時標記 `REVALIDATION_REQUIRED`，不要猜測。
 
 文件可保留歷史測試事實，但 current summary 必須明確指出最新 superseding rule，避免舊 PASS 被誤讀成目前 PASS。
 
