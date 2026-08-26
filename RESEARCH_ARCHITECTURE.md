@@ -77,7 +77,29 @@ GPL / license 不明預設 `REFERENCE ONLY`，除非專案另有正式 license d
 
 `Platform Class → Target Family → Concrete Target`
 
-選「最低充分 target + 合理成長空間」，不要預設最強 MCU/CPU。
+Target selection 也服從「最低充分」原則，但不能把「合理成長空間」解讀成預設挑資源最多的 target。應先找**最低合理候選**，再用 evidence 排除不足者；較高資源 target 可以降低 bring-up friction，但不能因開發方便、保守 margin 或未證實的未來需求，自動升格為 minimum product requirement。
+
+推薦流程：
+
+`Product requirements → Required capabilities → Lowest plausible target candidate → Upstream/toolchain evidence → Compile/static resource evidence → Runtime/resource evidence（需要時）→ Evidence-based reject/accept → Freeze minimum supported target`
+
+### Development / Bring-up Target 與 Minimum Product Target 分離
+
+- **Provisional Development / Bring-up Target**：可以暫時使用較多 RAM/Flash/core/PSRAM 或較成熟的 development board，目的是先降低工具鏈、framework 或初期 integration friction。必須明確標成 provisional；它不自動成為 architecture requirement、minimum supported target 或 product BOM requirement。
+- **Minimum Supported / Product Target**：只有在 required capability 與適當 resource evidence 足以證明後才 freeze。若目前只有 compile evidence，只能宣告 compile/build support；不得把它翻譯成 runtime/hardware sufficiency。
+- **Higher-capability Target**：可保留為 compatibility、scale-up 或 future option；「也能跑」不代表它是最低需求。
+
+舉證原則：
+
+- 不得只因較低資源 target「可能太緊」、「單核比較危險」、「沒有 PSRAM 比較不保險」就排除；應有官方 SDK/capability limitation、compile/resource evidence、runtime evidence 或其他可審查理由。
+- 同樣地，不得只因較高資源 target「比較保險」、「比較好開發」、「之後可能會用到」就 freeze 成 minimum requirement；額外 core、RAM、Flash、PSRAM、radio/peripheral capability 都應有目前需求或 evidence 支持。
+- 若較低候選明確缺少 REQUIRED hardware capability（例如必要 radio、peripheral、security primitive 或官方 SDK 支援），可依高權威 upstream evidence 直接排除，不需要為形式先 build/hardware test。
+- 若 evidence 尚不足以判定最低 target，保持 `CANDIDATE` / `PROVISIONAL` 或等價 Pending 狀態；不要用 resource-rich target 把未知風險永久藏起來。
+- OPTIONAL / FUTURE / OUT_OF_SCOPE capability 不得無條件墊高 v1 minimum target；只有已授權且合理可預期的 growth requirement 才能納入 headroom。
+
+Resource headroom 是 legitimate design budget，但也有成本：BOM、功耗、尺寸、供應、portability，以及讓 implementation 無意識依賴多餘資源的風險。選擇時比較的是**已證明足夠候選中的最低 total engineering / risk / cost**，不是單看硬體價格，也不是單看開發便利性。
+
+Embedded-specific 的 board/module/resource evidence 與 bring-up discipline 另見 `EMBEDDED_PROJECTS.md`。
 
 ## Capability 模型（Capability model）
 
