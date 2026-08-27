@@ -51,6 +51,28 @@ Authentication / authorization failure 不應以盲目重試、擴大 network pe
 
 Compile/source-fix loop 若 repository governance、正式 validation contract 或特定 Stage 有自己的 bounded 上限，服從該正式規則；不要用 non-compile cap 覆蓋它。
 
+## 完成證據關卡（Completion Evidence Guard）
+
+Agent 的自然語言 completion report、commit SHA 敘述、`TASKS.md` 狀態敘述或「已完成」不能單獨作為 repository completion authority。只要目前 Stage 宣稱發生 repository mutation、commit/push、queue bookkeeping 或 validation-state 變更，就應以 canonical repository evidence 做最低充分交叉確認。
+
+這在長 session、連續多 Stage、context compaction、agent handoff、重新 attach repository，或任何可能造成 stale context / stale task state 的情況尤其重要，但不是只有這些情況才適用。
+
+最低充分 completion evidence 依 Stage 性質選用：
+
+- pre-Stage baseline HEAD / branch / queue state（若需要比較）；
+- post-Stage `HEAD` / `origin/<branch>` 與最新 relevant commit；
+- scoped changed files / diff / stat，證明宣稱修改的 target 確實有本 Stage 的新 state；
+- required validation evidence；
+- `TASKS.md` queue state（若該 Stage 使用 TASKS）。
+
+一般原則：
+
+- 若 Stage 宣稱產生新的 repository mutation 或 commit，evidence 必須證明相對於 Stage baseline 確實出現符合 scope 的新 state；不得拿上一 Stage 的 SHA、diff、validation 或 queue state 重複當成本 Stage完成證據。
+- 不使用「SHA 一定要變」作為 universal rule：read-only、validation-only、合法 no-op、already-satisfied 或未授權 commit 的 Stage 可以沒有新 commit；但其 completion claim 必須與該 Stage 預期 evidence 一致。
+- 若 completion report 與 Git/current queue/validation authority 不一致，立即 STOP，標記該 completion report 不可靠；先以 canonical evidence 重建 current state，不得沿用錯誤 summary 直接進下一 Stage。
+- Evidence mismatch 時不要優先要求同一 stale context「回想剛才做了什麼」；先做便宜、機械式的 Git / queue / scoped-diff 檢查，再決定是否需要新的 bounded session/handoff。
+- Completion Evidence Guard 只確認「目前 repository / validation state 是否真的符合宣稱」，不取代 task-specific correctness review、runtime、hardware 或 production validation。
+
 ## 驗證階梯（Validation ladder）
 
 由小到大：
