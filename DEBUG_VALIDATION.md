@@ -51,6 +51,66 @@ Authentication / authorization failure 不應以盲目重試、擴大 network pe
 
 Compile/source-fix loop 若 repository governance、正式 validation contract 或特定 Stage 有自己的 bounded 上限，服從該正式規則；不要用 non-compile cap 覆蓋它。
 
+## 長時間 Operation 監督／無進展等待關卡（Long-running Operation Supervision / No-progress Wait Guard）
+
+對 long-running build、test、download、deploy、code generation、package/signing 或其他可能長時間佔用 tool/process 的 operation，等待與 polling 也必須是 **bounded operation**；不得把「process 還沒結束」當成無限次要求使用者繼續等待的理由。
+
+一般原則：
+
+- 第一次等待可依工具與工作負載的合理特性給予 bounded interval；若需要再次延長，先取得最低成本的 progress evidence，例如 process/job 是否仍 alive、目前 phase/stage、最新 bounded log/tail、artifact/file activity、CI step state 或工具原生 progress indicator。
+- 若 execution UI 每次延長 wait/poll 都需要使用者 approval，該 approval 只覆蓋**該次 bounded wait**；一次同意「繼續等」不等於授權 indefinite polling loop。
+- 有可觀察 progress、已知某 phase 合理耗時，或目前 Stage 必須等待單一 operation 完成時，可以繼續 bounded wait；不要只因暫時 silent 就武斷 kill 正常工作。
+- 若連續觀察沒有新增 progress evidence，先做 bounded status/tail/process inspection，判斷是 slow、silent-but-healthy、stalled、waiting on dependency、permission gate 或其他狀態；不得只重複「再等一下」而沒有新的判斷資訊。
+- Process / CI step 已 exit non-zero、cancelled 或明確 fatal 時，立即停止等待；保存相關 log/evidence，轉入 failure classification / phase attribution，不得繼續 poll 已結束的 operation。
+- 若目前工具無法提供足夠 observability，而繼續等待會持續消耗昂貴 usage window、鎖住 Stage 或需要反覆人工 approval，應 STOP 並回報 `INSUFFICIENT OBSERVABILITY` / operational state，而不是無限延長。
+- Long-running operation 的 stdout/stderr 控制仍遵守 `CODEX_PROMPT_RULES.md` 的 Long-running tool output discipline：優先保存完整 log 並只讀必要 bounded evidence，不把巨量 progress output 全部灌入 active Context。
+
+核心目標是：**等待必須帶來新的完成機會或新的 evidence；沒有進展的等待本身不是 retry 策略。**
+
+## Build／CI Phase Attribution（Build / CI Phase Attribution）
+
+Multi-stage build / CI pipeline 的整體 `FAIL`、non-zero exit 或紅燈，不得自動等同於 `Compile FAIL` 或 production source failure。應先找出**第一個真正 fatal phase / command**，再依該 phase 的 ownership 與 evidence 分類。
+
+常見 phase 可依實際 pipeline 區分：
+
+`configure / dependency resolution → code generation → compile → link → firmware/image generation → size/partition check → post-build → packaging/signing → artifact publication → deploy/runtime smoke`
+
+一般原則：
+
+- 先找 first fatal evidence；warning、deprecation notice 或 earlier non-fatal diagnostic 若沒有因果 evidence，不得因較醒目就被當成 root cause。
+- 較晚 phase 失敗不得自動推翻較早 phase 已成立的 evidence。例如 packaging FAIL 不等於 compile/link FAIL；artifact publication FAIL 也不等於 binary generation FAIL。
+- 反之，較早 phase PASS 也不得冒充後段 PASS；每個 evidence 只對其實際涵蓋的 phase 有效。
+- 修正某個 late-stage failure 後，優先重跑足以驗證受影響 phase 與必要 dependency chain 的最低充分 scope；除非修正改變了 source、toolchain、configuration、generated input 或其他會使 earlier evidence 失效的 material contract，否則不要機械式把整條 validation ladder 全部重跑。
+- 若同一 command 同時負責多個 phase，應以 log / artifact / command semantics 判斷哪些子階段已完成、哪一步真正 fatal；不要只依 command 名稱粗略分類。
+
+核心判斷：**Overall pipeline FAIL ≠ every phase FAIL；Late-stage failure ≠ earlier valid evidence invalidated。**
+
+## 決定性 Fail-Fast Preflight（Deterministic Fail-Fast Preflight）
+
+若昂貴或長時間 operation 的後段依賴某些**可在事前低成本、決定性驗證**的 input / metadata / prerequisite，優先在 expensive work 前做最小 preflight，避免跑到最後才因已知可檢查的空值、缺件或不合法設定失敗。
+
+適用例例如：
+
+- required version / build metadata；
+- vendor/product/package identifier；
+- required config key / manifest field；
+- 必要 tool/runtime version；
+- expected file/path/input artifact 是否存在且格式可判定；
+- signing/packaging 所需 material 是否**存在且可用**（不得輸出 secret value）；
+- partition/package/image metadata 中可在 build 前確定的 invariant。
+
+Condition-triggered 原則：
+
+- 只檢查真正會讓目前 expensive operation 在後段決定性失敗、而且可在事前可靠判斷的項目；不要為了形式建立大型 universal preflight framework。
+- 已實際發生過 costly late failure、同類 job 頻繁執行、或 failure cost 明顯高時，優先把該 deterministic prerequisite 收斂成 repository-owned guard/verifier/CI pre-step；一次性低成本流程則可保持簡單 inline check。
+- 若某 input 本來就必須由 build/runtime 中途產生，或事前值不可可靠知道，不得用猜測式 preflight 假裝已驗證。
+- Preflight PASS 只證明 prerequisite 可進入 expensive operation；不代表 compile、package、sign、deploy 或 runtime 一定成功。
+- Preflight 本身應比它避免的失敗便宜且穩定；若檢查成本接近完整 build，改用 targeted phase validation 或其他更有效 evidence。
+
+推薦思路：
+
+`cheap deterministic prerequisites → expensive operation → phase-attributed result → targeted retry/revalidation`
+
 ## 完成證據關卡（Completion Evidence Guard）
 
 Agent 的自然語言 completion report、commit SHA 敘述、`TASKS.md` 狀態敘述或「已完成」不能單獨作為 repository completion authority。只要目前 Stage 宣稱發生 repository mutation、commit/push、queue bookkeeping 或 validation-state 變更，就應以 canonical repository evidence 做最低充分交叉確認。
