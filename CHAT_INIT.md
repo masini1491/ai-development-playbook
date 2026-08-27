@@ -40,6 +40,14 @@
 
 不得只寫「門禁」「Yale」「後端」等可能和其他 repository 混淆的模糊名稱。
 
+## 跨聊天室回報時間戳（Reporting timestamp）
+
+ChatGPT 在本工程聊天室中的正式專案分析、review、GitHub 讀取結果、Prompt 規劃與 completion/STOP 回報，最後一行應附：
+
+`回報時間：YYYY-MM-DD HH:mm (Asia/Taipei)`
+
+這個時間戳只用於跨聊天室 freshness / ordering，不取代 repository HEAD、commit SHA、diff、validation evidence 或 `TASKS.md` state。不要只用「剛剛」、「今天」、「稍早」等相對時間。Codex 的對應規則見 `CODEX_PROMPT_RULES.md`。
+
 ## Repository 身分確認關卡（Repository Identity Gate）
 
 任何 Codex 執行在讀取、修改、build、test 或 Git mutation 前，先確認 working repository 與 Prompt 的 `owner/repo` 完全一致。
