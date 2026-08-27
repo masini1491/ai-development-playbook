@@ -36,6 +36,8 @@ Diagnostic command 本身也必須 fail closed：核心 toolchain guard 失敗�
 
 不要為了完整性檢查引入與 task 無關的大型 dependency scan；只驗證目前正式 contract 所需的最小 runtime chain。
 
+若 build/test/deploy pipeline 屬 long-running、expensive 或 multi-stage，而且後段存在可事前決定性驗證的 prerequisite、或過去曾發生 costly late failure，依 `DEBUG_VALIDATION.md` 的 **Long-running Operation Supervision / No-progress Wait Guard**、**Build / CI Phase Attribution** 與 **Deterministic Fail-Fast Preflight** 處理；本檔只保存 toolchain/runtime contract，不重複維護 debug/CI flow policy。
+
 ## Windows／PowerShell 7 基準（baseline）
 
 若互動式本機開發環境以 Windows 為主，而且 repository 使用自有 `.ps1`：
