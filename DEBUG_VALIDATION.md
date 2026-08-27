@@ -37,6 +37,15 @@
 
 `AUTHORIZATION` 表示 authentication 已成立或 service 可辨識身分，但該 identity / credential 對目前已授權 operation 缺少必要 service-side 權限。Credential 技術上具有較大權限時，也不得因此擴張 Task / Stage authorization。
 
+`SERVICE` 可進一步區分 provider-side operational condition，例如：
+
+- `RATE_LIMIT`
+- `QUOTA_EXHAUSTED`
+- `SERVICE_UNAVAILABLE`
+- `PROVIDER_SIDE_ERROR`
+
+Rate limit / quota exhausted 本身**不是** authentication failure，也不代表 credential 無效；先保存 reset/quota/evidence，依 `REPOSITORY_EXECUTION.md` 的最低充分 Access Capability 判斷是否可使用官方 public anonymous read-only fallback、等待 reset，或需要 authenticated access。不得以 quota exhausted 為理由盲目 retry、輪替帳號/token/installation、切 proxy/mirror/第三方來源，或擴大 credential capability。
+
 只有 `SOURCE` evidence 可直接成為繼續修改 production source 的理由。
 
 TOOLCHAIN / ENVIRONMENT / INFRASTRUCTURE / SERVICE / AUTHENTICATION / AUTHORIZATION / HARDWARE_REQUIRED 不得合理化 production source patch，也不是提高模型/Reasoning/Context/Multi-Agent 的理由。
