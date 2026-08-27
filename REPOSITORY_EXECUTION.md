@@ -205,6 +205,8 @@ Canonical evidence 解決的是「如何重現 repository 事實」，不取代 
 
 Task 成功驗證後刪除/更新該 unfinished item；完全清空時刪除 `TASKS.md`。
 
+在宣告 Task/Stage 完成、移除對應 queue entry 或進入下一 Stage 前，只要本 Stage 宣稱發生 repository mutation、commit/push、queue bookkeeping 或 validation-state 變更，必須依 `DEBUG_VALIDATION.md` 的 **Completion Evidence Guard**，以最低充分 canonical repository evidence 交叉確認完成狀態。若 agent completion report 與 current Git / scoped diff / validation / `TASKS.md` state 不一致，立即 STOP；不得以自然語言 summary 覆蓋 repository evidence，也不得沿用該 completion report 繼續下一 Stage。
+
 ## ChatGPT／Codex Repository 寫入邊界（ChatGPT / Codex Repository Write Boundary）
 
 對**一般目標 project repository**，預設固定分工：
