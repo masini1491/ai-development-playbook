@@ -46,6 +46,20 @@
 
 如果使用者採用純 local Git、GitLab 或其他協作平台，可以保留相同 governance 概念並映射到對應平台；本 repository 的預設說明與範例以 GitHub-backed workflow 為主。
 
+## Cross-agent Playbook alignment（跨 Agent 規則對齊）
+
+ChatGPT、Codex 或其他 coding agent 在 review 對方的 Prompt、handoff、STOP report、validation summary、completion summary 或其他正式工程回報時，若發現其**內容或回報形式與目前最新版 Playbook 不一致**，不要默默沿用，也不要只把文字重新排版後就假設原回報已符合治理規則。
+
+先指出具體 mismatch，再依影響程度處理：
+
+- 若只是低風險 presentation / formatting mismatch，而且不影響 repository authority、completion claim、validation correctness、Stage authorization、mutation boundary、security/credential handling、runtime/hardware evidence 或下一 Stage 是否可安全開始，可以繼續分析其實質 evidence；同時應建議對方重新讀取與該 mismatch 直接相關的**最低必要 Playbook 章節**。
+- 若 mismatch 會影響上述 authority / completion / validation / scope / security 邊界，不能只修格式後繼續。先依 canonical repository / validation evidence 重建可信狀態，必要時 STOP，再決定是否能繼續目前 Stage。
+- 不要求對方為單一 mismatch 完整重掃整份 Playbook。建議應具體指出：哪個回報／行為不符合、應重讀哪個最低必要章節、重讀後應重新檢查哪個 claim / Stage / evidence。
+- 典型 routing：repository / Git / TASKS / permission / completion authority → `REPOSITORY_EXECUTION.md`；debug / root cause / retry / validation / CI / completion evidence → `DEBUG_VALIDATION.md`；model / reasoning / context / agent / reporting / cost discipline → `CODEX_PROMPT_RULES.md`；architecture / target / research / authority boundary → `RESEARCH_ARCHITECTURE.md`；embedded / hardware / resource / target evidence → `EMBEDDED_PROJECTS.md`；toolchain / environment / long-running build → `TOOLCHAIN.md`。
+- Cross-agent review 的目的不是互相挑格式，而是避免 stale governance、錯誤 completion claim、scope drift、evidence inflation 或過期成本策略在不同 ChatGPT / Codex session 與 handoff 間繼續傳播。
+
+核心原則：**發現對方不符合 Playbook 時，指出具體 mismatch 並只要求最低必要重讀；若 mismatch 影響 authority、scope、completion 或 validation，先重新驗證 evidence，再繼續工作。**
+
 ## 跨聊天室回報時間戳（Cross-chat reporting timestamp）
 
 為了在多個 project chat、Codex session 與跨聊天室貼回結果時快速判斷哪一份較新，ChatGPT 與 Codex 的**正式工程結果回報**應在最後一行附上絕對時間戳。
@@ -187,6 +201,7 @@ AI-generated code / analysis 不因生成完成、command 成功或 build exit 0
 - Hardware evidence 與 target/board portability discipline
 - README development transparency / project-scale reporting
 - Completion Evidence Guard 與跨聊天室 reporting timestamp
+- Cross-agent Playbook alignment / 最低必要重讀
 
 ## 分享、採用與授權
 
