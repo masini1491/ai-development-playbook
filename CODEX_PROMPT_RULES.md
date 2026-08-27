@@ -29,6 +29,22 @@
 
 Prompt 不需要為每個 Stage 重複整段語言規則；若 repository governance 已引用本 playbook，通常只需在必要時簡短寫「請使用繁體中文回報」。
 
+## 回報時間戳（Reporting timestamp）
+
+為了讓多個 project chat、Codex session、handoff 與跨聊天室貼回的結果可以直接比較新舊，Codex 的 **STOP、validation summary、completion summary 與最終回報** 最後一行都應附上絕對時間戳。
+
+預設格式：
+
+`回報時間：YYYY-MM-DD HH:mm (Asia/Taipei)`
+
+一般原則：
+
+- 使用絕對日期時間，不使用「剛剛」、「今天早上」、「稍早」等相對時間作唯一 freshness marker。
+- 預設使用 `Asia/Taipei`；若使用者當次明確指定其他時區，改用該時區並清楚標示。
+- 時間戳代表**這份回報產生／完成的時間**，不是 commit time、device time、server event time 或 validation evidence 發生時間；這些若重要應各自保留原始時間來源。
+- 不因加入時間戳而省略 commit SHA、branch、validation evidence、TASKS state 或其他 completion evidence；時間戳只協助判斷回報新舊，不是 repository authority。
+- 若 execution environment 無法取得可信的目前時間，不得猜測；明確標記 `回報時間：UNAVAILABLE`，並保留其他 canonical completion evidence。
+
 ## Prompt 執行關卡（Prompt execution gates）
 
 對一般 project repository，Codex Prompt 應依任務需要引用 `REPOSITORY_EXECUTION.md` 的共通 gates，而不是每份 Prompt 重複全文：
