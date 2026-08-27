@@ -259,3 +259,19 @@ Stage Prompt 只保存：
 5. 不要把「讓模型先接收巨量 log，再要求它摘要」當成主要節流方式；最有效的 Context 控制是在輸出進入 active Context 前就抑制不必要內容。
 
 但 output suppression 不得破壞 validation contract：required diagnostics、audit evidence、failure reproduction、security/safety evidence 或 repository formal gate 所需完整 log 應保留在適當 artifact/file 中，並在需要時可被 targeted read。若工具的 quiet mode 會隱藏判斷 PASS/FAIL 所需 evidence，就不要使用該模式或另保留完整 log。
+
+### 異常／失控 Generation STOP Guard（Runaway / Corrupted Generation STOP Guard）
+
+若 agent / model 的輸出本身出現**明顯且持續的 corrupted / runaway generation**，例如大量無意義重複 token、重複 punctuation、失去語意的亂碼、反覆輸出相同段落，或在沒有新增 evidence 的情況下持續重複同一 conclusion / action，應立即 STOP；不得把「繼續讓它輸出看看會不會自行恢復」視為 retry 或 recovery 策略。
+
+一般原則：
+
+- 只針對明顯且持續的異常 generation；單次正常重述、短暫格式重複或合理 recap 不應誤判為 runaway。
+- 一旦異常開始，優先停止**模型 generation**，避免繼續累積無價值 Output Tokens / Credits、Context pollution 與錯誤 downstream action。
+- STOP 後先保存 working tree / current diff、最後可信的 Git / validation / tool evidence，以及仍在執行的 external process / job 狀態；不要因停止模型輸出而自動假設外部 build/test/process 也已停止。
+- 異常開始後新產生的自然語言 conclusion、completion claim、commit/TASKS 敘述或未經 canonical evidence 驗證的 action result，預設視為**不可信**；依 `DEBUG_VALIDATION.md` 的 Completion Evidence Guard 重建 current state。
+- 若 external process 仍正常執行，依 `DEBUG_VALIDATION.md` 的 Long-running Operation Supervision 獨立判斷是否 bounded wait / inspect / STOP；不得因 model generation 異常就武斷 kill 正常 process，也不得用 process 尚在跑作為繼續 corrupted generation 的理由。
+- Recovery 優先使用新的 bounded session / handoff，只帶入最後可信 evidence、current Git state、必要 diff / log 與未完成 scope；不要把大量 corrupted output 原封不動重新餵進新 Context。
+- 若異常發生在 context compaction、長 thread、handoff 或其他 state transition 後，可以記錄相關時間點，但沒有直接 evidence 時不得宣稱 compaction 就是 root cause；使用 `INSUFFICIENT OBSERVABILITY`。
+
+這條同時是成本與正確性 guard：**省的是已失去資訊價值的輸出與錯誤後續工作，不是必要推理。**
