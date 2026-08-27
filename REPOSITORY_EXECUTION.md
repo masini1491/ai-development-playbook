@@ -112,6 +112,32 @@ Commit/push 必須服從使用者當次 launch 或 repository policy 的明確�
 - 若 service/tool 對 side effect 定義不清楚，先查 authority/documentation 或以最小 read-only evidence確認；無法確認時不得把它假定成安全 read-only operation。
 - 若需要判斷 external-service 文件應如何依 provider、credential、configuration、resource lifecycle、deployment/mutation 或 validation authority 拆分，以 `RESEARCH_ARCHITECTURE.md` 的 **External-service authority separation** 為主要規則；本節不重複維護文件架構 policy。
 
+### Public read-only anonymous-first（最低充分 Access Capability）
+
+對 GitHub 或其他 service 的**已確認 public resource**，若目前 operation 是純 read-only，而且官方 endpoint 的 anonymous / unauthenticated access 已足以取得本 Stage 所需 evidence，優先使用較低的 access capability，避免不必要消耗 authenticated API quota 或暴露較大 credential capability。
+
+適用條件必須同時成立：
+
+- resource visibility 已確認為 public；若 private 或 visibility 不確定，不得先假設 anonymous 可替代；
+- operation 依實際 semantics 為 read-only，不造成 remote state / session / delivery / resource lifecycle 等 side effect；
+- 使用 provider 官方 endpoint / protocol，不為省 quota 自行切 mirror、proxy、scraper、第三方 gateway 或其他非 authority source；
+- 不需要 private、installation-only、account-specific、organization-specific 或 authenticated-only metadata；
+- anonymous access 不會降低目前 Stage 必要的 evidence quality、provenance、完整性或可重現性。
+
+推薦 capability escalation：
+
+`public anonymous read-only → authenticated read-only（必要時）→ authenticated mutation（只有明確授權時）`
+
+一般原則：
+
+- `anonymous-first` 是**最低充分 Access Capability**，不是 `anonymous-only`；anonymous rate limit、quota 或 capability 不足時，可在目前 Task / Stage 確實需要的範圍內升級 authenticated read-only。
+- authenticated read-only access 因 `RATE_LIMIT` / `QUOTA_EXHAUSTED` 暫時不可用時，若上述條件仍成立，改用同一 provider 官方 anonymous read-only endpoint可視為 capability downgrade，而不是 scope expansion；治理規則本身不要求額外 Task authorization。
+- 但 execution environment 若對 anonymous request 本身仍要求 network / sandbox approval，照常走 Permission-Gated Operation；本節不繞過 runtime permission gate。
+- 不得因 quota exhausted 自行輪替另一帳號、另一 token、另一 installation、另一 credential、proxy/mirror 或第三方服務；這些屬新的 identity / authority boundary，必須依目前 Task scope與相關授權另行判斷。
+- public anonymous fallback 不得被用來碰觸 private repository、private issue/attachment、installation-only resource，或把已知需要 authentication 的 evidence 改成較弱的猜測。
+
+核心原則：**Capability downgrade ≠ scope expansion；但 identity/source boundary change ≠ ordinary retry。**
+
 ### External service staged operation
 
 當 external service 同時存在 read-only API、live runtime evidence 與 mutation/admin capability 時，優先把 operation 分成明確 Stage，而不是一次取得較大 scope：
