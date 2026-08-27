@@ -46,6 +46,23 @@
 
 如果使用者採用純 local Git、GitLab 或其他協作平台，可以保留相同 governance 概念並映射到對應平台；本 repository 的預設說明與範例以 GitHub-backed workflow 為主。
 
+## 跨聊天室回報時間戳（Cross-chat reporting timestamp）
+
+為了在多個 project chat、Codex session 與跨聊天室貼回結果時快速判斷哪一份較新，ChatGPT 與 Codex 的**正式工程結果回報**應在最後一行附上絕對時間戳。
+
+預設格式：
+
+`回報時間：YYYY-MM-DD HH:mm (Asia/Taipei)`
+
+原則：
+
+- 使用絕對日期時間；不要只寫「剛剛」、「今天」、「稍早」。
+- 預設時區為 `Asia/Taipei`；若使用者當次明確指定其他時區，改用指定時區並標示。
+- 時間戳表示**該份回報產生／完成的時間**，只用於 freshness / ordering；不是 commit time、Git authority、validation event time 或 device/server time。
+- 時間戳不得取代 repository identity、branch、HEAD/commit、diff、validation evidence、TASKS state 或其他 canonical completion evidence。
+- ChatGPT 的專案分析、review、Prompt、GitHub 讀取結果與 playbook 維護回報應遵守此規則；一般非工程閒聊不要求強制附加。
+- Codex 的詳細回報規則見 `CODEX_PROMPT_RULES.md`。
+
 ## Project `AGENTS.md` → Playbook routing
 
 若多個 repository 都採用本 playbook 作為共通 baseline，建議在各 project root `AGENTS.md` 保存一份**精簡 routing**，讓 Codex / coding agent 知道共通方法論的 authority 與最低必要讀取路徑；不要在每個專案複製整份 playbook。
@@ -169,6 +186,7 @@ AI-generated code / analysis 不因生成完成、command 成功或 build exit 0
 - Research-first / Anti-Reinvent-Wheel Gate
 - Hardware evidence 與 target/board portability discipline
 - README development transparency / project-scale reporting
+- Completion Evidence Guard 與跨聊天室 reporting timestamp
 
 ## 分享、採用與授權
 
