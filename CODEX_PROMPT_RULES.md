@@ -21,6 +21,8 @@
 
 模型與推理強度由使用者在 Codex UI 手動選擇。Codex 不得自行 Luna→Terra→Sol，也不得自行 Low→Medium→High。
 
+新開、Branch / Fork、Resume 或跨 session handoff 後，若 Model / Reasoning 會影響成本或能力，真正執行 repository 工作前應重新確認實際 UI selection 與目前 Prompt 推薦一致；不要假設 parent / previous session 的 model 或 reasoning 設定一定被繼承。
+
 ## 回報語言
 
 除非使用者當次另有指定，Codex 的進度、STOP、validation、error explanation、summary 與最終回報一律使用**繁體中文**。
@@ -157,6 +159,20 @@ Condition-triggered 原則：
 - 優先維持 `最低充分 Evidence → 最低充分 Model/Reasoning/Context → Targeted Validation`；不要為了保留短期額度而降低已證明必要的 reasoning 或跳過 required validation。
 - 可將可安全分離的 workstream 分階段執行，例如先用較便宜模型取得 bounded evidence，再啟動較昂貴 implementation/architecture Stage；但不得只為避開 usage window 人為切碎具有共同 state / root cause / transaction boundary 的工作。
 - 若當前產品沒有短期 window 或類似限制，本節不增加額外 execution ceremony。
+
+### Product / Billing Authority Separation（產品／計費 Authority 分離）
+
+涉及 pricing、credits、usage limits、model availability、promotional pricing 或其他 volatile product fact 時，不得只比較數字新舊；先確認每份 authority 的實際適用 scope：
+
+`產品／功能 → 方案／workspace → metering / billing mode → 適用期間`
+
+一般原則：
+
+- 多份官方文件出現不同費率或限制時，優先使用**明確針對目前產品／功能、方案與 metering mode 的最新專用 authority**；不得把其他 ChatGPT feature、workspace、API、legacy metering、不同 billing mode 或不同方案的數字直接交叉套用。
+- 專用產品 Rate Card 明確被其他官方頁面引用為該功能 authority 時，以專用 Rate Card 為該功能的主要費率來源；不要因另一份較廣泛 Rate Card 顯示較低或較新的數字就自行覆蓋。
+- Included plan usage、purchased credits、usage-based / pay-as-you-go、legacy metering、API billing 等必須分開判斷；名稱相同的 model 不代表各 billing surface 使用相同 rate。
+- 官方文件無法確定目前帳號／workspace 實際適用版本時，標記為不確定；若 product UI / Usage panel 能提供 account-specific evidence，優先用它確認實際 applicability。不得自行平均、推導、選較便宜的數字或把 promotion 期限延伸成穩定 baseline。
+- 本 Playbook只保存 authority-selection 方法，不保存容易變動的固定 rate table；當次成本判斷仍以最新官方 evidence 為準。
 
 核心目標是**降低同一 resource window 裡的浪費，而不是降低必要品質**。
 
