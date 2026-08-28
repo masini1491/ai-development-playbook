@@ -21,7 +21,12 @@
 
 模型與推理強度由使用者在 Codex UI 手動選擇。Codex 不得自行 Luna→Terra→Sol，也不得自行 Low→Medium→High。
 
-新開、Branch / Fork、Resume 或跨 session handoff 後，若 Model / Reasoning 會影響成本或能力，真正執行 repository 工作前應重新確認實際 UI selection 與目前 Prompt 推薦一致；不要假設 parent / previous session 的 model 或 reasoning 設定一定被繼承。
+新開、Branch / Fork、Resume 或跨 session handoff 後，若 Model / Reasoning 會影響成本或能力：
+
+- **只有 execution surface 明確暴露可驗證的 UI / session selection metadata 時**，才在真正執行 repository 工作前核對其是否與目前 Prompt 推薦一致；若 authority 明確顯示不一致，STOP 並請使用者確認／切換。
+- 若 agent / runtime **無法觀察 Codex UI selection**，不得把「看不到 UI 設定」本身當成 STOP condition，也不得用模型自我描述、backend/runtime model identity 或其他未建立對應關係的名稱，推定使用者在 UI 選錯 Model / Reasoning。
+- 在 UI selection 不可觀察時，以使用者本次 launch 與 Prompt 指定的推薦設定作為操作前提繼續；必要時可提醒使用者自行確認，但不得因此阻塞原本已授權的 Stage。
+- 不要假設 parent / previous session 的 model 或 reasoning 設定一定被繼承；這條是**使用者／UI 操作注意事項**，不是要求 agent 具備不存在的 UI introspection capability。
 
 ## 回報語言
 
