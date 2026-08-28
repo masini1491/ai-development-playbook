@@ -230,6 +230,29 @@ Codex 無權自行換模型。達到 escalation condition 時：
 
 不要為了少貼幾次 Prompt 把不同決策階段、implementation、hardware validation 強行打包。
 
+## Coverage-sensitive work decomposition（覆蓋敏感工作拆分）
+
+有些工作**單一修改的 reasoning 難度不高，但要求完整覆蓋很多分散 surface**；例如 UI/UX consistency、設定頁 labels/actions、文件一致性、命名／錯誤訊息清理、migration cleanup、重複 API surface 或 verifier coverage。這類工作不能只用「每一項都很簡單」判斷適合一次塞進大型 Prompt。
+
+核心區分：**Model difficulty ≠ Coverage difficulty。**
+
+當漏掉任一 surface 會造成 material inconsistency，而每個 surface 又能安全獨立驗證時，優先縮小 Stage / checkpoint，而不是先升級模型：
+
+`Inventory / bounded evidence → Checkpoint A → Focused implementation → Targeted validation → STOP → Independent coverage reconciliation → Checkpoint B → … → Final closure reconciliation`
+
+一般原則：
+
+- 若修改 surface 尚未完整掌握，可先做一次 bounded read-only inventory；不要讓 implementation session 同時負責大範圍 discovery、修改與 completeness judgment。
+- 每個 checkpoint 只處理一個 coherent surface / invariant / operator flow，保留明確 allowed scope、forbidden scope、targeted validation 與 STOP condition。
+- Checkpoint 完成後不得因 queue 中還有下一項就自動繼續；先完成 completion evidence，再由 ChatGPT、human 或其他獨立 review pass 依 canonical diff / verifier / current repository evidence 做 coverage reconciliation，必要時修正下一 checkpoint scope。
+- Independent review 的價值在於把 **implementation** 與 **completeness judgment** 分離；尤其在完整性無法被 deterministic verifier 全面證明時，不要只靠同一 implementation context 自我宣告「全部處理完」。
+- 每個 checkpoint 優先重用仍為 CURRENT 的既有 evidence；除非 material change 使其失效，不因拆 Stage 就機械式重跑 broad build / regression。
+- 最後保留一個 bounded closure checkpoint，用來補強 verifier、檢查跨 surface consistency、reconcile remaining gaps 與 completion evidence；closure 不是重新開啟整個 implementation scope。
+- Model / Reasoning 應按**各 checkpoint 的實際內在難度與風險**選擇。原始工作很長或 surface 很多，不代表必須從 Luna 升 Terra / Sol；若拆小後 Luna 足夠，就維持較低成本。反之，單一 checkpoint 若涉及 security、state、protocol 或其他高風險 reasoning，仍應正常升級。
+- 不要為了符合本規則過度碎片化共享同一 transaction、root cause、state transition 或必須原子完成的工作；拆分只有在能降低 coverage risk 且不破壞 correctness boundary 時才有價值。
+
+核心原則：**Coverage-sensitive work 先縮小 Stage，再考慮升級模型；省的是大 Prompt 中的漏項與返工，不是必要推理。**
+
 ## Scope 擴張不等於模型升級（Scope Expansion ≠ Model Escalation）
 
 任務中發現 out-of-scope 問題：
