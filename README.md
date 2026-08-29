@@ -1,4 +1,4 @@
-# AI 開發 Playbook（AI Development Playbook）
+# AI 協作開發實戰手冊（AI Development Playbook）
 
 一套可重用的 **ChatGPT + Codex + GitHub** 協作開發方法論，目標是用最低充分成本完成可驗證、可追溯、可安全接續的工程工作。
 
