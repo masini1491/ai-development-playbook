@@ -243,7 +243,7 @@ Human-facing UI 是 presentation / interaction layer；不得因視覺一致性�
 
 推薦流程：
 
-`Current UI / stack / resource constraints → External reference inventory → Extract design principles / semantic tokens / interaction patterns → Fit against project constraints → Freeze project-specific UI contract → Checkpointed implementation → Targeted validation / coverage reconciliation`
+`Current UI / stack / resource constraints → External reference inventory → Extract design principles / semantic tokens / interaction patterns → Fit against project constraints → Freeze project-specific UI contract → Project-owned primitives / fixtures → Checkpointed implementation → Automated audit / targeted validation / coverage reconciliation`
 
 一般原則：
 
@@ -257,9 +257,12 @@ Human-facing UI 是 presentation / interaction layer；不得因視覺一致性�
 - **Motion / visual effects 必須有 operator value。** Animation、shimmer、blur、gradient、parallax、GPU transform 或其他裝飾效果只有在能改善 state transition、attention、feedback 或 comprehension 時才採用；管理、安全、embedded 或 resource-sensitive UI 預設偏克制，並在適用時尊重 `prefers-reduced-motion`。不要為了「看起來像 reference」增加持續動畫與 runtime/payload burden。
 - **Embedded / local-first / offline UI 要把 resource 與 availability 納入設計。** 字型、icon、CSS/JS、image、runtime framework 與 remote asset 都有 flash/RAM/network/startup/failure-domain 成本；若產品需要離線或區網獨立運作，關鍵 UI asset 不應無意依賴外部 CDN/service。具體 budget 由 project evidence 決定。
 - **Reference provenance 仍適用。** 借鑑 pattern / design principle 與複製 source code 是不同層級；若實際 reuse component code、CSS、asset 或 algorithm，仍依本文件 Provenance / license 規則記錄來源、revision、license 與 reuse restriction。
+- **把 UI consistency 變成可驗證 contract，而不是只靠 implementation session 記憶。** 當專案已有多個重複 component、page、theme、platform 或 operator flow，而且 style/behavior drift 已具有實際維護成本時，優先建立最低充分的 component preview / fixture / representative state matrix，讓 primary/secondary/destructive、normal/hover/focus/disabled/error/loading、light/dark 或其他重要狀態可以被獨立檢查。Preview/fixture 是 evidence surface，不應因此變成 production runtime dependency。
+- **能 deterministic audit 的一致性就不要只靠人工目測。** 可依專案技術棧建立 lightweight static verifier / script / test，檢查例如 semantic token 使用、禁止的 hard-coded style、必要 focus/disabled/error semantics、theme/appearance contract、motion policy 或其他可機械判定 invariant。只有 visual diff 真正能降低風險時才導入 screenshot/visual-regression infrastructure；小型或 embedded UI 不要求為形式建立 Storybook、browser farm 或大型 visual test stack。
+- **Audit scope 必須對齊 authority。** Theme/color/motion/appearance audit 證明的是其明確檢查的 presentation invariant，不得因 audit PASS 就升格為 runtime behavior、persistence、security、hardware 或完整 usability PASS；同樣地，純 styling change 若未改變較高層 contract，不應無理由使既有 runtime evidence失效。
 - **Design research 與 implementation completeness 分離。** UI consistency 往往是 coverage-sensitive work；若 surface 多而分散，依 `CODEX_PROMPT_RULES.md` 的 `Coverage-sensitive work decomposition` 先做 bounded inventory，再以 coherent checkpoints 實作，每個 checkpoint STOP 後做獨立 coverage reconciliation，不讓同一個長 Prompt 同時負責 reference research、全域修改與 completeness self-judgment。
 
-核心原則：**借成熟 design system 的規律，不借它不必要的技術棧；先建立符合目前產品限制的 project-owned UI contract，再實作。**
+核心原則：**借成熟 design system 的規律，不借它不必要的技術棧；把重要 UI consistency 收斂成 project-owned contract 與最低充分 audit，再實作。**
 
 ## 獨立 Domain Repository／組合（Independent domain repos / composition）
 
