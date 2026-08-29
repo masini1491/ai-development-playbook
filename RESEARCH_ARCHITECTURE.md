@@ -220,49 +220,11 @@ Library-ready ≠ 現在就拆 library。
 - Service-specific setup 文件可以比共通 playbook 更具體，但不得削弱 repository governance 或 protocol/security authority。
 - 若專案只有單一、簡單、低風險 external service，不必為形式建立完整目錄結構；只有當 service 數量、deployment target、credential、mutation boundary 或 operator workflow 複雜度值得時才拆分。
 
-## 人機 UI 與 Machine Contract 邊界（Human-facing UI / Machine Contract Boundary）
+## UI／UX routing
 
-Human-facing UI 是 presentation / interaction layer；不得因視覺一致性、文案整理、navigation、human-facing route normalization 或 component cleanup，偷偷改變較高權威的 runtime / machine contract。
+Human-facing UI、UX task flow、design-system reference adaptation、semantic tokens、accessibility、responsive/motion policy、component preview / fixture 與 UI consistency audit 的共通方法，集中由 `UI_UX.md` 維護。
 
-一般原則：
-
-- UI 必須忠實呈現 authoritative state。畫面已更新、request 已送出、handler 已回應或按鈕已被觸發，不等於 persistence、readback、restart、remote/network verification 或其他底層 operation 已真正完成。
-- 狀態應依系統需要區分不同 authority 與時間尺度，例如 expected/configured、observed/detected、current health/connection、latest outcome、pending、unknown、history/counter。Evidence 不足時應使用 Pending / Unknown / Unavailable 等誠實狀態，不得猜成 Success / Healthy / Failed。
-- Human-facing UI、navigation、wording、layout 或 route 工作，除非目前 scope 明確授權，不得修改 machine API、wire protocol、message/topic contract、persistence schema/semantics、authentication/authorization、session/CSRF、安全 ownership、runtime lifecycle 或 safety-critical behavior。
-- 若 UI 工作揭露 machine/runtime contract 本身需要改變，停止目前 presentation-only scope；另進 architecture/contract decision 或獨立 scoped task，不得以 UI cleanup 名義順手修改。
-- Secret 預設 write-only。UI、log、error、diagnostics 不得重新顯示 credential、password、token、shared secret 或其他 secret material，除非正式 product/security contract 明確要求且已有相應風險控制。
-- Destructive、security-sensitive 或 physical-effect action 應在執行前清楚說明效果、影響範圍、不可逆性或 restart/recovery consequence，並依風險提供適當 confirmation；不得只依賴顏色或圖示表達危險程度。
-- Status / error / warning / unknown 不得只靠顏色傳達；應提供可讀文字、label 或其他非顏色語意，避免無障礙與誤判問題。
-- Current status、latest outcome、history/log 與 raw engineering diagnostics 應依使用者角色與行動價值分層；不要把 raw debug dump 當作一般 operator UI，也不要用漂亮摘要掩蓋 lower-level failure/evidence。
-
-這些原則只定義 presentation 與 machine/runtime contract 的治理邊界；具體 route namespace、component library、visual style、copywriting、responsive breakpoint 與 device-specific vocabulary 仍由各 repository 的 UI/UX contract 決定。
-
-## 外部 UI／Design System Reference 適配（External UI / Design-system Reference Adaptation）
-
-研究成熟 UI framework、component library、design system 或公開 UI repository 時，應把它們視為**設計 evidence / reference**，不是自動導入 dependency、framework migration 或整套視覺複製的指令。
-
-推薦流程：
-
-`Current UI / stack / resource constraints → External reference inventory → Extract design principles / semantic tokens / interaction patterns → Fit against project constraints → Freeze project-specific UI contract → Project-owned primitives / fixtures → Checkpointed implementation → Automated audit / targeted validation / coverage reconciliation`
-
-一般原則：
-
-- **先保留現有技術棧。** 若目前 vanilla HTML/CSS、embedded server-rendered UI、native UI 或既有 framework 已能安全承載需求，不得只為取得某套外觀而引入 React、Tailwind、CSS-in-JS、animation runtime、external CDN 或其他新 dependency。只有 evidence 顯示現有 stack 無法合理滿足需求，且 migration 的 engineering/resource/security cost 已被評估時，才另開 stack decision。
-- **抽象設計語意，不機械照搬 implementation。** 優先研究 typography、spacing rhythm、surface hierarchy、semantic color、radius、control sizing、action hierarchy、focus/disabled/error states、responsive behavior、accessibility 與 feedback semantics；framework-specific component tree、utility class、runtime theme engine 或 build pipeline 不應因 reference 存在就被複製。
-- **使用最低充分 design token 層。** 對會跨多個 component / page 重複的值，優先建立 project-owned token / CSS variable / theme primitive，再由 component / page 使用語意名稱；避免每個 surface 各自 hard-code 顏色、間距、圓角與 focus style。實際 token 名稱、數值與 scale 仍由各 repository 決定，不在 common playbook 寫死。
-- **Semantic role 優先於固定 palette。** Page/surface/foreground/muted/border/input/primary/secondary/destructive，以及 info/success/warning/error 等狀態應依產品需要以語意角色表達；light/dark 或其他 theme 優先切換 semantic token，而不是在每個 component 分散維護互相衝突的固定色碼。
-- **Action hierarchy 必須對應 operation semantics。** Primary、secondary/outline、destructive、link/ghost 或等價層級應反映 action importance/risk，而不是只追求視覺變化；destructive / physical-effect / security-sensitive action 同時遵守上一節 Human UI / Machine Contract 的 confirmation 與文字語意要求。
-- **Accessibility 是 design contract 的一部分。** Keyboard focus / `focus-visible`、可讀 contrast、disabled state、label/field 關係、非純色彩 status cue、touch target 與必要的 screen-reader semantics 應隨 component pattern 一起評估；不要只複製 reference 的外觀截圖。
-- **Responsive 以實際內容與 target device 為 evidence。** 優先用少量、可解釋的 breakpoint / layout transition 解決真實 overflow、navigation、form、table、action-group 問題；不要因 reference framework 擁有完整 breakpoint scale 就在小型專案機械照搬。
-- **Motion / visual effects 必須有 operator value。** Animation、shimmer、blur、gradient、parallax、GPU transform 或其他裝飾效果只有在能改善 state transition、attention、feedback 或 comprehension 時才採用；管理、安全、embedded 或 resource-sensitive UI 預設偏克制，並在適用時尊重 `prefers-reduced-motion`。不要為了「看起來像 reference」增加持續動畫與 runtime/payload burden。
-- **Embedded / local-first / offline UI 要把 resource 與 availability 納入設計。** 字型、icon、CSS/JS、image、runtime framework 與 remote asset 都有 flash/RAM/network/startup/failure-domain 成本；若產品需要離線或區網獨立運作，關鍵 UI asset 不應無意依賴外部 CDN/service。具體 budget 由 project evidence 決定。
-- **Reference provenance 仍適用。** 借鑑 pattern / design principle 與複製 source code 是不同層級；若實際 reuse component code、CSS、asset 或 algorithm，仍依本文件 Provenance / license 規則記錄來源、revision、license 與 reuse restriction。
-- **把 UI consistency 變成可驗證 contract，而不是只靠 implementation session 記憶。** 當專案已有多個重複 component、page、theme、platform 或 operator flow，而且 style/behavior drift 已具有實際維護成本時，優先建立最低充分的 component preview / fixture / representative state matrix，讓 primary/secondary/destructive、normal/hover/focus/disabled/error/loading、light/dark 或其他重要狀態可以被獨立檢查。Preview/fixture 是 evidence surface，不應因此變成 production runtime dependency。
-- **能 deterministic audit 的一致性就不要只靠人工目測。** 可依專案技術棧建立 lightweight static verifier / script / test，檢查例如 semantic token 使用、禁止的 hard-coded style、必要 focus/disabled/error semantics、theme/appearance contract、motion policy 或其他可機械判定 invariant。只有 visual diff 真正能降低風險時才導入 screenshot/visual-regression infrastructure；小型或 embedded UI 不要求為形式建立 Storybook、browser farm 或大型 visual test stack。
-- **Audit scope 必須對齊 authority。** Theme/color/motion/appearance audit 證明的是其明確檢查的 presentation invariant，不得因 audit PASS 就升格為 runtime behavior、persistence、security、hardware 或完整 usability PASS；同樣地，純 styling change 若未改變較高層 contract，不應無理由使既有 runtime evidence失效。
-- **Design research 與 implementation completeness 分離。** UI consistency 往往是 coverage-sensitive work；若 surface 多而分散，依 `CODEX_PROMPT_RULES.md` 的 `Coverage-sensitive work decomposition` 先做 bounded inventory，再以 coherent checkpoints 實作，每個 checkpoint STOP 後做獨立 coverage reconciliation，不讓同一個長 Prompt 同時負責 reference research、全域修改與 completeness self-judgment。
-
-核心原則：**借成熟 design system 的規律，不借它不必要的技術棧；把重要 UI consistency 收斂成 project-owned contract 與最低充分 audit，再實作。**
+本文件只保留 architecture / provenance 等被 UI 工作引用的上游 authority；UI task 不需要為了讀 UI 規則而完整掃描本文件。若 UI 工作揭露真正的 architecture、runtime、security、protocol 或 ownership change，再回到相應 architecture / project authority 判斷。
 
 ## 獨立 Domain Repository／組合（Independent domain repos / composition）
 
