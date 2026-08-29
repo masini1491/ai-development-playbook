@@ -55,7 +55,7 @@ ChatGPT、Codex 或其他 coding agent 在 review 對方的 Prompt、handoff、S
 - 若只是低風險 presentation / formatting mismatch，而且不影響 repository authority、completion claim、validation correctness、Stage authorization、mutation boundary、security/credential handling、runtime/hardware evidence 或下一 Stage 是否可安全開始，可以繼續分析其實質 evidence；同時應建議對方重新讀取與該 mismatch 直接相關的**最低必要 Playbook 章節**。
 - 若 mismatch 會影響上述 authority / completion / validation / scope / security 邊界，不能只修格式後繼續。先依 canonical repository / validation evidence 重建可信狀態，必要時 STOP，再決定是否能繼續目前 Stage。
 - 不要求對方為單一 mismatch 完整重掃整份 Playbook。建議應具體指出：哪個回報／行為不符合、應重讀哪個最低必要章節、重讀後應重新檢查哪個 claim / Stage / evidence。
-- 典型 routing：repository / Git / TASKS / permission / completion authority → `REPOSITORY_EXECUTION.md`；debug / root cause / retry / validation / CI / completion evidence → `DEBUG_VALIDATION.md`；model / reasoning / context / agent / reporting / cost discipline → `CODEX_PROMPT_RULES.md`；architecture / target / research / authority boundary → `RESEARCH_ARCHITECTURE.md`；embedded / hardware / resource / target evidence → `EMBEDDED_PROJECTS.md`；toolchain / environment / long-running build → `TOOLCHAIN.md`。
+- 典型 routing：repository / Git / TASKS / permission / completion authority → `REPOSITORY_EXECUTION.md`；debug / root cause / retry / validation / CI / completion evidence → `DEBUG_VALIDATION.md`；model / reasoning / context / agent / reporting / cost discipline → `CODEX_PROMPT_RULES.md`；architecture / target / research / external-service authority → `RESEARCH_ARCHITECTURE.md`；human-facing UI / UX / design system / interaction semantics → `UI_UX.md`；embedded / hardware / resource / target evidence → `EMBEDDED_PROJECTS.md`；toolchain / environment / long-running build → `TOOLCHAIN.md`。
 - Cross-agent review 的目的不是互相挑格式，而是避免 stale governance、錯誤 completion claim、scope drift、evidence inflation 或過期成本策略在不同 ChatGPT / Codex session 與 handoff 間繼續傳播。
 
 核心原則：**發現對方不符合 Playbook 時，指出具體 mismatch 並只要求最低必要重讀；若 mismatch 影響 authority、scope、completion 或 validation，先重新驗證 evidence，再繼續工作。**
@@ -104,8 +104,10 @@ ChatGPT、Codex 或其他 coding agent 在 review 對方的 Prompt、handoff、S
   → `REPOSITORY_EXECUTION.md`
 - Debug / root cause / retry / validation
   → `DEBUG_VALIDATION.md`
-- Architecture / research / external-service authority / UI-machine boundary
+- Architecture / research / external-service authority
   → `RESEARCH_ARCHITECTURE.md`
+- Human-facing UI / UX / design-system / interaction semantics
+  → `UI_UX.md`
 - Embedded / hardware
   → `EMBEDDED_PROJECTS.md`
 - Codex model / reasoning / context / agent / prompt discipline
@@ -166,6 +168,7 @@ AI-generated code / analysis 不因生成完成、command 成功或 build exit 0
 | Windows、本機 runtime、PowerShell 7、toolchain contract | [`TOOLCHAIN.md`](TOOLCHAIN.md) |
 | Debug、root cause、retry、validation、evidence 等級 | [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) |
 | 新技術/協議研究、避免重造輪子、architecture/target/capability | [`RESEARCH_ARCHITECTURE.md`](RESEARCH_ARCHITECTURE.md) |
+| Human-facing UI / UX、design system、interaction、accessibility、UI consistency validation | [`UI_UX.md`](UI_UX.md) |
 | ESP32 / embedded / hardware evidence / board profile / diagnostic harness | [`EMBEDDED_PROJECTS.md`](EMBEDDED_PROJECTS.md) |
 | 維護本 playbook 本身 | [`AGENTS.md`](AGENTS.md) |
 
@@ -198,6 +201,7 @@ AI-generated code / analysis 不因生成完成、command 成功或 build exit 0
 - Validation Coverage Integrity
 - Windows / PowerShell 7 baseline（僅在 repository 使用 `.ps1` 時）
 - Research-first / Anti-Reinvent-Wheel Gate
+- Human-facing UI / UX、design-system adaptation 與 UI consistency contract
 - Hardware evidence 與 target/board portability discipline
 - README development transparency / project-scale reporting
 - Completion Evidence Guard 與跨聊天室 reporting timestamp
