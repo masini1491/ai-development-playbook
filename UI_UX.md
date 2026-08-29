@@ -49,6 +49,31 @@ UI 結構應先服務使用者／operator 的實際任務，而不是直接映�
 - Success / failure feedback 的持續時間與位置應符合重要性。關鍵設定、security、destructive 或 recovery outcome 不應只靠瞬間消失的 toast 作唯一 evidence。
 - Error message 優先回答三件事：**發生什麼、目前可相信的狀態是什麼、使用者下一步能做什麼**。不要把 raw exception/code 當作唯一 operator explanation；工程 diagnostics 可以另層提供。
 
+## Internationalization／Localization Readiness（國際化／在地化準備）
+
+Human-facing wording 應能在**不改變 machine contract、operation semantics、安全語意與底層 authority** 的前提下切換 locale。實際支援哪些語言仍可由各 project authority 覆蓋，但若專案沒有另外定義 locale policy，本 Playbook 推薦以 `zh-TW + en` 作為 baseline locales。
+
+推薦的 locale resolution：
+
+`explicit user selection → persisted user/client preference → client/browser locale detection → fallback en`
+
+一般原則：
+
+- **Baseline locales：`zh-TW` + `en`。** 若 project 沒有其他明確需求，繁體中文環境使用 `zh-TW`，其餘未支援 locale fallback 至 `en`；這是推薦 baseline，不是不可覆蓋的產品硬規格。
+- **繁中 locale normalization。** `zh-TW`、`zh-HK`、`zh-MO`、`zh-Hant` 可依產品需求映射至 `zh-TW`；`zh-CN`、`zh-SG`、`zh-Hans` 不得因同屬中文就自動視為繁體中文，若未提供對應翻譯則依 baseline fallback 至 `en`。
+- **自動偵測只決定初始值。** 使用者明確切換語言後，其選擇具有較高優先權，不應再被 browser/client locale 無條件覆蓋；可持久保存時，優先保存為 user/client preference，而不是沒有必要就變成整台設備的 global machine setting。
+- **Wording 與 machine identifier 分離。** API field、protocol value、identifier、topic/schema key、raw log/error、file/path 與其他 machine contract 不因 locale 切換而翻譯；UI 顯示文字、helper text、status label、confirmation copy 等 human-facing wording 才由 locale resource 控制。
+- **避免散落 hard-coded human-facing string。** 若同一產品預期支援多 locale，優先以 semantic text key / resource table / locale bundle 或目前 stack 的等價最小機制管理翻譯；不要求為此導入大型 i18n framework。
+- **Locale 不只等於語言。** 日期、時間、數字、小數點、千分位、單位、排序、pluralization 與必要的 timezone/region formatting 應依產品需求分開處理；不得假設換字串就完成 localization。
+- **Layout 必須容忍 text expansion。** Button、nav、form label、status、table、dialog 與 responsive layout 不應只對單一語言字數最佳化；翻譯後文字變長、換行或不同字形寬度時仍應保持可操作。沒有實際需求時，不要求為所有 script / RTL 預先重構，但需避免明顯阻礙未來 locale expansion 的 brittle layout。
+- **Accessibility metadata 跟隨實際 locale。** Web/native surface 若支援 language metadata，`lang`、screen-reader label 與相關 accessibility semantics 應反映目前顯示語言；不可讓畫面是繁中但 metadata 永遠宣告英文，或反之。
+- **Safety / destructive wording 必須維持語意等價。** 翻譯不得弱化 effect、risk、irreversibility、confirmation requirement、unknown/pending state 或 recovery consequence；安全與 physical-effect action 的翻譯品質高於行銷式自然度。
+- **Fallback 必須 fail readable。** Missing translation 不應使頁面 crash、空白或隱藏重要 action/state；應回退到 canonical/default locale，並在 development/audit surface 能辨識 missing key。
+- **能 deterministic audit 就機械檢查。** 若多語 surface 已具有維護成本，可用 lightweight verifier 檢查 missing/duplicate key、未預期 hard-coded human-facing string、fallback coverage、locale bundle parity 或其他可機械判斷 invariant；audit PASS 不代表翻譯自然度或文化適切性已由人類驗證。
+- **Resource-sensitive implementation 採最低充分方案。** Embedded/local-first UI 可依 flash/RAM/build profile 決定同時內建 `zh-TW + en`、compile-time locale bundle、host-delivered locale resource 或其他 project-owned方案；i18n-ready 不代表必須導入外部 runtime、CDN 或大型 framework。
+
+核心原則：**預設讓 `zh-TW + en` 可用，繁中環境選 `zh-TW`、其他環境回退 `en`；自動偵測服務首次體驗，使用者明確選擇才是之後的最高 human-facing locale authority。**
+
 ## 外部 UI／Design System Reference 適配（External UI / Design-system Reference Adaptation）
 
 研究成熟 UI framework、component library、design system 或公開 UI repository 時，應把它們視為**設計 evidence / reference**，不是自動導入 dependency、framework migration 或整套視覺複製的指令。
