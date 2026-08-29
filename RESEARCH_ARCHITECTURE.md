@@ -237,6 +237,30 @@ Human-facing UI 是 presentation / interaction layer；不得因視覺一致性�
 
 這些原則只定義 presentation 與 machine/runtime contract 的治理邊界；具體 route namespace、component library、visual style、copywriting、responsive breakpoint 與 device-specific vocabulary 仍由各 repository 的 UI/UX contract 決定。
 
+## 外部 UI／Design System Reference 適配（External UI / Design-system Reference Adaptation）
+
+研究成熟 UI framework、component library、design system 或公開 UI repository 時，應把它們視為**設計 evidence / reference**，不是自動導入 dependency、framework migration 或整套視覺複製的指令。
+
+推薦流程：
+
+`Current UI / stack / resource constraints → External reference inventory → Extract design principles / semantic tokens / interaction patterns → Fit against project constraints → Freeze project-specific UI contract → Checkpointed implementation → Targeted validation / coverage reconciliation`
+
+一般原則：
+
+- **先保留現有技術棧。** 若目前 vanilla HTML/CSS、embedded server-rendered UI、native UI 或既有 framework 已能安全承載需求，不得只為取得某套外觀而引入 React、Tailwind、CSS-in-JS、animation runtime、external CDN 或其他新 dependency。只有 evidence 顯示現有 stack 無法合理滿足需求，且 migration 的 engineering/resource/security cost 已被評估時，才另開 stack decision。
+- **抽象設計語意，不機械照搬 implementation。** 優先研究 typography、spacing rhythm、surface hierarchy、semantic color、radius、control sizing、action hierarchy、focus/disabled/error states、responsive behavior、accessibility 與 feedback semantics；framework-specific component tree、utility class、runtime theme engine 或 build pipeline 不應因 reference 存在就被複製。
+- **使用最低充分 design token 層。** 對會跨多個 component / page 重複的值，優先建立 project-owned token / CSS variable / theme primitive，再由 component / page 使用語意名稱；避免每個 surface 各自 hard-code 顏色、間距、圓角與 focus style。實際 token 名稱、數值與 scale 仍由各 repository 決定，不在 common playbook 寫死。
+- **Semantic role 優先於固定 palette。** Page/surface/foreground/muted/border/input/primary/secondary/destructive，以及 info/success/warning/error 等狀態應依產品需要以語意角色表達；light/dark 或其他 theme 優先切換 semantic token，而不是在每個 component 分散維護互相衝突的固定色碼。
+- **Action hierarchy 必須對應 operation semantics。** Primary、secondary/outline、destructive、link/ghost 或等價層級應反映 action importance/risk，而不是只追求視覺變化；destructive / physical-effect / security-sensitive action 同時遵守上一節 Human UI / Machine Contract 的 confirmation 與文字語意要求。
+- **Accessibility 是 design contract 的一部分。** Keyboard focus / `focus-visible`、可讀 contrast、disabled state、label/field 關係、非純色彩 status cue、touch target 與必要的 screen-reader semantics 應隨 component pattern 一起評估；不要只複製 reference 的外觀截圖。
+- **Responsive 以實際內容與 target device 為 evidence。** 優先用少量、可解釋的 breakpoint / layout transition 解決真實 overflow、navigation、form、table、action-group 問題；不要因 reference framework 擁有完整 breakpoint scale 就在小型專案機械照搬。
+- **Motion / visual effects 必須有 operator value。** Animation、shimmer、blur、gradient、parallax、GPU transform 或其他裝飾效果只有在能改善 state transition、attention、feedback 或 comprehension 時才採用；管理、安全、embedded 或 resource-sensitive UI 預設偏克制，並在適用時尊重 `prefers-reduced-motion`。不要為了「看起來像 reference」增加持續動畫與 runtime/payload burden。
+- **Embedded / local-first / offline UI 要把 resource 與 availability 納入設計。** 字型、icon、CSS/JS、image、runtime framework 與 remote asset 都有 flash/RAM/network/startup/failure-domain 成本；若產品需要離線或區網獨立運作，關鍵 UI asset 不應無意依賴外部 CDN/service。具體 budget 由 project evidence 決定。
+- **Reference provenance 仍適用。** 借鑑 pattern / design principle 與複製 source code 是不同層級；若實際 reuse component code、CSS、asset 或 algorithm，仍依本文件 Provenance / license 規則記錄來源、revision、license 與 reuse restriction。
+- **Design research 與 implementation completeness 分離。** UI consistency 往往是 coverage-sensitive work；若 surface 多而分散，依 `CODEX_PROMPT_RULES.md` 的 `Coverage-sensitive work decomposition` 先做 bounded inventory，再以 coherent checkpoints 實作，每個 checkpoint STOP 後做獨立 coverage reconciliation，不讓同一個長 Prompt 同時負責 reference research、全域修改與 completeness self-judgment。
+
+核心原則：**借成熟 design system 的規律，不借它不必要的技術棧；先建立符合目前產品限制的 project-owned UI contract，再實作。**
+
 ## 獨立 Domain Repository／組合（Independent domain repos / composition）
 
 Repository boundary 可依 domain ownership；deployment boundary 可依實際執行環境。
