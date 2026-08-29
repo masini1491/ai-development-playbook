@@ -166,7 +166,7 @@ Embedded runtime 優先：
 - 核心設定、狀態、診斷與 recovery flow 不應依賴外部 CDN、remote font、cloud-hosted frontend asset 或必須連 Internet 才能載入的 runtime dependency。
 - 是否允許外部資源由產品 contract 決定；cloud-first product 不因本規則被強迫成 offline-first。
 - 若 local/offline operation 是正式 requirement，外部服務失效不得讓 operator 無法完成必要 setup、configuration、diagnostics 或 recovery。
-- Embedded UI 仍遵守 `RESEARCH_ARCHITECTURE.md` 的 Human-facing UI / Machine Contract Boundary；self-contained 只處理 availability/dependency boundary，不授權 UI 接管 machine/runtime ownership。
+- Embedded UI 仍遵守 `UI_UX.md` 的 Human-facing UI / Machine Contract Boundary；self-contained 只處理 availability/dependency boundary，不授權 UI 接管 machine/runtime ownership。
 - 資源受限時，優先保留可操作性、可讀狀態、錯誤說明與必要安全流程，再考慮動畫、remote asset、heavy framework 或純裝飾性功能。
 
 ## 安全關鍵生命週期仲裁（Safety-Critical Lifecycle Arbitration）
