@@ -290,6 +290,21 @@ Stage Prompt 只保存：
 
 精簡 Prompt 或 tool surface 後，評估重點不是 Token 單一數字，而是代表性 task 的 task success、correctness、required evidence 與 validation quality 是否維持；若成功率下降或增加 retry / recovery 成本，應恢復必要 Context / capability。
 
+### 獨立工具排程紀律（Independent Tool Scheduling Discipline）
+
+對目前 Stage 已確認彼此**獨立、唯讀（read-only）、無衝突（conflict-free）**，且不需要依前一項結果做逐步 adaptive decision 的 tool checks，若 execution surface 原生支援安全的 batch／parallel tool execution，優先在**單一 bounded execution** 中批次或平行執行，完整保留並逐項檢查結果後再回模型。
+
+一般原則：
+
+- 只有 dependency 已知不存在、操作不會改變 shared state、順序不影響 correctness，而且每項結果都能獨立判讀時，才可 batch／parallel。
+- dependent、state-changing、write、side-effectful、approval-sensitive、adaptive、waiting／polling 或需要前一項 evidence 決定下一步的操作維持 serial；不得為降低 Context replay 而破壞 dependency、transaction、permission 或 safety boundary。
+- Batch／parallel 不得減少原本需要的 task scope、reasoning、validation、tool coverage、結果完整性或 evidence quality；每一項 check 仍必須有可審查的 result／failure evidence，不能因一起執行就只保留總結。
+- 若某一批中的 failure 會改變其他尚未執行 check 的必要性、參數或安全性，該組操作不符合「獨立」條件，應拆回 serial 或更小的 bounded batch。
+- 若 execution surface 不支援可靠的 batch／parallel scheduling，不得為符合本規則自行建立高複雜度 scheduler、額外 Multi-Agent 或有副作用的 workaround；維持安全 serial execution。
+- 本規則的目的只是減少多個已知獨立 checks 被拆成不必要的 `model → tool → model` 循環所造成的 Context replay／model re-entry；**省的是排程浪費，不是必要推理或驗證。**
+
+這是 condition-triggered optimization，不要求所有 tool calls 平行化，也不把特定 workload 的節省比例寫成穩定 baseline。
+
 ### 長時間／高頻 Tool Output 紀律（Long-running tool output discipline）
 
 已知會長時間執行、持續顯示 progress/status，或可能產生大量 stdout/stderr 的 command/process，不應預設把全部輸出直接送入 active model Context。
