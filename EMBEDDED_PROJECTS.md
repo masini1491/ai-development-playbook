@@ -1,19 +1,19 @@
 # 嵌入式／硬體專案方法論（Embedded / Hardware Project Methodology）
 
-本檔只保存跨專案 embedded/hardware 方法，不保存任何特定產品的 GPIO、credential 或私密 protocol。
+本檔只保存跨專案 embedded/hardware 特有方法，不保存任何特定產品的 GPIO、credential 或私密 protocol。
+
+一般 persistent-state transaction、idempotent reconciliation、lifecycle continuity 與 ownership 原則由 `RESEARCH_ARCHITECTURE.md` 維護；一般 evidence tiers、supersession 與 validation lifecycle 由 `DEBUG_VALIDATION.md` 維護。本檔只補充 target/board/device、硬體資源、實體輸出、bench/hardware evidence 等 embedded-specific delta。
 
 ## 硬體事實（Hardware truth）
 
 軟體分析、compile、simulation、相似型號 evidence 都不能自動宣稱真實硬體 PASS。
 
-建議 evidence 狀態：
-- `CONFIRMED_UPSTREAM`
-- `CONFIRMED_LOCAL`
-- `INFERRED`
-- `UNKNOWN`
-- `HARDWARE_TEST_PENDING`
+Evidence label 與 validation tier 以 `DEBUG_VALIDATION.md` 為唯一主要 authority。Embedded-specific 限制是：
 
-只有真實 target/board/device evidence 才能提升 local hardware confidence。
+- 只有真實 target/board/device evidence 才能提升 local hardware confidence；
+- 不同 board、FQBN、PHY、module、electrical mapping 或實體 device 的 Hardware/Bench PASS 不互相自動繼承；
+- upstream／相似裝置 evidence 可以降低未知，但不能改寫成 `CONFIRMED_LOCAL`；
+- hardware evidence 尚未取得時，保留 `HARDWARE_TEST_PENDING`／對應 Pending 狀態，不用 compile PASS 補推。
 
 ## 軟體優先基礎（Software-first foundation）
 
@@ -105,7 +105,7 @@ Bring-up target 不得自動推導：
 - required radio/peripheral capability
 - product-final board/pinout
 
-要把較高資源 target freeze 成 minimum requirement，需要 current product requirements 或 resource/runtime evidence 支持；開發方便、toolchain 成熟、未證實的「未來可能需要」或單純安全 margin 不足以構成 freeze evidence。
+要把較高資源 target freeze 成 minimum requirement，需要 current product requirements 或 resource/runtime evidence 支持；開發方便、toolchain 成熟、未證實的「未來可能需要」或單純 safety margin 不足以構成 freeze evidence。
 
 反過來，要排除較低資源候選，也應說明實際不足：
 
@@ -132,51 +132,13 @@ Bring-up target 不得自動推導：
 
 若較低 target 已被 evidence 證明足夠，不得只為了多留未定義 headroom 自動升到更大 target；若較低 target evidence 顯示 margin 不合理，再升級到下一候選並保留排除理由。
 
-## Persistent State 交易完整性（Persistent State Transaction Integrity）
+## Embedded State／Lifecycle 補充
 
-對 security/identity/auth/routing/hardware behavior/credential/critical config 等重要 persistent state，避免多 key partial success。
+一般 state transaction、reconciliation 與 lifecycle continuity contract 見 `RESEARCH_ARCHITECTURE.md`。Embedded system 額外注意：
 
-推薦語意：
-
-`write → exact readback → validate → commit/fail-safe/rollback → explicit result`
-
-Identity change 必須處理依賴它的 stale state；必要時用 generation/transaction semantics。
-
-Reusable helper 應在真實 consumer semantics 證明後再抽象。
-
-## 收斂式／冪等式協調（Convergent / Idempotent Reconciliation）
-
-對代表 desired state 的 registration、sync、scheduler、bridge exposure、subscription、binding、configuration apply 或其他 reconciliation operation，重複執行、retry、restart 或 reconnect 後應收斂到同一個 intended state；不得因相同輸入重複建立 device/entity/job/binding/subscription 或其他 logical resource。
-
-一般原則：
-
-- 使用 stable identity、canonical key、generation/version 或其他可重現 identity 判斷 existing state；不要只靠目前 session memory 推定「之前應該建立過」。
-- Reconciliation 應能區分 create、update、already-satisfied、stale/obsolete 與 conflict；合法重跑不得默默變成 duplicate creation。
-- 若 external platform / bridge / scheduler / broker 可能保留 stale state，reconnect 或 restart 後應先取得最低充分 current evidence，再 reconcile；不要無條件重新 enumerate／register 全部資源。
-- Retry 只有在 operation semantics 已確認可安全重入時才可視為 idempotent；沒有證據時，不得因 API 名稱看起來像 `set` / `sync` / `register` 就假設重試無副作用。
-- Validation 除了「這次操作成功」，需要時還應檢查 duplicate、stale reference、unexpected re-enumeration、orphan resource 與 intended mapping 是否維持唯一性。
-- 若底層 operation 天生 non-idempotent，應建立 explicit deduplication / transaction / idempotency-key / state machine boundary，或把 retry 交給知道 operation ownership 的單一 owner；不要讓多個 layer 各自盲目重試。
-
-核心原則：**同一 desired state 被重新套用，不應產生新的 logical state；reconciliation 的成功是收斂，不只是 command 回傳成功。**
-
-## 生命週期狀態連續性（Lifecycle State Continuity）
-
-若產品宣稱 restart、reboot、OTA、upgrade、migration、container/device replacement 或其他 lifecycle transition 不需要重新 commissioning／configuration，則 stable identity、persistent config、binding、automation reference、external integration mapping 與其他必要 state 應被視為明確的 continuity contract，而不是 incidental implementation detail。
-
-推薦驗證思路：
-
-`pre-state snapshot → lifecycle operation → startup/recovery → post-state reconciliation → continuity evidence`
-
-一般原則：
-
-- 先列出哪些 state 必須跨 lifecycle 保留、哪些可以合法重建、哪些應被清除；不要用「資料都還在」或「服務有起來」代替正式 continuity contract。
-- Stable identity、device/entity mapping、binding、scene/automation reference、credential ownership、routing/config 與其他 external reference 若屬 REQUIRED continuity，upgrade/restart 後不得 silently regenerate 成不同 identity 或 duplicate resource。
-- Local runtime healthy / boot PASS 不等於 external integration continuity PASS；若 correctness 依賴 Matter、Home Assistant、MQTT、cloud/backend 或其他外部 consumer，需取得最低充分的 post-lifecycle mapping / reachability / state evidence。
-- Backup/restore、migration 或 replacement 若宣稱可保留設定，應驗證 restored state 的 schema/version compatibility、identity ownership 與 external reference continuity；成功 import file 不等於整體 continuity 成立。
-- Lifecycle transition 若允許 intentionally reset identity / binding / commissioning state，應是明確 contract 與 operator-visible effect，不得由 upgrade/restart 意外觸發。
-- 不要求每次小版更新都做完整 production migration test；依實際風險選代表性 continuity fixture / targeted integration validation，但高價值 external binding 不應只靠 compile/static evidence。
-
-核心原則：**Lifecycle success 不只是「重新啟動成功」，而是所有宣稱應延續的 identity、binding 與 external reference 仍能被同一套 authority 正確辨識。**
+- persistent identity/config 若與 board identity、partition、NVS/flash layout 或 hardware binding 有關，upgrade/migration/replacement 必須把這些 physical assumptions 納入 continuity evidence；
+- physical output、relay/motor/lock、radio commissioning、sensor calibration 或 device binding 的 continuity 不能只靠資料檔存在／boot 成功宣稱成立；需要對應 target/device 的最低充分 bench/hardware evidence；
+- retry/reconcile 若會重送 physical command、重新配對硬體或改變 actuator state，不能只依一般 API idempotency 假設安全，必須確認實體 side effect semantics。
 
 ## Runtime 可靠性（Runtime reliability）
 
@@ -227,17 +189,12 @@ Embedded runtime 優先：
 
 ## 硬體驗證（Hardware validation）
 
-Validation 要區分：
-- Compile PASS
-- Static/Test PASS
-- Bench PASS
-- Hardware PASS
-- Network PASS
-- Production PASS
+Evidence tier 與 validation lifecycle 以 `DEBUG_VALIDATION.md` 為 authority。本檔只補充：
 
-不同 board/FQBN/PHY/device 的 PASS 不互相自動繼承。
-
-若 target-specific implementation 有可能被 build layout/conditional compile 排除，必須遵守 Validation Coverage Integrity，證明 intended backend 真正參與 compile/link/test。
+- 真實 target/board/device 才能建立 local Bench/Hardware confidence；
+- 不同 board/FQBN/PHY/device 的 PASS 不互相自動繼承；
+- 若 target-specific implementation 有可能被 build layout/conditional compile 排除，必須遵守 Validation Coverage Integrity，證明 intended backend 真正參與 compile/link/test；
+- compile/static PASS 不得冒充 electrical/timing/radio/physical-output hardware PASS。
 
 ## 部署／卸載（Deployment / offload）
 
