@@ -267,6 +267,21 @@ Evidence reuse 原則：
 
 文件可保留歷史測試事實，但 current summary 必須明確指出最新 superseding rule，避免舊 PASS 被誤讀成目前 PASS。
 
+### 行為保持 ≠ 證據保持（Behavior-preserving ≠ Evidence-preserving）
+
+`behavior-preserving`、`refactor-only`、`no intended semantic change` 描述的是**修改意圖與 protected behavior contract**，不代表既有 validation evidence 自動保持有效。每一份 evidence 是否仍為 `CURRENT`，應依它真正依賴的 implementation、binary、runtime、toolchain、measurement profile、hardware/environment assumption 判斷。
+
+一般原則：
+
+- File/module extraction、symbol relocation、link/layout 變化、compiler/config change、dependency rebuild、task/stack placement、instrumentation/logging 或其他結構性修改，即使 public behavior 預期完全相同，也可能改變 binary identity、timing、memory/resource layout、scheduler/cache behavior 或 measurement condition。
+- 若舊 evidence 衡量的是 firmware/binary timing、latency、resource usage、heap、stack、hardware behavior、performance 或其他與實際 build identity 有關的結果，而本次 refactor 已改變該 identity 或相關 execution profile，舊數值只能保留為 `HISTORICAL` / `SUPERSEDED`；新 build 應建立最低充分的新 baseline，不得宣稱 bit-identical 或直接繼承舊 measurement。
+- 反之，純 ownership/file-layout change 不代表所有不相關 evidence 都要失效。若某 API/wire/schema/security invariant 的 authority 與 validation backend 未受 material impact，可保持 `CURRENT`；只 revalidate 受影響範圍。
+- Refactor 前應先列出「哪些 evidence 預期可保留、哪些可能失效」；完成後以 canonical diff/build identity/validation scope 重新分類，而不是等到下一個 hardware/runtime Stage 才發現 baseline 已不再可比。
+- 若 instrumentation 本身可能改變 timing、logging load、network traffic、scheduler behavior 或 binary layout，應視為新的 **measurement profile**。跨 profile 數據可作方向性比較，但除非 observer effect 已被控制，不得假裝是嚴格單變因 A/B。
+- Diagnostic instrumentation 優先 bounded、test-only、低擾動，量測必要 boundary 而非修改 production semantics；若 instrumentation 必須改變 behavior 才能觀察問題，需把它當成新的 experiment contract，而不是「只是加 log」。
+
+核心原則：**Behavior preservation 與 evidence preservation 是兩個不同問題；驗證重用依 evidence dependency，不依 refactor 標籤。**
+
 ## 正確性優先於重構（Correctness before refactor）
 
 發現 correctness bug 時優先：
@@ -304,6 +319,20 @@ Evidence reuse 原則：
 - 未完成的 deeper modularization / cleanup 必須保持 Deferred，不得在後續 feature task 裡順手完成。
 
 驗證時優先比較 refactor 前後的 protected invariants；若 binary/resource usage 有變化但 behavior 預期不變，需記錄差異並判斷是否 material，不要只因數字不同就宣稱 regression，也不要完全忽略。
+
+### 依 Evidence Boundary 排定重構時機（Refactor Timing by Evidence Boundary）
+
+多個真實技術債候選同時存在時，不以「哪個檔案最大／最醜」決定先後；優先選擇 **ownership 清楚、behavior freeze 容易、validation coverage 強、external/runtime/hardware coupling 較低** 的 boundary，讓 refactor 可以被低風險地證明為 behavior-preserving。
+
+一般原則：
+
+- 若某 domain 的 correctness 高度依賴尚未完成的 hardware/runtime/recovery/timing evidence，而且現有結構沒有阻礙取得該 evidence，通常先完成 evidence gate，再做 structural extraction；避免同時改變 implementation identity 與待驗證現象，使 causal comparison 失去基準。
+- 若現有結構本身正在阻礙 observability、使 owner 不可辨識、讓 verifier 無法可靠涵蓋，或讓必要 evidence 無法安全取得，則可先建立最小 behavior-preserving extraction / instrumentation Stage；必須明確記錄舊 baseline 哪些失效、哪些保留。
+- Refactor timing 應考慮 current frozen baseline。正在進行 hardware/performance A/B、migration/cutover、recovery campaign 或其他依賴 binary/runtime identity 的驗證時，無關 correctness 的 cleanup 通常 Deferred，直到 baseline 不再需要或有正式新 baseline plan。
+- 若某候選可依既有 deterministic verifier、host test、exact readback、compile 或其他強 evidence 守住 behavior，而另一候選只能依尚未完成的現場／硬體證據驗證，通常先處理前者；這是風險排序，不是宣稱所有低 coupling debt 都必須優先。
+- 每完成一個 refactor Stage，重新讀 current dependency/evidence state再排下一刀；不得因最初 inventory 排出一串順序，就把後續 Stage 視為自動授權或不需重新評估。
+
+核心原則：**現在最值得修的技術債，是能清楚恢復 ownership、又能用目前最強 evidence 守住 behavior，而不會無必要破壞正在使用 baseline 的那一塊。**
 
 ## 決策階段（Decision Stage）
 
