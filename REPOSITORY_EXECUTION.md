@@ -131,7 +131,7 @@ Commit/push 必須服從使用者當次 launch 或 repository policy 的明確�
 一般原則：
 
 - `anonymous-first` 是**最低充分 Access Capability**，不是 `anonymous-only`；anonymous rate limit、quota 或 capability 不足時，可在目前 Task / Stage 確實需要的範圍內升級 authenticated read-only。
-- authenticated read-only access 因 `RATE_LIMIT` / `QUOTA_EXHAUSTED` 暫時不可用時，若上述條件仍成立，改用同一 provider 官方 anonymous read-only endpoint可視為 capability downgrade，而不是 scope expansion；治理規則本身不要求額外 Task authorization。
+- authenticated read-only access 因 `RATE_LIMIT` / `QUOTA_EXHAUSTED` 暫時不可用時，若上述條件仍成立，改用同一 provider 官方 anonymous read-only endpoint 可視為 capability downgrade，而不是 scope expansion；治理規則本身不要求額外 Task authorization。
 - 但 execution environment 若對 anonymous request 本身仍要求 network / sandbox approval，照常走 Permission-Gated Operation；本節不繞過 runtime permission gate。
 - 不得因 quota exhausted 自行輪替另一帳號、另一 token、另一 installation、另一 credential、proxy/mirror 或第三方服務；這些屬新的 identity / authority boundary，必須依目前 Task scope與相關授權另行判斷。
 - public anonymous fallback 不得被用來碰觸 private repository、private issue/attachment、installation-only resource，或把已知需要 authentication 的 evidence 改成較弱的猜測。
@@ -196,6 +196,40 @@ Sandbox/network permission approval **不等於 Git mutation authorization**。
 5. 若 repository 已有 canonical counter/hash tool，後續文件與 validation 優先使用該 authority，不要同時維護另一套手工算法造成 drift。
 
 Canonical evidence 解決的是「如何重現 repository 事實」，不取代 runtime/build/hardware validation。
+
+## Repository-facing 文件完整性（Repository Documentation Integrity）
+
+公開 README、showcase、project overview 或其他 repository-facing 文件若宣稱開發方式、驗證狀態、專案規模或 AI-assisted workflow，應讓 claim 可追溯到正確 authority；README 本身不應成為另一套重複的 execution/validation policy。
+
+### AI-assisted development transparency
+
+公開 repository 若明顯使用 ChatGPT、Codex 或其他 coding agent 作為主要開發方式，README 可精簡說明 human-in-the-loop 責任分工，例如：
+
+- **Human / developer**：需求、產品方向、現實世界／硬體 evidence、最終核准，以及需要人工完成的 validation；
+- **ChatGPT / planning agent**：研究、architecture/spec discussion、review、task decomposition 與 Prompt / unfinished-work planning；
+- **Codex / coding agent**：在授權 scope 內 implementation、tests、static/build validation、docs 與 repository maintenance。
+
+一般原則：
+
+- AI 產生 code／analysis、command success 或 build exit code 0 不等於產品已完成所有必要 validation；公開 wording 必須符合實際 evidence tier。
+- 若 README 提及 OpenAI／ChatGPT／Codex，不得暗示 provider 對 project/product/hardware/security decision 提供贊助、認證或背書，除非確有正式關係。
+- README 只需摘要責任分工；詳細 ChatGPT/Codex write boundary、Task/Stage authorization、completion evidence 仍由本文件與其他 canonical topic file 維護。
+
+### Project Scale Reporting
+
+若 README 或公開文件展示 LOC、行數、檔案數量或其他 project-scale statistics：
+
+- 說明統計基準，例如 Git tracked files、正式 ref/commit 或其他可重現來源；
+- 定義指標，例如 physical lines、logical/executable LOC、file count；若是 physical lines，說明是否包含 blank/comment；
+- 說明主要排除項目，例如 `.git`、third-party dependencies、downloaded packages、build/cache、generated artifacts；
+- 分類方式依 repository 實際 structure 定義，不要求所有專案使用同一 taxonomy；
+- 統計應服從本文件的 Canonical Repository Evidence，不因不同 OS newline/working-tree transform 產生無法解釋的 drift。
+
+不要求每個 repository 建立專用計數 script。只有當公開數字長期存在且頻繁改變、手工更新容易漂移，或同一統計要同步到多個正式文件時，才優先建立 repository-owned deterministic counter。
+
+已有正式 counter 的 repository，在主要 tracked-file 變更與相關 validation 完成後更新統計；數字未變時不要製造無意義 README diff。跨 repository showcase/private→public 同步若有特殊規則，留在各 project governance。
+
+核心原則：**公開 repository claim 應可由 canonical evidence 重現；README 負責說明，不自行複製底層治理規則。**
 
 ## TASKS.md 生命週期（TASKS.md Lifecycle）
 
