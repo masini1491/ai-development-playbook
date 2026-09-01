@@ -160,6 +160,7 @@ Repository 很大不是使用 Sol 或 High 的理由。
 Condition-triggered 原則：
 
 - 不把任何特定方案名稱、5-hour/weekly 數字、模型 credit rate 或 promotional pricing 寫成穩定 baseline；這些 volatile product facts 以當下官方 Rate Card / Help Center / product UI 為準。
+- 對 reset、credit、quota restoration 或其他 usage-resource action，在建議購買／使用或實際消耗前，先確認其 **resource semantics**：是增加獨立 entitlement（additive）、立即重開／取代目前週期（replacement）、保存供日後使用（banked），還是超額後按量扣款（pay-as-you-go）。若屬 replacement 型 reset，應比較目前剩餘 allowance、下一自然 reset 與預期近期 workload，再決定是否立即使用；不得把「reset」一律視為額外額度，也不得在 semantics 尚未確認時假設未用 allowance 會被保留。相關期限、價格、週期與方案細節仍以當下適用的官方 authority 為準，不寫死進 Playbook。
 - 若存在短期 window，大型工作應避免把低價值 discovery、重複 repo-wide exploration、無效 retry、非必要 full regression、verbose tool output 與高成本 reasoning 全集中在同一 window。
 - 優先維持 `最低充分 Evidence → 最低充分 Model/Reasoning/Context → Targeted Validation`；不要為了保留短期額度而降低已證明必要的 reasoning 或跳過 required validation。
 - 可將可安全分離的 workstream 分階段執行，例如先用較便宜模型取得 bounded evidence，再啟動較昂貴 implementation/architecture Stage；但不得只為避開 usage window 人為切碎具有共同 state / root cause / transaction boundary 的工作。
