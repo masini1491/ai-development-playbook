@@ -50,6 +50,8 @@ Write-required work（例如 source/tests/docs 修改、`TASKS.md` bookkeeping�
 9. 同步後重新讀最新 local `AGENTS.md` / `TASKS.md`。
 10. 若指定 Task/Stage 已消失或被改變到 launch 失效，STOP，不得依舊 Prompt/記憶執行。
 
+若 project governance 明確宣告採用 persistent `TASKS.md` mode，而同步後 `TASKS.md` 缺失，不得把「檔案不存在」直接解讀為 EMPTY；先依最新 project governance / Git evidence 判斷是否為尚未初始化、意外刪除或明確退出 TASKS mode。需要建立／恢復檔案時仍須落在目前授權的 bookkeeping scope。
+
 禁止 autonomous：
 - `reset --hard`
 - force push
@@ -140,7 +142,7 @@ Commit/push 必須服從使用者當次 launch 或 repository policy 的明確�
 
 ### External service staged operation
 
-當 external service 同時存在 read-only API、live runtime evidence 與 mutation/admin capability 時，優先把 operation 分成明確 Stage，而不是一次取得較大 scope：
+當 external service 同時存在 read-only API、live runtime evidence 與 mutation/admin capability時，優先把 operation 分成明確 Stage，而不是一次取得較大 scope：
 
 1. **Stage 1 — Read-only baseline**：確認 service/account/target identity、非敏感 resource/config metadata、credential 是否存在（不讀 secret value）、API access 與目前 baseline evidence。
 2. **Stage 2 — Live observation**：在真實 application/device/client 正常運作時，使用 read-only capability 觀察 current connection、subscription/session/resource/status、reconnect/disconnect、delivery 或其他 live evidence；不因觀測需要而主動製造 mutation。
@@ -233,7 +235,7 @@ Canonical evidence 解決的是「如何重現 repository 事實」，不取代 
 
 ## TASKS.md 生命週期（TASKS.md Lifecycle）
 
-`TASKS.md` 是一般 project repository 的唯一 active unfinished-work / executable scoped Prompt queue（若 repository 採此模式）。
+`TASKS.md` 是一般 project repository 的唯一 active unfinished-work / executable scoped Prompt queue（若 repository 採此模式）。對採用此模式的 repository，`TASKS.md` 應作為**持久、固定路徑的 coordination surface**；有無 active work 以檔案內容的 queue state 表達，不以檔案存在與否表達。
 
 只保留：
 - TODO
@@ -242,6 +244,21 @@ Canonical evidence 解決的是「如何重現 repository 事實」，不取代 
 - Pending-validation
 
 完成紀錄以 Git history 為準；不建立 Completed 區段。
+
+### EMPTY queue
+
+當最後一個 unfinished item 被移除時，不刪除 `TASKS.md`；改為收斂成最低充分的 `EMPTY` queue template。Idle template 應保持很短，只需保留：
+
+- 本檔是 active unfinished-work / executable scoped Prompt queue；
+- Completed 不保留，完成事實以 Git history 為準；
+- 本檔存在不代表授權任何 Stage；
+- `Queue status: EMPTY` 或等價明確狀態；
+- 目前沒有 TODO / Blocked / Deferred / Pending-validation；
+- 必要時一行 routing，要求新增工作前依 project governance 與本節 Admission threshold 判斷是否收錄。
+
+`EMPTY` **只代表目前沒有被 admission 進 active queue 的 unfinished work**。不得由 EMPTY 推論專案已完成、沒有技術債、沒有未觸發 roadmap、沒有 historical/pending evidence，或其他正式文件中的 validation / product state 已全部完成。
+
+若 repository 明確採用 persistent TASKS mode，而 `TASKS.md` 缺失，missing 與 EMPTY 不等價；先依 project governance / Git evidence 判斷原因。只有 repository 明確退出 TASKS mode 或 governance 被明確修改時，才應刪除該固定 coordination surface。
 
 ### 收錄門檻（Admission threshold）
 
@@ -263,7 +280,7 @@ Canonical evidence 解決的是「如何重現 repository 事實」，不取代 
 - material system/validation effect
 - 不記錄容易遺漏
 
-Task 成功驗證後刪除/更新該 unfinished item；完全清空時刪除 `TASKS.md`。
+Task 成功驗證後刪除/更新該 unfinished item；最後一項移除後依上述 EMPTY queue contract 收斂 `TASKS.md`，不因 queue 清空而刪檔。
 
 ### 觸發式技術債／佇列衛生（Triggered Technical Debt / Queue Hygiene）
 
@@ -288,7 +305,7 @@ Task 成功驗證後刪除/更新該 unfinished item；完全清空時刪除 `TA
 
 ### ChatGPT
 
-- 只對 repository root `TASKS.md` 具有建立、讀取、更新與刪除權。
+- 只對 repository root `TASKS.md` 具有建立、讀取與更新權；採用 persistent TASKS mode 時，正常 queue lifecycle 不刪除該檔。只有 repository 明確退出 TASKS mode 或使用者明確修改此治理 contract 時，才可依授權刪除。
 - 除 `TASKS.md` 外，所有 repository path 一律唯讀，包括 `AGENTS.md`、README/docs、source、tests、scripts、tooling、workflow/CI、config、manifest、lock files 等。
 - 可以讀取、分析 evidence、比較版本、提出修改方案與產生 Codex Prompt，但不得直接建立、更新、刪除或改名其他 path。
 - 若非 `TASKS.md` 檔案需要修改：先讀最新 evidence、避免 duplicate task，必要時只在 root `TASKS.md` 建立/更新 scoped unfinished task / executable Prompt，再由 Codex 執行真正修改。
@@ -297,7 +314,7 @@ Task 成功驗證後刪除/更新該 unfinished item；完全清空時刪除 `TA
 ### Codex／coding agent
 
 - 在使用者當次明確授權的 Task / Stage scope 內，依 repository governance 修改 `TASKS.md` 以外的 allowed files。
-- 同時可維護 `TASKS.md` 的執行狀態：更新 Blocked / Deferred / Pending-validation evidence、成功完成並驗證後移除 entry、queue 清空時刪除 `TASKS.md`。
+- 同時可維護 `TASKS.md` 的執行狀態：更新 Blocked / Deferred / Pending-validation evidence、成功完成並驗證後移除 entry；queue 清空時依 EMPTY queue contract 收斂檔案，不刪除固定 coordination surface。
 - 不得因具有 workspace write capability 就自行執行 queue 中其他未授權項目。
 
 ### `TASKS.md` 共同維護
@@ -308,6 +325,7 @@ Task 成功驗證後刪除/更新該 unfinished item；完全清空時刪除 `TA
 - Codex 主要負責執行當次授權 Stage 後的 status/evidence bookkeeping 與完成後移除 entry。
 - 雙方修改前都應先讀最新 GitHub / synced local `TASKS.md`，避免覆蓋彼此新內容。
 - `TASKS.md` 不是 changelog；Completed 不保留，完成紀錄以 Git history 為準。
+- Queue 無 unfinished item 時保留最小 `EMPTY` state；EMPTY 是 queue state，不是 project completion state。
 - `TASKS.md` 本身不授權 Codex 自動開始任何 Stage，也不擴張 ChatGPT 對其他 path 的寫入權。
 
 ### Playbook Repository 例外（Playbook repository exception）
