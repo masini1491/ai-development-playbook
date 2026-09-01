@@ -141,6 +141,23 @@ Standalone 也只帶最低充分 context；「需要自成一體」不是貼上�
 
 核心原則：**若完整 specification 已存在 repository，ChatGPT 的工作是產生最短安全 launch pointer，而不是再寫一份 specification。**
 
+## 可直接複製的 Codex Prompt（Copy-ready Prompt Delivery）
+
+只要 ChatGPT 提供的內容是要讓使用者**直接貼給 Codex 執行**的 Prompt，不論是 TASKS Short-launch、Direct Short Prompt 或 Standalone Full Prompt，都必須提供單一、完整、可一次複製的 copy surface。
+
+一般原則：
+
+- **One Prompt = One Copy Surface。** 同一份 Prompt 的全部 Codex-required instructions 必須集中在**一個 fenced code block** 內，讓支援 copy affordance 的 ChatGPT UI 可以一次複製；不得要求使用者自行框選散落在一般 prose、blockquote、列表或多個 code block 的片段後再拼接。
+- Prompt 外可以保留給使用者看的模型／Reasoning／Context 建議、簡短說明或注意事項；但任何 **Codex 必須一起收到才能正確執行** 的內容都必須在同一 code block 內。
+- TASKS Short-launch 應只把最短安全 launch body 放進單一 code block；若 model / reasoning 等資訊已由 referenced Stage 保存，可依前述規則在 block 外只顯示一行 UI 選擇提示，不得因此把 launch body重新膨脹。
+- Direct Short Prompt 與 Standalone Full Prompt 也遵守單一 copy surface；可以在 block 內使用 headings、bullets 或 Markdown，但不得把同一 Prompt 拆成「前半段／後半段」多個區塊。
+- 若 Prompt 內容本身需要包含 triple-backtick fenced example，使用較長的外層 fence或其他能保持**單一可複製區塊**的安全表示方式，不要因此拆成多個 Prompt block。
+- 若使用者真的需要兩個以上互斥 alternative Prompts，每個 alternative 可各自使用一個完整 code block並清楚標示；但**單一 alternative 仍不得碎片化**。
+- 若目前 client 不顯示 copy button，仍維持單一 fenced code block，讓使用者至少只需選取一個連續區塊；不得因 UI 差異退回散落格式。
+- Copy-ready 是 delivery contract，不是增加 Prompt 長度的理由；仍完整遵守 Prompt Mode Selection、Reference don’t repeat 與 Prompt lean。
+
+核心原則：**給 Codex 的可執行 Prompt 應能一次完整複製；使用者不應負責把 ChatGPT 輸出的 Prompt 碎片重新組裝。**
+
 ## TASKS 收錄／直接短 Prompt（TASKS Admission / Direct Short Prompt）
 
 **產生 Codex Prompt 不代表一定要建立 `TASKS.md`。**
