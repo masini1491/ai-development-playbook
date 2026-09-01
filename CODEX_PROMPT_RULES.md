@@ -178,7 +178,7 @@ Condition-triggered 原則：
 - 專用產品 Rate Card 明確被其他官方頁面引用為該功能 authority 時，以專用 Rate Card 為該功能的主要費率來源；不要因另一份較廣泛 Rate Card 顯示較低或較新的數字就自行覆蓋。
 - Included plan usage、purchased credits、usage-based / pay-as-you-go、legacy metering、API billing 等必須分開判斷；名稱相同的 model 不代表各 billing surface 使用相同 rate。
 - 官方文件無法確定目前帳號／workspace 實際適用版本時，標記為不確定；若 product UI / Usage panel 能提供 account-specific evidence，優先用它確認實際 applicability。不得自行平均、推導、選較便宜的數字或把 promotion 期限延伸成穩定 baseline。
-- 本 Playbook只保存 authority-selection 方法，不保存容易變動的固定 rate table；當次成本判斷仍以最新官方 evidence 為準。
+- 本手冊只保存 authority-selection 方法，不保存容易變動的固定 rate table；當次成本判斷仍以最新官方 evidence 為準。
 
 核心目標是**降低同一 resource window 裡的浪費，而不是降低必要品質**。
 
@@ -257,7 +257,6 @@ Codex 無權自行換模型。達到 escalation condition 時：
 ## Scope 擴張不等於模型升級（Scope Expansion ≠ Model Escalation）
 
 任務中發現 out-of-scope 問題：
-
 - 記錄成新的 TASKS item，或
 - STOP 並回報
 
@@ -277,6 +276,8 @@ Stage Prompt 只保存：
 - success/STOP condition
 
 以降低 Context inflation。
+
+**Prompt／Context／tool output 的節流規則不延伸到 human-maintained source code。** Codex 不得為了降低 Token、LOC、diff display 或輸出長度，把 production/test source 壓成多 statement one-liner、做 source minification 或降低既有可讀性。Behavior-preserving／mechanical Stage 的完整 readability baseline 以 `RESEARCH_ARCHITECTURE.md` 的 Readability Preservation 為 authority；本檔不重複維護 formatting policy。
 
 ### Tool／Skill 暴露面紀律（Tool / Skill Surface Discipline）
 
