@@ -18,6 +18,27 @@
 
 `INSUFFICIENT OBSERVABILITY` 時先取得能區分原因的最小 diagnostics / evidence；無法在目前 scope 內安全取得就 STOP。
 
+## 首次接觸診斷 Harness（First-contact Diagnostic Harness / Test Consumer）
+
+首次接觸新 hardware、network service、protocol、runtime/backend 或其他 external integration，且 production path 的實際行為／contract 尚未有足夠 observability 時，優先考慮 isolated diagnostic harness / test consumer，而不是直接把未知行為塞進 production runtime 或先用猜測式 patch 取得 evidence。
+
+Diagnostic harness 一般應：
+
+- default inert；
+- bounded，具有明確 timeout / stop condition；
+- read-only 優先；
+- one-shot / explicit action 優先，不在背景無界執行；
+- 不保存或輸出 secret / credential material；
+- 不做 destructive / state-changing operation，除非該 mutation 本身就是已明確授權且不可替代的實驗條件；
+- bounded retry，不做 infinite retry / polling；
+- 只輸出足以區分假說或驗證 contract 的最低必要 evidence。
+
+若 harness 需要真實 network、external service、hardware、credential 或其他高 capability execution，仍服從 `REPOSITORY_EXECUTION.md` 的 Task/Stage authorization、permission 與 credential boundary；「只是診斷」不會自動取得 mutation 或硬體執行授權。
+
+Harness PASS 只證明其實際 target / backend / fixture / measurement profile 的 scope；不得把 isolated smoke、自建 test consumer、mock 或相似硬體結果直接升格成 production/network/hardware PASS。Embedded first-contact 的 target/device evidence delta 另見 `EMBEDDED_PROJECTS.md`。
+
+核心原則：**先用最低風險、最低擾動的 isolated evidence consumer 了解未知 contract；diagnostic harness 是 observability 工具，不是繞過正式 production / authorization boundary 的捷徑。**
+
 ## 執行失敗分類（Operational failure taxonomy）
 
 真正 execution/operational failure 分類：
