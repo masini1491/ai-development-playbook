@@ -8,7 +8,7 @@
 
 ## Prompt 開頭固定資訊
 
-每份 Codex Prompt 前段至少包含：
+對 **Direct Short Prompt** 與 **Standalone Full Prompt**，前段至少包含：
 
 - 目標 Repository：`owner/repo`
 - 預期 Branch
@@ -18,6 +18,8 @@
 - 是否值得先用較便宜模型做前置蒐證：是/否 + 理由
 - 必要時補 Context 建議
 - 必要時補 Execution mode
+
+若使用 **TASKS Short-launch**，而 referenced Stage 已在最新 `TASKS.md` 保存 model / reasoning / Context / execution mode 等建議，**不要為了符合固定欄位再次把這些資訊展開到可複製 launch body**。ChatGPT 可在 Prompt 外用一行精簡顯示建議設定，供使用者在 Codex UI 選擇；launch body 仍保持短指令。若 Stage 沒有保存必要設定，才補最低充分資訊。
 
 模型與推理強度由使用者在 Codex UI 手動選擇。Codex 不得自行 Luna→Terra→Sol，也不得自行 Low→Medium→High。
 
@@ -86,7 +88,7 @@ Prompt 只需：
 
 1. 要求先讀最新 project `AGENTS.md`；
 2. 依 `AGENTS.md` routing 與本次 Task 讀最低必要 playbook 章節；
-3. 保存本次 task-specific evidence / scope / validation / STOP condition。
+3. 若沒有其他 repository authority 保存本次 task contract，才補最低充分 task-specific evidence / scope / validation / STOP condition。
 
 只有下列情況才應在 Prompt 額外指定某個 playbook 文件：
 
@@ -97,6 +99,48 @@ Prompt 只需：
 
 `AGENTS.md` routing 只降低重複 Prompt 與 discovery cost，不代表 playbook repository 內容已自動存在於 execution environment。若需要 external access，仍依 Permission-Gated Operation 處理。
 
+## Prompt 模式選擇（Prompt Mode Selection）
+
+產生 Codex Prompt 前，先選**最低充分 Prompt mode**。預設順序：
+
+`TASKS Short-launch → Direct Short Prompt → Standalone Full Prompt`
+
+### 1. TASKS Short-launch — 有 canonical executable Stage 時的預設
+
+若最新 repository `TASKS.md` 已保存可執行 Stage，且 Codex 能依 repository governance 讀取該 Stage 與其 authority，使用 **TASKS Short-launch**。此時：
+
+- Prompt 是 **execution pointer，不是 specification container**；
+- 以 exact Stage name 指向 `TASKS.md`，要求安全同步、讀最新 `AGENTS.md` / `TASKS.md`、依 routing 取得最低必要 authority、只執行該 Stage、依 queue action 收尾；
+- **不得重新敘述** Stage 已保存的 evidence、approved contract、allowed/forbidden scope、validation matrix、STOP/escalation、model/reasoning/context、歷史 root-cause timeline 或其他 canonical內容；
+- 只有 launch 時出現、而 repository authority 尚未保存的 material新資訊，才補進 Prompt；若該資訊需要後續追蹤，優先先更新 canonical Stage，而不是把 Prompt變成第二份 specification；
+- Short-launch 預設應能維持在**一個短段落**。若開始出現多段 evidence、長 bullets、完整 validation checklist 或大量 frozen behavior，先做 duplication check；通常代表正在重複 repository authority。
+
+核心原則：**Reference, don’t repeat。** Codex 可讀到的 canonical資訊，用 path / Stage name / authority reference 指向，不在 launch Prompt 再複製一份。
+
+### 2. Direct Short Prompt — 一次性、低追蹤價值工作
+
+若工作符合本文件的 TASKS Admission / Direct Short Prompt 條件，不需要建立 active queue item，使用 bounded direct Prompt。只放安全完成該一次性工作真正需要的 target、scope、必要 evidence、validation 與 STOP boundary；不要把整個 project history 裝進 Prompt。
+
+若 Direct Short Prompt 為了安全描述開始需要大量 historical evidence、很多 dependent scope、長 validation matrix、future trigger 或跨 Stage state，這通常是應進 TASKS 的訊號；先依 Admission threshold 建立／更新 Stage，再改用 Short-launch，而不是持續把 Direct Prompt 拉長。
+
+### 3. Standalone Full Prompt — 只有真的需要 self-contained 時
+
+只有下列情況才使用較完整的 standalone Prompt：
+
+- Codex 無法存取完成任務所需的 repository authority；
+- repository 尚無可靠 `AGENTS.md` / `TASKS.md` routing 或 canonical Stage；
+- 跨系統／跨 repository handoff 必須攜帶對方無法取得的 material context；
+- 使用者明確要求 self-contained / standalone / full Prompt；
+- 其他 evidence 證明只用 reference 會使 execution contract不完整或不安全。
+
+Standalone 也只帶最低充分 context；「需要自成一體」不是貼上整段聊天紀錄、完整 Playbook 或所有歷史 evidence 的理由。
+
+### Prompt 長度是診斷訊號，不是品質指標
+
+不設定僵硬字數上限，因 task complexity 不同；但 Prompt 明顯變長時，先判斷長度來自**不可替代的 task-specific contract**，還是 repository 已存在資訊的 duplication。Prompt 越長不代表越安全；重複 authority 會增加 Context inflation、drift、過期 evidence 與 Codex 誤把 Prompt 副本當最新 authority 的風險。
+
+核心原則：**若完整 specification 已存在 repository，ChatGPT 的工作是產生最短安全 launch pointer，而不是再寫一份 specification。**
+
 ## TASKS 收錄／直接短 Prompt（TASKS Admission / Direct Short Prompt）
 
 **產生 Codex Prompt 不代表一定要建立 `TASKS.md`。**
@@ -106,6 +150,8 @@ Prompt 只需：
 這類工作通常可從 **Luna / Low、Context L0→1、Agent 1、Focused patch** 起步，再依實際 evidence 調整。
 
 需要後續追蹤、Blocked / Deferred / Pending-validation、多 Stage、有 dependency / trigger、root cause 未確認、可能接續 implementation、具有 material project/validation effect，或若不記錄便容易遺漏時，才應建立／更新 `TASKS.md`。
+
+一旦工作已 admission 到 `TASKS.md` 且有可執行 canonical Stage，對使用者產生的 Codex launch 預設改用上述 **TASKS Short-launch**；不要再把 Stage 內容完整改寫成另一份 Prompt。
 
 完整 Admission threshold 與 lifecycle 以 `REPOSITORY_EXECUTION.md` 為 authority；本節只負責 Prompt-generation routing，不重複維護完整 queue policy。
 
@@ -264,18 +310,25 @@ Codex 無權自行換模型。達到 escalation condition 時：
 
 ## 精簡 Prompt（Prompt lean）
 
-穩定規則應放在 repository governance / playbook，不應在每個 Stage 重複全文。
+穩定規則應放在 repository governance / playbook，不應在每個 Stage 重複全文。**已存在且 Codex 可讀取的 task-specific authority 也同樣 reference，不重複。**
 
-Stage Prompt 只保存：
+對 TASKS Short-launch：
+- 只保存 target repository / branch、exact Stage pointer、必要 bootstrap/routing 指示與 completion/queue action；
+- Stage 已有的 evidence、scope、forbidden scope、validation、STOP condition 不在 launch Prompt 重寫；
+- 預設維持一個短段落。若明顯超出，先檢查是否正在 duplicate `TASKS.md` / AGENTS / spec / validation authority。
+
+對沒有 canonical Stage 的 Direct / Standalone Prompt，才保存最低充分：
 - target repo
-- target stage
-- task-specific evidence
+- target stage / task
+- 無法由 repository authority取得的 task-specific evidence
 - allowed scope
 - forbidden scope
 - targeted validation
 - success/STOP condition
 
-以降低 Context inflation。
+若這些內容持續膨脹，應先判斷是否應 admission 到 TASKS，而不是把「self-contained」當成無限制擴寫理由。
+
+以降低 Context inflation、authority drift 與重複維護。
 
 **Prompt／Context／tool output 的節流規則不延伸到 human-maintained source code。** Codex 不得為了降低 Token、LOC、diff display 或輸出長度，把 production/test source 壓成多 statement one-liner、做 source minification 或降低既有可讀性。Behavior-preserving／mechanical Stage 的完整 readability baseline 以 `RESEARCH_ARCHITECTURE.md` 的 Readability Preservation 為 authority；本檔不重複維護 formatting policy。
 
