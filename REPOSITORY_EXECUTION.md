@@ -231,6 +231,21 @@ Canonical evidence 解決的是「如何重現 repository 事實」，不取代 
 
 Task 成功驗證後刪除/更新該 unfinished item；完全清空時刪除 `TASKS.md`。
 
+### 觸發式技術債／佇列衛生（Triggered Technical Debt / Queue Hygiene）
+
+**發現技術債不等於立即修，也不等於應把所有候選一次塞進 `TASKS.md`。** `TASKS.md` 是 active unfinished-work / executable scoped Prompt queue，不是 refactor 願望清單或永久 debt register。
+
+一般原則：
+
+- 對不影響目前 correctness、安全、正式 contract 或必要 validation 的 maintenance、documentation、structure、naming 或 modularity debt，若立即處理會打擾正在使用的 baseline、增加 unrelated diff、擴張目前 Stage 或使重要 evidence 失效，優先保持 Deferred，而不是「順手清掉」。
+- 多個真實 refactor candidate 同時存在時，只把**下一個可執行且有明確 trigger / dependency / validation boundary** 的 Stage 提升為 active work。其他候選若不記錄容易遺失，才以精簡 Deferred item 保存；不得把整份 architecture wish list 轉成可執行 queue。
+- Deferred debt 至少應能回答：`why / owner or surface / trigger / blocked-by or dependency / allowed scope / required revalidation`。若連 trigger 與完成邊界都尚不清楚，優先保留在 architecture analysis / discussion，而不是建立模糊 TASKS item。
+- Trigger 成立且同一 owner/surface 本來就要合法修改時，可以在不擴張 behavior scope 的前提下合併低風險 maintenance；但必須保留明確 scope，不能把「反正正在改附近」當成 general cleanup、renaming spree、library extraction 或 architecture redesign 的授權。
+- 若目前有被 freeze 的 runtime/hardware/performance baseline，與該 baseline 無關且不影響 correctness 的 debt 通常等到 baseline 不再需要、或同一 surface 出現合法修改 Stage 時再處理。若 debt 本身正在阻礙取得必要 evidence，則可另立最小 scoped Stage，不必為了保護 baseline 永久延後。
+- Active debt Stage 完成後重新評估 repository current state，再決定下一個候選；不要因先前 inventory 一次列出很多問題，就自動串行執行全部後續 refactor。
+
+核心原則：**技術債用 trigger、ownership 與 evidence boundary 管理，不用「看到就修」或「全部排進 TASKS」管理。**
+
 在宣告 Task/Stage 完成、移除對應 queue entry 或進入下一 Stage 前，只要本 Stage 宣稱發生 repository mutation、commit/push、queue bookkeeping 或 validation-state 變更，必須依 `DEBUG_VALIDATION.md` 的 **Completion Evidence Guard**，以最低充分 canonical repository evidence 交叉確認完成狀態。若 agent completion report 與 current Git / scoped diff / validation / `TASKS.md` state 不一致，立即 STOP；不得以自然語言 summary 覆蓋 repository evidence，也不得沿用該 completion report 繼續下一 Stage。
 
 ## ChatGPT／Codex Repository 寫入邊界（ChatGPT / Codex Repository Write Boundary）
