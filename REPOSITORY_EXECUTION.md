@@ -18,6 +18,27 @@
 
 若 identity mismatch：立即 STOP，回報 expected/detected repository、branch、HEAD；不得修改任何檔案、不得自行切換 repository、不得自行 clone、不得將 Prompt 套用到相似專案。
 
+## 聊天室級 Repository 寫入鎖（Conversation-scoped Repository Write Lock）
+
+對遵循本手冊的 ChatGPT／planning conversation，**同一聊天室同一時間只能有一個明確的 `Current Write Target Repository`**。本聊天室直接發起的任何 repository mutation，必須先通過這個 gate；其他 repository 一律 read-only。
+
+一般原則：
+
+- 第一次需要 repository mutation 前，必須由使用者的明確指示足以辨識唯一 writable repository；若尚未能確定 `Current Write Target Repository`，所有 repository 維持 read-only，先釐清 target，不得先寫再補授權。
+- Current Write Target 以外的 repository，即使可被 GitHub connector／credential 讀寫，也只能讀取、搜尋、比較、review、取得 evidence 或產生建議／Prompt；**不得建立、更新、刪除或改名其任何 path，包括 `TASKS.md`、`AGENTS.md`、source、docs、tests、workflow 或其他檔案。**
+- `Current Write Target Repository` 只是 repository-level 必要條件，不增加任何 path/action 權限。實際 mutation 仍須同時符合該 repository governance、ChatGPT／Codex write boundary、目前 Task/Stage authorization、execution permission 與 credential capability。
+- 發現另一 repository「也應同步」、「順便對齊」、「同樣需要修」、「規則看起來應一起改」或存在合理 cross-repo follow-up，只建立 read-only analysis／handoff；不得據此推導第二個 writable repository。
+- 「好」、「繼續」、「照這樣做」等承接語句，以及對目前工作的一般同意，不構成 write-target switch。若新的 mutation request 指向不同 repository，必須由使用者**明確指定切換 writable repository**或等價清楚意圖；在此之前 STOP 該 repository mutation。
+- Write target 一旦明確切換，舊 target 立即回到 read-only；**同一聊天室不得同時保留兩個 writable repositories。**
+- `masini1491/ai-development-playbook` 的 ChatGPT-maintainer 例外也受本 gate 限制：只有它是本聊天室 Current Write Target 時，ChatGPT 才可直接維護手冊；若聊天室目前鎖定其他 project repository，手冊在該聊天室同樣 read-only。
+- 這個 write lock 不限制合法的跨 repository read-only research／comparison，也不代表另一個獨立聊天室或另行明確啟動的 execution session 自動沿用本聊天室 target；每個 conversation/session 依其自己的明確授權建立 write boundary。
+
+對本聊天室直接 repository mutation，可視為：
+
+`Allowed mutation = Current Write Target match ∩ Repository governance ∩ Task/Stage authorization ∩ Execution permission ∩ Credential capability`
+
+核心原則：**Repository access ≠ conversation write authority；先鎖定唯一 writable repository，再判斷該 repository 內實際允許寫什麼。**
+
 ## Workspace 寫入能力關卡（Workspace Write Capability Gate）
 
 在任何**需要修改 repository** 的 Task / Stage 開始 file mutation 前，先確認 execution environment 對目標 working tree 具有完成該 Stage 所需的最小寫入能力。
@@ -309,6 +330,7 @@ Task 成功驗證後刪除/更新該 unfinished item；最後一項移除後依�
 - 除 `TASKS.md` 外，所有 repository path 一律唯讀，包括 `AGENTS.md`、README/docs、source、tests、scripts、tooling、workflow/CI、config、manifest、lock files 等。
 - 可以讀取、分析 evidence、比較版本、提出修改方案與產生 Codex Prompt，但不得直接建立、更新、刪除或改名其他 path。
 - 若非 `TASKS.md` 檔案需要修改：先讀最新 evidence、避免 duplicate task，必要時只在 root `TASKS.md` 建立/更新 scoped unfinished task / executable Prompt，再由 Codex 執行真正修改。
+- 收到 Codex／coding agent 的執行結果後，若結果涉及 GitHub repository tracked-file 修改、commit、push、queue bookkeeping 或其他遠端 repository state claim，ChatGPT 在接受「完成」或據此推進下一 Stage 前，必須依 `DEBUG_VALIDATION.md` 的 **Completion Evidence Guard** 執行 GitHub remote read-back；Codex 的自然語言 summary 本身不是完成 authority。
 - 使用者直接要求 ChatGPT 修改 AGENTS/README/source，也不自動越過此 boundary；除非使用者明確修改這條治理規則本身。
 
 ### Codex／coding agent
