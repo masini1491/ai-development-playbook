@@ -156,6 +156,23 @@ Required capability 缺失應 fail closed；Optional capability 缺失可以是�
 
 Domain owner 要清楚；gateway/composition layer 不應偷接管 credential、authorization、safety-critical ownership。
 
+## Domain Cohesion／漸進式 Domain Extraction（Progressive Domain Extraction）
+
+Refactor priority 應依 **ownership、responsibility cohesion、state authority 與 dependency coupling** 判斷，而不是只看 LOC、檔案大小、header 大小、函式數量或名稱是否看起來老舊。
+
+一般判斷：
+
+- 大型 module 若仍有單一清楚 owner、共同 lifecycle 與可審查 contract，可以保持聚合；反之，小型 module 若同時持有多個互不直接相關的 persistence、network、security、hardware 或 application domain，反而是更強的 refactor signal。
+- 當 module / file 名稱已無法合理描述它實際掌管的 responsibilities，或同一 owner 同時成為多個 domain 的 state/persistence/network authority，應先做 bounded read-only boundary inventory，確認真正的 ownership seam，而不是直接按檔案切割。
+- God module、God header、廣泛 global/shared state 常是 ownership 漂移的**症狀**，不一定是第一刀 target。優先抽離一個 owner 清楚、coupling 較低、validation coverage 較強的 domain；每完成一個 extraction，再依新的 dependency graph 決定下一步。
+- 推薦流程：`Read-only boundary inventory → Freeze protected invariants → Extract one coherent domain → Targeted validation → Re-evaluate dependency graph → Next trigger / STOP`。
+- Shared/global surface 應優先隨 domain extraction 逐步縮小；不要為了「清 God header」建立一次大範圍 state/API migration，除非 evidence 證明 shared surface 本身就是 current correctness / safety blocker。
+- 一次只恢復一個 coherent ownership boundary。不得把 runtime、Web、persistence、network、hardware adapter、naming cleanup 與 speculative abstraction 綁成 big-bang refactor，只因它們都被辨識為技術債。
+- Extraction 後若發現必須改變 behavior、timing、concurrency ownership、protocol/security contract 或其他 protected invariant 才能完成，停止 behavior-preserving scope，轉成獨立 architecture/correctness decision；不得用 refactor 名義偷帶 behavior change。
+- 是否現在執行 extraction 仍需服從 `DEBUG_VALIDATION.md` 的 evidence lifecycle / refactor timing：如果某 domain 高度依賴尚未完成的 runtime/hardware evidence，而且現有結構沒有阻礙取得該 evidence，通常先完成 evidence gate，再做結構重整。
+
+核心原則：**大檔案不是技術債的充分證據；混亂的 ownership 才是。還技術債時一次恢復一個可驗證 domain boundary，不做 big-bang cleanup。**
+
 ## 可抽成 Library，但不急著抽（Library-ready, not library-now）
 
 Library-ready ≠ 現在就拆 library。
