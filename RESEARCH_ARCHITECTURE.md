@@ -156,6 +156,28 @@ Required capability 缺失應 fail closed；Optional capability 缺失可以是�
 
 Domain owner 要清楚；gateway/composition layer 不應偷接管 credential、authorization、safety-critical ownership。
 
+## Ownership Admission Gate（Ownership 收錄關卡）
+
+新增會持有**長期 state、persistent data、runtime lifecycle、network/service interaction、hardware resource、authorization/security state 或其他持續責任**的功能前，先確認其 semantic/domain owner，再決定 implementation 放在哪裡；不得因某個 module 已經有方便使用的 helper、global、include 或 dependency，就把新的 responsibility 順手塞進去。
+
+推薦流程：
+
+`Feature responsibility → Semantic/domain owner → State/lifecycle authority → Public contract / dependency direction → Implementation location`
+
+一般原則：
+
+- **Dependency availability ≠ ownership。** 某 module 已經 include `Preferences`、HTTP client、WebServer、Wi-Fi、filesystem 或其他 capability，不代表新的 persistence、network、UI 或 service responsibility 就由它擁有。
+- **Caller ≠ owner。** UI/Web/CLI handler、router、event consumer 或 application entry point 可以呼叫 domain API，但不因為它接到 request/event 就自動取得該 domain 的 persistence、authorization、credential、business rule 或 lifecycle ownership。
+- **Orchestrator ≠ domain owner。** `setup()/loop()`、runtime coordinator、composition root 或 lifecycle manager可以啟動、排序與組合各 domain；除非 contract 明確如此，不能因為它負責呼叫就逐步吸收各 domain implementation/state。
+- **Shared/global surface ≠ default home。** 找不到 owner 時，不得先塞進 `shared.*`、common global、God header、misc/util module 或 process-wide mutable state「之後再整理」；先判斷這是既有 domain 的責任、需要最低充分新 boundary，還是 ownership 尚未決定。
+- Persistence、credential、authorization、安全狀態與 hardware/resource owner 應跟真正的 domain authority 走；presentation/configuration layer可以呈現或轉交操作，但不得因方便 UI 實作就成為底層 state owner。
+- 一個新 owner 最好能用一句話說清楚：**它擁有什麼 state/lifecycle、對外提供什麼 contract、明確不擁有什麼。** 若無法清楚描述，先縮小 responsibility 或做 bounded architecture decision，不要直接進 implementation。
+- 若現有 owner 能自然承擔新功能，而且 responsibility/lifecycle/validation contract 仍 cohesive，不為形式新建 module；Ownership Admission Gate 不是「每個 feature 一個檔案」規則。
+- 若 ownership ambiguity 會改變 security、authorization、protocol、persistence、hardware、concurrency 或其他高影響 contract，先進 Decision Stage／freeze authority；若只是低風險、stateless、局部 helper，可依現有 coherent owner 保持簡單，不增加 ceremony。
+- Implementation/review 時若發現實際 responsibility 已偏離原先 owner，應停止繼續擴張該 module，先記錄 ownership drift；依本文件的 Domain Cohesion／Progressive Domain Extraction 與 `REPOSITORY_EXECUTION.md` 的 technical-debt trigger 規則決定是否立即修正或 Deferred。
+
+核心原則：**有能力呼叫某 dependency，不代表擁有該 domain；先決定 owner，再決定程式放哪裡。**
+
 ## Domain Cohesion／漸進式 Domain Extraction（Progressive Domain Extraction）
 
 Refactor priority 應依 **ownership、responsibility cohesion、state authority 與 dependency coupling** 判斷，而不是只看 LOC、檔案大小、header 大小、函式數量或名稱是否看起來老舊。
