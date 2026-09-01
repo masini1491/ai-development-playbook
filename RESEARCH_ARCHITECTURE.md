@@ -249,6 +249,23 @@ Refactor priority 應依 **ownership、responsibility cohesion、state authority
 
 核心原則：**大檔案不是技術債的充分證據；混亂的 ownership 才是。還技術債時一次恢復一個可驗證 domain boundary，不做 big-bang cleanup。**
 
+## 可讀性保持（Readability Preservation）
+
+Human-maintained source 的可讀性屬於 maintainability contract。它的優先級低於 correctness、safety、security、protocol 與正式 behavior contract，但高於純 cosmetic formatting preference；在 correctness、complexity、performance 與風險實質相當的方案中，優先選擇更容易被人類閱讀、review、debug、blame 與後續修改的表達方式。
+
+一般原則：
+
+- Behavior-preserving refactor、mechanical relocation、module extraction、rename、dependency cleanup 或其他主要目的不是重寫邏輯的 Stage，預設**不得降低既有 source readability**。
+- 除非 Stage 明確授權 formatting/style change，應盡量保留既有 statement granularity、control-flow clarity、comment intent 與局部 formatting convention；`relocation ≠ rewrite`。
+- 不得為縮短 LOC、token、diff display 或表面「精簡」而把多個獨立 statement 合併成一行、把原本清楚的 multi-line condition/call/loop 壓成難讀 one-liner，或做其他 source minification / statement compression。
+- **Token / LOC reduction 不是 human-maintained production source 的 optimization target。** Prompt、tool output、diagnostic log 可以依成本規則節流；source code 不應因此被壓縮。
+- 若 touched code 原本已有明顯局部可讀性問題，可在同一已授權 scope 內做最低必要改善，但不得因此擴張成全檔 reformat、repository-wide style cleanup、renaming spree 或 unrelated rewrite。
+- Generated、minified、vendored、machine-produced 或 upstream-controlled code 不適用相同 human-readability baseline；是否格式化應服從其 generator/upstream authority，避免產生無法維護的手工 drift。
+- Readability 不得凌駕正式 semantics：不能為了「更好看」改 protocol value、timing、state ownership、security behavior、persistent schema、hardware mapping 或其他 protected invariant。
+- Review behavior-preserving / mechanical diff 時，若功能與 validation 都 PASS 但 source 明顯比 baseline 更難讀，應把它視為 maintainability regression，而不是因「程式還能跑」就自動接受。
+
+核心原則：**Human-maintained source 的可讀性是工程效率的一部分；沒有實質收益時，不應用更短的程式換取更高的閱讀與維護成本。**
+
 ## 可抽成 Library，但不急著抽（Library-ready, not library-now）
 
 Library-ready ≠ 現在就拆 library。
