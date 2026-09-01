@@ -156,6 +156,60 @@ Required capability 缺失應 fail closed；Optional capability 缺失可以是�
 
 Domain owner 要清楚；gateway/composition layer 不應偷接管 credential、authorization、safety-critical ownership。
 
+## State／Lifecycle Integrity（狀態／生命週期完整性）
+
+對跨 process、service、device、backend、embedded 或 local application 都可能出現的 persistent state / desired state / lifecycle transition，先把 identity、transaction、reconciliation 與 continuity 視為 architecture contract；不要把它們留成某個 framework、UI 或裝置層的 incidental implementation detail。
+
+### Persistent State 交易完整性（Persistent State Transaction Integrity）
+
+對 security、identity、auth、routing、hardware behavior、credential、critical config 或其他重要 persistent state，避免多 key／多 resource partial success。
+
+推薦語意：
+
+`write → exact readback / authoritative confirmation → validate → commit / fail-safe / rollback → explicit result`
+
+一般原則：
+
+- Identity / owner / routing change 必須處理依賴它的 stale state；需要時使用 generation、transaction、version 或 migration semantics。
+- 成功寫入一部分 field/resource 不等於整體 transaction 成功；對外 completion 應以 contract 定義的完整 commit point 為準。
+- Reusable persistence helper 應在真實 consumer semantics 證明後再抽象；不要讓 generic helper 偷定義 domain transaction boundary。
+
+### 收斂式／冪等式協調（Convergent / Idempotent Reconciliation）
+
+對代表 desired state 的 registration、sync、scheduler、bridge exposure、subscription、binding、configuration apply 或其他 reconciliation operation，重複執行、retry、restart 或 reconnect 後應收斂到同一 intended state；不得因相同輸入重複建立 device/entity/job/binding/subscription 或其他 logical resource。
+
+一般原則：
+
+- 使用 stable identity、canonical key、generation/version 或其他可重現 identity 判斷 existing state；不要只靠目前 session memory 推定「之前應該建立過」。
+- Reconciliation 應能區分 create、update、already-satisfied、stale/obsolete 與 conflict；合法重跑不得默默變成 duplicate creation。
+- 若 external platform / bridge / scheduler / broker 可能保留 stale state，reconnect 或 restart 後先取得最低充分 current evidence，再 reconcile；不要無條件重新 enumerate／register 全部資源。
+- Retry 只有在 operation semantics 已確認可安全重入時才可視為 idempotent；不得因 API 名稱看起來像 `set` / `sync` / `register` 就假設重試無副作用。
+- Validation 除了「這次操作成功」，需要時還應檢查 duplicate、stale reference、unexpected re-enumeration、orphan resource 與 intended mapping 是否維持唯一性。
+- 若底層 operation 天生 non-idempotent，應建立 explicit deduplication / transaction / idempotency-key / state-machine boundary，或把 retry 交給知道 operation ownership 的單一 owner；不要讓多個 layer 各自盲目重試。
+
+核心原則：**同一 desired state 被重新套用，不應產生新的 logical state；reconciliation 的成功是收斂，不只是 command 回傳成功。**
+
+### 生命週期狀態連續性（Lifecycle State Continuity）
+
+若產品宣稱 restart、reboot、OTA、upgrade、migration、container/device replacement 或其他 lifecycle transition 不需要重新 commissioning／configuration，則 stable identity、persistent config、binding、automation reference、external integration mapping 與其他必要 state 應被視為明確 continuity contract。
+
+推薦驗證思路：
+
+`pre-state snapshot → lifecycle operation → startup/recovery → post-state reconciliation → continuity evidence`
+
+一般原則：
+
+- 先列出哪些 state 必須跨 lifecycle 保留、哪些可以合法重建、哪些應被清除；不要用「資料都還在」或「服務有起來」代替正式 continuity contract。
+- Stable identity、device/entity mapping、binding、scene/automation reference、credential ownership、routing/config 與其他 external reference 若屬 REQUIRED continuity，transition 後不得 silently regenerate 成不同 identity 或 duplicate resource。
+- Local runtime healthy / boot PASS 不等於 external integration continuity PASS；若 correctness 依賴 external consumer，需要最低充分的 post-lifecycle mapping / reachability / state evidence。
+- Backup/restore、migration 或 replacement 若宣稱可保留設定，應驗證 restored state 的 schema/version compatibility、identity ownership 與 external reference continuity；成功 import file 不等於整體 continuity 成立。
+- Lifecycle transition 若允許 intentionally reset identity / binding / commissioning state，應是明確 contract 與 operator-visible effect，不得由 restart/upgrade 意外觸發。
+- 不要求每次小版更新都做完整 production migration test；依實際風險選代表性 continuity fixture / targeted integration validation。
+
+Embedded-specific 的 partition/NVS、physical output、board/device binding 與 hardware evidence補充見 `EMBEDDED_PROJECTS.md`。
+
+核心原則：**Lifecycle success 不只是「重新啟動成功」，而是所有宣稱應延續的 identity、binding 與 external reference 仍能被同一套 authority 正確辨識。**
+
 ## Ownership Admission Gate（Ownership 收錄關卡）
 
 新增會持有**長期 state、persistent data、runtime lifecycle、network/service interaction、hardware resource、authorization/security state 或其他持續責任**的功能前，先確認其 semantic/domain owner，再決定 implementation 放在哪裡；不得因某個 module 已經有方便使用的 helper、global、include 或 dependency，就把新的 responsibility 順手塞進去。
@@ -168,9 +222,9 @@ Domain owner 要清楚；gateway/composition layer 不應偷接管 credential、
 
 - **Dependency availability ≠ ownership。** 某 module 已經 include `Preferences`、HTTP client、WebServer、Wi-Fi、filesystem 或其他 capability，不代表新的 persistence、network、UI 或 service responsibility 就由它擁有。
 - **Caller ≠ owner。** UI/Web/CLI handler、router、event consumer 或 application entry point 可以呼叫 domain API，但不因為它接到 request/event 就自動取得該 domain 的 persistence、authorization、credential、business rule 或 lifecycle ownership。
-- **Orchestrator ≠ domain owner。** `setup()/loop()`、runtime coordinator、composition root 或 lifecycle manager可以啟動、排序與組合各 domain；除非 contract 明確如此，不能因為它負責呼叫就逐步吸收各 domain implementation/state。
+- **Orchestrator ≠ domain owner。** `setup()/loop()`、runtime coordinator、composition root 或 lifecycle manager 可以啟動、排序與組合各 domain；除非 contract 明確如此，不能因為它負責呼叫就逐步吸收各 domain implementation/state。
 - **Shared/global surface ≠ default home。** 找不到 owner 時，不得先塞進 `shared.*`、common global、God header、misc/util module 或 process-wide mutable state「之後再整理」；先判斷這是既有 domain 的責任、需要最低充分新 boundary，還是 ownership 尚未決定。
-- Persistence、credential、authorization、安全狀態與 hardware/resource owner 應跟真正的 domain authority 走；presentation/configuration layer可以呈現或轉交操作，但不得因方便 UI 實作就成為底層 state owner。
+- Persistence、credential、authorization、安全狀態與 hardware/resource owner 應跟真正的 domain authority 走；presentation/configuration layer 可以呈現或轉交操作，但不得因方便 UI 實作就成為底層 state owner。
 - 一個新 owner 最好能用一句話說清楚：**它擁有什麼 state/lifecycle、對外提供什麼 contract、明確不擁有什麼。** 若無法清楚描述，先縮小 responsibility 或做 bounded architecture decision，不要直接進 implementation。
 - 若現有 owner 能自然承擔新功能，而且 responsibility/lifecycle/validation contract 仍 cohesive，不為形式新建 module；Ownership Admission Gate 不是「每個 feature 一個檔案」規則。
 - 若 ownership ambiguity 會改變 security、authorization、protocol、persistence、hardware、concurrency 或其他高影響 contract，先進 Decision Stage／freeze authority；若只是低風險、stateless、局部 helper，可依現有 coherent owner 保持簡單，不增加 ceremony。
@@ -284,7 +338,7 @@ Library-ready ≠ 現在就拆 library。
 
 - 同一 stable policy 只保留一個主要 authority；其他文件用 routing/reference，避免全文複製造成 drift。
 - Operator runbook 不得因方便操作而把 service credential、deployment target 或 protocol contract 自行重新定義。
-- Service-specific setup 文件可以比共通 playbook 更具體，但不得削弱 repository governance 或 protocol/security authority。
+- Service-specific setup 文件可以比共通手冊更具體，但不得削弱 repository governance 或 protocol/security authority。
 - 若專案只有單一、簡單、低風險 external service，不必為形式建立完整目錄結構；只有當 service 數量、deployment target、credential、mutation boundary 或 operator workflow 複雜度值得時才拆分。
 
 ## UI／UX routing
