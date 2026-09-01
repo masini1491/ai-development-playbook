@@ -141,6 +141,35 @@ Feature 可標：
 
 Required capability 缺失應 fail closed；Optional capability 缺失可以是合法 unavailable，不應用假值掩蓋。
 
+## Performance／SLA 收錄關卡（Performance / SLA Admission Gate）
+
+可量測的 latency、throughput、memory、CPU、retry interval、timeout、polling frequency、queue depth、availability 或其他數值，**不因「越快／越小／越高越好」就自動成為 hard requirement、acceptance criterion 或 validation failure threshold**。在把數值升格為 architecture / product contract 前，先確認它服務的實際 path、角色、use case、criticality 與超標後果。
+
+推薦判斷：
+
+`Metric → Exact path / owner → Primary / fallback / telemetry / diagnostic role → User/system consequence → Requirement class → Evidence-backed threshold → Validation scope`
+
+Requirement class 至少區分：
+
+- **Hard requirement / correctness gate**：超標會破壞必要功能、安全、protocol、timing contract、可用性或明確 product acceptance；FAIL 代表目前設計不可接受。
+- **Operational target / service objective**：正常條件下應追求並量測，但短暫超標不一定代表 correctness failure；需依 use case、分位數、環境與 degraded-mode contract 判斷。
+- **Optimization goal / observation metric**：改善有價值，但超標本身不構成 failure，也不應因單一數字自動建立額外 implementation / refactor Stage。
+
+一般原則：
+
+- **Measured metric ≠ required contract。** 能被量到、能畫圖、已有 verifier 或曾經設定過 threshold，不代表該數值已經被產品／architecture authority正式收錄為 hard gate。
+- **Backup-path performance ≠ primary-path SLA。** Primary、fallback/degraded、telemetry、diagnostic、background sync 等不同 path 不得機械共用同一 latency / throughput SLA，除非其實際 use case 與 architecture contract 明確要求相同服務等級。
+- 同一 transport / protocol 名稱也可能承擔不同角色；例如同為 MQTT，一條 edge 可能是 primary control path，另一條只是 RS485 failure 時的 fallback。SLA 應依**communication edge / semantic role**定義，不依 technology label 一刀切。
+- 在硬化 threshold 前，至少回答：`哪條 path？誰是 owner？這是 primary 還是 fallback？服務什麼操作？超標後實際壞什麼？使用者是否可接受 degraded behavior？`。若無法回答，不得把任意 round number、現有測試值或「感覺應該很快」升格成 correctness contract。
+- 1000 ms、100 ms、80% RAM、固定 retry count 等 round number 只有在有 product / protocol / safety / UX / upstream authority 或代表性 evidence 支持時才可成為 hard gate；不得因數字容易寫 verifier 就反向製造需求。
+- 若舊文件／測試已把某 threshold 寫成 hard FAIL，但 current architecture evidence 顯示其實只是 fallback optimization、observability threshold 或沒有 material consequence，先做 requirement reconciliation；不要為了讓不適用的 verifier變綠而增加 retry、queue、instrumentation、polling、revalidation 或 architecture complexity。
+- Performance work 的 scope 應與 consequence 對齊。若超標只影響非關鍵 fallback 的體感，優先保留 bounded observation / optimization；若會破壞 primary control、safety、deadline、resource ceiling 或正式 external contract，才升為 active correctness/performance Stage。
+- 若不同 path 必須共享資源，仍應評估低優先 path 是否會反向拖累 primary path；「fallback SLA 較寬」不代表允許它阻塞、starve 或破壞 primary correctness。
+- 對 latency / throughput 等 stochastic metric，需要時定義 measurement condition、sample/window、percentile、network/load profile 與容許 degraded mode；不要用單次最好／最差樣本冒充完整 SLA。
+- Requirement 被降級、修改或移除時，相關 tests/verifier/docs/TASKS 也應依 authority 同步 reconcile；但只做最低充分修改，不因移除過度嚴格 threshold 順便重構整個 transport stack。
+
+核心原則：**先證明數字對產品有什麼實際約束，再讓數字約束 implementation；不要讓容易量測的 metric 反過來製造不必要的工程工作。**
+
 ## 資源感知部署（Resource-aware deployment）
 
 新能力不一定要塞進原 MCU。
