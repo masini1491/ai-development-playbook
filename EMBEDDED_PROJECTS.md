@@ -144,6 +144,40 @@ Identity change 必須處理依賴它的 stale state；必要時用 generation/t
 
 Reusable helper 應在真實 consumer semantics 證明後再抽象。
 
+## 收斂式／冪等式協調（Convergent / Idempotent Reconciliation）
+
+對代表 desired state 的 registration、sync、scheduler、bridge exposure、subscription、binding、configuration apply 或其他 reconciliation operation，重複執行、retry、restart 或 reconnect 後應收斂到同一個 intended state；不得因相同輸入重複建立 device/entity/job/binding/subscription 或其他 logical resource。
+
+一般原則：
+
+- 使用 stable identity、canonical key、generation/version 或其他可重現 identity 判斷 existing state；不要只靠目前 session memory 推定「之前應該建立過」。
+- Reconciliation 應能區分 create、update、already-satisfied、stale/obsolete 與 conflict；合法重跑不得默默變成 duplicate creation。
+- 若 external platform / bridge / scheduler / broker 可能保留 stale state，reconnect 或 restart 後應先取得最低充分 current evidence，再 reconcile；不要無條件重新 enumerate／register 全部資源。
+- Retry 只有在 operation semantics 已確認可安全重入時才可視為 idempotent；沒有證據時，不得因 API 名稱看起來像 `set` / `sync` / `register` 就假設重試無副作用。
+- Validation 除了「這次操作成功」，需要時還應檢查 duplicate、stale reference、unexpected re-enumeration、orphan resource 與 intended mapping 是否維持唯一性。
+- 若底層 operation 天生 non-idempotent，應建立 explicit deduplication / transaction / idempotency-key / state machine boundary，或把 retry 交給知道 operation ownership 的單一 owner；不要讓多個 layer 各自盲目重試。
+
+核心原則：**同一 desired state 被重新套用，不應產生新的 logical state；reconciliation 的成功是收斂，不只是 command 回傳成功。**
+
+## 生命週期狀態連續性（Lifecycle State Continuity）
+
+若產品宣稱 restart、reboot、OTA、upgrade、migration、container/device replacement 或其他 lifecycle transition 不需要重新 commissioning／configuration，則 stable identity、persistent config、binding、automation reference、external integration mapping 與其他必要 state 應被視為明確的 continuity contract，而不是 incidental implementation detail。
+
+推薦驗證思路：
+
+`pre-state snapshot → lifecycle operation → startup/recovery → post-state reconciliation → continuity evidence`
+
+一般原則：
+
+- 先列出哪些 state 必須跨 lifecycle 保留、哪些可以合法重建、哪些應被清除；不要用「資料都還在」或「服務有起來」代替正式 continuity contract。
+- Stable identity、device/entity mapping、binding、scene/automation reference、credential ownership、routing/config 與其他 external reference 若屬 REQUIRED continuity，upgrade/restart 後不得 silently regenerate 成不同 identity 或 duplicate resource。
+- Local runtime healthy / boot PASS 不等於 external integration continuity PASS；若 correctness 依賴 Matter、Home Assistant、MQTT、cloud/backend 或其他外部 consumer，需取得最低充分的 post-lifecycle mapping / reachability / state evidence。
+- Backup/restore、migration 或 replacement 若宣稱可保留設定，應驗證 restored state 的 schema/version compatibility、identity ownership 與 external reference continuity；成功 import file 不等於整體 continuity 成立。
+- Lifecycle transition 若允許 intentionally reset identity / binding / commissioning state，應是明確 contract 與 operator-visible effect，不得由 upgrade/restart 意外觸發。
+- 不要求每次小版更新都做完整 production migration test；依實際風險選代表性 continuity fixture / targeted integration validation，但高價值 external binding 不應只靠 compile/static evidence。
+
+核心原則：**Lifecycle success 不只是「重新啟動成功」，而是所有宣稱應延續的 identity、binding 與 external reference 仍能被同一套 authority 正確辨識。**
+
 ## Runtime 可靠性（Runtime reliability）
 
 Embedded runtime 優先：
@@ -166,6 +200,7 @@ Embedded runtime 優先：
 - 核心設定、狀態、診斷與 recovery flow 不應依賴外部 CDN、remote font、cloud-hosted frontend asset 或必須連 Internet 才能載入的 runtime dependency。
 - 是否允許外部資源由產品 contract 決定；cloud-first product 不因本規則被強迫成 offline-first。
 - 若 local/offline operation 是正式 requirement，外部服務失效不得讓 operator 無法完成必要 setup、configuration、diagnostics 或 recovery。
+- **Local-first / offline-capable 不等於 unauthenticated。** Local LAN、direct AP、physical proximity 或 Internet unavailable 只描述 connectivity / availability boundary；authentication、authorization、credential ownership 與 destructive/recovery protection 仍依正式 security contract 處理，不因改成本地操作就自動放寬。
 - Embedded UI 仍遵守 `UI_UX.md` 的 Human-facing UI / Machine Contract Boundary；self-contained 只處理 availability/dependency boundary，不授權 UI 接管 machine/runtime ownership。
 - 資源受限時，優先保留可操作性、可讀狀態、錯誤說明與必要安全流程，再考慮動畫、remote asset、heavy framework 或純裝飾性功能。
 
