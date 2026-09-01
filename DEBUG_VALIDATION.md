@@ -147,6 +147,29 @@ Agent 的自然語言 completion report、commit SHA 敘述、`TASKS.md` 狀態�
 
 這在長 session、連續多 Stage、context compaction、agent handoff、重新 attach repository，或任何可能造成 stale context / stale task state 的情況尤其重要，但不是只有這些情況才適用。
 
+### ChatGPT 收到 Codex 結果時的 GitHub Remote Read-back
+
+當 ChatGPT／planning agent 收到 Codex／coding agent 的執行結果，只要結果宣稱涉及 **GitHub repository tracked-file 修改、commit、push、`TASKS.md` queue bookkeeping、branch/HEAD 變更，或其他可由 GitHub canonical evidence確認的 repository state change**，ChatGPT 在接受「完成」、更新後續判斷、產生下一 Stage，或向使用者回報修改已成立前，**一律先到 GitHub 讀取 current remote evidence 核對實際結果**。
+
+最低充分 read-back 依 claim 選用，不要求每次把整個 repository 全掃一遍：
+
+- commit / push claim：確認 target repository、branch、最新 relevant commit／SHA；
+- file modification claim：讀取 changed-file list／scoped diff，並在 correctness 判斷需要時讀 current target file relevant range；
+- `TASKS.md` bookkeeping claim：讀最新 remote `TASKS.md` queue state；
+- docs/spec/validation-state claim：讀被宣稱修改的 canonical file relevant section；
+- 若 Codex 提供 commit SHA，可先以該 SHA 查 commit/diff，再確認它確實位於 intended remote branch/current state；不得只因 SHA 看起來合法就接受。
+
+一般原則：
+
+- **Codex report 是待驗證 claim，不是 GitHub authority。**「已 push」、「已修改某檔」、「TASKS 已移除」、「validation docs 已更新」等敘述，都必須以 GitHub current remote evidence交叉確認。
+- GitHub read-back 是 read-only verification，不授權 ChatGPT修改該 repository，也不繞過 `REPOSITORY_EXECUTION.md` 的 Conversation-scoped Repository Write Lock；即使該 repository 不是目前 writable target，仍可在合法 read-only capability內核對 Codex 結果。
+- 若結果只涉及 local-only、未 push 的 working-tree state，而且 GitHub理應尚無變更，不能假裝用 GitHub驗證 local mutation；應明確標記 remote 尚無該 evidence，要求／使用對應 local canonical evidence。使用者要求的是 GitHub result verification時，只有已進入 GitHub remote state的 claim才可由本 gate確認。
+- 若 GitHub current state 與 Codex report 不一致，立即 STOP completion acceptance；先以 remote evidence重建 current state，指出 mismatch，不得用 Codex summary覆蓋 GitHub事實，也不得自動進下一 Stage。
+- 若 GitHub connector／network／permission 暫時無法取得必要 remote evidence，標記 **REMOTE COMPLETION EVIDENCE UNAVAILABLE**；不得在未核對情況下把 Codex 的 repository-mutation claim提升為已確認完成。
+- Read-back scope 應最低充分：確認此次宣稱的 repository、commit、changed files、關鍵內容與 queue/validation state；不因這條規則每次做 repo-wide audit、full code review 或重新跑 validation。
+
+核心原則：**Codex 說它改了 GitHub，不等於 GitHub 真的已是那個狀態；ChatGPT 必須先 remote read-back，再接受 completion。**
+
 最低充分 completion evidence 依 Stage 性質選用：
 
 - pre-Stage baseline HEAD / branch / queue state（若需要比較）；
