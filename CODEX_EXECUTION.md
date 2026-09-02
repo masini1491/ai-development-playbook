@@ -10,7 +10,7 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 不是選最強模型，而是選最低充分模型。
 
-本檔大部分章節仍依 Task 做 Progressive Reading；但 **Codex user-facing reporting contract 是 always-on cross-cutting contract**。只要 project `AGENTS.md`／正式 routing 已把 Codex reporting 指向本檔，每個 Codex execution 都至少必須取得本檔的「Codex 回報語言」與「Codex 回報時間戳」規則，再依 Task 讀其他最低必要章節。不得因本次工作只是 MQTT、BLE、文件、maintenance、validation 或其他特定 domain，就把 reporting contract 判成無關而跳過。
+本檔大部分章節仍依 Task 做 Progressive Reading；但 **Codex user-facing reporting contract 是 always-on cross-cutting contract**。只要 project `AGENTS.md`／正式 routing 已把 Codex reporting 指向本檔，每個 Codex execution 都至少必須取得本檔的「Codex 回報語言」、「Codex 回報時間戳」與「Reporting Pre-Send Gate」規則，再依 Task 讀其他最低必要章節。不得因本次工作只是 MQTT、BLE、文件、maintenance、validation 或其他特定 domain，就把 reporting contract 判成無關而跳過。
 
 模型與推理強度由使用者在 Codex UI 手動選擇。Codex 不得自行 Luna→Terra→Sol，也不得自行 Low→Medium→High。
 
@@ -60,6 +60,26 @@ Codex 的**每一個實質 user-facing 回覆**最後一行都應附上絕對時
 - 時間戳不取代 commit SHA、branch、validation evidence、TASKS state 或其他 completion evidence。
 - execution environment 無法取得可信目前時間時，不得猜測；標記 `回報時間：UNAVAILABLE`。
 - 這是 cross-cutting reporting contract，可由 project governance / playbook routing 啟用；**不要求 ChatGPT 為了 activation 把完整 reporting policy 或固定時間句重複塞進每一份 Codex launch Prompt**。
+
+## Reporting Pre-Send Gate
+
+Reporting policy 被讀取或在 Prompt 中重述，仍不等於最後送出的文字一定符合 contract。對每一個實質 user-facing reply，Codex 在送出前必須對**最終草稿本身**執行一次 bounded pre-send compliance check；這是 reporting contract 的最後一哩 gate，不是新的 project-specific policy。
+
+送出前至少依序確認：
+
+1. **User-facing classification**：本次輸出若會形成使用者可見、可據此判斷狀態或作為後續工作依據的自然語言訊息，就進入本 gate；不得因稱為 progress、intermediate、summary 或非 final 而跳過。
+2. **Language check**：最終草稿的自然語言回覆符合本檔「Codex 回報語言」或使用者／project 當次明確覆蓋的 reporting language；技術原文不需翻譯。
+3. **Timestamp source check**：使用可信的目前時間產生 absolute timestamp；若 execution environment 無法取得可信目前時間，使用 `回報時間：UNAVAILABLE`，不得猜測、沿用舊時間或保留 `YYYY-MM-DD HH:mm` placeholder。
+4. **Final-line check**：檢查最終草稿最後一個非空白行是否為本 contract 要求的 timestamp line，且沒有任何正文、附註、citation、summary 或其他內容出現在其後。
+5. **Fail-closed repair**：若 language、timestamp presence、格式或 final-line position 任一項不合格，先修正最終草稿並重新檢查；**未通過 pre-send check 的 user-facing reply 不得送出**。
+
+若 execution surface 原生提供 output validator、response post-processing hook、schema check 或其他可在送出前對最終文字做 deterministic validation 的能力，優先用它執行上述可機械判定項目；若沒有這類能力，仍必須做 bounded final-draft self-check。不得把 model-only self-check 宣稱為平台層 deterministic guarantee，也不得為了單一 timestamp 規則自行建立高複雜度 validator、agent loop 或外部服務。
+
+Pre-Send Gate 只驗證 reporting artifact 是否符合 contract，不證明其中的 Git、validation、completion 或 technical claim 為真；這些仍由 `DEBUG_VALIDATION.md`、`REPOSITORY_EXECUTION.md` 與 project authority 的 canonical evidence 決定。
+
+本 gate 與 Always-on Reporting Timestamp 同屬 `CODEX_EXECUTION.md` 的 canonical Codex-reporting authority。README、`CHATGPT_WORKFLOW.md`、project `AGENTS.md` 與 individual Codex Prompt 只需要 routing/reference，不應複製完整 normative checklist。
+
+核心原則：**先檢查實際要送出的 final draft，再送出；「我已讀過規則」不是 reporting compliance evidence。**
 
 ChatGPT 自己的 reply timestamp 由 `CHATGPT_WORKFLOW.md` 維護，兩者不要混用。
 
