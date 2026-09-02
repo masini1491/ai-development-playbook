@@ -78,6 +78,28 @@ Reference dossier 應能記錄：
 - do-not-assume
 - reuse restriction
 
+### Reference Adoption State（參考採用狀態）
+
+**Source evidence state ≠ adoption state。** 找到、讀過、驗證某個外部來源，只代表它成為 research evidence；不代表其做法已成為 project architecture、policy、implementation contract 或本手冊規則。
+
+當 reference dossier／synthesis 需要追蹤「這項外部做法最後是否被採用」時，可使用以下狀態：
+
+- `ADOPTED`：概念／contract 已直接成為目前 canonical project / playbook rule。
+- `ADAPTED`：核心概念已採用，但已依本 project 的 authority、constraint、architecture 或 terminology 調整；不得把 upstream 原文／前提直接當成 current contract。
+- `REFERENCE-ONLY`：保留為 evidence、比較材料或 future option，目前不形成 implementation / architecture / policy obligation。
+- `REJECTED`：已審查但目前明確不採用；必要時記錄理由、前提或 revisit trigger，避免後續 session 因看到同一來源又從頭評估。
+
+一般原則：
+
+- Adoption state 是**概念／決策層**狀態，不取代 source revision、freshness、license、authority boundary 或 evidence tier；同一來源可以有多個 observation，各自具有不同 adoption state。
+- `ADOPTED / ADAPTED` 只有在 project / playbook canonical authority 真正收錄後才成立；「ChatGPT 建議採用」、「Codex 已實作草稿」或「reference 看起來很好」都不足以升格。
+- `REFERENCE-ONLY` 不等於來源品質差；可能只是目前 use case、target、license、risk、scope 或 timing 不需要。
+- `REJECTED` 不代表永久禁止。若 upstream revision、project requirement、target capability 或其他 material premise 改變，可依明確 revisit trigger 重新評估，但不得因來源更新就自動翻轉 adoption state。
+- 外部來源新增 commit / release / wording 不會自動修改 current project contract。先做 freshness / applicability / authority comparison，再決定是否變更 adoption state 與 canonical rule。
+- 若 dossier 很小、只有一次性研究且採用與否已由 canonical decision 清楚表達，不為形式強制加 status；只有它能降低後續重複研究或 authority ambiguity 時才記錄。
+
+核心原則：**外部來源可以是可信 evidence，但只有經過 applicability／authority 判斷並被 canonical owner 正式收錄後，才成為我們的 contract。**
+
 GPL / license 不明預設 `REFERENCE ONLY`，除非專案另有正式 license decision。
 
 不要以改名、逐行翻譯、mechanical port 假裝成獨立 implementation；也不要隨意宣稱 clean-room。
