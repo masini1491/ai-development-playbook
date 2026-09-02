@@ -1,6 +1,6 @@
 # 新聊天室初始化（New Chat Initialization）
 
-本檔是新聊天室的**最小 bootstrap**。它只負責建立正確的 repository / authority / routing 起點，不重複保存 Git、TASKS、Prompt、toolchain、debug 或 validation 的完整規則。
+本檔是新聊天室的**最小 bootstrap**。它只負責建立正確的 repository / authority / routing 起點，不重複保存 Git、TASKS、ChatGPT workflow、Codex execution、toolchain、debug 或 validation 的完整規則。
 
 詳細方法以 `README.md` 路由到的主題文件為準。
 
@@ -18,9 +18,11 @@
 
 依目前工作選讀：
 
-- Codex Prompt、模型／推理／Context／Agent／成本
-  → `CODEX_PROMPT_RULES.md`
-- Git、Repository Identity、workspace／remote permission、TASKS、寫入分工、repository-facing documentation integrity
+- ChatGPT 專案聊天室 planning、TASKS admission、Codex Prompt mode／delivery、copy-ready、Codex result reconciliation、ChatGPT 回覆時間戳
+  → `CHATGPT_WORKFLOW.md`
+- Codex model／Reasoning／Context／Agent、execution mode、usage／cost、tool scheduling/output、Codex reporting
+  → `CODEX_EXECUTION.md`
+- Git、Repository Identity、workspace／remote permission、TASKS、ChatGPT／Codex 寫入分工、repository-facing documentation integrity
   → `REPOSITORY_EXECUTION.md`
 - 除錯、根因、重試、驗證、evidence lifecycle
   → `DEBUG_VALIDATION.md`
@@ -37,7 +39,7 @@
 
 ## 權威與執行注意
 
-Authority、Repository Identity、ChatGPT／Codex 寫入邊界、TASKS lifecycle、permission gates、Codex Prompt 固定欄位、模型／Reasoning 規則、回報時間戳、PowerShell baseline、root-cause labels 與 validation contract **不在本檔重複定義**。
+Authority、Repository Identity、ChatGPT／Codex 寫入邊界、TASKS lifecycle、permission gates、ChatGPT Prompt delivery、Codex model／Reasoning、ChatGPT／Codex 各自的 reporting timestamp、PowerShell baseline、root-cause labels 與 validation contract **不在本檔重複定義**。
 
 需要其中任一規則時，讀上方對應 canonical 主題文件；實際專案最新正式 technical/governance source of truth 仍高於本手冊。
 
