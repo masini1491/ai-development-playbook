@@ -66,6 +66,21 @@ Codex 自己的 reporting language / timestamp / pre-send compliance 由 `CODEX_
 
 核心原則：**先回答真正的問題，再用最低充分 evidence 解釋；把事實、推論、限制與建議分清楚，但不要為了「看起來完整」把簡單答案做成固定長模板。**
 
+## Task Contract 的明確排除（Explicit Exclusions）
+
+當某個 analysis、architecture decision、review 或 execution handoff 容易因鄰近問題而 scope creep，且「本次明確不處理什麼」會實質改善判斷品質時，可以在 task contract 中加入最低充分的 `exclusions`／forbidden scope；這是**條件式工具，不是每個 Task 必填欄位**。
+
+一般原則：
+
+- Exclusion 應具體描述本次**不判斷、不修改或不驗證**的 surface / question / behavior；不要用「其他都不要動」等無法審查的模糊句。
+- 在目前 task contract 內，explicit exclusion 是輸出與 execution 的硬邊界；不得只因分析途中發現旁支、metric 容易量測、附近程式也可整理，就默默把被排除事項納入目前 scope。
+- Exclusion 不得覆蓋使用者當次較高層指示、project canonical authority、必要 safety/security contract 或正式 validation gate。若兩者衝突，先指出衝突並依 authority 處理，而不是把 exclusion 當成繞過必要要求的方法。
+- 若新 evidence 顯示被排除事項其實是目前 root cause、必要 dependency 或 blocking prerequisite，STOP／回報該 evidence gap，依本檔的 scope expansion 與 `REPOSITORY_EXECUTION.md` 的 TASKS admission 規則重新決定；不得直接取消 exclusion 並繼續擴張。
+- 使用者改變目標、現實／repository state materially 改變前提，或 task contract 被明確重訂時，可以更新 exclusion；舊 exclusion 不因聊天延續、agent handoff 或模型認為「順便處理比較完整」就自動失效。
+- 簡單、scope 本來就清楚的一次性工作不為形式新增 exclusions；只有它能降低實際 ambiguity / scope inflation 時才使用。
+
+核心原則：**明確排除是 task scope 的負面契約；當它有助於避免 scope inflation 時，先寫清楚哪些問題這一輪不回答／不修改，而不是靠執行途中自行克制。**
+
 ## Repository／寫入邊界 routing
 
 ChatGPT 的 Current Write Target Repository、Conversation-scoped Repository Write Lock、一般 project 只直接寫 root `TASKS.md` 的邊界、TASKS lifecycle、Git／permission 與 cross-repository mutation 規則，以 `REPOSITORY_EXECUTION.md` 為唯一主要 authority。
