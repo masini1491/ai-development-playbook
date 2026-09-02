@@ -35,6 +35,12 @@
 
 `CHAT_INIT.md` 是**新聊天室最小 bootstrap**：只負責告訴新 session 如何確認目標 repository、依 README routing 讀最低必要主題文件，以及先取得哪些 project-local authority；不得再複製完整 Git、TASKS、Prompt、toolchain 或 validation policy。
 
+`CHATGPT_WORKFLOW.md` 是 **ChatGPT／planning conversation authority**：負責 TASKS admission routing、Codex Prompt mode / delivery、copy-ready contract、Codex result reconciliation 與 ChatGPT 工程回覆時間戳；不得再把 Codex execution / cost policy 全文收進來。
+
+`CODEX_EXECUTION.md` 是 **Codex／coding agent execution authority**：負責 model / reasoning / Context / Agent、execution mode、cost / usage budgeting、tool scheduling/output、escalation 與 Codex reporting；不得再維護 ChatGPT Prompt-generation workflow。
+
+`REPOSITORY_EXECUTION.md`、`DEBUG_VALIDATION.md`、`RESEARCH_ARCHITECTURE.md` 等 shared topic 文件只保存真正跨 ChatGPT / Codex 共用的 repository、evidence、validation、architecture contract。
+
 讀者與 coding agent 不應預設完整掃描全部文件；先從 README / CHAT_INIT 進入，再依 task topic 讀最少必要主題文件。
 
 ## 權威順序（Authority）
@@ -57,6 +63,8 @@
 - 是否有明確失敗案例或工程收益
 
 優先修改既有主題文件，不要為每個新細節建立新檔。
+
+但若不同 agent / lifecycle 已形成清楚且持續的 ownership boundary，例如 ChatGPT conversation planning 與 Codex execution，應依 owner 分離 canonical policy；**不要因舊檔名或舊 routing 存在就永久保留 ownership mixing**。下游專案可在讀取最新版手冊時做 governance reconciliation。
 
 若規則已存在 canonical topic owner，README、CHAT_INIT、其他主題文件只保留最低必要摘要／routing；不要因方便閱讀再複製一份完整 normative policy。
 
