@@ -35,7 +35,7 @@
 
 `CHAT_INIT.md` 是**新聊天室最小 bootstrap**：只負責告訴新 session 如何確認目標 repository、依 README routing 讀最低必要主題文件，以及先取得哪些 project-local authority；不得再複製完整 Git、TASKS、Prompt、toolchain 或 validation policy。
 
-`CHATGPT_WORKFLOW.md` 是 **ChatGPT／planning conversation authority**：負責 TASKS admission routing、Codex Prompt mode / delivery、copy-ready contract、Codex result reconciliation 與 ChatGPT 工程回覆時間戳；不得再把 Codex execution / cost policy 全文收進來。
+`CHATGPT_WORKFLOW.md` 是 **ChatGPT／planning conversation authority**：負責 TASKS admission routing、Codex Prompt mode / delivery、copy-ready contract、Codex result reconciliation、ChatGPT 工程回覆 presentation contract 與回覆時間戳；不得再把 Codex execution / cost policy 全文收進來。
 
 `CODEX_EXECUTION.md` 是 **Codex／coding agent execution authority**：負責 model / reasoning / Context / Agent、execution mode、cost / usage budgeting、tool scheduling/output、escalation 與 Codex reporting；不得再維護 ChatGPT Prompt-generation workflow。
 
