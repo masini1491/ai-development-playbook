@@ -18,6 +18,28 @@
 
 `INSUFFICIENT OBSERVABILITY` 時先取得能區分原因的最小 diagnostics / evidence；無法在目前 scope 內安全取得就 STOP。
 
+## 多來源／多 Agent 結果協調（Independent Result Reconciliation）
+
+當同一問題由多個**獨立 evidence producer** 回答，例如不同 Agent、reviewer、tool、runtime probe、static analyzer、test harness、外部 authority 或不同模型，先讓各來源在自己的 scope / authority / evidence contract 下完成判斷，再進行 synthesis；不得因為來源數量多就用簡單多數決取代證據判斷。
+
+推薦流程：
+
+`Independent conclusions → Normalize scope / authority / freshness → Agreement / Complement / Conflict / Unresolved → Evidence-weighted reconciliation → Next evidence only if needed`
+
+一般原則：
+
+- **Independent first, synthesis second。** 若多個 reviewer / Agent 本來就是為了降低共同偏誤而獨立工作，不要在它們完成前把彼此結論互相餵回去，除非 task contract 本來就是協作式 refinement。
+- **Agreement ≠ truth by vote。** 多個來源同方向可以提高一致性，但若它們共享同一錯誤 upstream、同一 stale assumption、同一 mock 或同一 measurement profile，不能因「三個都這樣說」就升格為更高 evidence tier。
+- **Conflict is a diagnostic signal, not a voting event。** 發生衝突時先比較：`scope / exact target / authority / freshness / phase / environment / measurement condition / assumption / completion criterion / evidence tier`。很多表面矛盾其實是不同來源回答了不同層級或不同條件。
+- **Authority beats count。** 一個直接量到 production target 的 current canonical evidence，可以合理高於多個低 authority、stale、mock-only 或推論型結果；來源數量本身不形成 authority。
+- **Complementary results 可並存。** 一個來源回答 root cause、另一個回答 blast radius、第三個只證明某 verifier stale，若 contract 不衝突，不必強迫收斂成單一句答案；synthesis 應保留各自證據角色。
+- **保留 `UNRESOLVED`。** 若完成最低充分 reconciliation 後仍缺少能決勝的 canonical evidence，明確保留 unresolved / insufficient observability；不要只因 project 需要「一個答案」就挑較多人支持的一邊。
+- 若衝突可以由一個低成本、低風險、可區分假說的 targeted check 解決，優先補該 evidence；不要因此自動增加 Agent 數量、升級最大 Context 或跑完整 regression。
+- 若不同來源不是獨立的，例如同一 Agent 重述自己前一輪、不同模型共用完全相同的單一 summary、或多個工具都只是包裝同一 backend/result，synthesis 時不得把它們計成多份獨立 evidence。
+- Security、safety、protocol、production/runtime 或其他高風險 decision 若存在 material conflict，依正式 authority / validation contract處理；本節不授權用「共識」降低既有 gate。
+
+核心原則：**多個結果要先確認它們各自在回答什麼、憑什麼回答，再做 evidence-weighted synthesis；衝突時查 scope 與 authority，不用票數決定真相。**
+
 ## 首次接觸診斷 Harness（First-contact Diagnostic Harness / Test Consumer）
 
 首次接觸新 hardware、network service、protocol、runtime/backend 或其他 external integration，且 production path 的實際行為／contract 尚未有足夠 observability 時，優先考慮 isolated diagnostic harness / test consumer，而不是直接把未知行為塞進 production runtime 或先用猜測式 patch 取得 evidence。
