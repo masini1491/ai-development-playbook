@@ -10,6 +10,8 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 不是選最強模型，而是選最低充分模型。
 
+本檔大部分章節仍依 Task 做 Progressive Reading；但 **Codex user-facing reporting contract 是 always-on cross-cutting contract**。只要 project `AGENTS.md`／正式 routing 已把 Codex reporting 指向本檔，每個 Codex execution 都至少必須取得本檔的「Codex 回報語言」與「Codex 回報時間戳」規則，再依 Task 讀其他最低必要章節。不得因本次工作只是 MQTT、BLE、文件、maintenance、validation 或其他特定 domain，就把 reporting contract 判成無關而跳過。
+
 模型與推理強度由使用者在 Codex UI 手動選擇。Codex 不得自行 Luna→Terra→Sol，也不得自行 Low→Medium→High。
 
 新開、Branch / Fork、Resume 或跨 session handoff 後，若 Model / Reasoning 會影響成本或能力：
@@ -21,23 +23,43 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 ## Codex 回報語言
 
-除非使用者當次另有指定，Codex 的進度、STOP、validation、error explanation、summary 與最終回報一律使用**繁體中文**。
+除非使用者當次另有指定，Codex 的**實質 user-facing 回覆**一律使用**繁體中文**，包括 analysis conclusion、progress conclusion、STOP、permission/blocker explanation、validation、error explanation、summary、completion 與 final report。
 
 程式碼、identifier、file/path、command、raw log、error string、protocol field、API name、library/tool name 與既有正式技術名詞保持原文；不得為了翻譯改寫 source semantics、machine contract 或 evidence 原文。
 
-## Codex 回報時間戳（Reporting timestamp）
+純 tool output、command stdout/stderr、execution surface 自動產生的 progress/status UI 不需要為符合本規則另外翻譯或包裝成自然語言回覆。
 
-Codex 的 **STOP、validation summary、completion summary 與最終回報** 最後一行應附上絕對時間戳：
+## Codex 回報時間戳（Always-on Reporting Timestamp）
+
+Codex 的**每一個實質 user-facing 回覆**最後一行都應附上絕對時間戳，而不只限於 STOP、validation、completion 或 final report：
 
 `回報時間：YYYY-MM-DD HH:mm (Asia/Taipei)`
+
+實質 user-facing 回覆至少包括：
+
+- analysis / architecture / requirement conclusion；
+- progress conclusion、目前狀態判斷或下一步決策；
+- permission / blocker / STOP explanation；
+- validation / error explanation；
+- completion summary / final report；
+- 其他會被使用者閱讀、跨 session 貼回、比較 freshness 或作為後續 execution 依據的自然語言回覆。
+
+不需要額外時間戳的情況限於：
+
+- execution surface 自動顯示的 tool progress / spinner / status；
+- raw command output / log 本身；
+- 沒有形成獨立 user-facing message 的內部 tool call 中間狀態。
+
+如果 Codex 已經產生一則獨立、可被使用者看見並據此判斷狀態的自然語言訊息，就視為實質 user-facing reply，不因它被稱為「進度」、「中間說明」或「不是 final」而免除時間戳。
 
 一般原則：
 
 - 使用絕對日期時間，不用「剛剛」、「今天早上」等相對時間作唯一 freshness marker。
 - 預設 `Asia/Taipei`；使用者明確指定其他時區時改用該時區並清楚標示。
-- 時間戳代表這份 Codex 回報產生／完成時間，不是 commit、device、server event 或 validation evidence 發生時間。
+- 時間戳代表這份 Codex 回覆產生／完成時間，不是 commit、device、server event 或 validation evidence 發生時間。
 - 時間戳不取代 commit SHA、branch、validation evidence、TASKS state 或其他 completion evidence。
 - execution environment 無法取得可信目前時間時，不得猜測；標記 `回報時間：UNAVAILABLE`。
+- 這是 cross-cutting reporting contract，可由 project governance / playbook routing 啟用；**不要求 ChatGPT 為了 activation 把完整 reporting policy 或固定時間句重複塞進每一份 Codex launch Prompt**。
 
 ChatGPT 自己的 reply timestamp 由 `CHATGPT_WORKFLOW.md` 維護，兩者不要混用。
 
@@ -157,6 +179,8 @@ Codex 無權自行換模型。達到 escalation condition 時：
 - L5：repo-wide
 
 只有 evidence 不足且能說明缺少哪個答案時才擴張。
+
+**Progressive Reading 只控制 task-specific Context expansion，不得用來跳過本檔 always-on reporting contract。** 若 project governance 已 routing 到本檔，Codex 每次 execution 都至少取得 reporting contract，再對其他章節維持最低充分讀取。
 
 不要預設最大 Context、1M context、Fast、Ultra、Max 或 Multi-Agent。
 
