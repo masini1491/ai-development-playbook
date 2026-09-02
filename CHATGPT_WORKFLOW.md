@@ -137,6 +137,19 @@ Codex 的 model / reasoning / Context / Agent / execution-mode 成本規則由 `
 
 對 **TASKS Short-launch**，若 referenced Stage 已保存 model / reasoning / Context / execution mode 等建議，不要為固定欄位再次展開。可以在可複製 Prompt 外用一行精簡顯示 UI 選擇建議；若 Stage 沒保存必要設定，才補最低充分資訊。
 
+## Codex reporting contract activation
+
+`CODEX_EXECUTION.md` 的 Codex reporting language / timestamp 是 **always-on cross-cutting contract**，不屬於可因 Task domain 而省略的 optional context。
+
+當 project `AGENTS.md`／正式 governance 已 routing `Codex reporting → CODEX_EXECUTION.md` 時，ChatGPT 產生 TASKS Short-launch、Direct Short Prompt 或 Standalone Full Prompt，不需要把完整 reporting policy 或固定時間句重複塞進每一份 Prompt；但 launch 必須要求 Codex 先讀最新 project `AGENTS.md`，並依 routing 啟用 always-on reporting contract，再對其他 topic 做最低充分閱讀。
+
+因此：
+
+- Progressive Reading 控制的是 task-specific Context，不會關閉 reporting contract；
+- 即使本次工作只是 MQTT、BLE、文件、maintenance、validation 或其他特定 domain，Codex reporting 仍為 active；
+- 若 project routing 尚未指向最新 `CODEX_EXECUTION.md`、routing 有 ambiguity、Codex 無法存取該 authority，才視為 activation gap，依 Prompt Mode Selection 補最低充分 self-contained contract；
+- 不因偶發漏時間，就預設在每份 copy-ready Prompt 硬編碼相同時間句。先讓 canonical routing / always-on activation 發揮作用，只有 evidence 證明仍不足時再考慮更強 handoff redundancy。
+
 ## Repository routing 完成後的 Prompt 產生
 
 若目標 repository 最新 `AGENTS.md` 已明確：
@@ -151,7 +164,7 @@ ChatGPT 後續產生 Prompt 時，不再列出整套 Playbook 文件或複製 co
 通常只需要：
 
 1. 要求 Codex 先讀最新 project `AGENTS.md`；
-2. 依 routing 與本次 Task 取得最低必要 authority；
+2. 依 routing 啟用 always-on reporting contract，再依本次 Task 取得其他最低必要 authority；
 3. 沒有其他 repository authority 保存 task contract 時，才補最低充分 task-specific evidence / scope / validation / STOP condition。
 
 只有 routing 尚未建立／不完整、有 ambiguity、Task 需要特殊章節或必須 freeze 某個 common contract 時，才額外點名具體 Playbook 文件。
