@@ -65,7 +65,7 @@
 | 情境 | 主要文件 |
 | --- | --- |
 | 新聊天室最小 bootstrap | [`CHAT_INIT.md`](CHAT_INIT.md) |
-| ChatGPT 專案聊天室 planning、TASKS admission、Codex Prompt mode／delivery、copy-ready、Codex result reconciliation、ChatGPT 回覆時間戳 | [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) |
+| ChatGPT 專案聊天室 planning、TASKS admission、Codex Prompt mode／delivery、copy-ready、Codex result reconciliation、工程回覆 presentation／timestamp | [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) |
 | Codex model／Reasoning／Context／Agent、execution mode、usage/cost、tool scheduling/output、Codex reporting | [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) |
 | Git 安全、Repository Identity、workspace／remote permission、external-service operation、TASKS、ChatGPT／Codex 寫入分工、repository-facing documentation | [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) |
 | Windows、本機 runtime、PowerShell 7、toolchain contract | [`TOOLCHAIN.md`](TOOLCHAIN.md) |
@@ -88,7 +88,7 @@
 
 不要完整掃描共通實戰手冊，只依目前 Task 讀最低必要章節：
 
-- ChatGPT planning／TASKS admission／Codex Prompt delivery／結果 reconciliation
+- ChatGPT planning／TASKS admission／Codex Prompt delivery／結果 reconciliation／工程回覆 presentation
   → `CHATGPT_WORKFLOW.md`
 - Codex model／Reasoning／Context／Agent／execution／成本／reporting
   → `CODEX_EXECUTION.md`
