@@ -90,7 +90,7 @@
 
 - ChatGPT planning／TASKS admission／Codex Prompt delivery／結果 reconciliation
   → `CHATGPT_WORKFLOW.md`
-- Codex model／Reasoning／Context／Agent／execution／成本
+- Codex model／Reasoning／Context／Agent／execution／成本／reporting
   → `CODEX_EXECUTION.md`
 - Git／儲存庫／權限／外部服務操作／TASKS／寫入邊界
   → `REPOSITORY_EXECUTION.md`
@@ -125,7 +125,7 @@ ChatGPT、Codex 或其他 coding agent 在 review 對方的 Prompt、handoff、S
 ChatGPT 與 Codex 的時間戳**分 owner 維護**：
 
 - ChatGPT 完整工程回覆：`CHATGPT_WORKFLOW.md`
-- Codex STOP／validation／completion／final report：`CODEX_EXECUTION.md`
+- Codex 每個實質 user-facing reply 與 pre-send reporting compliance：`CODEX_EXECUTION.md`
 
 預設格式分別為：
 
