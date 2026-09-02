@@ -38,7 +38,7 @@
 
 ### 一般專案儲存庫的高層分工
 
-- **ChatGPT**：研究、需求／架構／規格討論、審查、TASKS admission/scope 與 Codex Prompt 規劃；對一般 project repository 預設只直接寫 root `TASKS.md`。
+- **ChatGPT**：研究、需求／架構／規格討論、審查、TASKS admission/scope、Codex Prompt 規劃與交付、Codex result reconciliation；對一般 project repository 預設只直接寫 root `TASKS.md`。
 - **Codex／coding agent**：在使用者明確授權的 Task／Stage 範圍內修改 source/tests/docs/tooling 等 allowed files，完成 targeted validation，並依規則維護 `TASKS.md` 狀態。
 - **Human / developer**：需求、產品方向、現實世界／硬體 evidence、最終核准，以及需要人工完成的驗證。
 
@@ -46,7 +46,7 @@
 
 典型流程：
 
-`ChatGPT 讀最新 GitHub → 規劃／更新未完成工作 → Codex 做 identity／permission／safe-sync preflight → 執行指定 Stage → Targeted Validation → TASKS bookkeeping → 必要的 commit／push`
+`ChatGPT 讀最新 GitHub → 規劃／更新未完成工作 → 產生最低充分 Codex handoff → Codex 做 identity／permission／safe-sync preflight → 執行指定 Stage → Targeted Validation → TASKS bookkeeping → 必要的 commit／push → ChatGPT 依 canonical evidence reconciliation`
 
 如果使用者採用純本機 Git、GitLab 或其他協作平台，可以保留相同治理概念並映射到對應平台；本手冊範例以 GitHub 為主要協作模型。
 
@@ -65,8 +65,9 @@
 | 情境 | 主要文件 |
 | --- | --- |
 | 新聊天室最小 bootstrap | [`CHAT_INIT.md`](CHAT_INIT.md) |
-| 產生 Codex Prompt、模型／推理／Context／Agent、usage/cost、tool scheduling/output | [`CODEX_PROMPT_RULES.md`](CODEX_PROMPT_RULES.md) |
-| Git 安全、Repository Identity、workspace／remote permission、external-service operation、TASKS、寫入分工、repository-facing documentation | [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) |
+| ChatGPT 專案聊天室 planning、TASKS admission、Codex Prompt mode／delivery、copy-ready、Codex result reconciliation、ChatGPT 回覆時間戳 | [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) |
+| Codex model／Reasoning／Context／Agent、execution mode、usage/cost、tool scheduling/output、Codex reporting | [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) |
+| Git 安全、Repository Identity、workspace／remote permission、external-service operation、TASKS、ChatGPT／Codex 寫入分工、repository-facing documentation | [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) |
 | Windows、本機 runtime、PowerShell 7、toolchain contract | [`TOOLCHAIN.md`](TOOLCHAIN.md) |
 | 除錯、root cause、retry、CI/build phase、validation、evidence lifecycle、refactor evidence | [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) |
 | 新技術／協定研究、避免重造輪子、architecture、target/capability、state/lifecycle、ownership/refactor boundary | [`RESEARCH_ARCHITECTURE.md`](RESEARCH_ARCHITECTURE.md) |
@@ -87,7 +88,11 @@
 
 不要完整掃描共通實戰手冊，只依目前 Task 讀最低必要章節：
 
-- Git／儲存庫／權限／外部服務操作／TASKS
+- ChatGPT planning／TASKS admission／Codex Prompt delivery／結果 reconciliation
+  → `CHATGPT_WORKFLOW.md`
+- Codex model／Reasoning／Context／Agent／execution／成本
+  → `CODEX_EXECUTION.md`
+- Git／儲存庫／權限／外部服務操作／TASKS／寫入邊界
   → `REPOSITORY_EXECUTION.md`
 - 除錯／根因／重試／驗證
   → `DEBUG_VALIDATION.md`
@@ -97,13 +102,13 @@
   → `UI_UX.md`
 - 嵌入式／硬體
   → `EMBEDDED_PROJECTS.md`
-- Codex 模型／推理／Context／Agent／Prompt／成本
-  → `CODEX_PROMPT_RULES.md`
 - Windows／PowerShell／本機工具鏈（需要時）
   → `TOOLCHAIN.md`
 ```
 
 這份 routing 不要求逐字複製；project-specific governance 可以更嚴格，但不要把共通 policy 全文複製進每個 repository 造成 drift。
+
+若 project 仍指向舊版手冊檔名或舊 ownership 結構，讀取最新版手冊時依 project governance 做 bounded reconciliation；不為了 backward compatibility 永久保留 common authority 的錯誤 ownership。
 
 ## 跨 Agent 規則對齊
 
@@ -117,11 +122,18 @@ ChatGPT、Codex 或其他 coding agent 在 review 對方的 Prompt、handoff、S
 
 ## 跨聊天室回報時間戳
 
-正式工程回報使用絕對時間協助判斷 freshness / ordering，例如：
+ChatGPT 與 Codex 的時間戳**分 owner 維護**：
+
+- ChatGPT 完整工程回覆：`CHATGPT_WORKFLOW.md`
+- Codex STOP／validation／completion／final report：`CODEX_EXECUTION.md`
+
+預設格式分別為：
+
+`回覆時間：YYYY-MM-DD HH:mm (Asia/Taipei)`
 
 `回報時間：YYYY-MM-DD HH:mm (Asia/Taipei)`
 
-時間戳只協助排序，不取代 repository HEAD、commit、diff、validation evidence 或 TASKS state。Codex 詳細規則見 `CODEX_PROMPT_RULES.md`；各專案如有不同時區或 reporting contract，以 project/user authority 為準。
+時間戳只協助 freshness / ordering，不取代 repository HEAD、commit、diff、validation evidence 或 TASKS state。各專案如有不同時區或 reporting contract，以 project/user authority 為準。
 
 ## Repository-facing 文件與專案規模
 
@@ -143,7 +155,7 @@ ChatGPT、Codex 或其他 coding agent 在 review 對方的 Prompt、handoff、S
 
 ## 本手冊涵蓋的主要方法
 
-包括但不限於：Repository Identity / permission gates、safe Git sync、TASKS lifecycle、Progressive Repository Reading、Codex model/reasoning/context/agent budgeting、Evidence → Root Cause → Focused Patch → Targeted Validation、failure/retry discipline、validation coverage/evidence lifecycle、toolchain contract、research-first / Anti-Reinvent-Wheel、state/lifecycle integrity、ownership admission / progressive domain extraction、UI/UX/i18n、embedded hardware evidence 與 board portability。
+包括但不限於：ChatGPT project-conversation planning / Prompt delivery、Codex execution/cost discipline、Repository Identity / permission gates、safe Git sync、TASKS lifecycle、Progressive Repository Reading、Evidence → Root Cause → Focused Patch → Targeted Validation、failure/retry discipline、validation coverage/evidence lifecycle、toolchain contract、research-first / Anti-Reinvent-Wheel、state/lifecycle integrity、ownership admission / progressive domain extraction、UI/UX/i18n、embedded hardware evidence 與 board portability。
 
 不是所有 project 都需要使用所有規則；依 Task 與風險只讀、只套用最低必要部分。
 
