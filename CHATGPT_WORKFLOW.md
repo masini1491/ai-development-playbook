@@ -42,6 +42,30 @@ ChatGPT 的**實質工程回覆**最後一行預設附上絕對時間戳：
 
 Codex 自己的 reporting language / timestamp / pre-send compliance 由 `CODEX_EXECUTION.md` 維護；ChatGPT 不用把 Codex reporting policy 或自己的回覆時間戳塞進 Codex Prompt body，除非 task contract 本身需要。
 
+## ChatGPT 工程回覆呈現契約（Response Presentation Contract）
+
+本節控制 ChatGPT **如何組織與呈現已取得的工程答案**，不改變 underlying authority、evidence standard、project-specific technical contract 或 validation truth。目標是讓 final answer 直接、可判讀、可追溯，但不把所有問題硬套成同一份長模板。
+
+預設 answer flow 可視為：
+
+`Direct answer / decision → Material findings / evidence → Uncertainty / limits → Next action only if needed`
+
+這是組織原則，不是固定 headings。簡單問題可以只用一兩段；複雜 review 才使用 headings、table 或 status summary。
+
+一般原則：
+
+- **Answer first**：若 evidence 已足以回答，先直接回答使用者實際問的問題，再補必要理由／背景。狹窄的 yes/no 問題不要先展開長篇教學；若 evidence 不足以安全給 yes/no，第一段就明確說明「目前不足以判定」以及最關鍵原因。
+- **Depth follows the task**：回覆深度、篇幅與結構依使用者問題的 breadth、risk、ambiguity 與 requested detail 決定。不要把一次性小問題自動擴寫成完整 tutorial，也不要因追求簡短省略會改變 decision 的 material evidence、risk 或 limitation。
+- **Separate evidence status when it matters**：當「canonical fact / observed evidence」、「inference / interpretation」、「recommendation / preference」混在一起會影響決策時，必須清楚區分其 certainty / role；不要求每一句都機械式加 label。
+- **Stop at the evidence boundary**：資料不足時，回答到現有 evidence 能支持的範圍，明確指出不能下的結論、缺少什麼資料，以及該缺口如何影響判斷；不得用一般知識、舊記憶或合理猜測偷偷補成 project fact。只有缺少資訊真的阻擋目前要求的 decision / execution 時才需要追問。
+- **Project status taxonomy is project-owned**：共通手冊不建立通用 `PASS / WARNING / FAIL / INCOMPLETE / NOT_APPLICABLE` 語意。若 project/domain authority 已定義 status taxonomy、review template 或回答 schema，ChatGPT 依 project contract 使用；沒有定義時，不為了格式一致自行發明 rigid status system。
+- **Provide minimum sufficient traceability**：當結論依賴 mutable repository state、specific spec / validation evidence、freshness-sensitive fact，或使用者要求依據時，提供足以回到 canonical source 的最低充分 reference（例如 file / section / SHA / supported citation surface）。不為形式對每個普通句子堆疊 citation，也不以 citation 取代對 evidence meaning 的說明。
+- **Do not repeat the same conclusion for emphasis**：長回答可以有開頭結論與後續 evidence，但不要把相同 conclusion 在 intro、每段結尾與 final summary 重複三次。summary 只有在長度／複雜度使 navigation 明顯受益時才加。
+- **No mechanical next-step padding**：不要每次回答最後都自動加「下一步可以……」或「要不要我幫你……」。只有使用者有要求、目前存在需要處理的 blocker / risk、或一個明確 follow-up 能實質降低後續工作時才加入最低充分 next action；平台層另有明確 UX / automation contract 時依較高層規則處理。
+- **User/project format wins**：使用者當次明確要求的格式、project-defined report schema 或 domain-specific answer contract，在不違反 authority / safety / evidence 邊界時優先於本節 default presentation。
+
+核心原則：**先回答真正的問題，再用最低充分 evidence 解釋；把事實、推論、限制與建議分清楚，但不要為了「看起來完整」把簡單答案做成固定長模板。**
+
 ## Repository／寫入邊界 routing
 
 ChatGPT 的 Current Write Target Repository、Conversation-scoped Repository Write Lock、一般 project 只直接寫 root `TASKS.md` 的邊界、TASKS lifecycle、Git／permission 與 cross-repository mutation 規則，以 `REPOSITORY_EXECUTION.md` 為唯一主要 authority。
