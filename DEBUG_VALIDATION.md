@@ -386,6 +386,25 @@ Evidence reuse 原則：
 
 驗證時優先比較 refactor 前後的 protected invariants；若 binary/resource usage 有變化但 behavior 預期不變，需記錄差異並判斷是否 material，不要只因數字不同就宣稱 regression，也不要完全忽略。
 
+### 搬移／改名 Reference-Graph Closure Gate（Relocation / Reference-Graph Closure）
+
+Move、rename、split、directory/domain relocation、module extraction 或其他會改變 path / symbol / route / anchor 的 behavior-preserving migration，完成條件不只是 target 已成功搬到新位置；還必須確認舊 reference graph 已最低充分收斂。
+
+推薦流程：
+
+`Target relocation → Inbound-reference inventory → Routing/import/anchor/manifest update → Stale-old-reference scan → Targeted validation`
+
+一般原則：
+
+- 檢查直接與間接 inbound references，例如 include/import、README/docs links、router/index、anchor、manifest、CI/workflow path、test fixture、schema `$ref`、tooling/verifier、generated-input source path 或 project-owned script reference；依實際 repo 結構取最低充分 scope，不要求固定全種類 checklist。
+- **Moved successfully ≠ migration closed。** 新 target 可正常 build/render，不代表仍指向舊 path/symbol 的 consumer 已全部更新；舊 reference 若會造成 broken navigation、錯誤 authority、漏編譯、stale verifier 或 silent fallback，仍屬未完成 migration。
+- 優先用 deterministic search/link/import/reference verifier 找 stale old identifier/path；沒有既有工具且 repo 很小時，可用 bounded search，不為形式建立大型 reference graph framework。
+- 若 relocation 同時更新 canonical owner，需確認舊文件／route 不再繼續宣稱自己是 authority；不要只修 link 而留下雙 owner。
+- Generated、vendored 或 upstream-controlled references 依其 generator/upstream authority處理；不得手改 generated output 製造不可維護 drift。
+- 若發現 stale reference 指向的是刻意保留的 compatibility alias / redirect，應有明確 contract；不要因名稱仍存在就機械刪除。
+
+核心原則：**搬移的完成是新位置可用、舊引用收斂、authority/routing 一致；不是只把檔案移成功。**
+
 ### 依 Evidence Boundary 排定重構時機（Refactor Timing by Evidence Boundary）
 
 多個真實技術債候選同時存在時，不以「哪個檔案最大／最醜」決定先後；優先選擇 **ownership 清楚、behavior freeze 容易、validation coverage 強、external/runtime/hardware coupling 較低** 的 boundary，讓 refactor 可以被低風險地證明為 behavior-preserving。
