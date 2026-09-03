@@ -327,28 +327,13 @@ Python、Node.js、Shell/Bash、Java、Go、Rust、C/C++ compiler、Git、SQLite
 - **Execution failure 先分類再修改。** SOURCE、TOOLCHAIN、ENVIRONMENT、INFRASTRUCTURE、SERVICE、AUTHENTICATION、AUTHORIZATION、HARDWARE_REQUIRED 與 permission/network gate分開處理；只有符合 `DEBUG_VALIDATION.md` 的 source evidence才可直接合理化 production source patch。
 - **PASS 只證明實際涵蓋的 scope。** Unit test、validator、compile、schema check或script exit 0不得升格成未實際覆蓋的 security/runtime/hardware/production PASS。
 
-### Validation Execution Placement Gate
+### Deterministic validation placement routing
 
-**Validator existence ≠ validator 必須在 CI 執行。** 對 deterministic validation，先保留 check semantics，再依 enforcement需求選最低充分 execution placement。
+Deterministic validator／test 是否應由 ChatGPT-side、CI／independent gate或 hybrid/reduced-trigger 執行，不由本檔重複定義；依 `DEBUG_VALIDATION.md` 的 `Validation Execution Placement Gate` 判斷。
 
-判斷至少考慮：
+本節只負責：當 project governance與 shared placement gate允許／選擇 ChatGPT-side execution時，確認目前 session 的 runtime/toolchain capability、canonical input identity與 execution evidence boundary。誰被授權執行仍由 repository-specific governance決定。
 
-- **Independent enforcement need**：是否需要在任何 individual ChatGPT/agent/human 之外強制阻擋錯誤；
-- **Mutation paths**：是否有人或 automation可能繞過目前 ChatGPT workflow直接修改 repository；
-- **Collaboration/release risk**：多人協作、external PR、release/security gate通常更需要獨立 CI/check；
-- **Execution reproducibility**：ChatGPT session 是否能穩定取得 canonical input與符合 contract的 runtime/toolchain；
-- **Operational cost**：always-on CI 的 runner usage、setup/dependency latency、maintenance、failure notification/email noise 是否高於實際 enforcement收益；
-- **Failure actionability**：自動紅燈是否真的在正確時間阻擋風險，還是大量 intermediate push 只產生可預期、低價值的 failure noise。
-
-常見 placement：
-
-- **ChatGPT-side**：個人／少數 maintainer、主要變更流經 ChatGPT、validator deterministic、目前 session可重建 canonical input，且不需要每個 push獨立 fail-closed enforcement；
-- **CI / independent gate**：多人/external contributor、protected merge/release/security需求、存在繞過 ChatGPT 的 mutation path，或 validation必須獨立於單一 session強制成立；
-- **Hybrid / reduced-trigger**：日常維護由 ChatGPT-side執行，只在 PR、release、manual dispatch或其他 material boundary跑 independent validation，避免 every-push ceremony。
-
-若既有 always-on CI 造成大量低價值 failure notification，不應先刪 validator或弱化 invariant；先比較是否可保留 deterministic validator，僅調整 trigger/execution owner/placement。反之，若移除 CI 會失去必要的 independent enforcement，也不得只因 ChatGPT當下能執行就取消 gate。
-
-核心原則：**先確認 ChatGPT現在真的具備任務所需 execution capability；再決定 deterministic check應在哪裡執行。保留驗證語意，按 enforcement value 與 operational cost選最低充分 placement，而不是把 Python、CI或特定訂閱方案當成固定答案。**
+核心原則：**ChatGPT能執行，不等於 validator就應移出CI；placement先看 shared validation gate，ChatGPT-side執行再看本節 capability contract。**
 
 ## Codex 結果 reconciliation
 
