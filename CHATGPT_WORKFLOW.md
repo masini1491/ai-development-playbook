@@ -298,27 +298,57 @@ Direct/Standalone才保存最低充分 target/task/evidence/allowed-forbidden sc
 
 Implementation session不同時負責大範圍 discovery、修改與 completeness judgment；每 checkpoint處理 coherent surface/invariant/operator flow。Model difficulty ≠ Coverage difficulty。
 
-## ChatGPT-side Deterministic Validation Execution
+## ChatGPT-side Runtime Execution
 
-當目前 ChatGPT session 具備適用的程式執行能力，而且 project 已有 deterministic validator／test／script 時，ChatGPT 可直接執行它取得 validation evidence；不必因 implementation agent 是 Codex，就把所有 deterministic validation 一律交由 Codex。
+ChatGPT 能產生某種語言、command 或 toolchain 的內容，**不等於目前 session 一定能執行它**。任何 ChatGPT-side program／validator／test／build／diagnostic execution 前，先通過最低充分 **Execution Capability Gate**。
 
 推薦流程：
 
-`Current repository authority → exact commit/tree or current workspace → required files/materialization → identity/freshness check → ChatGPT-side execution → result classification → canonical reconciliation`
+`Task-required execution contract → current session capability probe → current repository authority → exact workspace/commit/tree → required materialization → identity/freshness check → ChatGPT-side execution → result classification → canonical reconciliation`
 
-操作原則：
+### Execution Capability Gate
 
-- **Execution capability 與 retrieval/network capability 分開判斷。** `git clone`、network、connector 或 archive download 失敗，不代表 Python／runtime 不可用，也不代表 validator/source 失敗；依 `DEBUG_VALIDATION.md` 的 failure taxonomy分類真正失敗層。
-- **只執行 project 已擁有或目前 scope 明確建立的 deterministic check。** ChatGPT 能跑 Python／其他 runtime，不構成新增 validator、修改 source、擴張 Task/Stage 或建立 automation framework 的理由。
-- **Canonical identity 要可證明。** 直接在 current canonical workspace 執行時使用其 Git/working-tree evidence；若由 GitHub／connector 重建 snapshot，pin exact commit/tree，並在 correctness需要時以 blob/hash/size或等價 canonical evidence確認 materialized files與 remote state一致。不得拿 stale/local approximation冒充 current repository。
-- **Runtime contract 仍由 project/toolchain authority決定。** Python只是常見 implementation；validator需要 Python、Node、PowerShell或其他 runtime時，使用符合 project contract的 executable/version。ChatGPT session沒有必要 runtime時，明確回報 execution unavailable，不猜測 PASS。
-- **Execution owner 不改變 check semantics。** ChatGPT、Codex、CI或human是否可執行，由各 project governance決定；本共通規則只表示 ChatGPT在具備能力時可直接成為 deterministic evidence producer，不授權或禁止其他 actor。
-- **PASS 只證明實際涵蓋的 invariant。** Unit test PASS、validator exit 0、schema check PASS不得升格成完整 correctness/security/runtime/hardware/production PASS；coverage、evidence tier與 verifier lifecycle仍以 `DEBUG_VALIDATION.md` 為 authority。
-- **Execution failure 先分類再修改。** SOURCE、TOOLCHAIN、ENVIRONMENT、INFRASTRUCTURE、SERVICE與 permission/network gate分開處理；不得因 ChatGPT-side execution失敗就直接修改 production source或升級模型。
-- 若 materialization／execution揭露 stale reference、routing drift或 validator false assumption，依 current authority判斷 project defect、verifier drift或 observability gap；修正後只重跑最低充分 scope。
-- 不要求所有 project使用 Python，也不要求為此建立 ChatGPT-only script、CI、pre-commit或 package framework。
+執行前只確認目前任務真正需要的能力，不為形式盤點整個 sandbox：
 
-核心原則：**ChatGPT若具備適用 runtime，可以直接取得 deterministic execution evidence；但先證明執行的是 current canonical input，再把結果限制在該 check真正涵蓋的 evidence boundary。**
+- required runtime / compiler / shell 是否存在；
+- executable/version 是否符合 project contract；
+- required dependency/package/tool 是否可用；
+- filesystem / working-directory / local database 等必要環境是否存在；
+- 只有任務真的需要時，才確認 Git、network、external service、credential 或 hardware access。
+
+Python、Node.js、Shell/Bash、Java、Go、Rust、C/C++ compiler、Git、SQLite 或其他工具都只是可能的 execution capability；**不得把「ChatGPT 可寫這種程式」當成 runtime 已安裝的證據，也不得把某個訂閱方案名稱當成 runtime availability contract。** 若必要 capability 不存在，標記 execution unavailable／依 `DEBUG_VALIDATION.md` 分類真正 failure/gate，不猜測 PASS。
+
+### Canonical execution discipline
+
+- **Execution capability 與 retrieval/network capability 分開判斷。** `git clone`、connector、archive download 或 HTTP 失敗，不代表 local runtime 不可用，也不代表 source/validator 有錯。
+- **只執行 project 已擁有或目前 scope 明確建立的 command/check。** ChatGPT 有 shell、Python、compiler 或其他 runtime，不構成新增 script、修改 production source、擴張 Task/Stage 或建立 automation framework 的理由。
+- **Canonical identity 要可證明。** 在 current canonical workspace 執行時使用其 Git/working-tree evidence；若由 connector／remote source 重建 snapshot，pin exact commit/tree，correctness需要時以 blob/hash/size或等價 canonical evidence確認 materialized input。不得拿 stale/local approximation冒充 current repository。
+- **Execution owner 不改變 command semantics。** 同一 validator/test由 ChatGPT、Codex、CI或human執行時，其 pass/fail contract不應因 actor 改寫；誰被授權執行仍由 project governance決定。
+- **Execution failure 先分類再修改。** SOURCE、TOOLCHAIN、ENVIRONMENT、INFRASTRUCTURE、SERVICE、AUTHENTICATION、AUTHORIZATION、HARDWARE_REQUIRED 與 permission/network gate分開處理；只有符合 `DEBUG_VALIDATION.md` 的 source evidence才可直接合理化 production source patch。
+- **PASS 只證明實際涵蓋的 scope。** Unit test、validator、compile、schema check或script exit 0不得升格成未實際覆蓋的 security/runtime/hardware/production PASS。
+
+### Validation Execution Placement Gate
+
+**Validator existence ≠ validator 必須在 CI 執行。** 對 deterministic validation，先保留 check semantics，再依 enforcement需求選最低充分 execution placement。
+
+判斷至少考慮：
+
+- **Independent enforcement need**：是否需要在任何 individual ChatGPT/agent/human 之外強制阻擋錯誤；
+- **Mutation paths**：是否有人或 automation可能繞過目前 ChatGPT workflow直接修改 repository；
+- **Collaboration/release risk**：多人協作、external PR、release/security gate通常更需要獨立 CI/check；
+- **Execution reproducibility**：ChatGPT session 是否能穩定取得 canonical input與符合 contract的 runtime/toolchain；
+- **Operational cost**：always-on CI 的 runner usage、setup/dependency latency、maintenance、failure notification/email noise 是否高於實際 enforcement收益；
+- **Failure actionability**：自動紅燈是否真的在正確時間阻擋風險，還是大量 intermediate push 只產生可預期、低價值的 failure noise。
+
+常見 placement：
+
+- **ChatGPT-side**：個人／少數 maintainer、主要變更流經 ChatGPT、validator deterministic、目前 session可重建 canonical input，且不需要每個 push獨立 fail-closed enforcement；
+- **CI / independent gate**：多人/external contributor、protected merge/release/security需求、存在繞過 ChatGPT 的 mutation path，或 validation必須獨立於單一 session強制成立；
+- **Hybrid / reduced-trigger**：日常維護由 ChatGPT-side執行，只在 PR、release、manual dispatch或其他 material boundary跑 independent validation，避免 every-push ceremony。
+
+若既有 always-on CI 造成大量低價值 failure notification，不應先刪 validator或弱化 invariant；先比較是否可保留 deterministic validator，僅調整 trigger/execution owner/placement。反之，若移除 CI 會失去必要的 independent enforcement，也不得只因 ChatGPT當下能執行就取消 gate。
+
+核心原則：**先確認 ChatGPT現在真的具備任務所需 execution capability；再決定 deterministic check應在哪裡執行。保留驗證語意，按 enforcement value 與 operational cost選最低充分 placement，而不是把 Python、CI或特定訂閱方案當成固定答案。**
 
 ## Codex 結果 reconciliation
 
