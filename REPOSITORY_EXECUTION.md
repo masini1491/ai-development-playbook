@@ -257,6 +257,28 @@ Opt-in 不要求使用上述固定名稱；語意與 AI loading responsibility�
 
 ChatGPT 對 allowlisted surface 的合法 mutation，不得因 derived bookkeeping 反向推導對 README、manifest、showcase、source 或其他非 allowlisted path 的直接寫入權。若衍生檔需要同步，依 `AI_CONTEXT.md` 的 Derived Metadata Write-Closure Gate處理。
 
+### Single-Surface → Multi-Surface adoption procedure
+
+當既有 project 從 default Single-Surface Mode（通常只有 `/TASKS.md`）第一次 opt-in `/BACKLOG.md`、Hot task dossier、evidence staging或其他額外 coordination surface時，**不要把「新增檔案」本身當成 migration 完成**。先完成最低充分 governance／information-architecture transition，避免 ChatGPT 在新 path 尚未取得 authority前自我擴權，或讓 operational memory意外污染 README／project-scale／derived metadata。
+
+推薦流程：
+
+`Audit current surfaces / derived dependencies → User selects target semantics → Authorized governance mutation → Supporting path/tooling update → Validation → Canonical read-back → Data migration → New allowlist becomes active`
+
+一般原則：
+
+1. **Audit current state**：先讀 current project governance、`TASKS.md`／現有 coordination content、retention/ignore policy，以及 project-scale／manifest／README/showcase等可能把 Markdown 或新 path納入 derived output 的規則。
+2. **Choose semantics before paths**：先確認真正需要的是 Cold Registry、Hot dossier、sanitized evidence staging或其他單一責任；不要為了「多層比較完整」一次啟用全部 surface。
+3. **User authorization does not equal immediate self-expansion**：使用者可明確授權「啟用 BACKLOG／讓 ChatGPT可維護某 surface」這項治理變更，但在 project governance實際由合法 maintainer／Codex更新並生效前，ChatGPT仍不得直接修改 governance或先建立／寫入新 path。
+4. **Governance first**：由當時具合法 mutation authority的 actor更新 `ChatGPT Coordination Write Allowlist`／等價 contract，並明確保留未列入 path為 read-only；必要時同步 routing、retention、security/sanitization與 actor responsibility。
+5. **Close derived dependencies**：若 project-scale、manifest、public README/showcase、generated index或其他 derived metadata會因新 operational surface而頻繁變動，先在同一 migration Stage調整 classification／write-closure；不要讓每筆 coordination mutation反向要求更新非 allowlisted文件。
+6. **Create only selected surfaces**：只建立已核准且有明確 owner/semantic的 path；Hot dossier/evidence staging不得因建立目錄就成為 every-task default load。
+7. **Migrate state without changing commitment**：把現有 `TASKS.md` 內容分流到 Hot／Cold／Evidence時，只改資訊責任與位置；`CANDIDATE` 不因搬到 BACKLOG就變 `COMMITTED`，Cold不因拆檔就取得 execution authority，historical/evidence也不得升格成 current task。
+8. **Validate and read back before use**：完成 project-required deterministic validation／CI（若適用）與 remote canonical read-back後，新的 allowlist才視為 effective；ChatGPT從此才可依新 contract直接維護新 surface。
+9. **Keep migration bounded**：第一次 migration只處理 coordination architecture成立所必需的治理、derived dependency與狀態分流；AGENTS/README slimming、archive重整、unrelated refactor若不是必要 dependency，另行 admission，不順手擴張。
+
+核心原則：**先讓 governance與 derived-information responsibility 對新 surface閉合，再搬資料、再開始使用；新增 coordination path不是 ChatGPT自我授權的捷徑。**
+
 ## Coordination Lifecycle / Admission
 
 `TASKS.md`、`BACKLOG.md`、task dossier、evidence surface 的 semantic responsibility與 default-load policy由 `AI_CONTEXT.md` 維護。本節只定義 persistence / execution admission 與 backward compatibility。
