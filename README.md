@@ -60,6 +60,24 @@
 - **Cost-aware execution**：Evidence → Context → Model → Reasoning → Agent → Validation，只有證據顯示不足時才逐級擴張。
 - **Ephemeral compute**：當既有 deterministic workload 值得執行時，ChatGPT 可在受控 sandbox 進行 bounded computation，但不因此取得 GitHub 寫入權。
 
+## 這套 Playbook 的護城河（Core differentiators）
+
+這套實戰手冊不試圖取代 agent runtime、Skills package、spec framework 或 enterprise compliance suite；它真正的差異化，是把 AI 長期使用真實工程 repository 時最容易混淆的 **project memory、Context、authority、evidence 與 execution cost** 放進同一套可路由、可驗證的協作架構。
+
+一句話定位：
+
+> **GitHub-native AI Engineering Control Plane + Durable Project Memory Architecture**
+
+目前最核心的五個護城河：
+
+1. **GitHub 是 durable project memory，不只是 code storage**：current canonical state、coordination 與 Git history 共同支撐跨聊天室接續；AI 不必把舊聊天或模型 memory 當成唯一專案記憶。
+2. **Context 本身有 lifecycle**：Always-on／Hot／Cold／Evidence／Current canonical／Historical 各有不同載入責任；資訊被保存，不代表每個 Task 都要付出 Context 成本。
+3. **保存、載入、修改、執行的 authority 分開**：`Persistence ≠ default loading ≠ write ≠ execution`。AI 能看到、能記住或技術上能呼叫工具，都不自動等於已被授權修改或執行。
+4. **Real-world evidence 是一級公民**：software／test PASS 不會自動覆蓋 hardware、bench、production 或 user-observed evidence；特別適合包含實體設備、嵌入式與現場驗證的工程專案。
+5. **Minimum-sufficient cost 是共同 optimization objective**：以 `Evidence → Context → Model → Reasoning → Agent → Validation` 控制整條工作流，只在證據顯示不足時逐級擴張，而不是預設使用最大 Context、最強模型或最多 Agent。
+
+這五點的共同目標不是增加 ceremony，而是讓 ChatGPT、Codex／coding agents、GitHub、project-specific truth、future work、evidence 與權限在長期協作中**保持可分辨、可追溯、可安全接續**。
+
 ## 核心原則
 
 > 先取得最低充分證據（Evidence），再使用最低充分上下文（Context）、模型（Model）、推理強度（Reasoning）、Agent 與驗證範圍（Validation scope）；只有證據證明不足時才逐級擴張。
