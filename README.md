@@ -68,13 +68,21 @@
 
 這套實戰手冊不試圖取代**代理執行環境（agent runtime）**、**技能套件（Skills package）**、**規格框架（spec framework）**或**企業合規套件（enterprise compliance suite）**；它真正的差異化，是把 AI 長期使用真實工程 repository 時最容易混淆的**專案記憶（project memory）**、**上下文（Context）**、**權威（authority）**、**證據（evidence）**與**執行成本（execution cost）**放進同一套可路由、可驗證的協作架構。
 
+### 核心定位：面向 AI 的儲存庫資訊架構（Repository Information Architecture for AI）
+
+這套實戰手冊的上位問題不是單純「怎麼寫 Prompt」，而是：**如何把一個真實工程儲存庫（repository）設計成 AI 能長期、安全、低成本重新理解與接續的資訊環境。**
+
+不只是讓 AI「讀得到儲存庫」，而是設計其中的資訊如何被保存、分層、路由、載入與重新建立，使不同聊天室／不同代理（agents）都能以**最低充分上下文（minimum-sufficient Context）**找到目前真正有效的專案狀態。
+
 一句話定位：
 
 > **GitHub 原生 AI 工程控制平面（GitHub-native AI Engineering Control Plane）+ 持久化專案記憶架構（Durable Project Memory Architecture）**
+>
+> 讓 GitHub 成為 AI 可安全長期使用的**專案記憶（project memory）**與**工程控制平面（engineering control plane）**，並以最低充分上下文（minimum-sufficient Context）、明確權威（authority）、現實世界證據（real-world evidence）與執行成本（execution cost）控制，讓不同聊天室／不同代理（agents）都能重新建立正確的專案狀態。
 
 目前最核心的五個護城河：
 
-1. **GitHub 是持久化專案記憶（durable project memory），不只是程式碼儲存（code storage）**：目前權威狀態（current canonical state）、協作狀態（coordination）與 Git 歷史（Git history）共同支撐跨聊天室接續；AI 不必把舊聊天或模型記憶（model memory）當成唯一專案記憶。
+1. **面向 AI 的儲存庫資訊架構（Repository Information Architecture for AI）**：GitHub 不只是程式碼儲存（code storage），也不是把文件堆進 repository；資訊依**責任邊界（surface responsibility）**、**檢索意圖（retrieval intent）**、目前權威（current canonical）、協作（coordination）、證據（evidence）與歷史（history）設計，使 repository 能真正成為 AI 的持久化專案記憶與工程控制平面。
 2. **上下文本身有生命週期（Context lifecycle）**：常駐載入（Always-on）／熱區（Hot）／冷區（Cold）／證據（Evidence）／目前權威（Current canonical）／歷史（Historical）各有不同載入責任；資訊被保存，不代表每個任務（Task）都要付出上下文成本（Context cost）。
 3. **保存、載入、修改、執行的權威邊界（authority）分開**：`Persistence ≠ default loading ≠ write ≠ execution`。AI 能看到、能記住或技術上能呼叫工具，都不自動等於已被授權修改或執行。
 4. **現實世界證據（Real-world evidence）是一級公民**：軟體／測試通過（software/test PASS）不會自動覆蓋硬體（hardware）、測試台（bench）、正式環境（production）或使用者觀察（user-observed）證據；特別適合包含實體設備、嵌入式與現場驗證的工程專案。
