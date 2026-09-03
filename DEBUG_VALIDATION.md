@@ -10,7 +10,7 @@
 - 根因／多來源結果／首次診斷 → `Root Cause 分類標籤`、`多來源／多 Agent 結果協調`、`首次接觸診斷 Harness`
 - operational failure／retry／等待 → `執行失敗分類`、`重試紀律`、`長時間 Operation 監督`
 - build／CI／昂貴流程 preflight → `Build／CI Phase Attribution`、`決定性 Fail-Fast Preflight`
-- deterministic rule／validator／hook → `Deterministic Enforcement Admission Gate`
+- deterministic rule／validator／hook／execution placement → `Deterministic Enforcement Admission Gate`、`Validation Execution Placement Gate`
 - completion／GitHub read-back → `完成證據關卡`
 - validation scope／runtime backend → `驗證階梯`、`驗證涵蓋完整性`、`真實 Runtime／Backend Contract 驗證`
 - verifier／evidence freshness → `Verifier Contract 生命週期`、`Evidence 等級`、`Evidence 取代生命週期`
@@ -60,6 +60,35 @@ Automation 也必須服從最低充分原則：
 - 自動檢查只證明它實際檢查的 invariant，不得把單一綠燈升格成整體 correctness / security / completion PASS。
 
 核心原則：**能可靠機械判斷的 constraint 優先交給工具；需要工程判斷的問題保留給 reasoning。產品化不是把所有規則 script 化，而是把最適合 deterministic enforcement 的那一小部分從「要求 AI 記住」升格成可驗證 contract。**
+
+## Validation Execution Placement Gate
+
+**Validator existence ≠ validator 必須在 CI 執行。** Deterministic check 的 invariant、pass/fail semantics 與 execution placement 是不同決策；先保留可驗證 contract，再依 enforcement value、authorized mutation path 與 operational cost選最低充分執行位置。
+
+判斷至少考慮：
+
+- **Independent enforcement need**：是否需要在任何單一 ChatGPT／Agent／human session之外強制阻擋錯誤；
+- **Mutation paths**：是否有 contributor、automation、API或其他流程可能繞過目前主要維護 workflow直接修改 repository；
+- **Collaboration / release risk**：多人協作、external PR、protected merge、release/security gate通常更需要獨立 verifier；
+- **Execution reproducibility**：候選 execution path 是否能穩定取得 current canonical input、符合 contract 的 runtime/toolchain與必要 dependency；
+- **Operational cost**：always-on CI 的 runner usage、setup/dependency latency、workflow maintenance、quota與 failure notification/email noise是否高於實際 enforcement收益；
+- **Failure actionability**：自動紅燈是否在正確 boundary阻擋 material risk，還是大量 intermediate push只產生可預期、低價值的 failure noise。
+
+常見 placement：
+
+- **Session/local-side authorized execution**：個人／少數 maintainer、主要 mutation path受控、validator deterministic、authorized session可取得 canonical input，而且不需要 every-push independent fail-closed enforcement；
+- **CI / independent gate**：多人/external contributor、protected merge/release/security需求、存在繞過主要 session的 mutation path，或 validation必須獨立於單一執行者強制成立；
+- **Hybrid / reduced-trigger**：日常維護由 authorized session/local execution處理，只在 PR、release、manual dispatch或其他 material boundary跑 independent validation，避免 every-push ceremony。
+
+一般原則：
+
+- 若既有 always-on CI 造成大量低價值 failure notification，不應先刪 validator、關掉 invariant或降低 failure threshold；先評估是否只需調整 trigger、execution owner或 placement。
+- 反之，若移除 CI 會失去 formal merge/release/security gate、external-contributor protection或其他必要 independent enforcement，不得只因某個 ChatGPT／Agent／human session當下能執行就取消 gate。
+- **Execution owner 不改變 check semantics。** 同一 validator/test由不同 authorized actor執行時，預期輸入、exit semantics與 evidence boundary應保持一致；actor authorization由 repository governance決定。
+- ChatGPT-side execution 的 runtime/toolchain capability、canonical snapshot與 session-specific discipline由 `CHATGPT_WORKFLOW.md` 的 `ChatGPT-side Runtime Execution` 負責；本節不重複 actor-specific capability policy。
+- Placement change若會改變正式 completion/merge/release contract，必須同步更新 canonical governance與必要 evidence；不得只刪 workflow檔就宣稱「驗證已改由別處承擔」。
+
+核心原則：**保留 deterministic validation contract，再按 independent enforcement需求與 operational cost選最低充分 execution placement；CI、ChatGPT、local human或其他 actor都不是固定答案。**
 
 ## Root Cause 分類標籤（Root-cause labels）
 
