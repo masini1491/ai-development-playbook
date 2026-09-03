@@ -152,7 +152,7 @@ def _check_local_links(path: Path, root: Path, text: str) -> list[Diagnostic]:
 
 def _heading_aliases(heading: str) -> set[str]:
     aliases = {heading}
-    for separator in ("（", " ("):
+    for separator in ("（", " (", "／"):
         if separator in heading:
             aliases.add(heading.split(separator, 1)[0].rstrip())
     return aliases
