@@ -98,6 +98,23 @@ Git／permission、Conversation-scoped Repository Write Lock、ChatGPT 實際可
 - 跨 topic 只讀真正參與本次 decision / execution / validation 的 sections；「相關」不等於「必讀」。
 - Available context ≠ required context；資訊存在不代表本次必須載入。
 
+### Fail-fast Context Ordering
+
+當本次 task 有多個 prerequisite artifact / authority 可能需要讀取時，除了「讀得少」，也應優先安排**最能以低成本否決後續 work / Context 的資訊**。
+
+推薦思路：
+
+`Repository / authority → task goal / scope → current canonical premise → detailed design / source / evidence`
+
+這不是固定讀取模板；實際順序依 task authority 與風險決定。核心是：
+
+- 若較早的 authority / goal / scope 已顯示 repository、target、permission、premise 或 completion criterion 不成立，立即停止載入原本依賴它的後續 implementation detail；
+- 先讀「一旦不成立，就能省掉大量後續 Context」的高 leverage artifact，再讀昂貴 design/source/evidence；
+- fail-fast 只停止已被否決的分支，不得拿低 authority summary 取代仍必要的 canonical evidence；
+- 若後續 artifact 才具有真正 decision authority，仍必須讀到該 authority，不能為了節省 Context 提前下結論。
+
+核心原則：**Context ordering 應讓錯誤 premise 儘早失敗；不要先花大量成本理解一條之後才發現根本不該執行的路徑。**
+
 ## Thin Routing Metadata
 
 Routing metadata 的責任是**幫 AI 找到該讀的 canonical content**，不是建立第二份 content/state database。
