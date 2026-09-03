@@ -18,6 +18,7 @@ HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
 FENCE_RE = re.compile(r"^\s{0,3}(`{3,}|~{3,})(.*)$")
 WINDOWS_DRIVE_RE = re.compile(r"^[A-Za-z]:[\\/]")
 URL_SCHEME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
+HTML_ANCHOR_RE = re.compile(r"<(?:a|[^>]+)\b(?:id|name)=[\"']([^\"']+)[\"']", re.IGNORECASE)
 CHAT_INIT_ROUTER_HEADING = "最低必要路由"
 
 
@@ -92,14 +93,45 @@ def _outside_fence_lines(text: str):
             yield line_no, line
 
 
+def _github_slug_base(heading: str) -> str:
+    heading = re.sub(r"!?\[([^\]]+)\]\([^)]+\)", r"\1", heading)
+    heading = re.sub(r"<[^>]+>", "", heading)
+    heading = heading.replace("`", "").lower().strip()
+    slug_chars: list[str] = []
+    for char in heading:
+        if char.isspace():
+            slug_chars.append("-")
+        elif char.isalnum() or char in {"-", "_"}:
+            slug_chars.append(char)
+    return "".join(slug_chars)
+
+
+def _markdown_anchor_ids(text: str) -> set[str]:
+    anchors = {match.group(1) for match in HTML_ANCHOR_RE.finditer(text)}
+    counts: dict[str, int] = {}
+    for _line_no, line in _outside_fence_lines(text):
+        heading_match = HEADING_RE.match(line)
+        if not heading_match:
+            continue
+        base = _github_slug_base(heading_match.group(2).strip())
+        if not base:
+            continue
+        count = counts.get(base, 0)
+        slug = base if count == 0 else f"{base}-{count}"
+        counts[base] = count + 1
+        anchors.add(slug)
+    return anchors
+
+
 def _check_local_links(path: Path, root: Path, text: str) -> list[Diagnostic]:
     diagnostics: list[Diagnostic] = []
+    anchor_cache: dict[Path, set[str]] = {}
     for line_no, line in _outside_fence_lines(text):
         for match in MARKDOWN_LINK_RE.finditer(line):
             target = _strip_link_destination(match.group(1))
             if _is_external_or_nonfile(target):
                 continue
-            resolved, _fragment = _resolve_target(path, root, target)
+            resolved, fragment = _resolve_target(path, root, target)
             try:
                 resolved.relative_to(root.resolve())
             except ValueError:
@@ -107,6 +139,14 @@ def _check_local_links(path: Path, root: Path, text: str) -> list[Diagnostic]:
                 continue
             if not resolved.exists():
                 diagnostics.append(Diagnostic(_relative_display(path, root), line_no, "LOCAL_TARGET", f"Missing local target: {target}"))
+                continue
+            if fragment and resolved.is_file() and resolved.suffix.lower() == ".md":
+                anchors = anchor_cache.get(resolved)
+                if anchors is None:
+                    anchors = _markdown_anchor_ids(resolved.read_text(encoding="utf-8"))
+                    anchor_cache[resolved] = anchors
+                if fragment not in anchors:
+                    diagnostics.append(Diagnostic(_relative_display(path, root), line_no, "LOCAL_ANCHOR", f"Missing Markdown heading anchor: {target}"))
     return diagnostics
 
 
