@@ -41,6 +41,13 @@
 
 這套導入方式的目的不是「把更多規則塞進 Prompt」，而是讓 AI 從一個很小的入口開始，按任務只讀需要的規則。
 
+完整可複製骨架見 [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md)。
+
+版本選擇：
+
+- 想持續取得最新規則：追蹤 `main`。
+- 想固定可重現 baseline：pin `v0.1.0`。
+
 ## 這套 Playbook 解決什麼
 
 它主要處理 AI-assisted engineering 常見但容易被忽略的協作問題：
