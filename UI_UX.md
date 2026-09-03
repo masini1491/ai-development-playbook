@@ -114,7 +114,7 @@ Human-facing wording 應能在**不改變 machine contract、operation semantics
 
 UI consistency 經常是「單項修改不難，但 surface 很多」的 coverage-sensitive work。若 surface 多而分散，不讓同一個長 Prompt 同時負責 external reference research、全域修改與 completeness self-judgment。
 
-依 `CODEX_PROMPT_RULES.md` 的 `Coverage-sensitive work decomposition`：
+依 `CHATGPT_WORKFLOW.md` 的 `Coverage-sensitive planning`：
 
 `bounded inventory → coherent checkpoint → focused implementation → targeted validation → STOP → independent coverage reconciliation → next checkpoint → final closure reconciliation`
 
