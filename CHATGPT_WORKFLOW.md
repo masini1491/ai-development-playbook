@@ -345,13 +345,37 @@ Implementation session不同時負責大範圍 discovery、修改與 completenes
 
 ## ChatGPT-side Runtime Execution
 
-ChatGPT 能產生某種語言、command 或 toolchain 的內容，**不等於目前 session 一定能執行它**。任何 ChatGPT-side program／validator／test／build／diagnostic execution 前，先通過最低充分 **Execution Capability Gate**。
+ChatGPT 不只可讀取 repository 後 reasoning；當 existing project 有適合的 deterministic workload，而且目前 task / governance 允許時，也可把 sandbox 當成**受控的 ephemeral execution surface**。這個 surface只提供暫時計算能力，不取得 repository persistence/write authority，也不成為新的 source of truth。
 
 推薦流程：
 
-`Task-required execution contract → current session capability probe → current repository authority → exact workspace/commit/tree → required materialization → identity/freshness check → ChatGPT-side execution → result classification → canonical reconciliation`
+`Candidate deterministic workload → Execution Opportunity Scan → current session capability probe → current repository authority → exact workspace/commit/tree → required materialization → identity/freshness check → ChatGPT-side execution → result classification → canonical reconciliation`
+
+### Execution Opportunity Scan
+
+Execution Opportunity Scan 用來回答：**目前已知的 project/workload 裡，是否有一個值得由 ChatGPT直接執行、而不是只靠語言模型推演或立刻交給 Codex／CI 的 deterministic candidate？**
+
+只在有實際訊號時做 bounded scan，例如：existing project首次採用本手冊／AI workflow review、已讀範圍直接出現 validator/parser/calculator/test/tooling、CI正在執行可在 push前重現的 deterministic check，或同一類人工解析／計算已反覆出現。不得因「ChatGPT可能會Python」就完整掃描 repository、盤點所有 runtime，或主動製造大量工具候選。
+
+候選通常至少同時滿足：
+
+- **Deterministic / bounded**：輸入、輸出、stop condition與 failure semantics可清楚界定；
+- **Material value**：可降低人工計算錯誤、重複解析成本、remote debugging noise，或提高 validation / evidence reproducibility；
+- **Existing asset or repeated need**：優先執行 repository已擁有的 project-owned tool；若工具尚不存在，至少已有反覆 deterministic workload 的真實 evidence。只有「寫個 script 也許很方便」不足以建立新 tooling obligation；
+- **Safe ephemeral scope**：預設不需要 secret、production mutation、無界 daemon、實體硬體或其他目前 sandbox無法可靠提供的 authority；若確實需要，必須另依 capability／authorization判斷；
+- **Governance-compatible**：目前 Task/Stage 與 repository governance允許該 execution。Repository source/docs write authority不足，**不會單獨禁止** read-only canonical materialization + sandbox computation；但也不因此取得任何 GitHub mutation權。
+
+Opportunity 成立後才 probe **本候選真正需要的** runtime / dependency / filesystem / network capability；不為了「知道 ChatGPT能做什麼」全面列舉 sandbox。若 candidate不存在或 material benefit不足，停止 scan，正常回到 reasoning / Prompt workflow。
+
+若 execution需要由 GitHub connector或其他 read-only source重建 filesystem snapshot，sandbox中的副本只是一個 pinned ephemeral input。GitHub／current canonical repository仍是 source of truth；執行結果是 evidence，不會因產生在ChatGPT filesystem就自動持久化，也不能覆蓋更高 authority current state。
+
+若 scan顯示「應該新增一個 parser／validator／calculator」，該 tooling creation仍是新的 repository work：先依 AI-originated Durable Work Admission Gate與 project write boundary決定是否 admission／handoff，不能因 ChatGPT有 runtime就直接建立 repository tool。
+
+核心原則：**先找真實 deterministic workload，再按需 probe capability；Ephemeral compute 可以擴大 ChatGPT 的計算能力，但不擴大 GitHub 寫入權或 durable authority。**
 
 ### Execution Capability Gate
+
+ChatGPT 能產生某種語言、command 或 toolchain 的內容，**不等於目前 session 一定能執行它**。任何 ChatGPT-side program／validator／test／build／diagnostic execution 前，先通過最低充分 **Execution Capability Gate**。
 
 執行前只確認目前任務真正需要的能力，不為形式盤點整個 sandbox：
 
