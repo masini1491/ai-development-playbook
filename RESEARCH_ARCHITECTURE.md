@@ -1,5 +1,24 @@
 # 研究／架構方法論（Research / Architecture Methodology）
 
+> **Authority**：research、reference/provenance、technology/target/capability、performance requirement、state/lifecycle、ownership、domain extraction、readability、complexity/failure-domain、external-service document architecture、composition。
+> **Read when**：目前問題涉及新技術／協定研究、architecture decision、target/capability、runtime state/lifecycle、ownership/refactor boundary 或 external-service architecture。
+> **Usually skip when**：只是 Git/repository permission、TASKS bookkeeping、source-level root cause/validation、純 UI／UX 或 embedded board-specific evidence。
+> **Progressive reading**：先依下方 Section Router 定位；找到 relevant heading 後只讀該 section 與必要相鄰 dependency，不預設載入全文。
+
+## Section Router
+
+- 外部研究／避免重造／來源權威 → `研究優先原則`、`避免重造輪子關卡`、`本地 Reference 知識庫`、`漸進式外部研究`、`來源與授權`
+- framework／technology stack → `技術棧選擇`
+- target／board class／capability／degraded startup → `Target 選擇`、`Capability 模型`
+- latency／throughput／resource threshold → `Performance／SLA 收錄關卡`
+- topology／companion／gateway → `資源感知部署`
+- operation result／parser output／async callback／event ordering／persistence／reconciliation／restart continuity → `State／Lifecycle Integrity`
+- ownership／God module／domain extraction／可讀性／library timing → `Ownership Admission Gate`、`Domain Cohesion／漸進式 Domain Extraction`、`可讀性保持`、`可抽成 Library，但不急著抽`
+- architecture complexity／failure blast radius／abstraction naming → `Evidence 觸發的複雜度升級`、`Failure Domain 最小化`、`抽象命名穩定性`
+- external service 文件 authority／provider lifecycle → `External Service 文件 Authority 分離`
+- UI architecture cross-routing → `UI／UX routing`
+- multi-repo domain composition → `獨立 Domain Repository／組合`
+
 ## 研究優先原則（Research-first principle）
 
 > 先降低不確定性，再降低模型成本。
