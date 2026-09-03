@@ -298,6 +298,28 @@ Direct/Standalone才保存最低充分 target/task/evidence/allowed-forbidden sc
 
 Implementation session不同時負責大範圍 discovery、修改與 completeness judgment；每 checkpoint處理 coherent surface/invariant/operator flow。Model difficulty ≠ Coverage difficulty。
 
+## ChatGPT-side Deterministic Validation Execution
+
+當目前 ChatGPT session 具備適用的程式執行能力，而且 project 已有 deterministic validator／test／script 時，ChatGPT 可直接執行它取得 validation evidence；不必因 implementation agent 是 Codex，就把所有 deterministic validation 一律交由 Codex。
+
+推薦流程：
+
+`Current repository authority → exact commit/tree or current workspace → required files/materialization → identity/freshness check → ChatGPT-side execution → result classification → canonical reconciliation`
+
+操作原則：
+
+- **Execution capability 與 retrieval/network capability 分開判斷。** `git clone`、network、connector 或 archive download 失敗，不代表 Python／runtime 不可用，也不代表 validator/source 失敗；依 `DEBUG_VALIDATION.md` 的 failure taxonomy分類真正失敗層。
+- **只執行 project 已擁有或目前 scope 明確建立的 deterministic check。** ChatGPT 能跑 Python／其他 runtime，不構成新增 validator、修改 source、擴張 Task/Stage 或建立 automation framework 的理由。
+- **Canonical identity 要可證明。** 直接在 current canonical workspace 執行時使用其 Git/working-tree evidence；若由 GitHub／connector 重建 snapshot，pin exact commit/tree，並在 correctness需要時以 blob/hash/size或等價 canonical evidence確認 materialized files與 remote state一致。不得拿 stale/local approximation冒充 current repository。
+- **Runtime contract 仍由 project/toolchain authority決定。** Python只是常見 implementation；validator需要 Python、Node、PowerShell或其他 runtime時，使用符合 project contract的 executable/version。ChatGPT session沒有必要 runtime時，明確回報 execution unavailable，不猜測 PASS。
+- **Execution owner 不改變 check semantics。** ChatGPT、Codex、CI或human是否可執行，由各 project governance決定；本共通規則只表示 ChatGPT在具備能力時可直接成為 deterministic evidence producer，不授權或禁止其他 actor。
+- **PASS 只證明實際涵蓋的 invariant。** Unit test PASS、validator exit 0、schema check PASS不得升格成完整 correctness/security/runtime/hardware/production PASS；coverage、evidence tier與 verifier lifecycle仍以 `DEBUG_VALIDATION.md` 為 authority。
+- **Execution failure 先分類再修改。** SOURCE、TOOLCHAIN、ENVIRONMENT、INFRASTRUCTURE、SERVICE與 permission/network gate分開處理；不得因 ChatGPT-side execution失敗就直接修改 production source或升級模型。
+- 若 materialization／execution揭露 stale reference、routing drift或 validator false assumption，依 current authority判斷 project defect、verifier drift或 observability gap；修正後只重跑最低充分 scope。
+- 不要求所有 project使用 Python，也不要求為此建立 ChatGPT-only script、CI、pre-commit或 package framework。
+
+核心原則：**ChatGPT若具備適用 runtime，可以直接取得 deterministic execution evidence；但先證明執行的是 current canonical input，再把結果限制在該 check真正涵蓋的 evidence boundary。**
+
 ## Codex 結果 reconciliation
 
 收到 Codex execution result後，若宣稱 GitHub tracked-file mutation、commit/push、coordination bookkeeping、branch/HEAD或其他 remote state change，在接受 completion或產生下一 Stage前，依 `DEBUG_VALIDATION.md` Completion Evidence Guard取得最低充分 remote evidence。
