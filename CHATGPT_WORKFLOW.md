@@ -213,6 +213,51 @@ ChatGPT 不因「還能做更多」就自動建立一串 TASKS/BACKLOG。
 - Evidence staging不具 execution authority，也不直接成為 canonical architecture/validation truth；
 - 單次 payload太長需要分段持久化時，分段是 write mechanism，不是多個工程 Stage；完整性規則依 `AI_CONTEXT.md`。
 
+## Session Compaction / Rehydration Contract
+
+長時間 ChatGPT engineering conversation 可能累積大量 search result、tool output、debug branch、舊假說與已被 supersede 的中間結論。當這些內容開始提高 retrieval cost、誤用 stale premise 或 handoff/recovery 風險時，ChatGPT 應做 **bounded session compaction**；不要等到 Context 已失控才把整段聊天摘要成另一份不可靠 authority。
+
+適合觸發 compaction 的情況包括：
+
+- 同一 task 已跨多個 Stage／大量 tool calls，且 current decision 只依賴其中一小部分 evidence；
+- 已出現多輪被推翻的假說、重複 log/search result 或 superseded intermediate state；
+- 即將進行 agent/session handoff、重新 attach repository，或需要讓後續 reasoning 從明確 checkpoint 接續；
+- 目前回答開始需要反覆回找「真正 current premise／decision／next action」才能避免混淆。
+
+不要只因聊天很長就機械式 compaction；若 current Context 仍清楚、沒有 material retrieval/handoff risk，保持原狀通常更便宜。
+
+### 最低充分 compaction payload
+
+Session checkpoint 只保留後續工作真正需要的 current state：
+
+`Goal / completion criterion → Canonical pointers / identity → Confirmed material findings → Superseded assumptions only if needed to avoid regression → Unresolved evidence gaps / blockers → Current decision / state → Next authorized action / STOP condition`
+
+一般原則：
+
+- **Pointer over copy**：能由 GitHub／canonical source重新取得的長文件、diff、log、spec不全文複製；保存 exact repo/path/SHA/section/command或其他最低充分 pointer。
+- **Current over historical**：已被新 evidence取代的細節預設不保留；只有忘掉會導致重犯已否決方案時，才保存一句 supersession reason。
+- **Evidence status 要保真**：confirmed、inferred、pending、unavailable不可在 compaction時互相升格；沒有實際執行的 validation不得被摘要成 PASS。
+- **Authorization 不可被摘要擴張**：Current Write Target、Task/Stage scope、permission、execution owner與 STOP boundary 在 compact後不得因語句變短而放寬。
+- **Rehydrate from authority, not summary alone**：後續 session/use 若要執行 mutation、接受 completion或作高影響 decision，先依 checkpoint pointer讀 current canonical authority/evidence；session summary是 routing/recovery aid，不是新的 repository source of truth。
+
+### Session compaction ≠ repository persistence
+
+Compaction 是 conversation-level state management，**不自動產生任何 durable repository obligation**。
+
+- 只有原本已通過本檔 Persistence／Coordination Admission、AI-originated Durable Work Admission Gate 與 project write allowlist 的內容，才可寫入 `TASKS.md`、Cold Registry、task dossier或 evidence surface。
+- 不得因「怕摘要後忘記」就把所有 observation、future idea、tool log或 unresolved speculation寫進 repository。
+- 若某 material state 若不持久化就會造成真正 project knowledge loss，先依既有 admission gate決定 No persistence／Cold／Hot，再寫入對應 canonical surface；不要讓 session summary本身變成第二套 durable memory。
+
+### Rehydration
+
+從 compacted checkpoint接續時，推薦順序：
+
+`Repository / authority identity → Current task goal / scope → Referenced current canonical state → Unresolved evidence gap → Next authorized action`
+
+若 checkpoint與 GitHub current state、project governance或新 evidence不一致，以較高 authority/current canonical state為準，更新 working context；不得為了維持舊 summary的一致性而覆蓋 current truth。
+
+核心原則：**Compaction 的目的是刪掉不再需要的 Context，同時保存足以安全重建 current task state 的最小 checkpoint；它不是把整個聊天永久化，也不是建立新的 authority。**
+
 ## Codex Prompt 模式選擇（Prompt Mode Selection）
 
 ChatGPT產生 Codex Prompt前，選最低充分 mode：
