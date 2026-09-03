@@ -9,12 +9,24 @@
 固定維護邊界：
 
 - **ChatGPT 是本 repository 的主要 AI maintainer**，可直接讀取、建立、更新、刪除本手冊內的規則與文件。
+- ChatGPT 對本 repository 的 direct-write 也包含本手冊自身的最小 deterministic tooling 與其 tests；目前只限 `/tools/playbook_check.py` 與 `/tests/test_playbook_check.py`。這是 Playbook maintainer 例外，不授權一般 project 的 ChatGPT 修改 source/tooling，也不授權 Codex 寫入本 repository。
 - **Codex / coding agent 對本 repository 預設唯讀**：可讀取並遵守本手冊，但不得以一般 project coordination → Codex implementation workflow 修改本 repository。
 - 本 repository 的 `TASKS.md` 若存在，只作為 ChatGPT 維護本手冊時的暫時 unfinished-work queue；不代表要交由 Codex 執行。
 - 對一般目標 project repository，ChatGPT direct-write path 依 `REPOSITORY_EXECUTION.md` 的 **Coordination Write Allowlist**：default 只有 root `TASKS.md`；project 可明確 opt-in `BACKLOG.md`、Hot task dossier或 sanitized evidence staging。其他 path 仍 read-only，由 Codex 在明確授權 scope 內修改。
 - 不得把一般 project 的 ChatGPT coordination write boundary反向套用到本手冊自身。
 
 若使用者日後明確變更本 repository 的維護 ownership，再依最新指示調整。
+
+### 本 repository 的 minimal validator contract
+
+本手冊自身的 deterministic Markdown/routing check 使用 `/tools/playbook_check.py`，tests 使用 `/tests/test_playbook_check.py`。
+
+- Runtime：Python 3.11+。
+- Dependency：Python standard library only；不要為第一版 validator 建立 package manager、requirements 或額外 config framework。
+- 正式檢查：`python tools/playbook_check.py`。
+- Unit tests：`python -m unittest tests/test_playbook_check.py`。
+- Validator v1 只處理可客觀判定的結構／routing invariant；不得加入需要 AI judgment 的 duplicate-policy、section-length、architecture score 或類似 heuristic。
+- 若未來真的讓 Codex 維護本 repository tooling，必須另由使用者明確授權；本段不建立 Codex write exception。
 
 ## 適用範圍（Scope）
 
