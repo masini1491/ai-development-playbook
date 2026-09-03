@@ -2,6 +2,8 @@
 
 一套可重用的 **ChatGPT + Codex + GitHub** 協作開發方法論，目標是用最低充分成本完成可驗證、可追溯、可安全接續的工程工作。
 
+本手冊設計成可由 AI／agent **直接從 [`CHAT_INIT.md`](CHAT_INIT.md) bootstrap**，並可透過目標專案 `AGENTS.md` 的薄路由快速套用到既有 GitHub repository；不需要先把整份手冊載入 Context。
+
 本儲存庫只保存**跨專案共通方法**，不保存任何特定產品的 GPIO、憑證、私密協定、客戶資料或其他專案機密。
 
 > **README 的責任是 human-facing overview + repository router。** 詳細 normative contract 由下方對應主題文件作為主要 authority；AI／agent 的新聊天室最小 bootstrap 直接使用 [`CHAT_INIT.md`](CHAT_INIT.md)，不要把 README 當成必經中繼站或第二份完整規則集。
@@ -53,6 +55,21 @@
 
 `ChatGPT 讀最新 GitHub → 取得最低充分 current context → persistence/coordination admission → 產生最低充分 Codex handoff → Codex identity/permission/safe-sync preflight → 執行指定 Stage → Targeted Validation → coordination bookkeeping → 必要 commit/push → ChatGPT canonical evidence reconciliation`
 
+## 快速導入既有專案
+
+要讓既有 repository 採用本手冊，不需要複製整份規則，也不需要要求 AI 每次完整掃描本 repository。最低充分導入流程：
+
+1. 在目標專案 root `AGENTS.md` 宣告本 repository 為 common baseline，並保留該專案自己的 governance／technical source of truth 與 exception。
+2. 新 AI／agent session **直接讀 [`CHAT_INIT.md`](CHAT_INIT.md)**，不要先載入整份 README 或所有主題文件。
+3. 依目前 Task 路由到最低必要 canonical topic／section；exact target 已明確時直接讀 leaf，不為 routing ceremony 增加 Context。
+4. 執行與驗證仍服從目標專案自己的 authority、permission、runtime/toolchain 與 evidence contract；共通手冊不覆蓋 project-specific rule。
+
+最短概念可記成：
+
+`Project AGENTS.md 宣告 baseline → AI 讀 CHAT_INIT → Task-based canonical routing → Project-specific authority 優先`
+
+下方「專案 `AGENTS.md` → 實戰手冊路由」提供可直接採用的薄路由範本。
+
 ## 新聊天室最短入口
 
 AI／agent 新開專案聊天室時：
@@ -69,11 +86,11 @@ AI／agent 新開專案聊天室時：
 | --- | --- |
 | 新聊天室最小 bootstrap／AI task router | [`CHAT_INIT.md`](CHAT_INIT.md) |
 | AI 可讀性、Context loading、Always-on／Hot／Cold／Evidence／Historical、task/evidence dossier、routing／retrieval cost | [`AI_CONTEXT.md`](AI_CONTEXT.md) |
-| ChatGPT planning、coordination admission、AI-originated durable work、Codex Prompt mode／delivery、copy-ready、結果 reconciliation、工程回覆 presentation／timestamp | [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) |
+| ChatGPT planning、coordination admission、AI-originated durable work、Codex Prompt mode／delivery、copy-ready、結果 reconciliation、ChatGPT-side runtime／Execution Capability Gate、工程回覆 presentation／timestamp | [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) |
 | Codex model／Reasoning／Context／Agent、execution mode、usage/cost、tool scheduling/output、Codex reporting | [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) |
 | Git 安全、Repository Identity、workspace／remote permission、external-service operation、Coordination Write Allowlist、ChatGPT／Codex 寫入分工、repository-facing documentation | [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) |
 | Windows、本機 runtime、PowerShell 7、toolchain contract | [`TOOLCHAIN.md`](TOOLCHAIN.md) |
-| 除錯、root cause、retry、CI/build phase、validation、evidence lifecycle、refactor evidence | [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) |
+| 除錯、root cause、retry、CI/build phase、deterministic enforcement／validation execution placement、validation、evidence lifecycle、refactor evidence | [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) |
 | 新技術／協定研究、避免重造輪子、architecture、target/capability、state/lifecycle、ownership/refactor boundary | [`RESEARCH_ARCHITECTURE.md`](RESEARCH_ARCHITECTURE.md) |
 | 人機 UI／UX、task flow、design-system reference、interaction、a11y、i18n | [`UI_UX.md`](UI_UX.md) |
 | ESP32／嵌入式／硬體、board profile、resource evidence、physical-output/recovery、bench/hardware delta | [`EMBEDDED_PROJECTS.md`](EMBEDDED_PROJECTS.md) |
