@@ -1,5 +1,20 @@
 # 除錯／驗證方法論（Debug / Validation Methodology）
 
+> **Authority**：root cause、retry、build/CI phase、validation、evidence lifecycle、refactor evidence。
+> **Read when**：目前問題涉及失敗原因、驗證範圍、evidence 有效性、重試／等待、behavior-preserving refactor。
+> **Usually skip when**：只是一般 research、architecture ownership、Git permission／TASKS bookkeeping 或 UI／UX。
+> **Progressive reading**：先依下方 Section Router 定位；找到 relevant heading 後只讀該 section 與必要相鄰 dependency，不預設載入全文。
+
+## Section Router
+
+- 根因／多來源結果／首次診斷 → `Root Cause 分類標籤`、`多來源／多 Agent 結果協調`、`首次接觸診斷 Harness`
+- operational failure／retry／等待 → `執行失敗分類`、`重試紀律`、`長時間 Operation 監督`
+- build／CI／昂貴流程 preflight → `Build／CI Phase Attribution`、`決定性 Fail-Fast Preflight`
+- completion／GitHub read-back → `完成證據關卡`
+- validation scope／runtime backend → `驗證階梯`、`驗證涵蓋完整性`、`真實 Runtime／Backend Contract 驗證`
+- verifier／evidence freshness → `Verifier Contract 生命週期`、`Evidence 等級`、`Evidence 取代生命週期`
+- correctness fix／behavior-preserving refactor／搬移改名 → `正確性優先於重構`、`行為保持重構關卡`
+
 ## 預設流程（Default flow）
 
 `Evidence → Root Cause → Focused Patch → Targeted Validation`
@@ -115,7 +130,7 @@ Compile/source-fix loop 若 repository governance、正式 validation contract �
 - 若連續觀察沒有新增 progress evidence，先做 bounded status/tail/process inspection，判斷是 slow、silent-but-healthy、stalled、waiting on dependency、permission gate 或其他狀態；不得只重複「再等一下」而沒有新的判斷資訊。
 - Process / CI step 已 exit non-zero、cancelled 或明確 fatal 時，立即停止等待；保存相關 log/evidence，轉入 failure classification / phase attribution，不得繼續 poll 已結束的 operation。
 - 若目前工具無法提供足夠 observability，而繼續等待會持續消耗昂貴 usage window、鎖住 Stage 或需要反覆人工 approval，應 STOP 並回報 `INSUFFICIENT OBSERVABILITY` / operational state，而不是無限延長。
-- Long-running operation 的 stdout/stderr 控制仍遵守 `CODEX_PROMPT_RULES.md` 的 Long-running tool output discipline：優先保存完整 log 並只讀必要 bounded evidence，不把巨量 progress output 全部灌入 active Context。
+- Long-running operation 的 stdout/stderr 控制遵守 `CODEX_EXECUTION.md` 的 **Long-running tool output discipline**：優先保存完整 log 並只讀必要 bounded evidence，不把巨量 progress output 全部灌入 active Context。
 
 核心目標是：**等待必須帶來新的完成機會或新的 evidence；沒有進展的等待本身不是 retry 策略。**
 
