@@ -10,6 +10,7 @@
 - 根因／多來源結果／首次診斷 → `Root Cause 分類標籤`、`多來源／多 Agent 結果協調`、`首次接觸診斷 Harness`
 - operational failure／retry／等待 → `執行失敗分類`、`重試紀律`、`長時間 Operation 監督`
 - build／CI／昂貴流程 preflight → `Build／CI Phase Attribution`、`決定性 Fail-Fast Preflight`
+- deterministic rule／validator／hook → `Deterministic Enforcement Admission Gate`
 - completion／GitHub read-back → `完成證據關卡`
 - validation scope／runtime backend → `驗證階梯`、`驗證涵蓋完整性`、`真實 Runtime／Backend Contract 驗證`
 - verifier／evidence freshness → `Verifier Contract 生命週期`、`Evidence 等級`、`Evidence 取代生命週期`
@@ -20,6 +21,45 @@
 `Evidence → Root Cause → Focused Patch → Targeted Validation`
 
 不要先重構再找原因；不要用更大的模型或更多 Agent 取代 evidence。
+
+## Deterministic Enforcement Admission Gate
+
+Playbook / project rule 不應因「很重要」就一律留在 instruction，也不應因想產品化就一律寫成 validator。先判斷它是否適合用 deterministic mechanism enforce。
+
+推薦思路：
+
+`Rule / invariant → deterministic, observable, low-false-positive? → validator / hook / script；否則 → human / AI reasoning contract，必要時再用 behavioral evaluation驗證`
+
+適合升格為 automated enforcement，通常同時具備：
+
+- **Observable**：結果可由檔案、schema、command exit、Git state、machine-readable metadata、exact path/reference 或其他客觀 artifact 直接觀察；
+- **Deterministic**：相同輸入應得到穩定結果，不需要模型自由推論才能判定；
+- **Low false-positive / false-negative risk**：工具不會因過度簡化 rule semantics 而頻繁誤擋正確工作或漏掉真正問題；
+- **Material value**：違反後的 correctness/security/release/retrieval cost 足夠高，或人工/Agent 重複檢查成本明顯；
+- **Cheaper than repeated remembering**：validator/hook 的維護與執行成本低於每次要求 Agent重新理解、記住與人工核對；
+- **Clear ownership**：check 的 source of truth、scope、failure semantics 與修正責任可明確定義，不會建立第二份 policy authority。
+
+典型適合機械化的項目包括：broken link/reference、stale filename、required file/field/schema、known generated-metadata drift、malformed config/frontmatter、declared path/role invariant、deterministic prerequisite、exact queue/evidence completeness marker 等。
+
+下列通常**不得假裝可以由簡單 validator決定**：
+
+- 某 refactor 是否值得現在做；
+- AI-originated `CANDIDATE` 是否已足夠升格為 committed work；
+- architecture trade-off 哪個方案最好；
+- root-cause evidence 是否在特定複雜情境已達高信心；
+- 使用者真正 intent、risk appetite 或產品優先序；
+- 需要綜合模糊 evidence、現場條件、domain judgment 才能決定的事項。
+
+對這類 judgment rule，若未來需要驗證 instruction 是否真的改變 Agent 行為，可建立 bounded behavioral scenario / eval；但**behavioral evaluation 本身不是所有規則的強制前置條件**，只有在風險、反覆 failure 或 adoption value 足以支持其成本時才做。
+
+Automation 也必須服從最低充分原則：
+
+- 不因能寫 script 就建立大型 validator framework；
+- 小型 repo / 一次性 rule 可保持簡單 inline check；
+- validator 若開始需要大量 heuristic、LLM grading 或 hidden state 才能判斷，應重新檢查它是否已跨出 deterministic boundary；
+- 自動檢查只證明它實際檢查的 invariant，不得把單一綠燈升格成整體 correctness / security / completion PASS。
+
+核心原則：**能可靠機械判斷的 constraint 優先交給工具；需要工程判斷的問題保留給 reasoning。產品化不是把所有規則 script 化，而是把最適合 deterministic enforcement 的那一小部分從「要求 AI 記住」升格成可驗證 contract。**
 
 ## Root Cause 分類標籤（Root-cause labels）
 
