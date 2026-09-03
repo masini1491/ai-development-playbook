@@ -163,6 +163,24 @@ Feature 可標：
 
 Required capability 缺失應 fail closed；Optional capability 缺失可以是合法 unavailable，不應用假值掩蓋。
 
+### Capability-conditioned Startup／部分降級（Partial Degradation）
+
+Stored configuration、current mode、runtime permission 與真正 required startup dependency 是不同狀態；「曾經設定過」或「某 capability 存在」不代表目前 path 應被啟動，也不代表所有 optional capability 都必須一起成功才允許其餘功能啟動。
+
+推薦流程：
+
+`Current mode → Required capabilities → Available / permitted capabilities → Startup activation → Explicit degraded behavior`
+
+一般原則：
+
+- **Stored configuration ≠ enabled capability ≠ runtime permission ≠ required dependency。** Stale SSID、token、endpoint、device setting、feature flag 或其他歷史設定，不得把 current mode 已停用的 path 重新啟動。
+- Optional capability 缺失、permission denied 或單一 provider/backend 不可用時，若剩餘 capability 仍可安全提供合法功能，優先局部 unavailable / degraded，不要無理由把整個 application / device startup 綁成 all-or-nothing gate。
+- Required capability 仍應 fail closed；partial degradation 不得用來繞過 authorization、security、safety、protocol dependency 或正式產品需求。
+- Runtime permission／capability 改變後，需要時只重新 reconcile 受影響 owner；不要因一個 optional source 變動重建所有無關 state。
+- 若多個 capability 必須共同形成單一 atomic product contract，應明確記錄這個 dependency，而不是從目前 initialization 寫法反推「它們本來就應一起成敗」。
+
+核心原則：**Startup 服從 current mode 與真正 required capability；歷史設定不授權 path，自選功能失敗也不應無理由拖垮可獨立運作的功能。**
+
 ## Performance／SLA 收錄關卡（Performance / SLA Admission Gate）
 
 可量測的 latency、throughput、memory、CPU、retry interval、timeout、polling frequency、queue depth、availability 或其他數值，**不因「越快／越小／越高越好」就自動成為 hard requirement、acceptance criterion 或 validation failure threshold**。在把數值升格為 architecture / product contract 前，先確認它服務的實際 path、角色、use case、criticality 與超標後果。
@@ -210,6 +228,74 @@ Domain owner 要清楚；gateway/composition layer 不應偷接管 credential、
 ## State／Lifecycle Integrity（狀態／生命週期完整性）
 
 對跨 process、service、device、backend、embedded 或 local application 都可能出現的 persistent state / desired state / lifecycle transition，先把 identity、transaction、reconciliation 與 continuity 視為 architecture contract；不要把它們留成某個 framework、UI 或裝置層的 incidental implementation detail。
+
+### Operation Outcome Semantics（操作結果層級）
+
+一個 operation 被 API／driver／queue 接受，不代表它已完成整條 end-to-end contract。需要時明確區分：
+
+`accepted / queued / submitted → transport completion → peer delivery → acknowledgement → application success`
+
+一般原則：
+
+- Status、log、metric、test assertion 與 completion wording 應說明自己代表哪一層；不得把 `accepted`、`publish queued`、`request submitted` 或 driver enqueue success 直接翻譯成 peer/application success。
+- 暫時 capacity/backpressure、queue full、busy、retryable timeout 與 permanent transmission/application failure 應依實際 contract 分類；不得為了 enum 簡單把所有 non-success 壓成同一 failure。
+- 若 lower layer 只能證明「已接手」，public API 不應承諾 on-wire、ACK、durable persistence 或 remote apply，除非有對應 authority/evidence。
+- Retry 決策應依 operation 所處層級與 idempotency/reentrancy contract；不知道上一層是否已生效時，不得因本地沒有 final ACK 就盲目重送具有副作用的 operation。
+
+核心原則：**Accepted ≠ completed；先定義成功發生在哪一層，再讓 status 與 validation 對齊那一層。**
+
+### Failure-Atomic Output Contract（失敗原子輸出）
+
+對 caller-visible structured output、parser result、decode result、config load result 或其他會由一次 operation 填入多個 field 的結果，除非 API 明確定義 partial-result contract，預設採 **success-atomic output**：
+
+`temporary state → full parse / validation → commit to caller-visible output`
+
+一般原則：
+
+- Failure 時 output 應有明確 contract：保持 reset、保持原值或回傳獨立 error result；不得留下「前一次 stale value + 這次 partial write」的混合狀態。
+- 不要在還可能失敗的中間步驟逐欄 commit public metadata；先在 local temporary 建立完整結果，只有成功後一次對外 commit。
+- 若 partial result 本身有產品價值，必須明確定義哪些 field valid、哪些未定，以及 caller 如何辨識；不能靠「目前碰巧先寫了幾個欄位」形成隱含 contract。
+- Targeted regression 應需要時從預先填有 sentinel/stale 值的 output 開始，證明 failure path 不會洩漏半完成的新狀態或誤保留舊狀態。
+
+核心原則：**沒有明確 partial-result contract 時，失敗不得把 caller-visible state 留在半新半舊的不可判讀狀態。**
+
+### Async Operation Lifetime／Quiescence Gate（非同步操作生命週期／靜默關卡）
+
+Async callback、request/context、cancel handle、promise/future、event registration 或其他 operation-owned resource 的釋放時點，必須依正式 terminal/quiescence contract 判斷；第一個 success、timeout 或 cancel call 本身不自動代表後續 callback 已停止。
+
+推薦生命週期：
+
+`start → active ownership → result accepted → terminal decision → quiescence → release`
+
+一般原則：
+
+- **Success / timeout / cancel ≠ callback quiescence。** 若 upstream/runtime authority 沒有保證 terminal callback、join、drain 或 cancel-return 即代表不再 callback，不能據此立即釋放 callback/context/request state。
+- 無法證明較早 quiescence 時，可把相關 state 保留到較大的安全 lifetime boundary，例如 operation registry、session、worker/thread 或 child-process exit；以 ownership 安全換取有限 bounded retention，而不是猜測 API lifecycle。
+- 若 contract 接受第一個有效結果，應使 accepted result immutable 或有明確 replacement rule；late/duplicate/malformed/failure callback 不得任意覆寫已接受結果。
+- 一旦 generation／operation 已進 terminal、STOPPING、cancelled 或 superseded state，late callback 可以被安全接收、丟棄或記錄，但不得重新啟動已終止 operation、推進舊 state machine 或產生新的 side effect。
+- Cancellation API 的 return value 只有在 authority 明確定義時才可當 quiescence evidence；「cancel 已呼叫」與「callback 已完全停止」是兩個不同事實。
+- Validation 需要時應覆蓋 late callback、multiple callback、timeout/cancel 後 callback 與 teardown ordering；只測 happy-path first success 不足以證明 lifetime safety。
+
+核心原則：**先證明 operation 已 quiescent，再釋放它依賴的 state；若證明不了，就把 ownership 延長到已知安全的更大生命週期。**
+
+### Semantic Event Pipeline Integrity（語意事件管線完整性）
+
+Event、message、telemetry、callback、interrupt、broker packet 或其他 observation 進入 shared state 前，先明確定義 validation、semantic identity、ordering/dedup 與 bounded buffering 的 owner；不要讓 transport-specific callback 各自隨意改共享狀態。
+
+推薦流程：
+
+`Ingress validation → semantic identity / ordering / dedup → bounded capture / queue → domain consumers`
+
+一般原則：
+
+- Identity、authorization、source eligibility、payload shape 等會決定事件是否有資格影響 shared state 的 validation，應在 shared dedup/order/watermark 或其他 mutation **之前**完成；無效事件不得先污染之後合法事件會依賴的 state。
+- Destructive/read-once event source、edge-triggered alert 或會被讀取後清除的 backend state，應有單一 capture owner／latch，再讓多個 consumer 依自己的語意消費；避免某 consumer 先讀掉另一 consumer 仍需要的 event。
+- Bounded queue 滿載時，eviction 應依 semantic substitutability / priority / state-convergence contract，而不是只按 oldest/newest；例如較新的同一狀態可取代未送舊狀態，但代表必要狀態收斂的 transition 不應被任意丟棄。
+- 多個 transport 承載同一 logical event stream 時，ordering、dedup、freshness/watermark owner 優先位於 transport-neutral semantic ingress；不要因 MQTT、RS485、BLE、UART 等 transport 不同，就各自建立互相矛盾的「最新」判定。
+- Transport/session reset 不應自動清除跨 transport/domain 的 semantic ordering state，除非該 state 的 identity/lifetime contract 本來就綁定該 session/generation。
+- 若同一 event 同時有 transport reliability 與 domain authorization 語意，兩者分層處理；transport delivery success 不得直接授權 domain action。
+
+核心原則：**先驗證事件有沒有資格改共享事實，再由單一語意 owner 管 ordering/dedup；queue 與 transport 只承載事件，不應暗中重寫 domain semantics。**
 
 ### Persistent State 交易完整性（Persistent State Transaction Integrity）
 
@@ -397,7 +483,6 @@ Library-ready ≠ 現在就拆 library。
 一條產品功能鏈若跨越多個獨立 provider 或 authority owner，而且各自擁有獨立的 credential、configuration、resource lifecycle、deployment/mutation boundary 或 validation authority，setup/config authority 應依**實際 authority owner / lifecycle boundary** 分離，再以 cross-reference 串接；不要只因多個 provider 共同完成同一產品功能，就把它們塞進同一份 setup 文件。
 
 反過來也不得過度拆分：
-
 - 不是「每個 API / endpoint / token / resource 一份文件」；
 - 只有 authority owner、credential owner、configuration lifecycle、deployment/mutation boundary 或 validation authority 真正獨立時才值得拆；
 - 同一 provider 內高度耦合、共同生命週期且沒有獨立治理價值的 setup 應保持聚合，避免文件碎片化；
