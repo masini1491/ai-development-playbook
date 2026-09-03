@@ -1,5 +1,20 @@
 # Repository 執行規則（Repository Execution Rules）
 
+> **Authority**：Repository identity、write scope、workspace／network／credential permission、remote Git、external-service operation、canonical repository evidence、TASKS lifecycle、ChatGPT／Codex repository write boundary。
+> **Read when**：目前工作涉及 Git/repository、permission/capability、remote service mutation/read-only boundary、TASKS、repository-facing claims 或 ChatGPT/Codex 寫入分工。
+> **Usually skip when**：只是純 architecture/research、source-level root cause/validation、UI／UX 或 embedded hardware semantics。
+> **Progressive reading**：先依下方 Section Router 定位；找到 relevant heading 後只讀該 section 與必要相鄰 dependency，不預設載入全文。
+
+## Section Router
+
+- repo/branch/HEAD 身分、聊天室 writable target → `Repository 身分確認關卡`、`聊天室級 Repository 寫入鎖`
+- workspace／sandbox／filesystem／network／credential capability → `Workspace 寫入能力關卡`、`授權與能力分層`、`權限關卡操作`
+- sync／fetch／push → `安全 Remote Sync 啟動`、`Remote Git 權限關卡`
+- external service read-only / mutation / staged operation → `權限關卡操作` 內的 external-service sections
+- hash／LOC／manifest／public README claim → `Canonical Repository Evidence`、`Repository-facing 文件完整性`
+- TASKS queue／admission／debt → `TASKS.md 生命週期`
+- ChatGPT／Codex 哪些 path 可寫 → `ChatGPT／Codex Repository 寫入邊界`
+
 ## Repository 身分確認關卡（Repository Identity Gate）
 
 每個 Codex Prompt 必須明確指定：
