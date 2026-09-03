@@ -27,6 +27,15 @@ class PlaybookCheckTests(unittest.TestCase):
         diagnostics = playbook_check.check_repository(root)
         self.assertEqual(["LOCAL_TARGET"], [item.code for item in diagnostics])
 
+    def test_valid_local_heading_anchor_passes(self) -> None:
+        root = self.make_repo({"README.md": "[Gate](DEBUG_VALIDATION.md#deterministic-enforcement-admission-gate)\n", "DEBUG_VALIDATION.md": "# Validation\n\n## Deterministic Enforcement Admission Gate\n"})
+        self.assertEqual([], playbook_check.check_repository(root))
+
+    def test_missing_local_heading_anchor_fails(self) -> None:
+        root = self.make_repo({"README.md": "[Gate](DEBUG_VALIDATION.md#missing-gate)\n", "DEBUG_VALIDATION.md": "# Validation\n\n## Existing Gate\n"})
+        diagnostics = playbook_check.check_repository(root)
+        self.assertEqual(["LOCAL_ANCHOR"], [item.code for item in diagnostics])
+
     def test_external_link_is_ignored(self) -> None:
         root = self.make_repo({"README.md": "[GitHub](https://github.com/example/repo)\n"})
         self.assertEqual([], playbook_check.check_repository(root))
