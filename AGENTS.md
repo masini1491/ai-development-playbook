@@ -10,7 +10,7 @@
 
 - **ChatGPT 是本 repository 的主要 AI maintainer**，可直接讀取、建立、更新、刪除本手冊內的規則與文件。
 - ChatGPT 對本 repository 的 direct-write 也包含本手冊自身的最小 deterministic tooling 與其 tests；目前只限 `/tools/playbook_check.py` 與 `/tests/test_playbook_check.py`。這是 Playbook maintainer 例外，不授權一般 project 的 ChatGPT 修改 source/tooling，也不授權 Codex 寫入本 repository。
-- **本 repository 的 AI 程式執行權只屬於 ChatGPT**：只有 ChatGPT 可執行本 repository 內的 validator、tests 或其他程式／script。Codex、其他 coding agent 或自動化 agent 即使具備技術執行能力，也只能讀取，不得執行；GitHub Actions、pre-commit 或其他自動執行機制也不應代跑，除非使用者日後明確改變本規則。
+- **本 repository 的 AI 程式執行權只屬於具備程式執行能力的 ChatGPT session**：只有這類 ChatGPT session 可執行本 repository 內的 validator、tests 或其他程式／script。若目前 ChatGPT session 沒有適用 runtime / execution capability，應明確回報無法執行，不得因此交由 Codex、其他 coding agent、GitHub Actions、pre-commit 或其他自動化機制代跑，除非使用者日後明確改變本規則。
 - **Codex / coding agent 對本 repository 預設唯讀**：可讀取並遵守本手冊，但不得以一般 project coordination → Codex implementation workflow 修改本 repository，也不得執行本 repository 內的程式／tests。
 - 本 repository 的 `TASKS.md` 若存在，只作為 ChatGPT 維護本手冊時的暫時 unfinished-work queue；不代表要交由 Codex 執行。
 - 對一般目標 project repository，ChatGPT direct-write path 依 `REPOSITORY_EXECUTION.md` 的 **Coordination Write Allowlist**：default 只有 root `TASKS.md`；project 可明確 opt-in `BACKLOG.md`、Hot task dossier或 sanitized evidence staging。其他 path 仍 read-only，由 Codex 在明確授權 scope 內修改。
@@ -24,9 +24,9 @@
 
 - Runtime：Python 3.11+。
 - Dependency：Python standard library only；不要為第一版 validator 建立 package manager、requirements 或額外 config framework。
-- 正式檢查：由 ChatGPT 執行 `python tools/playbook_check.py`。
-- Unit tests：由 ChatGPT 執行 `python -m unittest tests/test_playbook_check.py`。
-- 上述 command 是 ChatGPT 的 execution contract，不構成 Codex、其他 agent、CI 或自動化工具的執行授權。
+- 正式檢查：由具備程式執行能力的 ChatGPT session 執行 `python tools/playbook_check.py`。
+- Unit tests：由具備程式執行能力的 ChatGPT session 執行 `python -m unittest tests/test_playbook_check.py`。
+- 上述 command 是具備程式執行能力的 ChatGPT session 的 execution contract，不構成 Codex、其他 agent、CI 或自動化工具的執行授權。
 - Validator v1 只處理可客觀判定的結構／routing invariant；不得加入需要 AI judgment 的 duplicate-policy、section-length、architecture score 或類似 heuristic。
 - 若未來真的讓 Codex 維護或執行本 repository tooling，必須另由使用者明確授權；本段不建立 Codex write / execution exception。
 
