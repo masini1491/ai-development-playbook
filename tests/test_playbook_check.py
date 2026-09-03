@@ -48,6 +48,10 @@ class PlaybookCheckTests(unittest.TestCase):
         root = self.make_repo({"DEBUG_VALIDATION.md": "# Validation\n\n## Section Router\n\n- deterministic → `Gate`\n\n## Gate（Deterministic Gate）\n"})
         self.assertEqual([], playbook_check.check_repository(root))
 
+    def test_section_router_accepts_heading_with_slash_suffix(self) -> None:
+        root = self.make_repo({"DEBUG_VALIDATION.md": "# Validation\n\n## Section Router\n\n- retry → `Long Operation`\n\n## Long Operation／No-progress Wait Guard（Long-running Operation Supervision）\n"})
+        self.assertEqual([], playbook_check.check_repository(root))
+
     def test_section_router_requires_existing_heading(self) -> None:
         root = self.make_repo({"DEBUG_VALIDATION.md": "# Validation\n\n## Section Router\n\n- deterministic → `Existing Section`、`Missing Section`\n\n## Existing Section\n"})
         diagnostics = playbook_check.check_repository(root)
