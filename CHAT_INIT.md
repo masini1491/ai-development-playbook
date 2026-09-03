@@ -13,14 +13,15 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
 3. 讀實際目標 repository 最新 `AGENTS.md`／project governance、**current Hot coordination surface**（若 project 採用；通常是 `TASKS.md`）與本次 task 直接相關的最低必要正式 source of truth。`BACKLOG`、evidence、archive/history 等 Cold/非預設 surface 不因存在就無條件載入。
 4. 進入大型主題文件後，若檔首提供 Section Router / Progressive reading 指示，先定位 relevant heading，只讀該 section 與必要相鄰 dependency；不要因已選到 topic file 就預設載入全文。
 5. 若 exact task identity、path、symbol、pointer 已能唯一命中 canonical target，可直接讀 target；router 用於消歧，不是必經 ceremony。
-6. 依 project authority 與本手冊 routing 確認目前 Task / Stage 的 scope、permission、evidence 與 validation requirement，再開始分析、產生 Prompt 或執行工作。
-7. 若發現同層正式 authority 衝突、repository identity 不清楚，或目前 evidence 不足以安全決定下一步，STOP 並指出實際缺口；不要用舊聊天、cached copy 或 memory 猜測補齊。
+6. 若本次是**既有 project 首次採用本手冊／AI workflow review**，或目前已讀範圍明確出現 repository-owned deterministic validator、parser、calculator、test/tooling 或反覆人工 deterministic 計算流程，先做最低充分 **Execution Opportunity Scan**：只判斷是否存在 material ChatGPT-side execution candidate，不為了能力盤點完整掃描 repository 或 sandbox；只有候選成立時才路由到 `CHATGPT_WORKFLOW.md` 的 `ChatGPT-side Runtime Execution` 並 probe 本次真正需要的 capability。
+7. 依 project authority 與本手冊 routing 確認目前 Task / Stage 的 scope、permission、evidence 與 validation requirement，再開始分析、產生 Prompt 或執行工作。
+8. 若發現同層正式 authority 衝突、repository identity 不清楚，或目前 evidence 不足以安全決定下一步，STOP 並指出實際缺口；不要用舊聊天、cached copy 或 memory 猜測補齊。
 
 ## 最低必要路由
 
 依目前工作選讀：
 
-- ChatGPT 專案聊天室 planning、coordination admission、AI-originated work、Codex Prompt mode／delivery、copy-ready、Codex result reconciliation、ChatGPT 回覆時間戳
+- ChatGPT 專案聊天室 planning、coordination admission、AI-originated work、Execution Opportunity Scan／ChatGPT-side Runtime Execution、Codex Prompt mode／delivery、copy-ready、Codex result reconciliation、ChatGPT 回覆時間戳
   → `CHATGPT_WORKFLOW.md`
 - AI 可讀性、Context loading、Always-on／Hot／Cold／Evidence／Historical、task/evidence dossier、routing/retrieval cost
   → `AI_CONTEXT.md`
