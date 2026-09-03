@@ -4,7 +4,7 @@
 
 本儲存庫只保存**跨專案共通方法**，不保存任何特定產品的 GPIO、憑證、私密協定、客戶資料或其他專案機密。
 
-> **README 的責任是 overview + router。** 詳細 normative contract 由下方對應主題文件作為主要 authority；不要把 README 當成第二份完整規則集。
+> **README 的責任是 human-facing overview + repository router。** 詳細 normative contract 由下方對應主題文件作為主要 authority；AI／agent 的新聊天室最小 bootstrap 直接使用 [`CHAT_INIT.md`](CHAT_INIT.md)，不要把 README 當成必經中繼站或第二份完整規則集。
 
 ## 本實戰手冊的維護方式
 
@@ -52,19 +52,19 @@
 
 ## 新聊天室最短入口
 
-新開專案聊天室時：
+AI／agent 新開專案聊天室時：
 
-1. 先讀 [`CHAT_INIT.md`](CHAT_INIT.md) 建立 repository／authority／routing 起點。
-2. 回到本 README 的文件路由，只讀本次 Task 最低必要的主題文件。
+1. **直接讀 [`CHAT_INIT.md`](CHAT_INIT.md)** 建立 repository／authority／task routing 起點；不必先讀或再回到 README。
+2. 依 `CHAT_INIT.md` 的最低必要路由選取 canonical 主題文件；大型主題文件若有 Section Router，先定位 relevant heading，只讀該 section 與必要相鄰 dependency。
 3. 讀實際目標儲存庫最新 `AGENTS.md`／`TASKS.md`（若存在）與任務直接相關的正式 source of truth。
 
-不要為了「熟悉規則」預設完整掃描本儲存庫。
+人類若要了解整套手冊、分享內容或瀏覽主題，可從本 README 進入。不要為了「熟悉規則」預設完整掃描本儲存庫。
 
 ## 文件路由（Routing）
 
 | 情境 | 主要文件 |
 | --- | --- |
-| 新聊天室最小 bootstrap | [`CHAT_INIT.md`](CHAT_INIT.md) |
+| 新聊天室最小 bootstrap／AI task router | [`CHAT_INIT.md`](CHAT_INIT.md) |
 | ChatGPT 專案聊天室 planning、TASKS admission、Codex Prompt mode／delivery、copy-ready、Codex result reconciliation、工程回覆 presentation／timestamp | [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) |
 | Codex model／Reasoning／Context／Agent、execution mode、usage/cost、tool scheduling/output、Codex reporting | [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) |
 | Git 安全、Repository Identity、workspace／remote permission、external-service operation、TASKS、ChatGPT／Codex 寫入分工、repository-facing documentation | [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) |
