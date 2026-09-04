@@ -21,16 +21,16 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
 
 依目前工作選讀：
 
-- ChatGPT 專案聊天室 planning、coordination admission、AI-originated work、Execution Opportunity Scan／ChatGPT-side Runtime Execution、Codex Prompt mode／delivery、copy-ready、Codex result reconciliation、ChatGPT 回覆時間戳
-  → `CHATGPT_WORKFLOW.md`
+- ChatGPT 專案聊天室 planning、task contract／最低必要澄清、coordination admission、AI-originated work、Execution Opportunity Scan／ChatGPT-side Runtime Execution、Codex Prompt mode／delivery、copy-ready、Codex result reconciliation、ChatGPT 回覆時間戳
+  → `CHATGPT_WORKFLOW.md`；task contract 輸入不完整時優先定位 `Agent-Normalized Contract／Minimal Clarification Gate`
 - AI 可讀性、Context loading、Always-on／Hot／Cold／Evidence／Historical、task/evidence dossier、routing/retrieval cost
   → `AI_CONTEXT.md`
 - Codex model／Reasoning／Context／Agent、execution mode、usage／cost、tool scheduling/output、Codex reporting
   → `CODEX_EXECUTION.md`
 - Git、Repository Identity、workspace／remote permission、Coordination Write Allowlist、ChatGPT／Codex 寫入分工、repository-facing documentation integrity
   → `REPOSITORY_EXECUTION.md`
-- 除錯、根因、重試、驗證、evidence lifecycle
-  → `DEBUG_VALIDATION.md`
+- 除錯、根因、重試、驗證、evidence lifecycle、後續 evidence 與歷史判斷／紀錄 reconciliation
+  → `DEBUG_VALIDATION.md`；涉及新 evidence 是否取代舊 evidence、歷史紀錄是否仍可作 current authority 時優先定位 `Evidence 取代生命週期`
 - 研究、新技術／協定、architecture、target/capability、state/lifecycle、ownership
   → `RESEARCH_ARCHITECTURE.md`
 - 嵌入式／硬體／板級／硬體驗證差異
