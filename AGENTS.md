@@ -28,6 +28,15 @@
 - Unit tests：由已確認具備 Python 3.11+ runtime 的 ChatGPT session 執行 `python -m unittest tests/test_playbook_check.py`。
 - Adoption / Readability Doctor 使用 `/tools/adoption_doctor.py`，只對指定 project repository 做 read-only / report-only adoption 與 routing contract 檢查；不得修改 target project、不得自動修復，也不依賴 network／GitHub mutation。
 - Doctor unit tests：由已確認具備 Python 3.11+ runtime 的 ChatGPT session 執行 `python -m unittest tests/test_adoption_doctor.py`。
+
+Doctor v1 的 deterministic engine 只接受 filesystem root，但支援兩種**輸入取得模式（input acquisition modes）**；兩者使用同一套 check semantics：
+
+- **Local Path Mode**：human／authorized local session 將現有 project repository root 直接傳給 `python tools/adoption_doctor.py <project-root>`。Doctor 只讀該 filesystem tree，不修改 working tree。
+- **ChatGPT GitHub Snapshot Mode**：具備 GitHub repository read capability 的 ChatGPT session 先從使用者指定的 canonical repository／branch／ref 取得 Doctor active checks 所需的最低充分檔案，materialize 到 ChatGPT 自己 runtime 的 temporary／ephemeral snapshot，再執行 `python tools/adoption_doctor.py <snapshot-root>`。Snapshot 只作 execution input，不是新的 project authority，也不得回寫 target repository 或碰觸由 Codex／human 管理的本機 workspace。
+- `adoption_doctor.py` 本身**不取得 GitHub credential、不呼叫 GitHub API、不接收 repository write authority**；GitHub read、ref selection 與 snapshot acquisition 都屬於外部 authorized ChatGPT connector／runtime layer。`Input acquisition capability ≠ Doctor network capability ≠ target repository write authority`。
+- GitHub Snapshot Mode 必須先取得 `AGENTS.md`，再依其中 declaration 取得 active deterministic checks 需要的 local target（例如 declared coordination surface）。若必要檔案因 connector／permission／ref／runtime 限制無法完整取得，應回報 `SNAPSHOT / REMOTE EVIDENCE UNAVAILABLE` 或等價的 acquisition gap；**不得把不完整 snapshot 造成的 missing-file 診斷誤報成 target repository 的 deterministic FAIL**。
+- Snapshot Mode 的 branch／ref 必須與使用者要求的 canonical target 一致；未確認 freshness 的 cached/local copy 不得覆蓋較新的 remote canonical evidence。
+
 - 上述 command 是符合本 validator runtime contract 的 ChatGPT session execution contract，不構成 Codex、其他 agent、CI 或自動化工具的執行授權。
 - Validator / Doctor v1 只處理可客觀判定的結構／routing invariant；不得加入需要 AI judgment 的 duplicate-policy、section-length、architecture score、Context Cohesion score 或類似 heuristic。
 - 若未來真的讓 Codex 維護或執行本 repository tooling，必須另由使用者明確授權；本段不建立 Codex write / execution exception。
