@@ -9,7 +9,7 @@
 固定維護邊界：
 
 - **ChatGPT 是本 repository 的主要 AI maintainer**，可直接讀取、建立、更新、刪除本手冊內的規則與文件。
-- ChatGPT 對本 repository 的 direct-write 也包含本手冊自身的最小 deterministic tooling 與其 tests；目前只限 `/tools/playbook_check.py`、`/tests/test_playbook_check.py`、`/tools/adoption_doctor.py` 與 `/tests/test_adoption_doctor.py`。這是 Playbook maintainer 例外，不授權一般 project 的 ChatGPT 修改 source/tooling，也不授權 Codex 寫入本 repository。
+- ChatGPT 對本 repository 的 direct-write 也包含本手冊自身的最小 deterministic tooling 與其 tests；目前只限 `/tools/playbook_check.py`、`/tests/test_playbook_check.py`、`/tools/adoption_doctor.py`、`/tests/test_adoption_doctor.py`、`/tools/behavioral_eval.py` 與 `/tests/test_behavioral_eval.py`。這是 Playbook maintainer 例外，不授權一般 project 的 ChatGPT 修改 source/tooling，也不授權 Codex 寫入本 repository。
 - **本 repository 的 AI 程式執行權只屬於具備目前任務所需 runtime / toolchain 的 ChatGPT session**：只有能實際滿足該 command 的 executable/version/dependency 與必要 filesystem/network capability 的 ChatGPT session，才可執行本 repository 內的 validator、tests 或其他程式／script。ChatGPT 能產生某語言的程式碼，不代表目前 execution environment 一定具備該語言的 runtime。若目前 session 不具備最低必要執行能力，應明確回報無法執行，不得因此交由 Codex、其他 coding agent、GitHub Actions、pre-commit 或其他自動化機制代跑，除非使用者日後明確改變本規則。
 - **Codex / coding agent 對本 repository 預設唯讀**：可讀取並遵守本手冊，但不得以一般 project coordination → Codex implementation workflow 修改本 repository，也不得執行本 repository 內的程式／tests。
 - 本 repository 的 `TASKS.md` 若存在，只作為 ChatGPT 維護本手冊時的暫時 unfinished-work queue；不代表要交由 Codex 執行。
@@ -108,7 +108,7 @@ Cold/Candidate item、historical material或 AI 先前建議不因被持久化�
 - 新 heading／新 wording 能讀到，只證明新增內容存在；**不證明原本應保留的內容仍完整**。
 - 若 diff 顯示 deletion 規模明顯超出本次意圖、文件尾端消失、主要 canonical sections 不再可達，或 read-back 與 intended scope 不符，立即 STOP 後續 mutation，先恢復／修正 current canonical state，再繼續其他工作。
 - 發現 unintended deletion／truncation 後，**優先使用 Git history 中最近一個已知正常的 pre-mutation canonical blob／parent commit 作恢復基準**；先還原應保留內容，再只重新套用本次原本授權的 bounded intended change。不得靠舊聊天、memory 或模型自行重建整份文件，除非 Git history／canonical backup 確實不可取得，且必須明確標記 evidence gap。
-- 若整個 commit 都是錯誤 mutation，優先考慮建立新的 revert／repair commit 保留可追溯歷史；不要為了讓 history 看起來乾淨而 force push、reset-hard 或 rewrite history。
+- 若整個 commit 都是錯誤 mutation，優先考慮建立新的 revert／repair commit保留可追溯歷史；不要為了讓 history 看起來乾淨而 force push、reset-hard 或 rewrite history。
 - 恢復完成後仍要重新做 diff/stat + current canonical read-back，證明「遺失內容已恢復」與「原 intended change仍正確存在」兩件事都成立。
 - 小型 bounded patch 可只檢查 scoped diff + relevant section；不要為每個一行修改全文重讀。
 - 這是本 repository maintainer 的 direct-write integrity rule；一般 project 的 completion evidence仍由 `DEBUG_VALIDATION.md` 的 `完成證據關卡` 與該 project governance決定，不因本段擴張 ChatGPT 對其他 repository 的 write authority。
