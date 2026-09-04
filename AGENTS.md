@@ -95,6 +95,21 @@ Cold/Candidate item、historical material或 AI 先前建議不因被持久化�
 
 任何新增、刪除、搬移、拆分、合併 rule / file / router / information surface，都必須通過 `AI_CONTEXT.md` 的 **AI Readability / Retrieval Cost Change Gate**。少字、拆檔或新增 index 本身都不代表 AI 更快。
 
+### ChatGPT direct-write mutation integrity
+
+本 repository 允許 ChatGPT 直接維護 canonical 文件，因此 direct-write completion 不能只確認「新內容存在」。每次 GitHub direct-write 後，至少做與 mutation scope 相稱的 canonical read-back；若使用整檔 replacement、長文件重寫、大片段搬移或其他可能造成 unintended deletion／truncation 的高 blast-radius mutation，還必須檢查 changed-file diff/stat 與必要的保留區段／尾端內容，確認沒有超出意圖的刪除、截斷、重複或 authority loss。
+
+推薦最小流程：
+
+`Pre-write canonical blob / intended scope → write → commit diff/stat → current canonical read-back → unintended deletion/truncation check → only then accept completion`
+
+- 新 heading／新 wording 能讀到，只證明新增內容存在；**不證明原本應保留的內容仍完整**。
+- 若 diff 顯示 deletion 規模明顯超出本次意圖、文件尾端消失、主要 canonical sections 不再可達，或 read-back 與 intended scope 不符，立即 STOP 後續 mutation，先恢復／修正 current canonical state，再繼續其他工作。
+- 小型 bounded patch 可只檢查 scoped diff + relevant section；不要為每個一行修改全文重讀。
+- 這是本 repository maintainer 的 direct-write integrity rule；一般 project 的 completion evidence仍由 `DEBUG_VALIDATION.md` 的 `完成證據關卡` 與該 project governance決定，不因本段擴張 ChatGPT 對其他 repository 的 write authority。
+
+核心原則：**Direct-write success ≠ intended mutation success；canonical read-back 必須同時證明新增成立與應保留內容沒有被意外破壞。**
+
 優先修改既有主題文件，不要為每個新細節建立新檔。但若跨專案 evidence 顯示已形成穩定、可獨立 retrieval、具有清楚 ownership 的新 information architecture domain，可建立新 canonical owner；建立後其他文件只做 routing。
 
 若不同 agent / lifecycle 已形成清楚且持續的 ownership boundary，例如 ChatGPT planning 與 Codex execution，應依 owner 分離 canonical policy；**不要因舊檔名或舊 routing 存在就永久保留 ownership mixing**。
