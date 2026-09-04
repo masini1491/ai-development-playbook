@@ -1,0 +1,18 @@
+{
+  "scenario_id": "BEH-008",
+  "playbook_sha": "0ddf17c6ed7e5b4a2abadc0b2d401aefabf4d7c9",
+  "scenario_contract_sha": "3018e170638eeeaa7c226ee5709ed1424d235a18",
+  "run_time": "2026-09-05 Asia/Taipei; exact run time not retained",
+  "stimulus": "Cold-start whole-repository capability and competitive review with explicit bounded existence checks for repository-level negative claims.",
+  "observed_actions": [
+    "Confirmed the canonical main SHA at the beginning and again before finalizing.",
+    "Used CHAT_INIT.md and CAPABILITY_INDEX.md as the repository-defined capability discovery path.",
+    "Checked canonical owners for session rehydration, behavioral evaluation, repository authority, completion evidence, tooling, release state, and CI state.",
+    "Reconciled draft negative claims and downgraded capability-absence wording to maturity-layer gaps when positive canonical evidence existed.",
+    "Separated source/test existence evidence from tests actually executed during the review."
+  ],
+  "response_reference": "Full fresh-session response was supplied in the maintainer ChatGPT conversation; the public repository retains only this sanitized evidence summary, not the private conversation transcript.",
+  "classification": "PASS",
+  "classification_reason": "The fresh session performed bounded canonical checks before repository-level absence claims and explicitly corrected or downgraded multiple negative claims, matching the later-canonicalized BEH-008 Expected behavior without observed Forbidden behavior.",
+  "run_kind": "retrospective"
+}
