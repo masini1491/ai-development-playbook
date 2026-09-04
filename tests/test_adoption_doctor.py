@@ -55,10 +55,10 @@ project-specific authority 與 common Playbook 衝突，以 project-specific aut
         template_path = Path(__file__).resolve().parents[1] / "examples" / "minimal-project" / "AGENTS.md"
         text = template_path.read_text(encoding="utf-8")
         replacements = {
-            "<path / document / source>": "`docs/ARCHITECTURE.md`",
-            "<TASKS.md / equivalent / none>": "`TASKS.md`",
-            "<command / document / manual gate / none>": "`python -m unittest`",
-            "<rules / none>": "`none`",
+            "<path / document / source>": "docs/ARCHITECTURE.md",
+            "<TASKS.md / equivalent / none>": "TASKS.md",
+            "<command / document / manual gate / none>": "python -m unittest",
+            "<rules / none>": "none",
         }
         for placeholder, value in replacements.items():
             self.assertIn(placeholder, text)
@@ -101,16 +101,59 @@ project-specific authority 與 common Playbook 衝突，以 project-specific aut
         codes = [item.code for item in adoption_doctor.check_project(root)]
         self.assertIn("BASELINE_AMBIGUOUS", codes)
 
+    def test_duplicate_identical_baseline_declarations_warn(self) -> None:
+        text = self.healthy_agents().replace("Playbook baseline: `main`", "Playbook baseline: `main`\nPlaybook baseline: `main`")
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("BASELINE_AMBIGUOUS", codes)
+        self.assertNotIn("BASELINE_EXPLICIT", codes)
+
+    def test_unrelated_ref_is_not_a_playbook_baseline_declaration(self) -> None:
+        text = self.healthy_agents().replace("Playbook baseline: `main`", "ref: main")
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("BASELINE_NOT_EXPLICIT", codes)
+        self.assertNotIn("BASELINE_EXPLICIT", codes)
+
     def test_known_placeholders_warn(self) -> None:
         text = self.healthy_agents().replace("`docs/ARCHITECTURE.md`", "<path / document / source>")
         root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
         codes = [item.code for item in adoption_doctor.check_project(root)]
         self.assertIn("PLACEHOLDERS_PRESENT", codes)
 
+    def test_missing_minimum_contract_declarations_warn(self) -> None:
+        text = self.healthy_agents()
+        text = text.replace("- Canonical technical source(s): `docs/ARCHITECTURE.md`\n", "")
+        text = text.replace("- Project-specific exceptions or restrictions: `none`\n", "")
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("CANONICAL_SOURCES_UNDECLARED", codes)
+        self.assertIn("PROJECT_EXCEPTIONS_UNDECLARED", codes)
+
     def test_missing_declared_coordination_surface_fails(self) -> None:
         root = self.make_repo({"AGENTS.md": self.healthy_agents()})
         codes = [item.code for item in adoption_doctor.check_project(root)]
         self.assertIn("COORDINATION_TARGET_MISSING", codes)
+
+    def test_unicode_coordination_surface_is_valid(self) -> None:
+        text = self.healthy_agents().replace("`TASKS.md`", "`工作/任務.md`")
+        root = self.make_repo({"AGENTS.md": text, "工作/任務.md": "# 任務\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("COORDINATION_TARGET", codes)
+        self.assertNotIn("COORDINATION_UNPARSED", codes)
+
+    def test_coordination_surface_with_spaces_is_valid(self) -> None:
+        text = self.healthy_agents().replace("`TASKS.md`", "`docs/current tasks.md`")
+        root = self.make_repo({"AGENTS.md": text, "docs/current tasks.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("COORDINATION_TARGET", codes)
+        self.assertNotIn("COORDINATION_UNPARSED", codes)
+
+    def test_coordination_surface_cannot_escape_repository_root(self) -> None:
+        text = self.healthy_agents().replace("`TASKS.md`", "`../TASKS.md`")
+        root = self.make_repo({"AGENTS.md": text})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("COORDINATION_OUTSIDE_ROOT", codes)
 
     def test_none_coordination_surface_is_valid(self) -> None:
         text = self.healthy_agents().replace("`TASKS.md`", "`none`")
