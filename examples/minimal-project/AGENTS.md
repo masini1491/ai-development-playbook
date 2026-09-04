@@ -4,10 +4,9 @@
 
 本專案採用 `masini1491/ai-development-playbook` 作為共通 AI 開發基準。
 
-版本策略二選一：
+Playbook baseline: `main`
 
-- 需要最新規則：使用 `main`。
-- 需要可重現 baseline：pin `v0.1.0`。
+需要可重現 baseline 時，把上面唯一的 baseline declaration 改成已發布 tag，例如 `v0.1.0`；不要同時保留多個 active baseline declaration。
 
 新 ChatGPT／AI／coding-agent session：
 
@@ -32,5 +31,7 @@
 - Current coordination surface: `<TASKS.md / equivalent / none>`
 - Required validation: `<command / document / manual gate / none>`
 - Project-specific exceptions or restrictions: `<rules / none>`
+
+完成 adoption normalization 後，這份 declaration layer 應能讓 Adoption Doctor deterministic 確認 bootstrap、single baseline、project authority、coordination／validation declaration 與 no-authority-expansion boundary；更詳細的 project governance 留在本 repository 自己的 canonical owner，不要為了通過 Doctor 重複搬進本區塊。
 
 核心原則：**Common Playbook 管協作方法；本 repository 管自己的產品真相、權限與完成標準。**
