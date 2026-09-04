@@ -12,7 +12,7 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 本檔大部分章節仍依 Task 做 Progressive Reading；但 **Codex user-facing reporting contract 是 always-on cross-cutting contract**。只要 project `AGENTS.md`／正式 routing 已把 Codex reporting 指向本檔，每個 Codex execution 都至少必須取得本檔的「Codex 回報語言」、「Codex 回報時間戳」與「Reporting Pre-Send Gate」規則，再依 Task 讀其他最低必要章節。不得因本次工作只是 MQTT、BLE、文件、maintenance、validation 或其他特定 domain，就把 reporting contract 判成無關而跳過。
 
-模型與推理強度由使用者在 Codex UI 手動選擇。Codex 不得自行 Luna→Terra→Sol，也不得自行 Low→Medium→High。
+模型與推理強度由使用者在 Codex UI 手動選擇。Codex 不得自行 Luna→Terra→Sol→Astra，也不得自行 Low→Medium→High。
 
 新開、Branch / Fork、Resume 或跨 session handoff 後，若 Model / Reasoning 會影響成本或能力：
 
@@ -128,7 +128,18 @@ Codex 對一般 project repository 執行 Prompt 時，依任務需要引用 `RE
 - concurrency / distributed consistency
 - 錯誤設計會造成大範圍後果的決策
 
-Repository 很大不是使用 Sol 或 High 的理由。
+### Astra
+只在**目前 execution surface 已實際提供**，且 evidence 顯示 Sol 對該高難度 end-to-end task 很可能需要昂貴 retry／返工，或 Astra 的較高成功率／較少 iteration 有合理機會降低整體 task cost 時考慮。
+
+Astra 不作一般 development、repository discovery、grep/find、mechanical patch 或例行 validation 的預設模型。
+
+模型選擇比較的是 **end-to-end task cost / correctness / completion probability**，不是只比較單位 token rate；也不得因 Astra 是最新或最強模型就跳過 Luna → Terra → Sol 的最低充分原則。
+
+Astra 的 availability、credit/token rate、Fast multiplier、Context 與 promotional terms 屬 volatile product facts，每次依當下官方 authority 判斷，不寫死進 Playbook。
+
+因此模型階梯是 **Luna → Terra → Sol → Astra（條件式最高階）**；新增 Astra 不代表把原本適合 Sol 的工作全部上移。
+
+Repository 很大不是使用 Sol／Astra 或 High 的理由。
 
 ## 推理強度校準（Reasoning Calibration）
 
