@@ -9,7 +9,7 @@
 固定維護邊界：
 
 - **ChatGPT 是本 repository 的主要 AI maintainer**，可直接讀取、建立、更新、刪除本手冊內的規則與文件。
-- ChatGPT 對本 repository 的 direct-write 也包含本手冊自身的最小 deterministic tooling 與其 tests；目前只限 `/tools/playbook_check.py` 與 `/tests/test_playbook_check.py`。這是 Playbook maintainer 例外，不授權一般 project 的 ChatGPT 修改 source/tooling，也不授權 Codex 寫入本 repository。
+- ChatGPT 對本 repository 的 direct-write 也包含本手冊自身的最小 deterministic tooling 與其 tests；目前只限 `/tools/playbook_check.py`、`/tests/test_playbook_check.py`、`/tools/adoption_doctor.py` 與 `/tests/test_adoption_doctor.py`。這是 Playbook maintainer 例外，不授權一般 project 的 ChatGPT 修改 source/tooling，也不授權 Codex 寫入本 repository。
 - **本 repository 的 AI 程式執行權只屬於具備目前任務所需 runtime / toolchain 的 ChatGPT session**：只有能實際滿足該 command 的 executable/version/dependency 與必要 filesystem/network capability 的 ChatGPT session，才可執行本 repository 內的 validator、tests 或其他程式／script。ChatGPT 能產生某語言的程式碼，不代表目前 execution environment 一定具備該語言的 runtime。若目前 session 不具備最低必要執行能力，應明確回報無法執行，不得因此交由 Codex、其他 coding agent、GitHub Actions、pre-commit 或其他自動化機制代跑，除非使用者日後明確改變本規則。
 - **Codex / coding agent 對本 repository 預設唯讀**：可讀取並遵守本手冊，但不得以一般 project coordination → Codex implementation workflow 修改本 repository，也不得執行本 repository 內的程式／tests。
 - 本 repository 的 `TASKS.md` 若存在，只作為 ChatGPT 維護本手冊時的暫時 unfinished-work queue；不代表要交由 Codex 執行。
@@ -26,8 +26,10 @@
 - Dependency：Python standard library only；不要為第一版 validator 建立 package manager、requirements 或額外 config framework。
 - 正式檢查：由已確認具備 Python 3.11+ runtime 的 ChatGPT session 執行 `python tools/playbook_check.py`。
 - Unit tests：由已確認具備 Python 3.11+ runtime 的 ChatGPT session 執行 `python -m unittest tests/test_playbook_check.py`。
+- Adoption / Readability Doctor 使用 `/tools/adoption_doctor.py`，只對指定 project repository 做 read-only / report-only adoption 與 routing contract 檢查；不得修改 target project、不得自動修復，也不依賴 network／GitHub mutation。
+- Doctor unit tests：由已確認具備 Python 3.11+ runtime 的 ChatGPT session 執行 `python -m unittest tests/test_adoption_doctor.py`。
 - 上述 command 是符合本 validator runtime contract 的 ChatGPT session execution contract，不構成 Codex、其他 agent、CI 或自動化工具的執行授權。
-- Validator v1 只處理可客觀判定的結構／routing invariant；不得加入需要 AI judgment 的 duplicate-policy、section-length、architecture score 或類似 heuristic。
+- Validator / Doctor v1 只處理可客觀判定的結構／routing invariant；不得加入需要 AI judgment 的 duplicate-policy、section-length、architecture score、Context Cohesion score 或類似 heuristic。
 - 若未來真的讓 Codex 維護或執行本 repository tooling，必須另由使用者明確授權；本段不建立 Codex write / execution exception。
 
 ## 適用範圍（Scope）
@@ -118,26 +120,3 @@ Routing metadata 優先只保存穩定 ID/path/owner/entrypoint；除非本身�
 預設 main 是 source of truth。修改前確認 repository identity、branch、HEAD 與 working state；禁止 force push、reset-hard、rewrite history 或丟棄未知 user work。
 
 若遇 permission denial，遵守 `REPOSITORY_EXECUTION.md` 的 Permission-Gated Operation。
-
-## 驗證（Validation）
-
-純 Markdown policy 修改至少檢查：
-- links / routing 是否一致
-- 同名規則是否產生 contradiction
-- fenced code / headings 是否完整
-- stale filename / superseded wording 是否仍污染 active routing
-- AI default-load / always-on / bounded-read / routing depth 是否惡化
-- 是否因新增 surface 產生不必要的 tracked derived-metadata write closure
-- 若在 local workspace 執行，使用 `git diff --check`
-
-涉及 policy ownership 搬移時，額外確認：
-- canonical rule 沒有遺失；
-- 舊位置已改成 routing/reference 或必要 domain-specific delta；
-- `CHAT_INIT` / README routing 指向新的主要 authority；
-- 沒有同一完整 normative policy 同時留在多個檔案。
-
-不要為純文件 wording 修改跑不相關 build/test。
-
-## 版本演進理念（Versioning philosophy）
-
-Git history 是本手冊演進紀錄。不要在文件內維護冗長 completed changelog；重大 policy 變動可透過清楚 commit message 追溯。
