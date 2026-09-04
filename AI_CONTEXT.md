@@ -167,6 +167,42 @@ Top-level router 的大小應主要隨穩定 domain / owner 數量成長，不�
 
 人類標題可以改善、翻譯或改 wording，而不應無必要破壞 machine routing identity。
 
+## AI-facing Surface Maintenance Trigger／Routing Integrity Check
+
+AI-friendly repository 不能只在第一次設計時成立；bootstrap、router、registry、index、coordination surface 與 canonical owner 會隨專案成長，因此應有 **repository-defined growth budget／maintenance trigger**，在 AI 讀取路徑開始退化前觸發 bounded information-architecture review。
+
+Budget／trigger 可依 repository 規模與使用型態定義，例如：
+
+- always-on／router surface 持續增長，使大多數 task 被迫載入更多無關 Context；
+- routing entry／active item 數量已使單一 index 難以 bounded-read；
+- 同一 domain 已形成多個穩定、可獨立檢索的子主題；
+- current lookup 經常需要打開過多 canonical artifacts 才能回答一個穩定問題；
+- historical／cold／superseded material 經搜尋後常被誤當 current authority；
+- router/index 開始複製正文、volatile status 或 evidence，而不再只是 routing metadata；
+- 新 canonical owner 存在，但 bootstrap／index／parent router 無法可靠命中。
+
+**Playbook 不規定 universal KB、行數、entry count 或固定 depth。** Project 可自行設定可操作的 budget，但超過 budget 只代表「需要檢查」，不代表自動拆檔、建立新 router 或刪除歷史。實際 restructuring 仍須通過 `Independent Retrieval Intent Gate`、`Context Cohesion Gate` 與本檔的 `AI Readability / Retrieval Cost Change Gate`。
+
+### Canonical／routing mutation 後的最低充分 integrity check
+
+只要本次 mutation 新增、移動、重新分類、supersede 或替換 AI 會需要找到的 canonical artifact／information surface，應做最低充分 routing integrity check：
+
+`Bootstrap / known entry → relevant router / owner → current canonical target → sufficient then STOP`
+
+至少確認：
+
+- 新 target 可由預期 entry path 命中，不需要依賴模型猜 path／舊聊天室／全 repo 搜尋；
+- 只更新必要 router／index，不因單一 leaf mutation製造全域 derived churn；
+- current authority 沒有被 historical／cold／superseded route 重新暴露或混合加權；
+- parent／child、dependency、conditional pointer 等會改變 task identity／scope 的關係仍完整；
+- canonical owner 變更時，舊 owner 已降為 routing／historical／compatibility role，不留下雙 authority；
+- 典型 current lookup 的 routing depth、default-load Context 與需要載入的 artifact 數量沒有無理由惡化；
+- 若 mutation 使 lookup 明顯變長，先判斷能否用更薄 routing、canonicalization、cold isolation 或 direct-leaf bypass 修正，而不是要求 AI 永久多讀一個 global file。
+
+Routing integrity check 是 **bounded maintenance check，不是每次 repo-wide audit**。小型 direct-reference repository 可以只檢查一條 path；大型 registry／router 架構才需要較完整的 parent/child、authority-class、stale-route 檢查。
+
+核心原則：**Maintenance trigger 告訴你何時重新檢查 AI 資訊架構；Routing Integrity Check 確認一次 mutation 後 AI 仍找得到唯一 current authority；兩者都不自動決定要不要拆。**
+
 ## Generated Routing Metadata／Drift Check
 
 若 routing metadata 可以由 canonical structure 可靠推導，而且 workload 證明值得維護，優先 deterministic generation / check，避免人工維護第二份 inventory。
