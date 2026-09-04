@@ -5,18 +5,17 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import re
 import sys
 
 MIN_PYTHON = (3, 11)
 PLAYBOOK_REPO = "masini1491/ai-development-playbook"
 BASELINE_ASSIGN_RE = re.compile(
-    r"(?im)^\s*(?:[-*]\s*)?(?:playbook\s+baseline|baseline|ref)\s*[:：]\s*`?(main|v\d+\.\d+\.\d+)`?\s*[。.]?\s*$"
+    r"(?im)^\s*(?:[-*]\s*)?playbook\s+baseline\s*[:：]\s*`?(main|v\d+\.\d+\.\d+)`?\s*[。.]?\s*$"
 )
 VERSION_TOKEN_RE = re.compile(r"`?(v\d+\.\d+\.\d+)`?")
 FIELD_RE_TEMPLATE = r"(?im)^\s*[-*]\s*{label}\s*:\s*(.+?)\s*$"
-PATHISH_RE = re.compile(r"^[A-Za-z0-9_.\-/]+$")
 PLACEHOLDER_MARKERS = (
     "<path / document / source>",
     "<TASKS.md / equivalent / none>",
@@ -54,20 +53,37 @@ def _extract_field(text: str, label: str) -> str | None:
     return match.group(1).strip() if match else None
 
 
+def _is_placeholder(value: str) -> bool:
+    return any(marker in value for marker in PLACEHOLDER_MARKERS) or value.startswith("<")
+
+
 def _baseline_findings(text: str) -> list[Finding]:
-    explicit = sorted(set(BASELINE_ASSIGN_RE.findall(text)))
+    explicit = BASELINE_ASSIGN_RE.findall(text)
     if len(explicit) == 1:
         return [_finding("PASS", "BASELINE_EXPLICIT", f"Explicit Playbook baseline: {explicit[0]}")]
     if len(explicit) > 1:
-        return [_finding("WARN", "BASELINE_AMBIGUOUS", f"Multiple explicit Playbook baselines declared: {', '.join(explicit)}")]
+        rendered = ", ".join(explicit)
+        return [_finding("WARN", "BASELINE_AMBIGUOUS", f"Multiple explicit Playbook baseline declarations found: {rendered}")]
 
     mentions = set()
     if re.search(r"(?<![\w/])main(?![\w/])", text):
         mentions.add("main")
     mentions.update(VERSION_TOKEN_RE.findall(text))
     if mentions:
-        return [_finding("WARN", "BASELINE_NOT_EXPLICIT", f"Playbook baseline is mentioned but not declared as one explicit value: {', '.join(sorted(mentions))}")]
-    return [_finding("WARN", "BASELINE_MISSING", "No recognizable Playbook baseline declaration found.")]
+        return [_finding("WARN", "BASELINE_NOT_EXPLICIT", f"Playbook baseline is mentioned but not declared as one explicit `Playbook baseline:` value: {', '.join(sorted(mentions))}")]
+    return [_finding("WARN", "BASELINE_MISSING", "No recognizable `Playbook baseline:` declaration found.")]
+
+
+def _declaration_findings(text: str, label: str, code_prefix: str) -> list[Finding]:
+    value = _extract_field(text, label)
+    if value is None:
+        return [_finding("WARN", f"{code_prefix}_UNDECLARED", f"Project-specific minimum contract does not declare {label}.")]
+    value = _strip_inline_code(value)
+    if _is_placeholder(value):
+        return [_finding("WARN", f"{code_prefix}_PLACEHOLDER", f"{label} still contains a placeholder: {value}")]
+    if not value:
+        return [_finding("WARN", f"{code_prefix}_EMPTY", f"{label} is empty.")]
+    return [_finding("PASS", f"{code_prefix}_DECLARED", f"{label} is declared: {value}")]
 
 
 def _coordination_findings(root: Path, text: str) -> list[Finding]:
@@ -75,20 +91,25 @@ def _coordination_findings(root: Path, text: str) -> list[Finding]:
     if value is None:
         return [_finding("WARN", "COORDINATION_UNDECLARED", "Project-specific minimum contract does not declare a current coordination surface.")]
     value = _strip_inline_code(value)
-    if any(marker in value for marker in PLACEHOLDER_MARKERS) or value.startswith("<"):
+    if _is_placeholder(value):
         return [_finding("WARN", "COORDINATION_PLACEHOLDER", f"Current coordination surface still contains a placeholder: {value}")]
     if value.lower() == "none":
         return [_finding("PASS", "COORDINATION_NONE", "Current coordination surface is explicitly none.")]
-    if PATHISH_RE.match(value):
-        target = (root / value).resolve()
-        try:
-            target.relative_to(root.resolve())
-        except ValueError:
-            return [_finding("FAIL", "COORDINATION_OUTSIDE_ROOT", f"Declared coordination surface escapes repository root: {value}")]
-        if not target.is_file():
-            return [_finding("FAIL", "COORDINATION_TARGET_MISSING", f"Declared coordination surface does not exist: {value}")]
-        return [_finding("PASS", "COORDINATION_TARGET", f"Declared coordination surface exists: {value}")]
-    return [_finding("WARN", "COORDINATION_UNPARSED", f"Could not deterministically resolve coordination surface declaration: {value}")]
+    if not value:
+        return [_finding("WARN", "COORDINATION_UNPARSED", "Current coordination surface is empty.")]
+
+    declared = Path(value)
+    if declared.is_absolute() or PureWindowsPath(value).is_absolute():
+        return [_finding("FAIL", "COORDINATION_OUTSIDE_ROOT", f"Declared coordination surface must be repository-relative: {value}")]
+
+    target = (root / declared).resolve()
+    try:
+        target.relative_to(root.resolve())
+    except ValueError:
+        return [_finding("FAIL", "COORDINATION_OUTSIDE_ROOT", f"Declared coordination surface escapes repository root: {value}")]
+    if not target.is_file():
+        return [_finding("FAIL", "COORDINATION_TARGET_MISSING", f"Declared coordination surface does not exist: {value}")]
+    return [_finding("PASS", "COORDINATION_TARGET", f"Declared coordination surface exists: {value}")]
 
 
 def _validation_findings(text: str) -> list[Finding]:
@@ -96,7 +117,7 @@ def _validation_findings(text: str) -> list[Finding]:
     if value is None:
         return [_finding("WARN", "VALIDATION_UNDECLARED", "Project-specific minimum contract does not declare required validation.")]
     value = _strip_inline_code(value)
-    if any(marker in value for marker in PLACEHOLDER_MARKERS) or value.startswith("<"):
+    if _is_placeholder(value):
         return [_finding("WARN", "VALIDATION_PLACEHOLDER", f"Required validation still contains a placeholder: {value}")]
     if value.lower() == "none":
         return [_finding("INFO", "VALIDATION_NONE", "Required validation is explicitly none.")]
@@ -130,8 +151,10 @@ def check_project(root: Path) -> list[Finding]:
     else:
         findings.append(_finding("PASS", "PLACEHOLDERS_CLEARED", "Known minimal-adoption placeholders are cleared."))
 
+    findings.extend(_declaration_findings(text, "Canonical technical source(s)", "CANONICAL_SOURCES"))
     findings.extend(_coordination_findings(root, text))
     findings.extend(_validation_findings(text))
+    findings.extend(_declaration_findings(text, "Project-specific exceptions or restrictions", "PROJECT_EXCEPTIONS"))
 
     has_heading = bool(re.search(r"(?im)^#{1,6}\s+Authority boundary\b", text))
     has_project_authority = "project-specific authority" in text or ("本 repository" in text and "權威" in text)
@@ -155,7 +178,12 @@ def check_project(root: Path) -> list[Finding]:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Run read-only deterministic checks for ai-development-playbook project adoption.")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Run read-only deterministic checks for ai-development-playbook project adoption. "
+            "RESULT PASS means zero FAIL findings; Doctor-clean means zero FAIL and zero WARN."
+        )
+    )
     parser.add_argument("project", type=Path, help="Target project repository root.")
     return parser
 
@@ -185,7 +213,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"{item.severity} {item.code} {item.message}")
 
     result = "FAIL" if counts["FAIL"] else "PASS"
+    clean = "YES" if not counts["FAIL"] and not counts["WARN"] else "NO"
     print(f"RESULT {result}: {counts['FAIL']} fail(s), {counts['WARN']} warning(s), {counts['INFO']} info, {counts['PASS']} pass(es)")
+    print(f"DOCTOR_CLEAN {clean}: clean means 0 FAIL and 0 WARN")
     return 1 if counts["FAIL"] else 0
 
 
