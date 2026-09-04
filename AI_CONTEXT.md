@@ -85,6 +85,27 @@ Git／permission、Conversation-scoped Repository Write Lock、ChatGPT 實際可
 - 不以固定 KB、行數、段落數作 universal split threshold。
 - Input artifact count ≠ canonical artifact count；十份來源／log 不代表要建立十份 canonical conclusion files。
 
+## Context Cohesion Gate
+
+Context optimization 不只檢查「能不能少讀」，也要檢查拆分後 AI 是否仍能可靠重建本次 reasoning 所需的共同 premise。
+
+> **Context 優化應沿著已穩定的 evidence、retrieval intent 與 ownership boundary 進行；不要只為降低當下載入量，就把仍在共同演化的 reasoning unit 硬拆開。**
+
+Active campaign／Stage 若仍高度共享 mutable premise、blocker、validation boundary、next action 或 production constraint，過早拆成多個 dossier／surface 可能降低單次 loaded context，卻增加 cross-file reconciliation、drift、stale premise 與 partial retrieval 的成本。
+
+拆分前至少確認：
+
+- Stage／evidence boundary 已足夠收斂；
+- relevant canonical evidence 已 reconcile；
+- current status、blocker、validation boundary 與 next action 已穩定到可被明確引用；
+- 舊 premise 已標示 superseded，或不再需要跨新 surface 共同維護；
+- 新單元具有獨立 retrieval intent 與清楚 ownership；
+- 拆分後不需要高頻 cross-file synchronization 才能維持 correctness。
+
+若上述條件尚未成立，可先用 section-level bounded read、Hot/Cold 分流、pointer 或其他低風險 slimming；等 evidence／Stage boundary 收斂後再進行第二輪 information architecture 拆分。
+
+核心原則：**Progressive Reading 減少不必要載入；Context Cohesion Gate 避免把仍必須共同理解的資訊拆到難以可靠重建。不是越拆越快，而是在正確收斂點拆，才真正降低 end-to-end retrieval cost。**
+
 ## Progressive Routing／Direct-leaf Bypass
 
 推薦 routing 思路：
