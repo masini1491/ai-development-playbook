@@ -105,10 +105,13 @@ Cold/Candidate item、historical material或 AI 先前建議不因被持久化�
 
 - 新 heading／新 wording 能讀到，只證明新增內容存在；**不證明原本應保留的內容仍完整**。
 - 若 diff 顯示 deletion 規模明顯超出本次意圖、文件尾端消失、主要 canonical sections 不再可達，或 read-back 與 intended scope 不符，立即 STOP 後續 mutation，先恢復／修正 current canonical state，再繼續其他工作。
+- 發現 unintended deletion／truncation 後，**優先使用 Git history 中最近一個已知正常的 pre-mutation canonical blob／parent commit 作恢復基準**；先還原應保留內容，再只重新套用本次原本授權的 bounded intended change。不得靠舊聊天、memory 或模型自行重建整份文件，除非 Git history／canonical backup 確實不可取得，且必須明確標記 evidence gap。
+- 若整個 commit 都是錯誤 mutation，優先考慮建立新的 revert／repair commit 保留可追溯歷史；不要為了讓 history 看起來乾淨而 force push、reset-hard 或 rewrite history。
+- 恢復完成後仍要重新做 diff/stat + current canonical read-back，證明「遺失內容已恢復」與「原 intended change仍正確存在」兩件事都成立。
 - 小型 bounded patch 可只檢查 scoped diff + relevant section；不要為每個一行修改全文重讀。
 - 這是本 repository maintainer 的 direct-write integrity rule；一般 project 的 completion evidence仍由 `DEBUG_VALIDATION.md` 的 `完成證據關卡` 與該 project governance決定，不因本段擴張 ChatGPT 對其他 repository 的 write authority。
 
-核心原則：**Direct-write success ≠ intended mutation success；canonical read-back 必須同時證明新增成立與應保留內容沒有被意外破壞。**
+核心原則：**Direct-write success ≠ intended mutation success；發現破壞時先從 canonical Git history恢復，再重新套用最小 intended patch，最後用 current read-back 關閉復原。**
 
 優先修改既有主題文件，不要為每個新細節建立新檔。但若跨專案 evidence 顯示已形成穩定、可獨立 retrieval、具有清楚 ownership 的新 information architecture domain，可建立新 canonical owner；建立後其他文件只做 routing。
 
