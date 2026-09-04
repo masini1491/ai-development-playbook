@@ -51,6 +51,28 @@ project-specific authority 與 common Playbook 衝突，以 project-specific aut
         findings = adoption_doctor.check_project(root)
         self.assertFalse([item for item in findings if item.severity in {"FAIL", "WARN"}])
 
+    def test_official_minimal_template_can_become_doctor_clean(self) -> None:
+        template_path = Path(__file__).resolve().parents[1] / "examples" / "minimal-project" / "AGENTS.md"
+        text = template_path.read_text(encoding="utf-8")
+        replacements = {
+            "<path / document / source>": "`docs/ARCHITECTURE.md`",
+            "<TASKS.md / equivalent / none>": "`TASKS.md`",
+            "<command / document / manual gate / none>": "`python -m unittest`",
+            "<rules / none>": "`none`",
+        }
+        for placeholder, value in replacements.items():
+            self.assertIn(placeholder, text)
+            text = text.replace(placeholder, value)
+
+        root = self.make_repo({
+            "AGENTS.md": text,
+            "TASKS.md": "# Tasks\n",
+            "docs/ARCHITECTURE.md": "# Architecture\n",
+        })
+        findings = adoption_doctor.check_project(root)
+        problems = [item for item in findings if item.severity in {"FAIL", "WARN"}]
+        self.assertFalse(problems, problems)
+
     def test_missing_agents_fails(self) -> None:
         root = self.make_repo({"README.md": "# Demo\n"})
         findings = adoption_doctor.check_project(root)
