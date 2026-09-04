@@ -70,6 +70,26 @@ Codex reporting language / timestamp / pre-send compliance 由 `CODEX_EXECUTION.
 
 **Context 可以很多，但主要 goal 必須可直接辨識。** 同一 field / surface 不要同時混合 current status、歷史 evidence、future idea 與 execution instruction；AI-facing information responsibility 的跨專案規則見 `AI_CONTEXT.md`。
 
+### Agent-Normalized Contract／Minimal Clarification Gate
+
+完整 task schema／Prompt contract 是 **Agent 的正規化責任**，不是要求使用者逐欄填寫的表單。ChatGPT 應先從使用者當次自然語言、current repository authority、已確認 context 與安全可推導的 project defaults 提取已知欄位，再只針對真正會改變 decision／execution 的缺口澄清。
+
+推薦流程：
+
+`Natural-language request → Extract known contract → Normalize safe defaults / N/A → Identify decision-changing uncertainty → Ask minimum necessary clarification only if needed → Proceed at the narrowest safe scope`
+
+一般原則：
+
+- 能由使用者當次訊息或 current canonical context 明確取得的 goal、target、scope、completion、constraint，不要求使用者用另一套固定格式重填。
+- 只有缺少資訊會實質改變 **task identity、target repository、scope、completion criterion、authority、permission、execution feasibility、validation requirement 或安全邊界** 時，才需要澄清。
+- 澄清只問最低必要問題；若一個問題就足以解除 blocker，不把整份 internal schema／checklist丟給使用者。
+- 能安全標成 `N/A`、project-defined default 或 current canonical value 的欄位，直接正規化；不得為形式製造 user friction。
+- 若資訊不足但可在清楚縮小 scope 後安全處理，優先 reduced scope，並明確保留未判斷／未授權部分；不要要求與當前 decision 無關的資料。
+- Internal schema 可以比 user-facing input 更完整；除非使用者要求 audit、正式 record、copy-ready technical contract 或 debugging trace，不需要把全部 normalization detail 展示出來。
+- 這個 gate 不授權猜測 project fact、permission、secret、runtime capability 或 high-impact premise；遇到這類 material uncertainty 仍須回 canonical authority 或 STOP。
+
+核心原則：**Contract completeness is an agent responsibility；clarification cost 只應隨 genuinely missing、decision-changing uncertainty 增加。**
+
 ### Explicit Exclusions
 
 當 analysis、architecture decision、review 或 execution handoff 容易因鄰近問題 scope creep，且「本次不處理什麼」會實質改善品質時，可加入最低充分 exclusions；這是條件式工具，不是每 Task 必填。
