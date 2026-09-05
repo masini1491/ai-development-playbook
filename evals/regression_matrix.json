@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "authority": "selection-only",
+  "full_baseline": [
+    "BEH-001",
+    "BEH-002",
+    "BEH-003",
+    "BEH-004",
+    "BEH-005",
+    "BEH-006",
+    "BEH-007",
+    "BEH-008",
+    "BEH-009"
+  ],
+  "change_classes": {
+    "repository-authority": [
+      "BEH-001",
+      "BEH-006",
+      "BEH-007",
+      "BEH-009"
+    ],
+    "coordination-admission": [
+      "BEH-002",
+      "BEH-003"
+    ],
+    "runtime-and-validation-placement": [
+      "BEH-004",
+      "BEH-005"
+    ],
+    "capability-discovery": [
+      "BEH-008"
+    ],
+    "session-compaction-rehydration": [
+      "BEH-009"
+    ],
+    "routing-or-information-architecture": [
+      "BEH-008",
+      "BEH-009"
+    ]
+  }
+}
