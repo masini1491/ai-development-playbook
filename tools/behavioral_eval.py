@@ -12,6 +12,8 @@ SCENARIO_IDS = {f"BEH-{index:03d}" for index in range(1, 10)}
 CLASSIFICATIONS = {"PASS", "FAIL", "INCONCLUSIVE"}
 RUN_KINDS = {"formal", "retrospective"}
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+MATRIX_SCHEMA_VERSION = 1
+MATRIX_AUTHORITY = "selection-only"
 
 
 def validate_record(record: dict[str, Any]) -> list[str]:
@@ -100,15 +102,106 @@ def summarize(records: Iterable[dict[str, Any]]) -> list[str]:
     return lines
 
 
+def load_regression_matrix(path: Path) -> dict[str, Any]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError("regression matrix top-level JSON value must be an object")
+    return data
+
+
+def validate_regression_matrix(matrix: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if matrix.get("schema_version") != MATRIX_SCHEMA_VERSION:
+        errors.append(f"regression matrix schema_version must be {MATRIX_SCHEMA_VERSION}")
+    if matrix.get("authority") != MATRIX_AUTHORITY:
+        errors.append(f"regression matrix authority must be {MATRIX_AUTHORITY}")
+
+    full_baseline = matrix.get("full_baseline")
+    if not isinstance(full_baseline, list) or set(full_baseline) != SCENARIO_IDS or len(full_baseline) != len(SCENARIO_IDS):
+        errors.append("regression matrix full_baseline must contain each current Behavioral Evaluation MVP ID exactly once")
+
+    change_classes = matrix.get("change_classes")
+    if not isinstance(change_classes, dict) or not change_classes:
+        errors.append("regression matrix change_classes must be a non-empty object")
+        return errors
+
+    for change_class, scenario_ids in change_classes.items():
+        if not isinstance(change_class, str) or not change_class.strip():
+            errors.append("regression matrix change class names must be non-empty strings")
+            continue
+        if (
+            not isinstance(scenario_ids, list)
+            or not scenario_ids
+            or not all(isinstance(item, str) for item in scenario_ids)
+        ):
+            errors.append(f"regression matrix change class {change_class!r} must contain a non-empty list of scenario IDs")
+            continue
+        if len(scenario_ids) != len(set(scenario_ids)):
+            errors.append(f"regression matrix change class {change_class!r} contains duplicate scenario IDs")
+        unknown = sorted(set(scenario_ids) - SCENARIO_IDS)
+        if unknown:
+            errors.append(
+                f"regression matrix change class {change_class!r} contains unknown scenario IDs: {', '.join(unknown)}"
+            )
+    return errors
+
+
+def select_regression_scenarios(matrix: dict[str, Any], change_class: str) -> list[str]:
+    change_classes = matrix.get("change_classes")
+    if not isinstance(change_classes, dict) or change_class not in change_classes:
+        raise KeyError(change_class)
+    scenario_ids = change_classes[change_class]
+    if not isinstance(scenario_ids, list):
+        raise ValueError(f"invalid scenario list for change class {change_class!r}")
+    return list(scenario_ids)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Validate Behavioral Evaluation run records and print a deterministic summary."
+        description="Validate Behavioral Evaluation run records and deterministic regression-selection metadata."
     )
-    parser.add_argument("records", nargs="+", type=Path, help="JSON run-record paths")
+    parser.add_argument("records", nargs="*", type=Path, help="JSON run-record paths")
+    parser.add_argument("--matrix", type=Path, help="Regression matrix JSON path")
+    parser.add_argument("--change-class", help="Print the scenario IDs selected for one regression change class")
     args = parser.parse_args(argv)
 
-    loaded: list[dict[str, Any]] = []
     failed = False
+    matrix: dict[str, Any] | None = None
+    if args.matrix is not None:
+        try:
+            matrix = load_regression_matrix(args.matrix)
+        except (OSError, json.JSONDecodeError, ValueError) as exc:
+            print(f"FAIL matrix {args.matrix}: {exc}")
+            failed = True
+        else:
+            matrix_errors = validate_regression_matrix(matrix)
+            if matrix_errors:
+                failed = True
+                for error in matrix_errors:
+                    print(f"FAIL matrix {args.matrix}: {error}")
+            else:
+                print(f"PASS matrix {args.matrix}")
+
+    if args.change_class:
+        if matrix is None:
+            print("FAIL matrix: --change-class requires a valid --matrix")
+            failed = True
+        elif not validate_regression_matrix(matrix):
+            try:
+                selected = select_regression_scenarios(matrix, args.change_class)
+            except KeyError:
+                print(f"FAIL matrix: unknown change class {args.change_class!r}")
+                failed = True
+            except ValueError as exc:
+                print(f"FAIL matrix: {exc}")
+                failed = True
+            else:
+                print(f"REGRESSION {args.change_class}: {' '.join(selected)}")
+
+    if not args.records and args.matrix is None:
+        parser.error("provide at least one run record or --matrix")
+
+    loaded: list[dict[str, Any]] = []
     for path in args.records:
         try:
             record = load_record(path)
