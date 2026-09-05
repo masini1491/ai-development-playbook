@@ -25,13 +25,13 @@
 
 新專案或成熟技術整合，優先：
 
-requirements → platform class → target family → external research → local reference synthesis → technology stack → architecture/policy freeze → implementation → validation
+requirements → capability/domain decomposition → reuse discovery → local reference synthesis → technology stack → architecture/policy freeze → implementation → validation
 
-不要一開始就讓 coding agent 自行發明成熟協議、driver 或 framework。
+不要一開始就讓 coding agent 自行發明成熟協議、driver、framework 或其他已有成熟 upstream 解法的 capability。對 research-bootstrap 開案，reuse discovery 的 phase-level admission / handoff contract 見 `PROJECT_BOOTSTRAP.md` 的 `Reuse-First Research Gate`。
 
 ## 避免重造輪子關卡（Anti-Reinvent-Wheel Gate）
 
-第一次實作成熟 protocol / hardware / SDK / integration 前，檢查：
+對新專案或 material 新能力，**在 architecture freeze／implementation scope 固定之前**，先辨識其中哪些 capability 屬於成熟領域、具有 material engineering cost、或合理可能已有 upstream reuse；對這些 capability 做最低充分檢查，而不是等第一次 coding 時才補查：
 
 - 是否有官方 implementation / SDK / sample
 - 是否有成熟 GitHub implementation
@@ -39,9 +39,13 @@ requirements → platform class → target family → external research → loca
 - 是否有 test vectors / interoperability evidence
 - 哪些 layer 已被 upstream 解決
 - license / provenance 是否允許 reuse
-- 真正需要自行實作的 gap 有多大
+- 可直接 reuse、需要 adapt、或真正需要自行實作的 gap 有多大
 
-常見 trigger：NFC、HCE、APDU、BLE、CAN、ISO-TP、UDS、Matter、MQTT、Home Assistant、GPS/NMEA、fingerprint、Modbus、RS485、Zigbee、Thread、TLS、OTA、常見 sensor/SDK。
+若需求橫跨多個成熟 domain，先按 capability / responsibility 拆開做 bounded discovery；不要只用整個產品名稱搜尋一次，就把沒有命中的部分視為 custom implementation。研究結果應足以限制後續 invention boundary：已由成熟 upstream 解決的 layer，coding agent 不應無 evidence 重新發明；真正 project-specific 的 gap 才進 implementation scope。
+
+常見 trigger：NFC、HCE、APDU、BLE、CAN、ISO-TP、UDS、Matter、MQTT、Home Assistant、GPS/NMEA、fingerprint、Modbus、RS485、Zigbee、Thread、TLS、OTA、常見 sensor/SDK，以及成熟 application-domain capability，例如資料匯入／查詢、scheduler、notification、technical analysis、backtest、media processing、authentication、database adapter 等。
+
+本 gate 不要求固定搜尋數量。若一個高權威來源已足以決策就停止；簡單、低成本、明顯 project-specific 的局部 helper 也不為形式強制研究。外部 research 的 bounded expansion、freshness、authority、license 與 adoption state 仍由本文件後續章節管理。
 
 ## 本地 Reference 知識庫（Local reference knowledge base）
 
