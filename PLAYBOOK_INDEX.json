@@ -16,6 +16,8 @@
     {"id":"integrity.derived-synthesis","owner":"INFORMATION_INTEGRITY.md","section":"Derived Synthesis Authority Guard","kind":"contract"},
     {"id":"integrity.durable-fact-ownership","owner":"INFORMATION_INTEGRITY.md","section":"Durable Confirmed Fact Ownership Guard","kind":"contract"},
     {"id":"integrity.provenance-precision","owner":"INFORMATION_INTEGRITY.md","section":"Provenance Precision Guard","kind":"contract"},
+    {"id":"integrity.snapshot-consistency","owner":"INFORMATION_INTEGRITY.md","section":"Snapshot Consistency Guard","kind":"contract"},
+    {"id":"integrity.search-hit-authority","owner":"INFORMATION_INTEGRITY.md","section":"Search Hit Authority Guard","kind":"contract"},
     {"id":"session.compaction-rehydration","owner":"CHATGPT_WORKFLOW.md","section":"Session Compaction / Rehydration Contract","kind":"contract"},
     {"id":"work.ai-originated-admission","owner":"CHATGPT_WORKFLOW.md","section":"AI-originated Durable Work Admission Gate","kind":"contract"},
     {"id":"execution.chatgpt-runtime","owner":"CHATGPT_WORKFLOW.md","section":"ChatGPT-side Runtime Execution","kind":"contract"},
