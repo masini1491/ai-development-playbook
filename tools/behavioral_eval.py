@@ -8,7 +8,7 @@ import re
 import sys
 from typing import Any, Iterable
 
-SCENARIO_IDS = {f"BEH-{index:03d}" for index in range(1, 9)}
+SCENARIO_IDS = {f"BEH-{index:03d}" for index in range(1, 10)}
 CLASSIFICATIONS = {"PASS", "FAIL", "INCONCLUSIVE"}
 RUN_KINDS = {"formal", "retrospective"}
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
