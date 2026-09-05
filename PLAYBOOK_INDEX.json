@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "authority": "routing-only",
+  "bootstrap": {
+    "path": "CHAT_INIT.md"
+  },
+  "capabilities": [
+    {
+      "id": "bootstrap.task-routing",
+      "owner": "CHAT_INIT.md",
+      "section": "啟動順序",
+      "kind": "contract"
+    },
+    {
+      "id": "context.repository-memory",
+      "owner": "AI_CONTEXT.md",
+      "section": "AI Context Surface Model",
+      "kind": "contract"
+    },
+    {
+      "id": "context.absence-claim-coverage",
+      "owner": "AI_CONTEXT.md",
+      "section": "Absence Claim Coverage Gate",
+      "kind": "contract"
+    },
+    {
+      "id": "session.compaction-rehydration",
+      "owner": "CHATGPT_WORKFLOW.md",
+      "section": "Session Compaction / Rehydration Contract",
+      "kind": "contract"
+    },
+    {
+      "id": "work.ai-originated-admission",
+      "owner": "CHATGPT_WORKFLOW.md",
+      "section": "AI-originated Durable Work Admission Gate",
+      "kind": "contract"
+    },
+    {
+      "id": "execution.chatgpt-runtime",
+      "owner": "CHATGPT_WORKFLOW.md",
+      "section": "ChatGPT-side Runtime Execution",
+      "kind": "contract"
+    },
+    {
+      "id": "repository.write-authority",
+      "owner": "REPOSITORY_EXECUTION.md",
+      "section": "聊天室級 Repository 寫入鎖",
+      "kind": "contract"
+    },
+    {
+      "id": "validation.behavioral-evaluation",
+      "owner": "DEBUG_VALIDATION.md",
+      "section": "Behavioral Evaluation MVP",
+      "kind": "contract"
+    },
+    {
+      "id": "validation.execution-placement",
+      "owner": "DEBUG_VALIDATION.md",
+      "section": "Validation Execution Placement Gate",
+      "kind": "contract"
+    },
+    {
+      "id": "validation.completion-readback",
+      "owner": "DEBUG_VALIDATION.md",
+      "section": "完成證據關卡",
+      "kind": "contract"
+    },
+    {
+      "id": "validation.evidence-lifecycle",
+      "owner": "DEBUG_VALIDATION.md",
+      "section": "Evidence 取代生命週期",
+      "kind": "contract"
+    },
+    {
+      "id": "execution.cost-aware",
+      "owner": "CODEX_EXECUTION.md",
+      "kind": "contract"
+    },
+    {
+      "id": "adoption.doctor",
+      "owner": "AGENTS.md",
+      "section": "本 repository 的 minimal validator contract",
+      "kind": "contract"
+    }
+  ],
+  "implementations": {
+    "playbook_check": "tools/playbook_check.py",
+    "adoption_doctor": "tools/adoption_doctor.py",
+    "behavioral_eval": "tools/behavioral_eval.py"
+  },
+  "adapters": {
+    "activation": "ACTIVATION_ADAPTERS.md",
+    "session_handoff": "SESSION_HANDOFF_TEMPLATE.md"
+  },
+  "behavioral_regression": {
+    "matrix": "evals/regression_matrix.json",
+    "runner": "tools/behavioral_eval.py"
+  }
+}
