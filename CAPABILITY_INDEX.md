@@ -8,10 +8,12 @@
 
 若任務是 capability inventory、competitive comparison、productization gap analysis、architecture maturity review，或準備宣稱「這個 repository 缺少／沒有／尚未實作 X」：
 
-1. 先用本索引找可能的 canonical owner／implementation／test。
+1. 先用本索引找可能的 canonical owner／implementation／test；machine consumer 也可用 `PLAYBOOK_INDEX.json` 做 stable-ID / path discovery。
 2. 依 `CHAT_INIT.md` 與 `AI_CONTEXT.md` 的 `Absence Claim Coverage Gate` 做 bounded read／existence check。
 3. 在**最終回答前**，把草稿中的 negative／gap claims（例如「缺少 X」、「尚未支援 Y」、「沒有 Z」）逐條重新 reconcile；若找到任何一層 positive evidence，應描述真正 maturity layer，例如「已有 contract/spec，尚無 automated harness」，不要把 implementation gap 誤寫成 capability absence。
 4. 若 repository search／connector coverage 不完整，使用 `NOT FOUND IN CHECKED SCOPE`／等價 evidence-bounded wording，不得升格成 whole-repository absence。
+
+`PLAYBOOK_INDEX.json` 與本檔都是 discovery surface；machine manifest 只保存 stable routing metadata，不取代 canonical Markdown owner。
 
 核心原則：**Discovery index 幫你找到能力；canonical owner 決定能力；final negative-claim reconciliation 防止在 synthesis 階段重新漏掉能力。**
 
@@ -20,10 +22,12 @@
 | Capability | Canonical owner / implementation pointer | Maturity / discovery note |
 | --- | --- | --- |
 | New-session bootstrap / task routing | `CHAT_INIT.md` | Minimal bootstrap、task router、direct-leaf bypass、cross-owner review trigger。 |
+| Machine-readable routing discovery | `PLAYBOOK_INDEX.json`；drift/path/section check：`tools/playbook_check.py` + tests | **Routing-only JSON manifest 已存在**；只保存 stable capability ID / owner / section / adapter pointer，不保存 current state。 |
+| Thin activation adapters | `ACTIVATION_ADAPTERS.md` | **Manual thin activation adapter contract 已存在**；native marketplace installer／startup hook／generated per-tool command pack 尚未宣稱存在。 |
 | Repository information architecture / durable project memory | `AI_CONTEXT.md` | Always-on／Hot／Cold／Evidence／Current canonical／Historical、retrieval cost、Context Cohesion。 |
 | Repository-level absence / capability review | `AI_CONTEXT.md` → `Absence Claim Coverage Gate` | 已有 normative coverage contract；不要把 search miss 當 absence proof。 |
-| Session compaction / rehydration | `CHATGPT_WORKFLOW.md` → `Session Compaction / Rehydration Contract` | **Contract 已存在**；是否有 automated compactor／runtime adapter是另一 maturity layer，不得混成「沒有 session compaction」。 |
-| Behavioral evaluation | `DEBUG_VALIDATION.md` → `Behavioral Evaluation MVP` | **Normative behavioral-eval contract 與 BEH scenarios 已存在**；automated eval harness／cross-model empirical runs是另一 maturity layer。 |
+| Session compaction / rehydration | `CHATGPT_WORKFLOW.md` → `Session Compaction / Rehydration Contract`；adapter：`SESSION_HANDOFF_TEMPLATE.md` | **Contract + thin handoff adapter 已存在**；自動判斷 compaction 時機／自動產生 handoff 的 runtime automation 尚未宣稱存在。 |
+| Behavioral evaluation | `DEBUG_VALIDATION.md` → `Behavioral Evaluation MVP`；`evals/regression_matrix.json`；`tools/behavioral_eval.py` + tests | **Normative BEH contract、formal evidence、deterministic record validator與 bounded regression selector 已存在**；fresh-session model invocation／semantic grading仍是 external/manual layer。 |
 | Deterministic validation / enforcement admission | `DEBUG_VALIDATION.md` → `Deterministic Enforcement Admission Gate`；`tools/playbook_check.py` + tests | Policy與 executable checker分層；checker只證明實際檢查的 invariant。 |
 | Adoption Doctor | `AGENTS.md` → minimal validator contract；`tools/adoption_doctor.py` + `tests/test_adoption_doctor.py` | Read-only/report-only；支援 Local Path Mode 與 ChatGPT GitHub Snapshot Mode。 |
 | GitHub connector-first snapshot acquisition | `AGENTS.md` → `ChatGPT GitHub Snapshot Mode` | Connector retrieval capability 與 local Python/network capability分層；connector可正常而 sandbox DNS受限。 |
@@ -44,9 +48,9 @@ Capability review 至少區分下列層級；不是每項能力都必須同時�
 
 因此建議寫：
 
-- `Behavioral Evaluation MVP contract exists; automated harness not yet evidenced.`
-- `Session Compaction / Rehydration contract exists; automated compaction adapter not evidenced.`
-- `Markdown routing contract exists; machine-readable manifest not evidenced.`
+- `Behavioral Evaluation MVP contract and regression-selection metadata exist; fresh-session invocation / semantic grading remain external.`
+- `Session Compaction / Rehydration contract and handoff adapter exist; automatic compaction runtime not evidenced.`
+- `Machine-readable routing manifest exists; native per-runtime activation hooks/installers not evidenced.`
 
 避免寫成：
 
