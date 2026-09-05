@@ -69,7 +69,7 @@ Behavioral evaluation 用來驗證：**AI／Agent 已讀到規則後，實際 de
 
 - 規則跨專案且 material，違反會造成錯誤 mutation、錯誤 execution、錯誤 completion、scope creep 或 durable obligation inflation；
 - 曾實際發生、接近發生，或 external review / multi-agent evidence 顯示有重複失敗風險；
-- deterministic validator 無法在低 false-positive 下直接判斷，但 expected / forbidden behavior 可以被清楚描述；
+- deterministic validator 無法在 low false-positive 下直接判斷，但 expected / forbidden behavior 可以被清楚描述；
 - scenario 成本低，且結果會實際影響規則、Prompt、procedure 或未來 tooling 決策。
 
 第一版不建立大型 eval framework。每個 scenario 只保存：
@@ -171,16 +171,7 @@ Behavioral evaluation 用來驗證：**AI／Agent 已讀到規則後，實際 de
 判斷至少考慮：
 
 - **Independent enforcement need**：是否需要在任何單一 ChatGPT／Agent／human session之外強制阻擋錯誤；
-- **Mutation paths**：是否有 contributor、automation、API或其他流程可能繞過目前主要維護 workflow直接修改 repository；
-- **Collaboration / release risk**：多人協作、external PR、protected merge、release/security gate通常更需要獨立 verifier；
-- **Execution reproducibility**：候選 execution path 是否能穩定取得 current canonical input、符合 contract 的 runtime/toolchain與必要 dependency；
-- **Operational cost**：always-on CI 的 runner usage、setup/dependency latency、workflow maintenance、quota與 failure notification/email noise是否高於實際 enforcement收益；
-- **Failure actionability**：自動紅燈是否在正確 boundary阻擋 material risk，還是大量 intermediate push只產生可預期、低價值的 failure noise。
-
-常見 placement：
-
-- **Session/local-side authorized execution**：個人／少數 maintainer、主要 mutation path受控、validator deterministic、authorized session可取得 canonical input，而且不需要 every-push independent fail-closed enforcement；
-- **CI / independent gate**：多人/external contributor、protected merge/release/security需求、存在繞過主要 session的 mutation path，或 validation必須獨立於單一執行者強制成立；
+- **Mutation paths**：是否有 contributor、automation、API或其他流程可能繞過目前主要 session的 mutation path，或 validation必須獨立於單一執行者強制成立；
 - **Hybrid / reduced-trigger**：日常維護由 authorized session/local execution處理，只在 PR、release、manual dispatch或其他 material boundary跑 independent validation，避免 every-push ceremony。
 
 一般原則：
@@ -238,11 +229,11 @@ Diagnostic harness 一般應：
 - read-only 優先；
 - one-shot / explicit action 優先，不在背景無界執行；
 - 不保存或輸出 secret / credential material；
-- 不做 destructive / state-changing operation，除非該 mutation 本身就是已明確授權且不可替代的實驗條件；
+- 不做 destructive / state-changing operation，除非該 mutation本身就是已明確授權且不可替代的實驗條件；
 - bounded retry，不做 infinite retry / polling；
 - 只輸出足以區分假說或驗證 contract 的最低必要 evidence。
 
-若 harness 需要真實 network、external service、hardware、credential 或其他高 capability execution，仍服從 `REPOSITORY_EXECUTION.md` 的 Task/Stage authorization、permission 與 credential boundary；「只是診斷」不會自動取得 mutation 或硬體執行授權。
+若 harness 需要真實 network、external service、hardware、credential 或其他 high capability execution，仍服從 `REPOSITORY_EXECUTION.md` 的 Task/Stage authorization、permission 與 credential boundary；「只是診斷」不會自動取得 mutation 或硬體執行授權。
 
 Harness PASS 只證明其實際 target / backend / fixture / measurement profile 的 scope；不得把 isolated smoke、自建 test consumer、mock 或相似硬體結果直接升格成 production/network/hardware PASS。Embedded first-contact 的 target/device evidence delta 另見 `EMBEDDED_PROJECTS.md`。
 
@@ -263,7 +254,7 @@ Harness PASS 只證明其實際 target / backend / fixture / measurement profile
 
 可由使用者授權解除的 sandbox / network / filesystem / repository-metadata / execution permission gate，在解除前**不算真正 operational failure**；先依 `REPOSITORY_EXECUTION.md` 的 Authorization / Capability Layers 與 Permission-Gated Operation 處理。
 
-`AUTHENTICATION` 表示已有必要 execution permission，但 service/account 身分驗證本身失敗，例如 credential 缺失、無效、過期或登入/session 無法成立。
+`AUTHENTICATION` 表示已有必要 execution permission，但 service/account 身分驗證本身失敗，例如 credential缺失、無效、過期或登入/session 無法成立。
 
 `AUTHORIZATION` 表示 authentication 已成立或 service 可辨識身分，但該 identity / credential 對目前已授權 operation 缺少必要 service-side 權限。Credential 技術上具有較大權限時，也不得因此擴張 Task / Stage authorization。
 
@@ -302,7 +293,7 @@ Compile/source-fix loop 若 repository governance、正式 validation contract �
 - 若連續觀察沒有新增 progress evidence，先做 bounded status/tail/process inspection，判斷是 slow、silent-but-healthy、stalled、waiting on dependency、permission gate 或其他狀態；不得只重複「再等一下」而沒有新的判斷資訊。
 - Process / CI step 已 exit non-zero、cancelled 或明確 fatal 時，立即停止等待；保存相關 log/evidence，轉入 failure classification / phase attribution，不得繼續 poll 已結束的 operation。
 - 若目前工具無法提供足夠 observability，而繼續等待會持續消耗昂貴 usage window、鎖住 Stage 或需要反覆人工 approval，應 STOP 並回報 `INSUFFICIENT OBSERVABILITY` / operational state，而不是無限延長。
-- Long-running operation 的 stdout/stderr 控制遵守 `CODEX_EXECUTION.md` 的 **Long-running tool output discipline**：優先保存完整 log並只讀必要 bounded evidence，不把巨量 progress output 全部灌入 active Context。
+- Long-running operation 的 stdout/stderr 控制遵守 `CODEX_EXECUTION.md` 的 **Long-running tool output discipline**：優先保存完整 log 並只讀必要 bounded evidence，不把巨量 progress output 全部灌入 active Context。
 
 核心目標是：**等待必須帶來新的完成機會或新的 evidence；沒有進展的等待本身不是 retry 策略。**
 
@@ -341,7 +332,7 @@ Multi-stage build / CI pipeline 的整體 `FAIL`、non-zero exit 或紅燈，不
 Condition-triggered 原則：
 
 - 只檢查真正會讓目前 expensive operation 在後段決定性失敗、而且可在事前可靠判斷的項目；不要為了形式建立大型 universal preflight framework。
-- 已實際發生過 costly late failure、同類 job 頻繁執行、或 failure cost 明顯高時，優先把該 deterministic prerequisite 收斂成 repository-owned guard/verifier/CI pre-step；一次性低成本流程則可保持簡單 inline check。
+- 已實際發生過 costly late failure、同類 job頻繁執行、或 failure cost 明顯高時，優先把該 deterministic prerequisite 收斂成 repository-owned guard/verifier/CI pre-step；一次性低成本流程則可保持簡單 inline check。
 - 若某 input 本來就必須由 build/runtime 中途產生，或事前值不可可靠知道，不得用猜測式 preflight 假裝已驗證。
 - Preflight PASS 只證明 prerequisite 可進入 expensive operation；不代表 compile、package、sign、deploy 或 runtime 一定成功。
 - Preflight 本身應比它避免的失敗便宜且穩定；若檢查成本接近完整 build，改用 targeted phase validation 或其他更有效 evidence。
@@ -604,7 +595,7 @@ Move、rename、split、directory/domain relocation、module extraction 或其�
 - 若某候選可依既有 deterministic verifier、host test、exact readback、compile 或其他強 evidence 守住 behavior，而另一候選只能依尚未完成的現場／硬體證據驗證，通常先處理前者；這是風險排序，不是宣稱所有低 coupling debt 都必須優先。
 - 每完成一個 refactor Stage，重新讀 current dependency/evidence state再排下一刀；不得因最初 inventory 排出一串順序，就把後續 Stage 視為自動授權或不需重新評估。
 
-核心原則：**現在最值得修的技術債，是能清楚恢復 ownership、又能用目前最強 evidence 守住 behavior，而不會無必要破壞正在使用 baseline 的那一塊。**
+核心原則：**現在最值得修的技術債，是能清楚恢復 ownership、又能用目前最強 evidence守住 behavior，而不會無必要破壞正在使用 baseline 的那一塊。**
 
 ## 決策階段（Decision Stage）
 
