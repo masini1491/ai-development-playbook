@@ -248,6 +248,28 @@ def _check_chat_init_router(path: Path, root: Path, text: str) -> list[Diagnosti
     return diagnostics
 
 
+def _chat_init_routed_markdown_owners(root: Path) -> set[str] | None:
+    path = root / "CHAT_INIT.md"
+    if not path.exists():
+        return None
+    lines = path.read_text(encoding="utf-8").splitlines()
+    ranges = _section_ranges(lines, CHAT_INIT_ROUTER_HEADING)
+    if not ranges:
+        return None
+    owners: set[str] = set()
+    for start, end in ranges:
+        for index in range(start, end):
+            line = lines[index]
+            if "→" not in line:
+                continue
+            for target in CODE_SPAN_RE.findall(line):
+                target = target.strip()
+                if not target.lower().endswith(".md") or any(ch in target for ch in "*?[]"):
+                    continue
+                owners.add(Path(target).as_posix())
+    return owners
+
+
 def _check_fences(path: Path, root: Path, text: str) -> list[Diagnostic]:
     open_fence: tuple[str, int, int] | None = None
     for line_no, line in enumerate(text.splitlines(), start=1):
@@ -302,6 +324,7 @@ def _check_machine_index(root: Path) -> list[Diagnostic]:
 
     capabilities = data.get("capabilities")
     seen_ids: set[str] = set()
+    manifest_owners: set[str] = set()
     if not isinstance(capabilities, list) or not capabilities:
         diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_FORMAT", "capabilities must be a non-empty list"))
     else:
@@ -318,6 +341,8 @@ def _check_machine_index(root: Path) -> list[Diagnostic]:
             else:
                 seen_ids.add(capability_id)
             referenced_paths.append((f"capabilities[{index}].owner", owner))
+            if isinstance(owner, str) and owner.strip() and owner.lower().endswith(".md"):
+                manifest_owners.add(Path(owner).as_posix())
             section = item.get("section")
             owner_path = _machine_index_target(root, owner)
             if section is not None:
@@ -351,6 +376,15 @@ def _check_machine_index(root: Path) -> list[Diagnostic]:
             diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_TARGET", f"{field} must be a repository-relative path"))
         elif not target.exists():
             diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_TARGET", f"Missing machine routing target for {field}: {relative}"))
+
+    routed_owners = _chat_init_routed_markdown_owners(root)
+    if routed_owners is not None:
+        bootstrap_path = bootstrap.get("path") if isinstance(bootstrap, dict) else None
+        bootstrap_owner = {Path(bootstrap_path).as_posix()} if isinstance(bootstrap_path, str) and bootstrap_path.lower().endswith(".md") else set()
+        for owner in sorted(routed_owners - manifest_owners):
+            diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "ROUTING_CLOSURE", f"CHAT_INIT routed owner missing from machine manifest capabilities: {owner}"))
+        for owner in sorted(manifest_owners - routed_owners - bootstrap_owner):
+            diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "ROUTING_CLOSURE", f"Machine manifest capability owner is not reachable from CHAT_INIT routing: {owner}"))
     return diagnostics
 
 
