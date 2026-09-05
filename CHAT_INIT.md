@@ -23,6 +23,8 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
 
 - ChatGPT planning／task contract／澄清／coordination admission／AI-originated work
   → `CHATGPT_WORKFLOW.md`；依需要直達 `Task Contract：Goal / Context / Exclusions`、`Agent-Normalized Contract／Minimal Clarification Gate`、`Persistence／Coordination Admission`
+- 新 repository／pre-implementation 階段由 ChatGPT 蒐集 reference、形成 research synthesis／requirements／architecture，Codex 尚未接手且需要 bounded direct-write
+  → `PROJECT_BOOTSTRAP.md`；確認 `research-bootstrap` activation、Research Write Allowlist 與 exit/handoff gate，再依需要讀 `REPOSITORY_EXECUTION.md`
 - ChatGPT-side deterministic runtime execution
   → `CHATGPT_WORKFLOW.md` → `ChatGPT-side Runtime Execution`
 - Codex Prompt mode／delivery／copy-ready／Codex result reconciliation／ChatGPT user-facing response contract
