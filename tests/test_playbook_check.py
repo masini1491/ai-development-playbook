@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import tempfile
 from pathlib import Path
 import unittest
@@ -77,6 +78,55 @@ class PlaybookCheckTests(unittest.TestCase):
         root = self.make_repo({"B.md": "[Missing](z.md)\n", "A.md": "[Missing](y.md)\n"})
         diagnostics = playbook_check.check_repository(root)
         self.assertEqual(["A.md", "B.md"], [item.path for item in diagnostics])
+
+    def test_machine_index_valid_targets_and_sections_pass(self) -> None:
+        manifest = {
+            "schema_version": 1,
+            "authority": "routing-only",
+            "bootstrap": {"path": "CHAT_INIT.md"},
+            "capabilities": [
+                {"id": "bootstrap", "owner": "CHAT_INIT.md", "section": "啟動順序", "kind": "contract"}
+            ],
+            "implementations": {"check": "tools/check.py"},
+            "adapters": {"activation": "ACTIVATION_ADAPTERS.md"},
+            "behavioral_regression": {"matrix": "evals/regression_matrix.json", "runner": "tools/check.py"},
+        }
+        root = self.make_repo({
+            "PLAYBOOK_INDEX.json": json.dumps(manifest, ensure_ascii=False),
+            "CHAT_INIT.md": "# Init\n\n## 啟動順序\n",
+            "ACTIVATION_ADAPTERS.md": "# Adapter\n",
+            "tools/check.py": "",
+            "evals/regression_matrix.json": "{}",
+        })
+        self.assertEqual([], playbook_check.check_repository(root))
+
+    def test_machine_index_missing_target_fails(self) -> None:
+        manifest = {
+            "schema_version": 1,
+            "authority": "routing-only",
+            "bootstrap": {"path": "CHAT_INIT.md"},
+            "capabilities": [{"id": "missing", "owner": "MISSING.md", "kind": "contract"}],
+        }
+        root = self.make_repo({
+            "PLAYBOOK_INDEX.json": json.dumps(manifest),
+            "CHAT_INIT.md": "# Init\n",
+        })
+        diagnostics = playbook_check.check_repository(root)
+        self.assertEqual(["MANIFEST_TARGET"], [item.code for item in diagnostics])
+
+    def test_machine_index_missing_section_fails(self) -> None:
+        manifest = {
+            "schema_version": 1,
+            "authority": "routing-only",
+            "bootstrap": {"path": "CHAT_INIT.md"},
+            "capabilities": [{"id": "bootstrap", "owner": "CHAT_INIT.md", "section": "Missing", "kind": "contract"}],
+        }
+        root = self.make_repo({
+            "PLAYBOOK_INDEX.json": json.dumps(manifest),
+            "CHAT_INIT.md": "# Init\n\n## Existing\n",
+        })
+        diagnostics = playbook_check.check_repository(root)
+        self.assertEqual(["MANIFEST_SECTION"], [item.code for item in diagnostics])
 
 
 if __name__ == "__main__":
