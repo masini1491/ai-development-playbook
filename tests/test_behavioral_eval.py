@@ -22,6 +22,12 @@ class BehavioralEvalTests(unittest.TestCase):
     def test_valid_formal_record_passes(self) -> None:
         self.assertEqual([], behavioral_eval.validate_record(self.valid_record()))
 
+    def test_beh_009_record_passes(self) -> None:
+        record = self.valid_record()
+        record["scenario_id"] = "BEH-009"
+        record["stimulus"] = "Rehydrate a fresh session from a stale checkpoint."
+        self.assertEqual([], behavioral_eval.validate_record(record))
+
     def test_unknown_scenario_fails(self) -> None:
         record = self.valid_record()
         record["scenario_id"] = "BEH-999"
