@@ -41,6 +41,37 @@ Path 只是示例；project 可選 `references/**`、`docs/research/**`、`PROJE
 
 核心原則：**Bootstrap initializer 解決「誰先建立研究寫入邊界」；它不是一般 governance write permission。**
 
+## Reuse-First Research Gate
+
+在 `research-bootstrap` 階段，**成熟能力的 reuse discovery 必須發生在 architecture freeze 與 Codex handoff 之前**；不能等到 coding agent 已準備實作某個功能時，才臨時檢查是否已有成熟做法。
+
+推薦流程：
+
+`Requirement discovery → Domain decomposition → Bounded reuse discovery → Candidate evaluation → Reuse / Adapt / Gap map → Architecture freeze → Codex handoff`
+
+一般原則：
+
+- 先把需求拆成具有獨立工程責任的 capability / domain，例如資料來源、storage/query、scheduler、notification、protocol adapter、UI component、backtest、import/export、device integration；不要只用產品名稱做一個寬泛搜尋。
+- 對**成熟領域、material engineering cost、或合理存在 upstream reuse 可能性**的 capability，ChatGPT 主動做 bounded discovery；不等使用者逐項提醒「先找 GitHub」。
+- Discovery 優先檢查官方 implementation / SDK / sample、成熟 GitHub repository、library / driver、reference architecture、interoperability / test evidence；詳細研究與 license/provenance 規則仍服從 `RESEARCH_ARCHITECTURE.md` 的 `避免重造輪子關卡`、`漸進式外部研究`、`來源與授權`。
+- 找到候選後，不只回答「有沒有」，還要判斷可直接 `REUSE`、需要 `ADAPT`、僅 `REFERENCE-ONLY`、或必須自行補 `GAP`。既有 `Reference Adoption State` 可用時直接沿用，不另造平行狀態系統。
+- Architecture freeze 前，對會 materially 影響 implementation scope 的 capability，應形成最低充分 **Reuse / Adapt / Gap Map**；不用追求固定表格格式，但至少能回答：候選來源、採用判斷、可重用 boundary、project-specific gap、Codex 不應重造的 layer。
+- 若一份高權威候選已足以支持 reuse/adapt decision，就停止擴張；不要求每個 capability 固定搜尋多個 repo。若未發現成熟候選，也要把「已做 bounded discovery、目前 gap 仍存在」與搜尋範圍／限制說清楚，避免 Codex 把 search miss 當成世界上不存在 upstream。
+- 簡單、低成本、明顯 project-specific 的局部能力，不為形式強制建立 reuse ceremony；本 gate 的目的是真正避免高成本重造，不是把所有 helper 都變成研究專案。
+
+建議 handoff 摘要可採：
+
+```text
+Capability: <name>
+Candidate: <repo / library / SDK / none after bounded discovery>
+Decision: REUSE | ADAPT | GAP | REFERENCE-ONLY
+Reusable boundary: <what upstream already solves>
+Project-specific gap: <what remains ours>
+Codex invention boundary: <layers Codex must not rebuild without new evidence>
+```
+
+核心原則：**成熟能力先證明哪些可以 reuse / adapt，再設計我們真正缺的 gap；Codex 的工作邊界應由 gap 決定，而不是由空白畫布決定。**
+
 ## Research Write Allowlist
 
 Mode 啟用後，ChatGPT 可在 project 明確 allowlist 內直接建立／更新 pre-implementation knowledge artifact，例如：
@@ -49,6 +80,7 @@ Mode 啟用後，ChatGPT 可在 project 明確 allowlist 內直接建立／更�
 - research synthesis、technology comparison、unknown / revisit trigger；
 - requirement discovery / constraint baseline；
 - 尚未進 implementation 的 architecture / protocol / integration decision；
+- Reuse / Adapt / Gap Map 或等價 reuse synthesis；
 - project bootstrap dossier；
 - 一般既有 coordination / Cold / evidence surfaces（只有 project 同時明確列入時）。
 
@@ -84,13 +116,14 @@ Research 階段允許 ChatGPT 直接形成 durable project knowledge，因此要
 
 `research-bootstrap` 不是永久寬鬆模式。當第一個 implementation Stage 準備交給 Codex／coding agent，或 project 已開始穩定 source mutation lifecycle 時，應做 bounded handoff：
 
-`research-bootstrap → reconcile current research / architecture → freeze minimum implementation premise → admit Hot implementation work → switch to implementation boundary → Codex executes`
+`research-bootstrap → reconcile current research / architecture → close material Reuse / Adapt / Gap decisions → freeze minimum implementation premise → admit Hot implementation work → switch to implementation boundary → Codex executes`
 
 退出前至少確認：
 
 - implementation 所需的 current requirements / architecture premise 有唯一可找到的 canonical owner；
+- 對 material mature capabilities 已完成最低充分 reuse discovery，Reuse / Adapt / Gap 結論可被 Codex 找到；
 - unresolved research 有明確 status / trigger，不冒充已決定事項；
-- first implementation task 的 goal / completion / exclusions / evidence pointers 足夠；
+- first implementation task 的 goal / completion / exclusions / evidence pointers 足夠，且明確指出 upstream reusable boundary 與 project-specific implementation gap；
 - project governance 將 `ChatGPT Project Mode` 切回一般 implementation mode或等價 contract，並收斂不再需要的 Research Write Allowlist；
 - 退出後 ChatGPT 不因曾在 bootstrap 期間可寫 architecture/research，就繼續推導對 source、tests 或一般 docs 的永久 write authority。
 
