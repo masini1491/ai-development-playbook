@@ -1,8 +1,8 @@
 # Information Integrity Guards
 
-> **Authority**：跨專案 semantic identity、derived artifact authority、durable confirmed fact ownership、evidence provenance precision。
+> **Authority**：跨專案 semantic identity、derived artifact authority、durable confirmed fact ownership、evidence provenance precision、remote snapshot consistency、search-result authority/currentness。
 >
-> **Read when**：目前工作涉及 aggregate/bundle identity、跨來源 synthesis、evidence metadata、provenance、或把 confirmed fact 保存到 report／analysis／eval 等 derived artifact。
+> **Read when**：目前工作涉及 aggregate/bundle identity、跨來源 synthesis、evidence metadata、provenance、remote canonical snapshot validation、repository search hit authority，或把 confirmed fact 保存到 report／analysis／eval 等 derived artifact。
 >
 > 本檔只保存跨專案 integrity contract；domain-specific ID 格式、lifecycle 名稱與資料 schema 仍由各 project owner 決定。
 
@@ -57,6 +57,43 @@ Evidence metadata 必須保存實際可證明的 precision，不得用格式完�
 
 核心原則：**Preserve evidence precision; verification does not propagate transitively across provenance fields.**
 
+## Snapshot Consistency Guard
+
+當 ChatGPT／agent 先從 remote canonical repository 取得多個檔案，再 materialize 成 ephemeral/local snapshot 交給 Doctor、validator、test harness 或其他 deterministic check 時，**同一次 validation run 的 repository inputs 必須對齊同一個 exact canonical revision**。
+
+推薦流程：
+
+`Resolve requested branch/ref → pin exact commit SHA / immutable revision → fetch every validation input from that revision → build snapshot → execute validator`
+
+一般原則：
+
+- branch／tag／moving ref 可以用來選擇目標，但開始取得 validation inputs 前應先 resolve 成 immutable revision；
+- 同一次 snapshot 不得混用 `AGENTS.md@commit-A`、coordination surface `@commit-B`、validator `@commit-C`，即使三者取得時都名義上來自 `main`；
+- validator 自身若屬被驗證 repository 的 canonical tooling，也應從同一 pinned revision 取得，除非 validation contract 明確指定 external/versioned validator authority；
+- snapshot 只需包含 validator 真正需要的最低充分 inputs；consistency guard 不要求 full clone／full repository materialization；
+- 若 connector／runtime 無法保證所有必要 input 來自同一 pinned revision，應回報 `SNAPSHOT CONSISTENCY UNAVAILABLE`／等價 evidence gap，不得把混合 revision 的 PASS 冒充單一 canonical state 的 validation result；
+- validation 完成後 remote branch 已前進，不會追溯使該 run 無效；但結果只能宣稱對 pinned revision 成立。若要宣稱 current branch 最新狀態，重新 resolve current revision 並建立新 snapshot。
+
+核心原則：**One validation snapshot, one canonical revision. Moving refs select a revision; they are not themselves a consistency boundary.**
+
+## Search Hit Authority Guard
+
+Repository search、全文搜尋、semantic search、code search、filename match 或其他 discovery mechanism 命中某 artifact，只證明它在被搜尋範圍內**可被發現／可能相關**；不因此取得 current、canonical、execution 或 policy authority。
+
+推薦判斷：
+
+`Search hit → identify owner / authority class / currentness → resolve canonical target → use or discard`
+
+一般原則：
+
+- 搜尋命中 historical、archive、deprecated、cold、superseded、generated summary、old task、migration note 或 stale copy 時，先回 current router／governance／canonical owner 判斷，不得因 query match 很強就直接採用；
+- search result excerpt、ranking、filename、snippet freshness 或搜尋引擎排序都不是 authority signal；
+- search hit 可以作 discovery evidence，幫助找到可能 owner／symbol／path；真正 decision 仍由 current canonical authority 與必要 provenance 決定；
+- 若 repository 沒有足夠 routing／metadata 判定 hit 是否 current，應明確保持 uncertainty 或做 bounded reconciliation，不得自動把「找到」翻成「現在有效」；
+- 這與 absence 判斷對稱：`not found` 不等於 absent；同樣地，`found` 也不等於 authoritative/current。
+
+核心原則：**Search relevance ≠ authority. A hit locates evidence; it does not promote that evidence to current truth.**
+
 ## Boundary
 
-這些 guards 不要求所有 project 使用 global monotonic ID，也不規定 Tarot/Vault 類的 `reflective_only`、`waiting_for_reality` 等 domain lifecycle。跨專案只採用上面的 identity、authority、durable ownership 與 provenance precision 原則。
+這些 guards 不要求所有 project 使用 global monotonic ID，也不規定 Tarot/Vault 類的 `reflective_only`、`waiting_for_reality` 等 domain lifecycle。跨專案只採用上面的 identity、authority、durable ownership、provenance precision、snapshot consistency 與 search-hit authority 原則。
