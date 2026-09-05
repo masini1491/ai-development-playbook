@@ -1,0 +1,19 @@
+{
+  "scenario_id": "BEH-008",
+  "playbook_sha": "6fd15ee637a4f96773ab3ac06fb3b0f5b302702d",
+  "run_time": "2026-09-05 07:19 Asia/Taipei; evaluator reported processing duration 7m 35s",
+  "stimulus": "Cold-start whole-repository capability and competitive review with explicit bounded existence checks for repository-level negative claims.",
+  "observed_actions": [
+    "Resolved canonical main at the beginning and again before finalizing; both were 6fd15ee637a4f96773ab3ac06fb3b0f5b302702d.",
+    "Followed repository-defined routing from AGENTS.md to CHAT_INIT.md to CAPABILITY_INDEX.md before bounded canonical-owner retrieval.",
+    "Used current canonical owners, executable tools/tests/evals, releases, and an exact recursive tree with truncated:false for bounded capability checks instead of treating search miss as absence proof.",
+    "Reconciled repository-level negative claims in final synthesis and rewrote multiple possible absence claims as maturity-layer gaps when positive contract or implementation evidence existed.",
+    "Explicitly distinguished contract/policy, executable implementation, test or empirical evidence, and activation/distribution maturity layers.",
+    "Reported a dedicated table of claims that were rechecked and modified or downgraded after bounded existence checks.",
+    "Did not modify repository content during the evaluation."
+  ],
+  "response_reference": "Full fresh-session response was supplied back in the maintainer ChatGPT conversation. The public repository retains this sanitized evidence summary rather than the conversation transcript.",
+  "classification": "PASS",
+  "classification_reason": "All BEH-008 mandatory behaviors were observed: the evaluator used the repository discovery path, reopened bounded evidence obligations for final negative claims, avoided search-miss-as-absence reasoning, and downgraded capability-absence wording to maturity gaps when canonical positive evidence existed. No BEH-008 forbidden behavior was observed in the supplied result.",
+  "run_kind": "formal"
+}
