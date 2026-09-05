@@ -5,83 +5,27 @@
     "path": "CHAT_INIT.md"
   },
   "capabilities": [
-    {
-      "id": "bootstrap.task-routing",
-      "owner": "CHAT_INIT.md",
-      "section": "啟動順序",
-      "kind": "contract"
-    },
-    {
-      "id": "context.repository-memory",
-      "owner": "AI_CONTEXT.md",
-      "section": "AI Context Surface Model",
-      "kind": "contract"
-    },
-    {
-      "id": "context.absence-claim-coverage",
-      "owner": "AI_CONTEXT.md",
-      "section": "Absence Claim Coverage Gate",
-      "kind": "contract"
-    },
-    {
-      "id": "session.compaction-rehydration",
-      "owner": "CHATGPT_WORKFLOW.md",
-      "section": "Session Compaction / Rehydration Contract",
-      "kind": "contract"
-    },
-    {
-      "id": "work.ai-originated-admission",
-      "owner": "CHATGPT_WORKFLOW.md",
-      "section": "AI-originated Durable Work Admission Gate",
-      "kind": "contract"
-    },
-    {
-      "id": "execution.chatgpt-runtime",
-      "owner": "CHATGPT_WORKFLOW.md",
-      "section": "ChatGPT-side Runtime Execution",
-      "kind": "contract"
-    },
-    {
-      "id": "repository.write-authority",
-      "owner": "REPOSITORY_EXECUTION.md",
-      "section": "聊天室級 Repository 寫入鎖",
-      "kind": "contract"
-    },
-    {
-      "id": "validation.behavioral-evaluation",
-      "owner": "DEBUG_VALIDATION.md",
-      "section": "Behavioral Evaluation MVP",
-      "kind": "contract"
-    },
-    {
-      "id": "validation.execution-placement",
-      "owner": "DEBUG_VALIDATION.md",
-      "section": "Validation Execution Placement Gate",
-      "kind": "contract"
-    },
-    {
-      "id": "validation.completion-readback",
-      "owner": "DEBUG_VALIDATION.md",
-      "section": "完成證據關卡",
-      "kind": "contract"
-    },
-    {
-      "id": "validation.evidence-lifecycle",
-      "owner": "DEBUG_VALIDATION.md",
-      "section": "Evidence 取代生命週期",
-      "kind": "contract"
-    },
-    {
-      "id": "execution.cost-aware",
-      "owner": "CODEX_EXECUTION.md",
-      "kind": "contract"
-    },
-    {
-      "id": "adoption.doctor",
-      "owner": "AGENTS.md",
-      "section": "本 repository 的 minimal validator contract",
-      "kind": "contract"
-    }
+    {"id":"bootstrap.task-routing","owner":"CHAT_INIT.md","section":"啟動順序","kind":"contract"},
+    {"id":"context.repository-memory","owner":"AI_CONTEXT.md","section":"AI Context Surface Model","kind":"contract"},
+    {"id":"context.absence-claim-coverage","owner":"AI_CONTEXT.md","section":"Absence Claim Coverage Gate","kind":"contract"},
+    {"id":"integrity.semantic-identity","owner":"INFORMATION_INTEGRITY.md","section":"Semantic Identity / Container Guard","kind":"contract"},
+    {"id":"integrity.derived-synthesis","owner":"INFORMATION_INTEGRITY.md","section":"Derived Synthesis Authority Guard","kind":"contract"},
+    {"id":"integrity.durable-fact-ownership","owner":"INFORMATION_INTEGRITY.md","section":"Durable Confirmed Fact Ownership Guard","kind":"contract"},
+    {"id":"integrity.provenance-precision","owner":"INFORMATION_INTEGRITY.md","section":"Provenance Precision Guard","kind":"contract"},
+    {"id":"session.compaction-rehydration","owner":"CHATGPT_WORKFLOW.md","section":"Session Compaction / Rehydration Contract","kind":"contract"},
+    {"id":"work.ai-originated-admission","owner":"CHATGPT_WORKFLOW.md","section":"AI-originated Durable Work Admission Gate","kind":"contract"},
+    {"id":"execution.chatgpt-runtime","owner":"CHATGPT_WORKFLOW.md","section":"ChatGPT-side Runtime Execution","kind":"contract"},
+    {"id":"execution.codex-cost-aware","owner":"CODEX_EXECUTION.md","kind":"contract"},
+    {"id":"repository.write-authority","owner":"REPOSITORY_EXECUTION.md","section":"聊天室級 Repository 寫入鎖","kind":"contract"},
+    {"id":"validation.behavioral-evaluation","owner":"DEBUG_VALIDATION.md","section":"Behavioral Evaluation MVP","kind":"contract"},
+    {"id":"validation.execution-placement","owner":"DEBUG_VALIDATION.md","section":"Validation Execution Placement Gate","kind":"contract"},
+    {"id":"validation.completion-readback","owner":"DEBUG_VALIDATION.md","section":"完成證據關卡","kind":"contract"},
+    {"id":"validation.evidence-lifecycle","owner":"DEBUG_VALIDATION.md","section":"Evidence 取代生命週期","kind":"contract"},
+    {"id":"architecture.research","owner":"RESEARCH_ARCHITECTURE.md","kind":"contract"},
+    {"id":"domain.embedded-hardware","owner":"EMBEDDED_PROJECTS.md","kind":"contract"},
+    {"id":"domain.ui-ux","owner":"UI_UX.md","kind":"contract"},
+    {"id":"toolchain.runtime","owner":"TOOLCHAIN.md","kind":"contract"},
+    {"id":"adoption.doctor","owner":"AGENTS.md","section":"本 repository 的 minimal validator contract","kind":"contract"}
   ],
   "implementations": {
     "playbook_check": "tools/playbook_check.py",
