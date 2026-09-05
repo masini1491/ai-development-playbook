@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Minimal deterministic checks for ai-development-playbook Markdown routing."""
+"""Minimal deterministic checks for ai-development-playbook routing."""
 
 from __future__ import annotations
 
 import argparse
 from dataclasses import dataclass
+import json
 from pathlib import Path
 import re
 import sys
+from typing import Any
 from urllib.parse import unquote
 
 MIN_PYTHON = (3, 11)
@@ -20,6 +22,9 @@ WINDOWS_DRIVE_RE = re.compile(r"^[A-Za-z]:[\\/]")
 URL_SCHEME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
 HTML_ANCHOR_RE = re.compile(r"<(?:a|[^>]+)\b(?:id|name)=[\"']([^\"']+)[\"']", re.IGNORECASE)
 CHAT_INIT_ROUTER_HEADING = "最低必要路由"
+MACHINE_INDEX_NAME = "PLAYBOOK_INDEX.json"
+MACHINE_INDEX_SCHEMA_VERSION = 1
+MACHINE_INDEX_AUTHORITY = "routing-only"
 
 
 @dataclass(frozen=True, order=True)
@@ -261,6 +266,94 @@ def _check_fences(path: Path, root: Path, text: str) -> list[Diagnostic]:
     return [Diagnostic(_relative_display(path, root), open_fence[2], "FENCE_UNCLOSED", f"Unclosed Markdown fence opened with {open_fence[0] * open_fence[1]}")]
 
 
+def _machine_index_target(root: Path, relative: Any) -> Path | None:
+    if not isinstance(relative, str) or not relative.strip():
+        return None
+    resolved = (root / relative).resolve()
+    try:
+        resolved.relative_to(root.resolve())
+    except ValueError:
+        return None
+    return resolved
+
+
+def _check_machine_index(root: Path) -> list[Diagnostic]:
+    path = root / MACHINE_INDEX_NAME
+    if not path.exists():
+        return []
+    diagnostics: list[Diagnostic] = []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        return [Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_FORMAT", f"Invalid machine routing manifest: {exc}")]
+    if not isinstance(data, dict):
+        return [Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_FORMAT", "Machine routing manifest must be a JSON object")]
+    if data.get("schema_version") != MACHINE_INDEX_SCHEMA_VERSION:
+        diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_FORMAT", f"schema_version must be {MACHINE_INDEX_SCHEMA_VERSION}"))
+    if data.get("authority") != MACHINE_INDEX_AUTHORITY:
+        diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_FORMAT", f"authority must be {MACHINE_INDEX_AUTHORITY}"))
+
+    referenced_paths: list[tuple[str, Any]] = []
+    bootstrap = data.get("bootstrap")
+    if not isinstance(bootstrap, dict):
+        diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_FORMAT", "bootstrap must be an object"))
+    else:
+        referenced_paths.append(("bootstrap.path", bootstrap.get("path")))
+
+    capabilities = data.get("capabilities")
+    seen_ids: set[str] = set()
+    if not isinstance(capabilities, list) or not capabilities:
+        diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_FORMAT", "capabilities must be a non-empty list"))
+    else:
+        for index, item in enumerate(capabilities):
+            if not isinstance(item, dict):
+                diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_FORMAT", f"capabilities[{index}] must be an object"))
+                continue
+            capability_id = item.get("id")
+            owner = item.get("owner")
+            if not isinstance(capability_id, str) or not capability_id.strip():
+                diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_FORMAT", f"capabilities[{index}].id must be a non-empty string"))
+            elif capability_id in seen_ids:
+                diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_DUPLICATE", f"Duplicate capability id: {capability_id}"))
+            else:
+                seen_ids.add(capability_id)
+            referenced_paths.append((f"capabilities[{index}].owner", owner))
+            section = item.get("section")
+            owner_path = _machine_index_target(root, owner)
+            if section is not None:
+                if not isinstance(section, str) or not section.strip():
+                    diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_FORMAT", f"capabilities[{index}].section must be a non-empty string when provided"))
+                elif owner_path is not None and owner_path.exists() and owner_path.suffix.lower() == ".md":
+                    headings = _heading_map(owner_path.read_text(encoding="utf-8").splitlines())
+                    if section not in headings:
+                        diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_SECTION", f"Missing owner section for {capability_id}: {owner} → {section}"))
+
+    for group_name in ("implementations", "adapters"):
+        group = data.get(group_name)
+        if group is not None:
+            if not isinstance(group, dict):
+                diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_FORMAT", f"{group_name} must be an object"))
+            else:
+                for key, relative in group.items():
+                    referenced_paths.append((f"{group_name}.{key}", relative))
+
+    regression = data.get("behavioral_regression")
+    if regression is not None:
+        if not isinstance(regression, dict):
+            diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_FORMAT", "behavioral_regression must be an object"))
+        else:
+            for key in ("matrix", "runner"):
+                referenced_paths.append((f"behavioral_regression.{key}", regression.get(key)))
+
+    for field, relative in referenced_paths:
+        target = _machine_index_target(root, relative)
+        if target is None:
+            diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_TARGET", f"{field} must be a repository-relative path"))
+        elif not target.exists():
+            diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_TARGET", f"Missing machine routing target for {field}: {relative}"))
+    return diagnostics
+
+
 def check_repository(root: Path) -> list[Diagnostic]:
     root = root.resolve()
     diagnostics: list[Diagnostic] = []
@@ -270,11 +363,12 @@ def check_repository(root: Path) -> list[Diagnostic]:
         diagnostics.extend(_check_section_router(path, root, text))
         diagnostics.extend(_check_chat_init_router(path, root, text))
         diagnostics.extend(_check_fences(path, root, text))
+    diagnostics.extend(_check_machine_index(root))
     return sorted(diagnostics)
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Run minimal deterministic Markdown checks for the playbook.")
+    parser = argparse.ArgumentParser(description="Run minimal deterministic routing checks for the playbook.")
     parser.add_argument("root", nargs="?", type=Path, default=Path(__file__).resolve().parents[1], help="Repository root. Defaults to the parent of tools/.")
     return parser
 
