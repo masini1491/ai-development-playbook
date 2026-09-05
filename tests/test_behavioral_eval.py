@@ -19,6 +19,17 @@ class BehavioralEvalTests(unittest.TestCase):
             "run_kind": "formal",
         }
 
+    def valid_matrix(self) -> dict[str, object]:
+        return {
+            "schema_version": 1,
+            "authority": "selection-only",
+            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 10)],
+            "change_classes": {
+                "routing": ["BEH-008", "BEH-009"],
+                "validation": ["BEH-004", "BEH-005"],
+            },
+        }
+
     def test_valid_formal_record_passes(self) -> None:
         self.assertEqual([], behavioral_eval.validate_record(self.valid_record()))
 
@@ -73,6 +84,21 @@ class BehavioralEvalTests(unittest.TestCase):
         self.assertEqual(
             ["BEH-008: 2 PASS / 1 FAIL / 1 INCONCLUSIVE"],
             behavioral_eval.summarize(records),
+        )
+
+    def test_valid_regression_matrix_passes(self) -> None:
+        self.assertEqual([], behavioral_eval.validate_regression_matrix(self.valid_matrix()))
+
+    def test_regression_matrix_rejects_unknown_scenario(self) -> None:
+        matrix = self.valid_matrix()
+        matrix["change_classes"]["routing"].append("BEH-999")  # type: ignore[index]
+        errors = behavioral_eval.validate_regression_matrix(matrix)
+        self.assertTrue(any("unknown scenario IDs" in item for item in errors))
+
+    def test_select_regression_scenarios(self) -> None:
+        self.assertEqual(
+            ["BEH-008", "BEH-009"],
+            behavioral_eval.select_regression_scenarios(self.valid_matrix(), "routing"),
         )
 
 
