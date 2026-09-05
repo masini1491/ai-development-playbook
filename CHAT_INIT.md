@@ -33,7 +33,7 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
   → `AI_CONTEXT.md`；依需要直達 `AI Context Surface Model`、`Independent Retrieval Intent Gate`、`Context Cohesion Gate`、`Progressive Routing／Direct-leaf Bypass`、`AI Readability / Retrieval Cost Change Gate`
 - Whole-repository capability discovery／repository-level absence claim
   → 先 `CAPABILITY_INDEX.md`；必要時 `PLAYBOOK_INDEX.json` 做 machine discovery，再讀 `AI_CONTEXT.md` → `Absence Claim Coverage Gate`
-- Semantic identity／aggregate container／derived synthesis authority／durable confirmed fact ownership／provenance precision
+- Semantic identity／aggregate container／derived synthesis authority／durable confirmed fact ownership／provenance precision／remote snapshot consistency／search-hit authority-currentness
   → `INFORMATION_INTEGRITY.md`；只讀對應 guard；evidence lifecycle 的其他規則仍由 `DEBUG_VALIDATION.md` 負責
 - Codex model／Reasoning／Context／Agent、execution mode、usage／cost、tool scheduling/output、Codex reporting
   → `CODEX_EXECUTION.md`；reporting 直達 `Codex 回報語言`、`Codex 回報時間戳（Always-on Reporting Timestamp）`、`Reporting Pre-Send Gate`，其他只讀 task-relevant section
