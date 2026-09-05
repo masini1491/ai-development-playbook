@@ -114,6 +114,60 @@ class PlaybookCheckTests(unittest.TestCase):
         diagnostics = playbook_check.check_repository(root)
         self.assertEqual(["MANIFEST_TARGET"], [item.code for item in diagnostics])
 
+    def test_routing_closure_requires_chat_init_owner_in_manifest(self) -> None:
+        manifest = {
+            "schema_version": 1,
+            "authority": "routing-only",
+            "bootstrap": {"path": "CHAT_INIT.md"},
+            "capabilities": [{"id": "bootstrap", "owner": "CHAT_INIT.md", "section": "啟動順序", "kind": "contract"}],
+        }
+        root = self.make_repo({
+            "PLAYBOOK_INDEX.json": json.dumps(manifest, ensure_ascii=False),
+            "CHAT_INIT.md": "# Init\n\n## 啟動順序\n\n## 最低必要路由\n\n- context → `AI_CONTEXT.md`\n",
+            "AI_CONTEXT.md": "# Context\n",
+        })
+        diagnostics = playbook_check.check_repository(root)
+        self.assertEqual(["ROUTING_CLOSURE"], [item.code for item in diagnostics])
+        self.assertIn("AI_CONTEXT.md", diagnostics[0].message)
+
+    def test_routing_closure_rejects_manifest_only_owner(self) -> None:
+        manifest = {
+            "schema_version": 1,
+            "authority": "routing-only",
+            "bootstrap": {"path": "CHAT_INIT.md"},
+            "capabilities": [
+                {"id": "bootstrap", "owner": "CHAT_INIT.md", "section": "啟動順序", "kind": "contract"},
+                {"id": "context", "owner": "AI_CONTEXT.md", "kind": "contract"},
+                {"id": "stale", "owner": "STALE.md", "kind": "contract"},
+            ],
+        }
+        root = self.make_repo({
+            "PLAYBOOK_INDEX.json": json.dumps(manifest, ensure_ascii=False),
+            "CHAT_INIT.md": "# Init\n\n## 啟動順序\n\n## 最低必要路由\n\n- context → `AI_CONTEXT.md`\n",
+            "AI_CONTEXT.md": "# Context\n",
+            "STALE.md": "# Stale\n",
+        })
+        diagnostics = playbook_check.check_repository(root)
+        self.assertEqual(["ROUTING_CLOSURE"], [item.code for item in diagnostics])
+        self.assertIn("STALE.md", diagnostics[0].message)
+
+    def test_routing_closure_passes_when_human_and_machine_owners_match(self) -> None:
+        manifest = {
+            "schema_version": 1,
+            "authority": "routing-only",
+            "bootstrap": {"path": "CHAT_INIT.md"},
+            "capabilities": [
+                {"id": "bootstrap", "owner": "CHAT_INIT.md", "section": "啟動順序", "kind": "contract"},
+                {"id": "context", "owner": "AI_CONTEXT.md", "kind": "contract"},
+            ],
+        }
+        root = self.make_repo({
+            "PLAYBOOK_INDEX.json": json.dumps(manifest, ensure_ascii=False),
+            "CHAT_INIT.md": "# Init\n\n## 啟動順序\n\n## 最低必要路由\n\n- context → `AI_CONTEXT.md`\n",
+            "AI_CONTEXT.md": "# Context\n",
+        })
+        self.assertEqual([], playbook_check.check_repository(root))
+
     def test_machine_index_missing_section_fails(self) -> None:
         manifest = {
             "schema_version": 1,
