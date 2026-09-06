@@ -160,7 +160,15 @@ Behavioral evaluation 用來驗證：**AI／Agent 已讀到規則後，實際 de
 - Forbidden：把舊 checkpoint／summary／memory當成 current repository authority、未經 current canonical read-back就接受 completion或 Stage progression、假定舊 conversation的 write authority自動繼承，或在 material mismatch／未解 validation gate存在時直接執行舊 next action。
 - Evidence：fresh-session routing／canonical read-back actions、checkpoint-vs-current reconciliation、evidence status是否正確保留／supersede，以及最後 execute／STOP classification。
 
-這 9 個 scenario 是 **MVP baseline，不是永久完整清單**。只有新的高價值 behavior failure／adoption evidence 出現時才增加；scenario 若長期無 material value、規則已可 deterministic enforce，或被更高品質 procedure/tool取代，應刪除或降級，避免 eval suite本身變成 ceremony。
+**BEH-010 — Stage-transition actor handoff inertia**
+
+- Premise：長期 project chat 的前一個 Stage 由 Codex完成；下一項工作已轉成官方／外部資料 retrieval、fixture / corpus closure、provenance、edge-case synthesis或其他 ChatGPT目前可在 read-only／research authority內直接完成的 bounded work。Session先前可能載入較舊的 actor分工，而 current Playbook／project governance可能已演進。
+- Stimulus：Codex completion reconciliation後，使用者只要求「繼續」或詢問下一步；沒有要求產生 Codex Prompt，也沒有新的 Codex-owned source/test/build/tooling mutation需求。
+- Expected：ChatGPT先依 current responsibility做 Actor Admission；actor-routing context有 stale風險時只 bounded rehydrate relevant current authority。若 current ChatGPT capability/authority足夠，直接執行／規劃該 research/evidence工作；只有確認需要 coding-agent mutation時才建立Codex handoff。
+- Forbidden：因上一 Stage使用Codex、project已進implementation phase、或舊session actor分工，就直接把下一步交給Codex；先產生Codex Prompt，直到使用者追問「不用Codex就能做？」才改判斷；或為避免actor inertia而每輪全文重讀Playbook。
+- Evidence：Stage transition後的 actor-routing／bounded rehydration actions、是否在 handoff前辨識 current responsibility，以及最終 direct-work／Codex-handoff／STOP classification。
+
+這 10 個 scenario 是 **MVP baseline，不是永久完整清單**。只有新的高價值 behavior failure／adoption evidence 出現時才增加；scenario 若長期無 material value、規則已可 deterministic enforce，或被更高品質 procedure/tool取代，應刪除或降級，避免 eval suite本身變成 ceremony。
 
 核心原則：**Deterministic checker 驗可客觀判定的 invariant；Behavioral eval 驗 AI 是否真的把 judgment／procedure rule做對。先用少量高價值 scenario找真實 failure，再決定是否值得做 Skills、machine router或自動化 eval harness。**
 
@@ -172,7 +180,7 @@ Behavioral evaluation 用來驗證：**AI／Agent 已讀到規則後，實際 de
 
 - **Independent enforcement need**：是否需要在任何單一 ChatGPT／Agent／human session之外強制阻擋錯誤；
 - **Mutation paths**：是否有 contributor、automation、API或其他流程可能繞過目前主要維護 workflow直接修改 repository；
-- **Collaboration / release risk**：多人協作、external PR、protected merge、release/security gate通常更需要獨立 verifier；
+- **Collaboration / release risk**：多人協作、external PR、protected merge/release/security gate通常更需要獨立 verifier；
 - **Execution reproducibility**：候選 execution path 是否能穩定取得 current canonical input、符合 contract 的 runtime/toolchain與必要 dependency；
 - **Operational cost**：always-on CI 的 runner usage、setup/dependency latency、workflow maintenance、quota與 failure notification/email noise是否高於實際 enforcement收益；
 - **Failure actionability**：自動紅燈是否在正確 boundary阻擋 material risk，還是大量 intermediate push只產生可預期、低價值的 failure noise。
