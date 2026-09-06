@@ -2,6 +2,8 @@
 
 本檔是新聊天室的**AI 最小 bootstrap + task router**。它只負責建立正確的 repository / authority / routing 起點，不重複保存 Git、coordination lifecycle、ChatGPT workflow、Codex execution、AI Context、toolchain、debug 或 validation 的完整規則。
 
+本檔與其路由到的 canonical owners 是 **AI／agent-facing operational surfaces**；人類一般從 `README.md` 了解本手冊定位、導入與使用方式，不需要依序閱讀這些內部規則文件。
+
 AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先讀 `README.md`**。`README.md` 主要服務人類 overview、分享與手冊總覽；只有需要了解整套手冊、routing 無法由本檔判定，或使用者明確要求時再讀。
 
 ## Repository Read Acquisition / Recovery Gate
