@@ -72,6 +72,34 @@ Codex invention boundary: <layers Codex must not rebuild without new evidence>
 
 核心原則：**成熟能力先證明哪些可以 reuse / adapt，再設計我們真正缺的 gap；Codex 的工作邊界應由 gap 決定，而不是由空白畫布決定。**
 
+## Post-Adoption Context Closure Gate
+
+Reuse / Adapt 能降低初次 implementation cost，但若後續每個 Task 都重新讀大量 upstream source、examples、tests 與 internal architecture，節省的成本會被長期 Context 消耗追回來。因此，material upstream integration 在完成 gap implementation 與最低充分 validation 後，應建立**薄型 local integration contract**，把成熟 upstream internals 從 ordinary default Context 降為 condition-triggered detail。
+
+推薦 lifecycle：
+
+`Reuse discovery → adopt / adapt → implement project gap → validate integration → freeze thin local integration contract → ordinary work reads contract + project-owned code → expand upstream internals only on trigger`
+
+Thin contract 不要求建立固定檔名或額外 ceremony；可放在 project 已存在的 architecture / integration / reference owner。只需保存後續 task 真正需要的最低充分資訊，例如：
+
+- upstream identity / pinned version、revision 或 dependency range；
+- upstream 擁有並已解決的 responsibility / layer；
+- project 自己擁有的 adapter、policy、extension、gap；
+- stable integration points / public API / contract；
+- project-specific assumptions、known limitation、license / provenance pointer；
+- **Codex invention boundary**：哪些 upstream-solved layer 不得無新 evidence 重寫；
+- **Context expansion trigger**：何時才需要深入 upstream internals，例如 upstream bug evidence、version upgrade、contract conflict、security/failure analysis、integration test 指向 upstream boundary。
+
+一般原則：
+
+- **不要為了「變成自己的」而重寫成熟 upstream。** Integration 已正常工作時，implementation cleanup / rewrite 必須有 correctness、performance、resource、security、maintainability 或其他 material evidence；不能只為降低表面 dependency 或 source ownership 感而把 upstream重新實作一次。
+- Ordinary feature / maintenance task 若只碰 project-owned gap，預設先讀 thin integration contract 與直接相關 project code；不因 upstream repository 可讀就全文載入。
+- Thin contract 是 routing / ownership / integration boundary，不是把 upstream README / source 再複製一份。需要 upstream 詳情時沿 provenance / stable pointer bounded-read 原始 authority。
+- Dependency upgrade、upstream API change 或 evidence 顯示 current thin contract 不再成立時，重新做 bounded upstream reconciliation，更新 contract 後再收斂 Context。
+- 若 upstream 很小、API 本來就極薄，或每次工作確實必須理解其 internals，則不為形式建立額外 wrapper 文件；本 gate 的判斷標準是**是否實際降低後續 end-to-end retrieval / reasoning cost而不犧牲 correctness**。
+
+核心原則：**Reuse saves implementation cost only if adopted upstream does not become permanent default Context. Preserve a thin local contract; make upstream internals condition-triggered.**
+
 ## Research Write Allowlist
 
 Mode 啟用後，ChatGPT 可在 project 明確 allowlist 內直接建立／更新 pre-implementation knowledge artifact，例如：
@@ -124,6 +152,7 @@ Research 階段允許 ChatGPT 直接形成 durable project knowledge，因此要
 - 對 material mature capabilities 已完成最低充分 reuse discovery，Reuse / Adapt / Gap 結論可被 Codex 找到；
 - unresolved research 有明確 status / trigger，不冒充已決定事項；
 - first implementation task 的 goal / completion / exclusions / evidence pointers 足夠，且明確指出 upstream reusable boundary 與 project-specific implementation gap；
+- 對預計採用的 material upstream，已決定 integration completion 後 thin local contract 的 owner / destination，讓 implementation 完成後可以收斂成 Post-Adoption Context Closure，而不是永久把 upstream internals 放在 default Context；
 - project governance 將 `ChatGPT Project Mode` 切回一般 implementation mode或等價 contract，並收斂不再需要的 Research Write Allowlist；
 - 退出後 ChatGPT 不因曾在 bootstrap 期間可寫 architecture/research，就繼續推導對 source、tests 或一般 docs 的永久 write authority。
 
@@ -133,9 +162,11 @@ Research 階段允許 ChatGPT 直接形成 durable project knowledge，因此要
 
 本 mode 的目的不是讓 ChatGPT 取代 Codex，而是消除開案早期低價值的搬運：當 ChatGPT 本來就是 reference retrieval、analysis、synthesis 的主要 actor 時，不需要為了把同一份 research conclusion 寫進 repository，再額外建立 Codex handoff、重載 Context、產生 commit-only 工作。
 
+Reuse 的成本收益也不只看第一次少寫多少 code；若 adopted upstream 之後每個 Codex task 都被迫重讀大量 internals，長期 Context / reasoning cost 仍可能很高。完成 integration 後應把 ordinary work 收斂到 thin local contract + project-owned gap，只有 trigger 成立才展開 upstream internals。
+
 核心分工：
 
 - **Research/bootstrap phase**：ChatGPT = research + synthesis + bounded canonical documentation maintainer；
 - **Implementation phase**：ChatGPT = planning / research / review；Codex／coding agent = authorized repository implementation maintainer。
 
-核心原則：**Write authority follows project phase and explicit governance；研究階段減少無意義 handoff，實作階段恢復清楚 actor boundary。**
+核心原則：**Write authority follows project phase and explicit governance；研究階段減少無意義 handoff，實作階段恢復清楚 actor boundary；Reuse 之後再收斂 default Context，才真正降低 end-to-end AI development cost。**
