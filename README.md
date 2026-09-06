@@ -1,6 +1,6 @@
 # AI 協作開發實戰手冊（AI Development Playbook）
 
-> **可重用的 AI 工程協作流程（A reusable AI engineering workflow），用於 ChatGPT、Codex 與 GitHub。**
+> **GitHub-native AI 工程治理與資訊完整性控制平面（governance and information-integrity control plane），用於 ChatGPT、Codex 與其他 AI coding workflows。**
 >
 > Use GitHub as durable project memory and source of truth, ChatGPT for reasoning and bounded ephemeral execution, and Codex／coding agents for authorized repository implementation — with explicit context, permission, validation, evidence and cost controls.
 >
@@ -85,6 +85,7 @@ ChatGPT GitHub Snapshot Mode：可要求具備 GitHub repository read capability
 - **代理治理（Agent governance）**：把持久化（persistence）、寫入（write）、執行（execution）、預設載入（default-load）的**權威邊界（authority）**分開，不因「AI 看得到」就推導成「AI 可以改／可以做」。
 - **儲存庫記憶（Repository memory）**：以 GitHub **目前權威狀態（current canonical state）**保存可追溯專案記憶，避免只依賴舊聊天室或模型 memory。
 - **任務路由（Task routing）**：從 `CHAT_INIT.md` 進入，依 task 直達最低必要**權威主責（canonical owner）／章節（section）**。
+- **外部工作流互通（Workflow interoperability）**：可與 OpenSpec、GitHub Spec Kit、Superpowers、GSA-TTS Agentic Coding Playbook 等外部 spec／skills／governance 系統共存，並保留 Playbook 的 authority、loading、permission、evidence 與 completion 邊界，而不是重做對方的 workflow。
 - **驗證與證據（Validation & evidence）**：區分**確定性檢查器（deterministic checker）**、**行為評估（behavioral evaluation）**、執行環境（runtime）／硬體（hardware）／正式環境（production）證據，以及**完成狀態回讀（completion read-back）**。
 - **成本感知執行（Cost-aware execution）**：證據（Evidence）→ 上下文（Context）→ 模型（Model）→ 推理（Reasoning）→ 代理（Agent）→ 驗證（Validation），只有證據顯示不足時才逐級擴張。
 - **暫態運算（Ephemeral compute）**：當既有**確定性工作負載（deterministic workload）**值得執行時，ChatGPT 可在受控**沙盒（sandbox）**進行**有界運算（bounded computation）**，但不因此取得 GitHub 寫入權。
@@ -92,6 +93,8 @@ ChatGPT GitHub Snapshot Mode：可要求具備 GitHub repository read capability
 ## 這套 Playbook 的護城河（Core differentiators）
 
 這套實戰手冊不試圖取代**代理執行環境（agent runtime）**、**技能套件（Skills package）**、**規格框架（spec framework）**或**企業合規套件（enterprise compliance suite）**；它真正的差異化，是把 AI 長期使用真實工程 repository 時最容易混淆的**專案記憶（project memory）**、**上下文（Context）**、**權威（authority）**、**證據（evidence）**與**執行成本（execution cost）**放進同一套可路由、可驗證的協作架構。
+
+外部 workflow／skills／governance framework 可以繼續負責它們擅長的 spec lifecycle、execution methodology 或 compliance capability；Playbook 則負責讓這些系統接進真實 project repository 後，不把**存在、載入、授權、執行、證據與完成**混成同一件事。詳細 interoperability contract 見 [`INTEROPERABILITY.md`](INTEROPERABILITY.md)。
 
 ### 核心定位：面向 AI 的儲存庫資訊架構（Repository Information Architecture for AI）
 
@@ -101,9 +104,9 @@ ChatGPT GitHub Snapshot Mode：可要求具備 GitHub repository read capability
 
 一句話定位：
 
-> **GitHub 原生 AI 工程控制平面（GitHub-native AI Engineering Control Plane）+ 持久化專案記憶架構（Durable Project Memory Architecture）**
+> **GitHub 原生 AI 工程治理與資訊完整性控制平面（GitHub-native governance and information-integrity control plane）+ 持久化專案記憶架構（Durable Project Memory Architecture）**
 >
-> 讓 GitHub 成為 AI 可安全長期使用的**專案記憶（project memory）**與**工程控制平面（engineering control plane）**，並以最低充分上下文（minimum-sufficient Context）、明確權威（authority）、現實世界證據（real-world evidence）與執行成本（execution cost）控制，讓不同聊天室／不同代理（agents）都能重新建立正確的專案狀態。
+> 讓 GitHub 成為 AI 可安全長期使用的**專案記憶（project memory）**與**工程控制平面（engineering control plane）**，並以最低充分上下文（minimum-sufficient Context）、明確權威（authority）、現實世界證據（real-world evidence）與執行成本（execution cost）控制，讓不同聊天室／不同代理（agents）與不同 AI engineering workflows 都能重新建立正確的專案狀態。
 
 目前最核心的五個護城河：
 
@@ -138,6 +141,7 @@ ChatGPT GitHub Snapshot Mode：可要求具備 GitHub repository read capability
 | `PROJECT_BOOTSTRAP.md` | research-bootstrap mode、reuse-first research、stage-transition actor revalidation、research write allowlist、post-adoption context closure、implementation handoff |
 | `CAPABILITY_INDEX.md` | AI-facing whole-repository capability discovery 薄索引；用於 capability／gap／absence review |
 | `PLAYBOOK_INDEX.json` | routing-only machine manifest：stable capability ID / owner / section / implementation / adapter pointers |
+| `INTEROPERABILITY.md` | 外部 spec／change workflow、skills runtime、agent-governance framework 的 Playbook-side authority／loading／evidence mapping與 compatibility profiles |
 | `AI_CONTEXT.md` | AI-readable repository information architecture：Always-on / Hot / Cold / Evidence / Current / Historical、Progressive Routing、retrieval cost、routing metadata、write closure |
 | `INFORMATION_INTEGRITY.md` | semantic identity、derived synthesis、durable fact ownership、provenance、original-vs-retrospective evidence、snapshot/search-hit authority guards |
 | `CHATGPT_WORKFLOW.md` | ChatGPT／planning conversation authority：coordination admission、Task contract／最低必要澄清、AI-originated durable work、ChatGPT-side runtime execution、Execution Opportunity Scan、Codex Prompt mode／delivery、copy-ready contract、Codex result reconciliation、session compaction／rehydration、ChatGPT 回覆 presentation contract |

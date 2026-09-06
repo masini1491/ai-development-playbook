@@ -28,6 +28,7 @@
 | Stage-transition actor revalidation | `PROJECT_BOOTSTRAP.md` → `Stage-Transition Actor Revalidation Gate`；behavioral evidence：`DEBUG_VALIDATION.md` → `BEH-010`、`evals/runs/BEH-010-2026-09-07-formal-001.json` | **Contract + formal behavioral evidence 已存在**；actor choice依 current responsibility／mutation／capability／authority重新判定，不繼承上一 Stage。 |
 | Machine-readable routing discovery | `PLAYBOOK_INDEX.json`；drift/path/section check：`tools/playbook_check.py` + tests | **Routing-only JSON manifest 已存在**；只保存 stable capability ID / owner / section / adapter pointer，不保存 current state。 |
 | Thin activation adapters | `ACTIVATION_ADAPTERS.md` | **Manual thin activation adapter contract 已存在**；native marketplace installer／startup hook／generated per-tool command pack 尚未宣稱存在。 |
+| External workflow interoperability / compatibility profiles | `INTEROPERABILITY.md` | **Normative interoperability contract + bounded compatibility profiles 已存在**；只定義 Playbook-side authority／loading／evidence mapping，不宣稱 native installer、auto-detection或live cross-runtime conformance。 |
 | Repository information architecture / durable project memory | `AI_CONTEXT.md` | Always-on／Hot／Cold／Evidence／Current canonical／Historical、retrieval cost、Context Cohesion。 |
 | Repository-level absence / capability review | `AI_CONTEXT.md` → `Absence Claim Coverage Gate` | 已有 normative coverage contract；不要把 search miss 當 absence proof。 |
 | Evidence lineage / independence | `INFORMATION_INTEGRITY.md` → `Evidence Lineage / Independence Guard` | Source count 不等於 independent evidence count；fork／mirror／shared upstream lineage 不得膨脹 corroboration。 |
@@ -61,11 +62,13 @@ Capability review 至少區分下列層級；不是每項能力都必須同時�
 - `Behavioral Evaluation MVP contract and regression-selection metadata exist; fresh-session invocation / semantic grading remain external.`
 - `Session Compaction / Rehydration contract and handoff adapter exist; automatic compaction runtime not evidenced.`
 - `Machine-readable routing manifest exists; native per-runtime activation hooks/installers not evidenced.`
+- `External workflow interoperability contract exists; native integration and cross-runtime conformance remain separate maturity layers.`
 
 避免寫成：
 
 - `Behavioral evaluation does not exist.`
 - `Session compaction is missing.`
 - `Routing capability is absent.`
+- `External workflow integration is absent.`
 
 除非已完成與 claim scope 相稱的 bounded coverage，且 current canonical evidence確實支持 whole-repository absence。

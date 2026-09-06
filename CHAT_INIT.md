@@ -55,6 +55,8 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
   → `AI_CONTEXT.md`；依需要直達 `AI Context Surface Model`、`Independent Retrieval Intent Gate`、`Context Cohesion Gate`、`Progressive Routing／Direct-leaf Bypass`、`AI Readability / Retrieval Cost Change Gate`
 - Whole-repository capability discovery／repository-level absence claim
   → 先 `CAPABILITY_INDEX.md`；必要時 `PLAYBOOK_INDEX.json` 做 machine discovery，再讀 `AI_CONTEXT.md` → `Absence Claim Coverage Gate`
+- External spec／change workflow、skills runtime、agent-governance framework integration／compatibility／authority mapping
+  → `INTEROPERABILITY.md`；只讀 Generic Interoperability Contract 與 task-relevant Compatibility Profile；version-specific upstream behavior 仍回到外部系統 current canonical documentation
 - Semantic identity／aggregate container／derived synthesis authority／durable confirmed fact ownership／provenance precision／evidence lineage independence／temporal and multi-clock semantics／negative observation or unknown／scope-qualified status propagation／private-to-public generalization／remote snapshot consistency／search-hit authority-currentness
   → `INFORMATION_INTEGRITY.md`；只讀對應 guard；evidence lifecycle 的其他規則仍由 `DEBUG_VALIDATION.md` 負責
 - Codex model／Reasoning／Context／Agent、execution mode、usage／cost、tool scheduling/output、Codex reporting
