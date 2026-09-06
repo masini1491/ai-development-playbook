@@ -22,6 +22,9 @@
 | Capability | Canonical owner / implementation pointer | Maturity / discovery note |
 | --- | --- | --- |
 | New-session bootstrap / task routing | `CHAT_INIT.md` | Minimal bootstrap、task router、direct-leaf bypass、cross-owner review trigger。 |
+| Research-bootstrap project mode / write boundary / handoff | `PROJECT_BOOTSTRAP.md` → `啟用條件（Activation Gate）`、`Research Write Allowlist`、`Exit / Handoff Gate` | Opt-in pre-implementation research mode；不擴張一般 implementation source write authority。 |
+| Reuse-first research / post-adoption context closure | `PROJECT_BOOTSTRAP.md` → `Reuse-First Research Gate`、`Post-Adoption Context Closure Gate` | Architecture freeze 前先做 bounded reuse discovery；採用後以 thin local integration contract 降低長期 upstream Context 成本。 |
+| Stage-transition actor revalidation | `PROJECT_BOOTSTRAP.md` → `Stage-Transition Actor Revalidation Gate`；behavioral evidence：`DEBUG_VALIDATION.md` → `BEH-010`、`evals/runs/BEH-010-2026-09-07-formal-001.json` | **Contract + formal behavioral evidence 已存在**；actor choice依 current responsibility／mutation／capability／authority重新判定，不繼承上一 Stage。 |
 | Machine-readable routing discovery | `PLAYBOOK_INDEX.json`；drift/path/section check：`tools/playbook_check.py` + tests | **Routing-only JSON manifest 已存在**；只保存 stable capability ID / owner / section / adapter pointer，不保存 current state。 |
 | Thin activation adapters | `ACTIVATION_ADAPTERS.md` | **Manual thin activation adapter contract 已存在**；native marketplace installer／startup hook／generated per-tool command pack 尚未宣稱存在。 |
 | Repository information architecture / durable project memory | `AI_CONTEXT.md` | Always-on／Hot／Cold／Evidence／Current canonical／Historical、retrieval cost、Context Cohesion。 |
