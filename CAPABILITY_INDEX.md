@@ -1,6 +1,6 @@
 # AI Capability Discovery Index
 
-> **Purpose**：這是給 AI／reviewer／human 做 whole-repository capability discovery 的**薄索引（thin discovery surface）**，用來降低「能力已存在，但因沒有讀到正確 canonical owner 而被誤判為缺少」的風險。
+> **Purpose**：這是給 AI／agent／automated reviewer 做 whole-repository capability discovery 的**薄索引（thin discovery surface）**，用來降低「能力已存在，但因沒有讀到正確 canonical owner 而被誤判為缺少」的風險。
 >
 > **Authority boundary**：本檔不是新的 policy／state／validation authority，不複製完整規則，也不證明某 capability 的 runtime maturity。每個 capability 的正式語意仍由下列 canonical owner／tool／test 決定。
 
