@@ -10,7 +10,8 @@
     "BEH-006",
     "BEH-007",
     "BEH-008",
-    "BEH-009"
+    "BEH-009",
+    "BEH-010"
   ],
   "change_classes": {
     "repository-authority": [
@@ -31,11 +32,16 @@
       "BEH-008"
     ],
     "session-compaction-rehydration": [
-      "BEH-009"
+      "BEH-009",
+      "BEH-010"
+    ],
+    "actor-admission-and-handoff": [
+      "BEH-010"
     ],
     "routing-or-information-architecture": [
       "BEH-008",
-      "BEH-009"
+      "BEH-009",
+      "BEH-010"
     ]
   }
 }
