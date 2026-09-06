@@ -4,6 +4,26 @@
 
 AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先讀 `README.md`**。`README.md` 主要服務人類 overview、分享與手冊總覽；只有需要了解整套手冊、routing 無法由本檔判定，或使用者明確要求時再讀。
 
+## Repository Read Acquisition / Recovery Gate
+
+當本次 task 需要讀取 remote repository 的 current canonical content，而首選 read path 不可用時，應以最低充分 access capability 漸進降級；**讀取工具失效不等於 canonical authority 可以退回 memory。**
+
+推薦順序：
+
+`repository-native connector → public canonical read（若 resource public）→ minimum user-supplied canonical section → REPOSITORY READ BLOCKED`
+
+一般原則：
+
+- 若目前已有可直接讀取指定 repository／branch／ref 的 connected repository-native connector，優先使用它；不要先要求 shell、Python runtime 或一般 HTTP client具備相同 network capability。
+- 若 connector 不可用，而目前產品／runtime 支援 Plugin／Connector discovery，可對使用者提供一次**非阻塞式** connect suggestion；不要等待連接完成才繼續其他合法 read-only fallback。
+- 對已確認 public repository，connector unavailable 後可立即嘗試官方 repository URL、raw content、public Web 或等價 canonical read-only surface；fallback 只改變 acquisition mechanism，不改變 source authority。
+- 若 public／connector 路徑都無法取得，而使用者可直接提供本次 decision 所需的 exact canonical file／section，可只要求最低必要內容；不要把「請貼完整 repository」當成預設 recovery path。
+- 若無法可靠建立 current canonical content，標記 `REPOSITORY READ BLOCKED`／等價 acquisition gap，並停在 evidence boundary；不得以舊聊天、模型 memory、未驗證 cache 或相似 repository 內容冒充 current authority。
+- 同一 session 已做過 connector suggestion 後，不應每次 repository read 都重複提示；只有使用者主動詢問、要求連接，或先前 blocked state material 改變時才再次處理。
+- Read acquisition capability、runtime network capability、credential capability、repository write authority 與 task authorization 彼此獨立；任何 fallback 都不得藉機擴張 mutation scope。
+
+核心原則：**Fail over the read mechanism, not the authority. Recover with the lowest-sufficient canonical path; if current canonical state仍不可得，就明確 fail closed。**
+
 ## 啟動順序
 
 新聊天室處理工程專案時：
