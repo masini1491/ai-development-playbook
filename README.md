@@ -16,9 +16,11 @@
 
 本儲存庫只保存**跨專案共通方法**，不保存任何特定產品的 GPIO、憑證、私密協定、客戶資料或其他專案機密。
 
-> **README 的責任是人類導向總覽（human-facing overview）+ 儲存庫路由器（repository router）。** 詳細**規範契約（normative contract）**由下方對應主題文件作為主要**權威來源（authority）**；AI／agent 的新聊天室最小**啟動引導（bootstrap）**直接使用 [`CHAT_INIT.md`](CHAT_INIT.md)，不要把 README 當成必經中繼站或第二份完整規則集。
+> **README 是本 repository 唯一以人類閱讀為主要設計目的的 primary surface。** 一般使用者只需要閱讀 README，就能了解這套手冊的定位、導入方式、使用方法與主要能力；其餘 canonical Markdown、indexes、adapters、evals 與治理文件主要供 AI／agent 做 routing、authority resolution、execution、validation 與 durable project memory 使用。
 >
-> **維護本 Playbook repository 本身時，先讀 [`AGENTS.md`](AGENTS.md)。** 本 repository 的 maintainer ownership、ChatGPT direct-write exception、Codex read-only boundary、validator execution contract 與 direct-write integrity 都由該檔案管理，不要把一般 product project 的 ChatGPT／Codex 分工反向套用到本手冊自身。
+> 其他文件仍保持可被人類檢查與維護，但不以「從頭讀完」的教學式閱讀流程為主要最佳化目標。詳細**規範契約（normative contract）**仍由各 canonical owner 負責；README 只做**人類導向總覽（human-facing overview）+ 儲存庫路由器（repository router）**，不成為第二份完整規則集。
+>
+> **維護本 Playbook repository 本身時，AI 先讀 [`AGENTS.md`](AGENTS.md)。** 本 repository 的 maintainer ownership、ChatGPT direct-write exception、Codex read-only boundary、validator execution contract、audience/surface contract 與 direct-write integrity 都由該檔案管理，不要把一般 product project 的 ChatGPT／Codex 分工反向套用到本手冊自身。
 
 ## 30 秒開始使用
 
@@ -127,15 +129,17 @@ ChatGPT GitHub Snapshot Mode：可要求具備 GitHub repository read capability
 
 ## 文件地圖
 
+人類一般不需要依序閱讀下列文件；這張表的用途是讓你知道「AI 會去哪裡讀什麼」。
+
 | 文件 | 用途 |
 |---|---|
-| `AGENTS.md` | **本 Playbook repository 自身的 maintainer authority**：ChatGPT／Codex ownership、direct-write／execution exception、validator contract、direct-write integrity |
-| `CHAT_INIT.md` | 新聊天室最小 bootstrap + task router |
+| `AGENTS.md` | **本 Playbook repository 自身的 AI maintainer authority**：ChatGPT／Codex ownership、audience/surface contract、direct-write／execution exception、validator contract、direct-write integrity |
+| `CHAT_INIT.md` | AI 新聊天室最小 bootstrap + task router + repository read recovery |
 | `PROJECT_BOOTSTRAP.md` | research-bootstrap mode、reuse-first research、stage-transition actor revalidation、research write allowlist、post-adoption context closure、implementation handoff |
-| `CAPABILITY_INDEX.md` | whole-repository capability discovery 的 human-readable 薄索引；用於 capability／gap／absence review |
+| `CAPABILITY_INDEX.md` | AI-facing whole-repository capability discovery 薄索引；用於 capability／gap／absence review |
 | `PLAYBOOK_INDEX.json` | routing-only machine manifest：stable capability ID / owner / section / implementation / adapter pointers |
 | `AI_CONTEXT.md` | AI-readable repository information architecture：Always-on / Hot / Cold / Evidence / Current / Historical、Progressive Routing、retrieval cost、routing metadata、write closure |
-| `INFORMATION_INTEGRITY.md` | semantic identity、derived synthesis、durable fact ownership、provenance、snapshot/search-hit authority guards |
+| `INFORMATION_INTEGRITY.md` | semantic identity、derived synthesis、durable fact ownership、provenance、original-vs-retrospective evidence、snapshot/search-hit authority guards |
 | `CHATGPT_WORKFLOW.md` | ChatGPT／planning conversation authority：coordination admission、Task contract／最低必要澄清、AI-originated durable work、ChatGPT-side runtime execution、Execution Opportunity Scan、Codex Prompt mode／delivery、copy-ready contract、Codex result reconciliation、session compaction／rehydration、ChatGPT 回覆 presentation contract |
 | `CODEX_EXECUTION.md` | Codex／coding agent execution authority：Model / Reasoning / Context / Agent、execution mode、cost / usage、tool scheduling/output、escalation、Codex reporting |
 | `REPOSITORY_EXECUTION.md` | Git / repository identity、permission、ChatGPT coordination write allowlist、Codex implementation write boundary、remote write/read-back、repository-facing documentation integrity |
@@ -146,11 +150,17 @@ ChatGPT GitHub Snapshot Mode：可要求具備 GitHub repository read capability
 | `TOOLCHAIN.md` | local toolchain / runtime / PowerShell contract |
 | `examples/minimal-project/AGENTS.md` | 最小 project adoption 範例 |
 
-建議讀取順序：
+### 人類閱讀路徑
 
-1. 新聊天室先讀 `CHAT_INIT.md`；若是在維護本 Playbook repository 本身，先讀本 repo 的 `AGENTS.md`。
-2. 依 `CHAT_INIT.md` 先確認目標 repository，並讀該 project 最新 `AGENTS.md`／governance、current Hot coordination surface（若採用）與本次 task 直接相關的正式 source of truth。
-3. 再依 task 類型只讀真正參與本次 decision／execution／validation 的 Playbook owner／section；whole-repository capability／gap／absence review則先用 `CAPABILITY_INDEX.md`／`PLAYBOOK_INDEX.json` 做 bounded discovery。
+`README → 理解定位／導入方式 → 把 thin bootstrap 放進目標 project AGENTS.md → 交給 AI／agent`
+
+一般使用不要求人類繼續閱讀其餘 canonical owner；只有你要維護手冊、稽核規則或深入理解某個機制時才需要進一步打開對應文件。
+
+### AI／Agent 實際讀取路徑
+
+1. 實際 project session：`Project AGENTS.md → resolve Playbook baseline → CHAT_INIT.md → project governance/current truth → minimum-sufficient canonical owner`。
+2. 維護本 Playbook repository：`Playbook AGENTS.md → task-relevant canonical owner`；不先把 README 當 AI bootstrap。
+3. Whole-repository capability／gap／absence review：`CAPABILITY_INDEX.md`／`PLAYBOOK_INDEX.json` 做 bounded discovery，再由 canonical owner確認。
 
 ## 與實際專案的關係
 
