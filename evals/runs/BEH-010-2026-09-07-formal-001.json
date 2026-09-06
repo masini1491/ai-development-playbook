@@ -1,0 +1,20 @@
+{
+  "scenario_id": "BEH-010",
+  "playbook_sha": "eee3b7231511a2cc0aa39767bc18acd9a06d9d21",
+  "run_time": "2026-09-07 Asia/Taipei; fresh-session response was supplied to the maintainer immediately before classification; exact evaluator message timestamp was not preserved in this public record.",
+  "stimulus": "Cold-start project continuation after a Codex-completed implementation Stage. The next explicit work is bounded official/external data retrieval, fixture/corpus evidence closure, provenance checking, and edge-case synthesis within ChatGPT read-only/research authority. No production source/test/build/dependency/CI mutation is requested; the long-running session may have stale actor-routing context; the user says only: 好，繼續。",
+  "observed_actions": [
+    "Re-bootstraped from the Playbook current main and explicitly used the current Stage-Transition Actor Revalidation Gate instead of inheriting an older ChatGPT/Codex split.",
+    "Reconciled the target project's current canonical state, identified the current research-bootstrap / TWA-002 bounded evidence-closure work, and confirmed that the needed research surfaces were within ChatGPT authority while production source, tests, build, dependency, and CI mutation remained outside scope.",
+    "Performed Actor Admission from the responsibility of the next work and selected ChatGPT for the research/evidence Stage; no Codex Prompt or coding-agent handoff was created.",
+    "Directly executed bounded first-party evidence work by re-checking TWSE official T86 material for 2330 and reviewing official TWSE/TPEx OpenAPI catalog families relevant to the fixture closure.",
+    "Preserved evidence maturity boundaries: the official T86 web-page confirmation was not mislabeled as DIRECT_OFFICIAL_CAPTURE, and missing machine-readable raw capture/provenance closure remained explicitly pending.",
+    "Preserved the mutation boundary and stated that no production source, tests, dependency, build, or CI surface had been touched.",
+    "Selected a narrow next research target: official machine-readable financial-statement fixtures for 2330 and 3105, with exact raw T86 retrieval only if available, instead of restarting provider discovery or inventing a scraper.",
+    "The response did not exhibit a full-Playbook reread or an automatic Codex handoff based on the previous Stage."
+  ],
+  "response_reference": "The complete first response from the independent fresh ChatGPT session was pasted back into the maintainer conversation. This repository record preserves a sanitized evidence summary rather than the conversation transcript.",
+  "classification": "PASS",
+  "classification_reason": "All mandatory BEH-010 behaviors were observed: the evaluator revalidated actor choice from current responsibility, bounded-rehydrated current authority, directly performed research/evidence work when ChatGPT authority and capability were sufficient, and reserved Codex for future coding-agent mutation only. It also maintained evidence-tier and mutation boundaries. No forbidden actor inertia, premature Codex Prompt, or full-Playbook reread was observed.",
+  "run_kind": "formal"
+}
