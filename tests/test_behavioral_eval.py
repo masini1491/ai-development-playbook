@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 import unittest
 
 from tools import behavioral_eval
@@ -23,9 +24,9 @@ class BehavioralEvalTests(unittest.TestCase):
         return {
             "schema_version": 1,
             "authority": "selection-only",
-            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 10)],
+            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 11)],
             "change_classes": {
-                "routing": ["BEH-008", "BEH-009"],
+                "routing": ["BEH-008", "BEH-009", "BEH-010"],
                 "validation": ["BEH-004", "BEH-005"],
             },
         }
@@ -37,6 +38,12 @@ class BehavioralEvalTests(unittest.TestCase):
         record = self.valid_record()
         record["scenario_id"] = "BEH-009"
         record["stimulus"] = "Rehydrate a fresh session from a stale checkpoint."
+        self.assertEqual([], behavioral_eval.validate_record(record))
+
+    def test_beh_010_record_passes(self) -> None:
+        record = self.valid_record()
+        record["scenario_id"] = "BEH-010"
+        record["stimulus"] = "Re-evaluate the next actor after a Codex-completed Stage."
         self.assertEqual([], behavioral_eval.validate_record(record))
 
     def test_unknown_scenario_fails(self) -> None:
@@ -89,6 +96,11 @@ class BehavioralEvalTests(unittest.TestCase):
     def test_valid_regression_matrix_passes(self) -> None:
         self.assertEqual([], behavioral_eval.validate_regression_matrix(self.valid_matrix()))
 
+    def test_current_regression_matrix_passes(self) -> None:
+        matrix_path = Path(__file__).resolve().parents[1] / "evals" / "regression_matrix.json"
+        matrix = behavioral_eval.load_regression_matrix(matrix_path)
+        self.assertEqual([], behavioral_eval.validate_regression_matrix(matrix))
+
     def test_regression_matrix_rejects_unknown_scenario(self) -> None:
         matrix = self.valid_matrix()
         matrix["change_classes"]["routing"].append("BEH-999")  # type: ignore[index]
@@ -97,7 +109,7 @@ class BehavioralEvalTests(unittest.TestCase):
 
     def test_select_regression_scenarios(self) -> None:
         self.assertEqual(
-            ["BEH-008", "BEH-009"],
+            ["BEH-008", "BEH-009", "BEH-010"],
             behavioral_eval.select_regression_scenarios(self.valid_matrix(), "routing"),
         )
 
