@@ -6,9 +6,9 @@
 >
 > 以 GitHub 作為**持久化專案記憶（durable project memory）**與**單一事實來源（source of truth）**，由 ChatGPT 負責推理與**有界暫態執行（bounded ephemeral execution）**，Codex／**程式開發代理（coding agents）**負責經授權的儲存庫實作（repository implementation），並明確控制**上下文（Context）**、權限（permission）、驗證（validation）、證據（evidence）與成本（cost）。
 >
-> **主要文件語言（Primary documentation language）：繁體中文（Traditional Chinese）。**
+> **README 閱讀語言（README language）：以高品質繁體中文為主，必要時搭配英文術語或雙語表達。**
 >
-> **術語呈現（Terminology）**：可自然翻譯的技術概念優先採「繁體中文（English）」；產品名、檔名、程式識別符、版本、固定 key／status 與需要精確比對的原文字串保留原文。
+> **術語呈現（Terminology）**：README 以人類閱讀清楚為優先；產品名、檔名、程式識別符、版本、固定 key／status 與需要精確比對的原文字串保留原文。其餘 AI-facing canonical surfaces 不受「繁體中文優先」限制，依 `AGENTS.md` 的 Language policy 以 semantic precision、stable terminology 與 retrieval reliability 為優先。
 
 一套可重用的 **ChatGPT + Codex + GitHub** 協作開發方法論，目標是用最低充分成本完成可驗證、可追溯、可安全接續的工程工作。
 
