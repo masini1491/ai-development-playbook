@@ -428,6 +428,25 @@ ChatGPT 能產生某種語言、command 或 toolchain 的內容，**不等於目
 
 Python、Node.js、Shell/Bash、Java、Go、Rust、C/C++ compiler、Git、SQLite 或其他工具都只是可能的 execution capability；**不得把「ChatGPT 可寫這種程式」當成 runtime 已安裝的證據，也不得把某個訂閱方案名稱當成 runtime availability contract。** 若必要 capability 不存在，標記 execution unavailable／依 `DEBUG_VALIDATION.md` 分類真正 failure/gate，不猜測 PASS。
 
+### Runtime Asset Reuse Fast Path
+
+如果目前 execution runtime 中已經**實際存在**先前驗證過、仍可執行、來源／版本／identity 足以辨識的 deterministic tool、script、binary 或 materialized runtime asset，可以先做一次低成本 reuse probe；probe 足以證明目前 asset仍符合本次 execution contract時，直接重用，不為形式重新 fetch repository、materialize、install 或重跑完整 bootstrap／smoke test。
+
+推薦流程：
+
+`Verified runtime asset present → cheap identity / executability probe → reuse if sufficient → otherwise canonical reacquisition / normal capability path`
+
+一般原則：
+
+- Conversation／checkpoint 記得「之前載入過」本身不是 runtime evidence；必須在目前 execution environment中實際確認 asset存在且可用。
+- Reuse probe 只檢查會改變本次 execution correctness的最低充分項目，例如 executable存在、版本／hash／source identity仍符合已知 contract、必要 dependency/runtime未 material改變；不得為了 fast path又重跑完整 acquisition流程。
+- 使用者明確要求 latest/current HEAD、已有 evidence顯示 source/tool更新、dependency/runtime materially改變、asset identity無法可靠確認、probe失敗，或 correctness明確依賴 current canonical revision時，退出 fast path，重新取得 current canonical asset。
+- 若同一 validated asset可服務多次 independent execution，不要求每次都重新下載或 materialize；但 project正式 policy若要求 per-run immutable snapshot／fresh environment，服從該較高 contract。
+- **Execution asset reuse ≠ result / evidence reuse。** 可以重用 tool/script/binary/runtime asset，但新的 input、task identity、commit、fixture set 或 execution question若需要新的 result，就必須 fresh execution；不得把上一輪 PASS/output只因 executable沒變就冒充本輪 evidence。
+- Asset本身可重用，不代表 previous execution environment／network／credential／hardware state仍相同；這些只有在本次 correctness依賴時才重新 probe。
+
+核心原則：**Reuse the verified execution asset when its identity is still sufficient; never reuse a prior result as a substitute for a required fresh execution.**
+
 ### Canonical execution discipline
 
 - **Execution capability 與 retrieval/network capability 分開判斷。** `git clone`、connector、archive download 或 HTTP 失敗，不代表 local runtime 不可用，也不代表 source/validator 有錯。
