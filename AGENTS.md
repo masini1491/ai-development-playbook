@@ -56,9 +56,25 @@ Doctor v1 的 deterministic engine 只接受 filesystem root，但支援兩種**
 
 若某條規則只適用單一 repository，應留在該 repository 的 governance / architecture / coordination surface，而不是搬進本手冊。
 
+## Audience / Surface Contract
+
+`README.md` 是本 repository **唯一以人類閱讀為主要設計目的的 primary surface**。一般人類使用者應能只靠 README 理解本手冊的定位、導入方式、使用方法與主要能力；不要求依序閱讀其餘 canonical 文件才能開始使用。
+
+除 README 外，本 repository 的 canonical Markdown、routing index、adapter、eval、tooling contract 與治理文件主要是 **AI／agent-facing operational information surfaces**：用於 authority resolution、routing、execution、validation、evidence 與 durable project memory。它們仍應保持可被人類檢查與維護，但不以 tutorial-style human reading flow 作為主要最佳化目標。
+
+維護時：
+
+- 不得因「讓人更容易從頭讀完」就在 AI-facing canonical owner 重複 README 已有的介紹、教學或完整 policy；
+- human-friendly explanation、導入步驟、產品定位與分享語境優先收斂到 README；
+- AI-facing surface 優先最佳化 stable authority、bounded retrieval、exact routing、low duplication 與 machine／agent interpretability；
+- README 可以摘要 canonical capability，但不得成為第二份 normative authority；規則語意仍由對應 canonical owner 決定；
+- 人類可直接閱讀任何檔案，不代表該檔案因此成為 human-facing primary surface。
+
+核心原則：**Human enters through README; AI enters through project governance / `CHAT_INIT.md` and routed canonical owners. Human readability remains useful, but AI-facing operational surfaces are optimized first for reliable machine/agent retrieval and authority.**
+
 ## 文件責任與讀取紀律（Document ownership / reading discipline）
 
-`README.md` 是 **human-facing overview + repository router**：保存手冊定位、核心原則、文件路由與必要高層摘要；詳細 normative contract 由對應主題文件作為唯一主要 authority。
+`README.md` 是 **唯一 human-facing primary overview + repository router**：保存手冊定位、核心原則、導入方式、文件路由與必要高層摘要；詳細 normative contract 由對應主題文件作為唯一主要 authority。
 
 `CHAT_INIT.md` 是**新聊天室最小 bootstrap + task router**：AI 可直接從它進入，不必先讀 README；它只負責建立 repository / authority / minimal routing 起點，不複製完整 Git、coordination、Prompt、toolchain 或 validation policy。
 
@@ -70,7 +86,7 @@ Doctor v1 的 deterministic engine 只接受 filesystem root，但支援兩種**
 
 `REPOSITORY_EXECUTION.md`、`DEBUG_VALIDATION.md`、`RESEARCH_ARCHITECTURE.md` 等 shared topic 文件只保存真正跨 agent 共用的 repository、permission/write boundary、evidence、validation、architecture contract。
 
-讀者與 coding agent 不應預設完整掃描全部文件；先從 `CHAT_INIT.md` 進入，再依 task topic讀最低必要主題／section。Exact target 已明確時可 direct-leaf bypass，不為 routing ceremony 多讀中間層。
+AI／coding agent 不應預設完整掃描全部文件；先從 `CHAT_INIT.md` 進入，再依 task topic讀最低必要主題／section。Exact target 已明確時可 direct-leaf bypass，不為 routing ceremony 多讀中間層。
 
 ## 權威順序（Authority）
 
