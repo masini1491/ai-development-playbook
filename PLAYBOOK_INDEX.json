@@ -9,6 +9,7 @@
     {"id":"bootstrap.research-project-mode","owner":"PROJECT_BOOTSTRAP.md","section":"啟用條件","kind":"contract"},
     {"id":"bootstrap.research-write-boundary","owner":"PROJECT_BOOTSTRAP.md","section":"Research Write Allowlist","kind":"contract"},
     {"id":"bootstrap.research-handoff","owner":"PROJECT_BOOTSTRAP.md","section":"Exit / Handoff Gate","kind":"contract"},
+    {"id":"bootstrap.post-adoption-context-closure","owner":"PROJECT_BOOTSTRAP.md","section":"Post-Adoption Context Closure Gate","kind":"contract"},
     {"id":"discovery.capability-index","owner":"CAPABILITY_INDEX.md","kind":"routing"},
     {"id":"context.repository-memory","owner":"AI_CONTEXT.md","section":"AI Context Surface Model","kind":"contract"},
     {"id":"context.absence-claim-coverage","owner":"AI_CONTEXT.md","section":"Absence Claim Coverage Gate","kind":"contract"},
