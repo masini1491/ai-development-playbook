@@ -11,37 +11,73 @@
     "BEH-007",
     "BEH-008",
     "BEH-009",
-    "BEH-010"
+    "BEH-010",
+    "BEH-011",
+    "BEH-012",
+    "BEH-013",
+    "BEH-014"
   ],
   "change_classes": {
     "repository-authority": [
       "BEH-001",
       "BEH-006",
       "BEH-007",
-      "BEH-009"
+      "BEH-009",
+      "BEH-012",
+      "BEH-013",
+      "BEH-014"
     ],
     "coordination-admission": [
       "BEH-002",
-      "BEH-003"
+      "BEH-003",
+      "BEH-013"
     ],
     "runtime-and-validation-placement": [
       "BEH-004",
-      "BEH-005"
+      "BEH-005",
+      "BEH-014"
     ],
     "capability-discovery": [
-      "BEH-008"
+      "BEH-008",
+      "BEH-011",
+      "BEH-012"
     ],
     "session-compaction-rehydration": [
       "BEH-009",
       "BEH-010"
     ],
     "actor-admission-and-handoff": [
-      "BEH-010"
+      "BEH-010",
+      "BEH-013"
     ],
     "routing-or-information-architecture": [
       "BEH-008",
       "BEH-009",
-      "BEH-010"
+      "BEH-010",
+      "BEH-011",
+      "BEH-012",
+      "BEH-013",
+      "BEH-014"
+    ],
+    "information-integrity": [
+      "BEH-008",
+      "BEH-011",
+      "BEH-012",
+      "BEH-014"
+    ],
+    "external-workflow-interoperability": [
+      "BEH-013",
+      "BEH-014"
+    ],
+    "phase3-cold-start-core": [
+      "BEH-002",
+      "BEH-006",
+      "BEH-008",
+      "BEH-010",
+      "BEH-011",
+      "BEH-012",
+      "BEH-013",
+      "BEH-014"
     ]
   }
 }
