@@ -57,6 +57,26 @@ Evidence metadata 必須保存實際可證明的 precision，不得用格式完�
 
 核心原則：**Preserve evidence precision; verification does not propagate transitively across provenance fields.**
 
+## Original vs Retrospective Evidence Guard
+
+後續 evidence 可以改變**目前應相信的結論**，但不得改寫「較早 decision point 當時實際知道什麼、實際判斷什麼」。若一個 engineering record 需要跨時間比較、incident review、validation backtest、experiment evaluation、behavioral eval、architecture decision trace 或其他 hindsight-sensitive用途，應把 original state 與 retrospective analysis 分層保存。
+
+推薦最小模型：
+
+`Original premise / evidence / decision → later observation → retrospective analysis / supersession`
+
+一般原則：
+
+- 原始 hypothesis、task contract、decision rationale、validation expectation、fresh-session response、measurement interpretation或其他 time-bound judgment，一旦被用作後續比較基準，不應因知道結果後而靜默重寫成較接近後來事實的版本。
+- 新 production／hardware／benchmark／user-observed／external evidence 出現後，可以更新 current canonical truth、建立 supersession、追加 correction 或形成新的 decision；但要保留足以重建舊 decision point 的 original record／Git provenance。
+- retrospective root-cause、postmortem explanation、backtest、reclassification 或 hindsight synthesis 應明確標示其時間與來源，不得呈現成「原本就已知道／已預測／已驗證」。
+- correction 若只是 typo、轉錄錯誤或客觀 metadata repair，可以修改原 record，但應保留最低充分 correction provenance；若修改會改變原 decision semantics，優先使用新 revision／append／supersession，而不是覆寫歷史。
+- project 不必為每個普通 note 建立 append-only framework；只有原始判斷本身具有 audit、comparison、validation、experiment、incident或 future decision價值時才需要此 guard。
+
+這與 `DEBUG_VALIDATION.md` 的 evidence supersession互補：**supersession 決定現在什麼 evidence有效；本 guard 保存較早 decision point 當時究竟知道與判斷了什麼。**
+
+核心原則：**Later evidence may change current truth; it must not manufacture hindsight into the original record.**
+
 ## Snapshot Consistency Guard
 
 當 ChatGPT／agent 先從 remote canonical repository 取得多個檔案，再 materialize 成 ephemeral/local snapshot 交給 Doctor、validator、test harness 或其他 deterministic check 時，**同一次 validation run 的 repository inputs 必須對齊同一個 exact canonical revision**。
@@ -96,4 +116,4 @@ Repository search、全文搜尋、semantic search、code search、filename matc
 
 ## Boundary
 
-這些 guards 不要求所有 project 使用 global monotonic ID，也不規定 Tarot/Vault 類的 `reflective_only`、`waiting_for_reality` 等 domain lifecycle。跨專案只採用上面的 identity、authority、durable ownership、provenance precision、snapshot consistency 與 search-hit authority 原則。
+這些 guards 不要求所有 project 使用 global monotonic ID，也不規定 Tarot/Vault 類的 `reflective_only`、`waiting_for_reality` 等 domain lifecycle。跨專案只採用上面的 identity、authority、durable ownership、provenance precision、original-vs-retrospective evidence、snapshot consistency 與 search-hit authority 原則。
