@@ -72,6 +72,25 @@ Codex invention boundary: <layers Codex must not rebuild without new evidence>
 
 核心原則：**成熟能力先證明哪些可以 reuse / adapt，再設計我們真正缺的 gap；Codex 的工作邊界應由 gap 決定，而不是由空白畫布決定。**
 
+## Stage-Transition Actor Revalidation Gate
+
+在 `research-bootstrap` 或其後續 implementation lifecycle 中，**前一個 Stage 由 Codex 執行，不代表下一個 Stage 也應自動交給 Codex**。每當 current Stage 完成、task responsibility materially 改變、或下一步從 implementation 轉回 research / evidence / synthesis / fixture closure 時，ChatGPT 應重新做一次最低充分 actor admission，而不是沿用上一輪 actor inertia。
+
+推薦判斷：
+
+`Next work → classify responsibility / mutation need → re-read only the current actor-routing authority if stale or materially changed → choose lowest-sufficient authorized actor → execute / handoff`
+
+一般原則：
+
+- 若下一步主要是官方／外部資料 retrieval、bounded research、fixture / corpus 蒐集、provenance、comparison、schema / edge-case synthesis、read-only validation analysis，且 ChatGPT 目前 tool/runtime 與 project authority足以完成，**預設由 ChatGPT 直接處理**；不要只因上一 Stage 用過 Codex 就先產生 Codex Prompt。
+- 若下一步需要 production/application/firmware source mutation、executable tests、build/dependency/tooling、CI/release/deploy 或其他 current project governance 明確屬 coding-agent maintainer 的 artifact，再 handoff Codex。
+- Actor 判斷以**目前工作的 responsibility、required mutation surface、execution capability 與 project authority**為準，不以「之前是誰做的」或「project已進 implementation phase」單獨決定。
+- 長時間 project chat 若 current Playbook / project governance 在 session 開始後可能已演進，而且下一步 actor choice會改變成本或 authority，先 bounded rehydrate **actor-routing relevant sections**；不全文重讀 Playbook，也不把舊 conversation 的 actor分工當永久 current truth。
+- 若 current authority未改、task responsibility也沒有 material轉換，不為每個小步驟重跑完整 rehydration；這是 stage-transition gate，不是 per-message ceremony。
+- ChatGPT 能直接做某個 research/evidence工作，不代表取得 source implementation write authority；反之，Codex 是 authorized implementation maintainer，也不代表所有 non-implementation工作都必須透過 Codex。
+
+核心原則：**Actor choice is stage-local, not inherited. Re-evaluate at responsibility transitions; use the lowest-sufficient authorized actor.**
+
 ## Post-Adoption Context Closure Gate
 
 Reuse / Adapt 能降低初次 implementation cost，但若後續每個 Task 都重新讀大量 upstream source、examples、tests 與 internal architecture，節省的成本會被長期 Context 消耗追回來。因此，material upstream integration 在完成 gap implementation 與最低充分 validation 後，應建立**薄型 local integration contract**，把成熟 upstream internals 從 ordinary default Context 降為 condition-triggered detail。
@@ -156,7 +175,7 @@ Research 階段允許 ChatGPT 直接形成 durable project knowledge，因此要
 - project governance 將 `ChatGPT Project Mode` 切回一般 implementation mode或等價 contract，並收斂不再需要的 Research Write Allowlist；
 - 退出後 ChatGPT 不因曾在 bootstrap 期間可寫 architecture/research，就繼續推導對 source、tests 或一般 docs 的永久 write authority。
 
-若 implementation 已開始但後續又需要新研究，ChatGPT仍可 read/research；是否重新取得 research path direct-write 依 current project governance，不因歷史 mode 自動恢復。
+若 implementation 已開始但後續又需要新研究，ChatGPT仍可 read/research；是否重新取得 research path direct-write 依 current project governance，不因歷史 mode 自動恢復。每個這類 responsibility transition 仍應依 `Stage-Transition Actor Revalidation Gate` 重新判斷最低充分 actor，不因 implementation mode 已啟用就把 research/evidence work 自動交給 Codex。
 
 ## Cost / Workflow Rationale
 
@@ -164,9 +183,11 @@ Research 階段允許 ChatGPT 直接形成 durable project knowledge，因此要
 
 Reuse 的成本收益也不只看第一次少寫多少 code；若 adopted upstream 之後每個 Codex task 都被迫重讀大量 internals，長期 Context / reasoning cost 仍可能很高。完成 integration 後應把 ordinary work 收斂到 thin local contract + project-owned gap，只有 trigger 成立才展開 upstream internals。
 
+同樣地，actor inertia 也會增加成本：一個前一 Stage 使用 Codex 的長期 project chat，如果後續 research / fixture / evidence closure仍機械式建立 Codex handoff，就會重複載入不必要的 implementation Context。Stage transition 時重新選最低充分 actor，是 resource control的一部分。
+
 核心分工：
 
 - **Research/bootstrap phase**：ChatGPT = research + synthesis + bounded canonical documentation maintainer；
 - **Implementation phase**：ChatGPT = planning / research / review；Codex／coding agent = authorized repository implementation maintainer。
 
-核心原則：**Write authority follows project phase and explicit governance；研究階段減少無意義 handoff，實作階段恢復清楚 actor boundary；Reuse 之後再收斂 default Context，才真正降低 end-to-end AI development cost。**
+核心原則：**Write authority follows project phase and explicit governance；研究階段減少無意義 handoff，實作階段恢復清楚 actor boundary；Reuse 之後再收斂 default Context，且每次 responsibility transition重新選最低充分 actor，才真正降低 end-to-end AI development cost。**
