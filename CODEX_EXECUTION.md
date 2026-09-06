@@ -163,6 +163,7 @@ Condition-triggered 原則：
 
 - 不把特定方案名稱、固定 window 數字、model credit rate 或 promotional pricing 寫成穩定 baseline；volatile product facts 以當下官方 Rate Card / Help Center / product UI 為準。
 - 若官方 authority 顯示同一 account / plan 的多個 supported agentic features 可能共享 included usage allowance、usage-credit balance 或其他 resource pool，評估 Codex usage／credits 消耗時先確認 **resource pool scope 與同帳號 concurrent / recent agentic workloads**；不得把 quota／balance 變化預設全部歸因於目前 Codex thread，也不得在 shared-consumption evidence 尚未排除前直接推論 Codex token efficiency、model multiplier 或 client regression。Supported feature set、共享方式與 account-specific applicability 以最新官方 authority / Usage UI 為準，不把功能清單寫死。
+- 使用高成本／受限模型前，除了確認 account／plan 的 shared resource pool，也確認是否存在 **model-specific allowance／entitlement scope**；不得從「總 Work／Codex allowance 尚有剩餘」推定目前模型仍可使用相同比例的 included allowance。Model-specific eligibility、included usage 與追加 credits 條件屬 volatile product facts，以當下官方 authority／Usage UI 為準，不把方案或固定數字寫死。
 - 對 reset、credit、quota restoration 等 usage-resource action，在建議使用或實際消耗前先確認 resource semantics：additive、replacement、banked、pay-as-you-go 或其他當下官方定義。不得把 reset 一律視為額外額度，也不得在 semantics 未確認時假設 unused allowance 會保留。
 - 若存在短期 window，大型工作避免把低價值 discovery、重複 repo-wide exploration、無效 retry、非必要 full regression、verbose tool output 與高成本 reasoning 全集中在同一 window。
 - 維持 `最低充分 Evidence → 最低充分 Model/Reasoning/Context → Targeted Validation`；不為保留短期額度降低已證明必要的 reasoning 或跳過 required validation。
