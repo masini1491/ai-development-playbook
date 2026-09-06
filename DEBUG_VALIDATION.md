@@ -180,7 +180,7 @@ Behavioral evaluation 用來驗證：**AI／Agent 已讀到規則後，實際 de
 
 - **Independent enforcement need**：是否需要在任何單一 ChatGPT／Agent／human session之外強制阻擋錯誤；
 - **Mutation paths**：是否有 contributor、automation、API或其他流程可能繞過目前主要維護 workflow直接修改 repository；
-- **Collaboration / release risk**：多人協作、external PR、protected merge/release/security gate通常更需要獨立 verifier；
+- **Collaboration / release risk**：多人協作、external PR、protected merge、release/security gate通常更需要獨立 verifier；
 - **Execution reproducibility**：候選 execution path 是否能穩定取得 current canonical input、符合 contract 的 runtime/toolchain與必要 dependency；
 - **Operational cost**：always-on CI 的 runner usage、setup/dependency latency、workflow maintenance、quota與 failure notification/email noise是否高於實際 enforcement收益；
 - **Failure actionability**：自動紅燈是否在正確 boundary阻擋 material risk，還是大量 intermediate push只產生可預期、低價值的 failure noise。
