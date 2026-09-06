@@ -7,7 +7,9 @@
   "capabilities": [
     {"id":"bootstrap.task-routing","owner":"CHAT_INIT.md","section":"啟動順序","kind":"contract"},
     {"id":"bootstrap.research-project-mode","owner":"PROJECT_BOOTSTRAP.md","section":"啟用條件","kind":"contract"},
+    {"id":"bootstrap.reuse-first-research","owner":"PROJECT_BOOTSTRAP.md","section":"Reuse-First Research Gate","kind":"contract"},
     {"id":"bootstrap.research-write-boundary","owner":"PROJECT_BOOTSTRAP.md","section":"Research Write Allowlist","kind":"contract"},
+    {"id":"bootstrap.stage-transition-actor-revalidation","owner":"PROJECT_BOOTSTRAP.md","section":"Stage-Transition Actor Revalidation Gate","kind":"contract"},
     {"id":"bootstrap.research-handoff","owner":"PROJECT_BOOTSTRAP.md","section":"Exit / Handoff Gate","kind":"contract"},
     {"id":"bootstrap.post-adoption-context-closure","owner":"PROJECT_BOOTSTRAP.md","section":"Post-Adoption Context Closure Gate","kind":"contract"},
     {"id":"discovery.capability-index","owner":"CAPABILITY_INDEX.md","kind":"routing"},
