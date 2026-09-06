@@ -8,9 +8,9 @@
 
 一般專案聊天室優先遵循：
 
-`Current repository / authority → Lowest-sufficient evidence → Persistence / coordination admission decision → Prompt mode selection → Copy-ready delivery → Codex execution → Canonical result reconciliation → Next decision`
+`Current repository / authority → Lowest-sufficient evidence → Persistence / coordination admission decision → Actor admission → Prompt mode only if handoff is needed → Execution / handoff → Canonical result reconciliation → Next decision`
 
-ChatGPT 的角色是建立正確 task contract、選擇最低充分 execution handoff、維護 current coordination scope，並用 canonical evidence 接受或拒絕 completion claim；不是把既有 repository authority 重新抄成第二份 specification，也不是把每個「看起來有道理」的改善建議自動變成專案義務。
+ChatGPT 的角色是建立正確 task contract、選擇最低充分 authorized actor / execution handoff、維護 current coordination scope，並用 canonical evidence 接受或拒絕 completion claim；不是把既有 repository authority 重新抄成第二份 specification，也不是把每個「看起來有道理」的改善建議自動變成專案義務。
 
 ## ChatGPT 回覆語言與時間戳（Reply language / timestamp）
 
@@ -276,11 +276,32 @@ Compaction 是 conversation-level state management，**不自動產生任何 dur
 
 若 checkpoint與 GitHub current state、project governance或新 evidence不一致，以較高 authority/current canonical state為準，更新 working context；不得為了維持舊 summary的一致性而覆蓋 current truth。
 
-核心原則：**Compaction 的目的是刪掉不再需要的 Context，同時保存足以安全重建 current task state 的最小 checkpoint；它不是把整個聊天永久化，也不是建立新的 authority。**
+長期 project chat 即使沒有發生 compaction，也不得把 session 開始時載入的 actor 分工視為永久 current。當 **Stage 完成、task responsibility materially 改變、準備建立 Codex handoff，或 current Playbook / project governance 可能已演進且會影響 actor choice** 時，做一次 bounded actor-routing rehydration：只重讀會改變本次 actor / authority / capability decision 的 current sections，不全文重載 Playbook。若 current authority與 responsibility均未 material 改變，則沿用已確認 contract，避免 per-message rehydration成本。
+
+核心原則：**Compaction 的目的是刪掉不再需要的 Context，同時保存足以安全重建 current task state 的最小 checkpoint；它不是把整個聊天永久化，也不是建立新的 authority。長期聊天室在 responsibility transition仍需 bounded rehydrate current actor routing，不能靠舊分工慣性決定下一個 executor。**
+
+## Actor Admission / Handoff Gate
+
+**Codex handoff 不是 project workflow 的預設下一步。** ChatGPT 在準備產生 Codex Prompt、或上一個 Stage 完成準備決定 next action 時，先判斷目前工作真正需要哪個 actor。
+
+推薦流程：
+
+`Next work → responsibility / required mutation → current authority + capability → lowest-sufficient authorized actor → ChatGPT direct work | Codex handoff | STOP`
+
+一般原則：
+
+- 官方／外部資料 retrieval、bounded research、fixture / corpus 蒐集、provenance、comparison、schema / edge-case synthesis、read-only review，以及目前 session可安全完成的 deterministic evidence processing，若不需要 Codex-owned repository mutation，優先由 ChatGPT直接完成。
+- Production/application/firmware source、executable tests、build/dependency/tooling、CI/release/deploy或其他 project governance指定給 coding agent的 mutation，才進 Codex handoff。
+- **Previous actor ≠ next actor。** 上一 Stage由 Codex完成，只代表上一 Stage需要Codex；不能用它作下一 Stage的 actor evidence。
+- Project已進 implementation phase也不代表所有後續 research / evidence / fixture工作都屬 Codex；phase決定 write boundary的一部分，但 actor仍依 current responsibility判斷。
+- ChatGPT capability也不是無條件 direct-execution authority。需要 runtime/tool時仍依 `ChatGPT-side Runtime Execution` 的 capability gate；需要 repository mutation時仍依 `REPOSITORY_EXECUTION.md` 的 current write boundary。
+- 若 actor choice受 stale session context影響，先依本檔 `Session Compaction / Rehydration Contract` 做 bounded actor-routing rehydration，再決定；不得要求使用者用「不用 Codex 就能做？」之類提醒來解除 handoff inertia。
+
+核心原則：**Choose the actor from the current work, not from the previous Stage. Handoff is a decision, not a habit.**
 
 ## Codex Prompt 模式選擇（Prompt Mode Selection）
 
-ChatGPT產生 Codex Prompt前，選最低充分 mode：
+只有 `Actor Admission / Handoff Gate` 已判定目前工作確實需要 Codex handoff，才選最低充分 Prompt mode：
 
 `TASKS Short-launch → Direct Short Prompt → Standalone Full Prompt`
 
@@ -430,10 +451,12 @@ Deterministic validator／test 是否應由 ChatGPT-side、CI／independent gate
 
 Codex report是 claim，不是 GitHub authority；local-only change不能被 remote read-back升格；mismatch時 STOP並依 canonical current state重建；remote evidence不可用時標記 `REMOTE COMPLETION EVIDENCE UNAVAILABLE`。
 
+完成 reconciliation 後，**不要直接因「Codex剛完成」就產生下一個 Codex Prompt**；先回到 `Actor Admission / Handoff Gate`，依下一項工作的 current responsibility重新選 actor。
+
 ## Scope expansion 與下一步
 
 Analysis/review/Codex result發現 out-of-scope問題時，先依本檔 **AI-originated Durable Work Admission Gate / Follow-up Gate** 與 `REPOSITORY_EXECUTION.md` coordination lifecycle判斷：只留 observation、Cold Candidate/Committed，或真正 Hot admission；不得因「順便看到」就擴張目前 Stage或製造新的 durable obligation。
 
 發現另一 repository也需要同步時，只做 read-only analysis/handoff；write-target switch仍依 `REPOSITORY_EXECUTION.md`。
 
-核心原則：**ChatGPT 負責把真正值得持久化的問題變成最低充分、可追蹤、可執行的 handoff；不是把所有合理建議永久化。Codex 負責在授權 Stage 內執行，GitHub／canonical evidence 負責證明結果。**
+核心原則：**ChatGPT 負責把真正值得持久化的問題變成最低充分、可追蹤、可執行的工作，並在每個 responsibility transition重新選最低充分 authorized actor；Codex只負責需要其 implementation authority的 Stage。GitHub／canonical evidence 負責證明結果。**
