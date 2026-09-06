@@ -1,10 +1,10 @@
 # Information Integrity Guards
 
-> **Authority**：跨專案 semantic identity、derived artifact authority、durable confirmed fact ownership、evidence provenance precision、remote snapshot consistency、search-result authority/currentness。
+> **Authority**：跨專案 semantic identity、derived artifact authority、durable confirmed fact ownership、evidence provenance precision／lineage independence／temporal semantics／negative observation semantics、scope-qualified status propagation、private-to-public generalization、remote snapshot consistency、search-result authority/currentness。
 >
-> **Read when**：目前工作涉及 aggregate/bundle identity、跨來源 synthesis、evidence metadata、provenance、remote canonical snapshot validation、repository search hit authority，或把 confirmed fact 保存到 report／analysis／eval 等 derived artifact。
+> **Read when**：目前工作涉及 aggregate/bundle identity、跨來源 synthesis、evidence metadata/provenance/independence、時間或多 clock 語意、negative observation／unknown、status scope、private evidence 公開泛化、remote canonical snapshot validation、repository search hit authority，或把 confirmed fact 保存到 report／analysis／eval 等 derived artifact。
 >
-> 本檔只保存跨專案 integrity contract；domain-specific ID 格式、lifecycle 名稱與資料 schema 仍由各 project owner 決定。
+> 本檔只保存跨專案 integrity contract；domain-specific ID 格式、lifecycle 名稱、資料 schema、validation ladder 與公開／機密分類細節仍由各 project owner 決定。
 
 ## Semantic Identity / Container Guard
 
@@ -26,7 +26,8 @@ Physical container 不等於 semantic identity。
 - derived synthesis 可以形成新的分析結論，但不得冒充 underlying source fact／execution evidence／task authorization；
 - 沒有新增 observation、execution、draw/cast、measurement 或其他 source event 時，不得只因產生一份新總表就創造新的 source-fact identity；
 - synthesis 若需要跨來源比較，應保留足以回到各 source identity 的 provenance／pointer；
-- 若 synthesis 與 source authority 衝突，先回 canonical source reconciliation，不得讓較方便閱讀的 aggregate view 靜默覆蓋 source truth。
+- 若 synthesis 與 source authority 衝突，先回 canonical source reconciliation，不得讓較方便閱讀的 aggregate view 靜默覆蓋 source truth；
+- derived mirror／showcase／generated repository 若 freshness 會影響使用，可記錄它代表的 source revision／baseline；但 baseline pointer 只說明 derivation scope，不會把 derived artifact 升格成 source authority，也不會擴張原 source 的 publication／privacy boundary。
 
 核心原則：**Derived synthesis may add interpretation; it does not inherit or manufacture source authority.**
 
@@ -56,6 +57,85 @@ Evidence metadata 必須保存實際可證明的 precision，不得用格式完�
 - 後續取得更高精度 evidence 時，可以追加／升級 provenance；不得把後來取得的 metadata 回寫成「當時已知」。
 
 核心原則：**Preserve evidence precision; verification does not propagate transitively across provenance fields.**
+
+## Evidence Lineage / Independence Guard
+
+多個 source artifact／repository／article／report／issue／dataset 看起來彼此不同，不代表它們形成同等數量的**獨立證據**。當「有多少份證據互相支持」會影響 confidence、research conclusion 或 implementation boundary 時，應辨識 material provenance lineage。
+
+一般原則：
+
+- fork、mirror、copy、translation、syndication、repackaging、共同 upstream dataset、共同 measurement run 或明顯由同一 primary source 派生的多個 artifact，預設屬同一 evidence family，除非有額外 evidence 證明其中存在獨立 observation／verification；
+- independence 依 evidence 的形成來源與 causal/provenance lineage 判斷，不依 hostname、repository 數量、publisher 數量或搜尋結果數量判斷；
+- 同 lineage 的多份 artifact 仍可用來確認 wording、implementation divergence、distribution 狀態或 historical propagation，但不得只靠數量把 confidence 包裝成 independent corroboration；
+- 一份 primary source 加上一份真正獨立的 local observation／independent test 可以形成不同 evidence units；但 local artifact 若只是重播同一 upstream vector，不自動成為獨立事實來源；
+- lineage 無法可靠判定時，標記 `LINEAGE UNKNOWN`／等價 uncertainty，避免用「多來源一致」暗示已確認獨立性；
+- 不要求固定多來源。若一份高 authority evidence 已足以回答，就停止；本 guard 只防止 source count inflation，不要求為形式增加來源。
+
+核心原則：**Source count ≠ independent evidence count. Corroboration depends on provenance lineage, not artifact count.**
+
+## Temporal Semantics / Clock Identity Guard
+
+同一事件常同時存在多個合法時間欄位；它們的 clock／語意不同，不得因格式相同就互換。
+
+常見時間 identity 包括：
+
+`source / event time → observation / acquisition time → callback / processing time → publication / effective time → derived artifact generation time`
+
+一般原則：
+
+- callback arrival／ingestion time 不等於 device／ECU／exchange／upstream event timestamp；retrieval time 不等於 source 最後更新時間；publication time 也不自動等於 effective time；
+- 若 decision 依賴 ordering、freshness、latency、session mapping 或 deadline，應保存足以辨識 clock domain、timezone、precision 與欄位語意的 metadata；
+- 不同 clock 之間只有在已建立可靠 mapping／ordering contract 時才可計算 latency 或先後；wall-clock、monotonic clock、device clock 與 remote service clock 不得直接相減後宣稱精確延遲；
+- 缺少 source/event timestamp 時，可保存「observed at／received at」，但不得把 acquisition time 回填成 source time；
+- derived summary／report 的 generated time 只說明 synthesis 何時形成，不會刷新 underlying evidence 的 event/freshness time；
+- 只有一個時間欄且其語意明確、不影響判斷時，不為形式建立多 clock schema。
+
+核心原則：**Timestamp format does not define timestamp meaning. Preserve clock identity before comparing time, freshness or order.**
+
+## Negative Observation / Unknown Semantics Guard
+
+「沒有觀察到」與「已證明不存在」是不同 evidence statement。Timeout、silence、not advertised、search miss、bounded passive observation、parser unavailable、unsupported query、empty result 或其他 negative result，只能支持其**實際觀察 contract**允許的結論。
+
+一般原則：
+
+- `NO X OBSERVED`／`NOT ADVERTISED`／`NOT FOUND IN CHECKED SCOPE` 等狀態預設不等於 `X ABSENT`、`X UNSUPPORTED`、`X OFFLINE` 或特定 root cause；
+- 要把 negative observation 升格成 absence claim，必須有足以支持該 claim 的 coverage／sensitivity／expected-detectability contract，例如已知完整 enumeration surface、明確 authoritative registry 或能可靠排除其他 failure modes 的 measurement method；
+- `UNKNOWN`、unreadable、ambiguous、timeout 或 missing metadata 不得偷偷轉成 `0`、`false`、empty、legacy、unsupported、PASS 或其他 convenient default；
+- 若安全／correctness policy 要求 unknown 時停止，可以 **fail closed operationally**；但「因 unknown 而拒絕執行」仍不等於「已證明某事實為 false／absent」；
+- 同一 negative result 若可能由多個原因造成，除非 observation 能區分原因，否則保持原因集合／uncertainty，不以最方便的單一原因完成故事；
+- repository-level search absence 的更具體 coverage contract 仍由 `AI_CONTEXT.md` → `Absence Claim Coverage Gate` 管理。
+
+核心原則：**Not observed ≠ absent. Unknown may block action without becoming a fabricated fact.**
+
+## Scope-Qualified Status / Propagation Guard
+
+`PASS`、`FAIL`、`MISMATCH`、`CURRENT`、`FROZEN`、`READY`、`SUPPORTED`、`AVAILABLE` 等 status 只有在其**semantic scope**清楚時才可可靠傳播。當不同層級／dimension 的 status 容易被誤讀成同一件事時，應附 owner／object／stage／evidence scope。
+
+一般原則：
+
+- 局部 arithmetic／parser／member／adapter `PASS` 不得自動擴張成 system／product／hardware／production `PASS`；validation evidence tier 的具體升格規則仍由 `DEBUG_VALIDATION.md` 管理；
+- calculation `MISMATCH` 不自動等於 engineering acceptance `FAIL`；source discrepancy、execution result、engineering judgment 與 completion state 可以是不同 status dimensions；
+- `requirements FROZEN` 不自動代表 architecture、provider、implementation、evidence 或 deployment topology 也 frozen；freeze／lock／ready 類標籤應說明其 decision scope；
+- aggregate status 只有在存在明確 aggregation contract 時才可形成；不得用 parent label 抹掉 child status／unknown／pending；
+- `UNKNOWN` 不得為了填滿 dashboard/schema 自動轉成 PASS 或 FAIL；若 workflow 需要 operational default，必須把 default action 與 factual status 分開；
+- mutable status 應有一個 canonical owner；router、summary、mirror 或 derived view若複製 status，必須避免成為第二份可獨立演化的 owner。
+
+核心原則：**A status is true only for its named semantic scope; status does not propagate across dimensions by convenience.**
+
+## Private-to-Public Generalization / Mosaic Guard
+
+Private／internal／customer／project-specific evidence 可以協助形成通用方法，但**不會因被摘要或去掉名稱就自動變成可公開 provenance**。當 durable artifact 要從 private evidence 進入 public／broader-distribution surface 時，應在第一次公開 durable write 前完成抽象化與 mosaic-risk review。
+
+一般原則：
+
+- 優先萃取 general principle／method，而不是複製 private solution；移除名稱、帳號、位置、精確 identifier、專屬 revision、unique geometry／value combination、raw screenshot、private filename／metadata 與其他可回推 source identity 的資訊；
+- 去識別不能只看單一檔案。應考慮與 repository 其他公開頁面、commit metadata、圖表、數值、時間與 routing pointer 交叉比對後，是否可能重建特定 private source／project／person；
+- 若要把 private-derived principle 寫成 public normative rule，優先用合法 public／primary evidence 重新驗證；若無法取得足夠 public evidence，降級為 generic caution／open question／internal-only conclusion，而不是把 private provenance包裝成 public authority；
+- public derived artifact 可以在 governance允許時保存不洩密的 abstract source-baseline／freshness pointer；但 baseline 不公開 private content、不轉移 license／publication right，也不讓 public mirror 取代 private source authority；
+- 先 commit raw private artifact、再靠後續 commit 刪除不算安全 sanitize；Git history／artifact cache 可能仍保留內容。若 raw evidence 必須保存，應留在允許的 private evidence surface；
+- 本 guard 只定義跨專案 generalization integrity；哪些資料屬 confidential／personal／regulated，以及是否允許公開，仍由 target project governance／applicable policy 決定。
+
+核心原則：**Private evidence may inform a public abstraction; it does not become public provenance by summarization. Review the mosaic, not only each file.**
 
 ## Original vs Retrospective Evidence Guard
 
@@ -116,4 +196,4 @@ Repository search、全文搜尋、semantic search、code search、filename matc
 
 ## Boundary
 
-這些 guards 不要求所有 project 使用 global monotonic ID，也不規定 Tarot/Vault 類的 `reflective_only`、`waiting_for_reality` 等 domain lifecycle。跨專案只採用上面的 identity、authority、durable ownership、provenance precision、original-vs-retrospective evidence、snapshot consistency 與 search-hit authority 原則。
+這些 guards 不要求所有 project 使用 global monotonic ID，也不規定 Tarot/Vault 類的 `reflective_only`、`waiting_for_reality` 等 domain lifecycle；不替代 target project 的 confidentiality classification、validation ladder 或 domain schema。跨專案只採用上面的 identity、derived authority、durable ownership、provenance precision／lineage independence／temporal semantics、negative-observation／unknown semantics、scope-qualified status、private-to-public generalization、original-vs-retrospective evidence、snapshot consistency 與 search-hit authority 原則。
