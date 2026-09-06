@@ -22,6 +22,7 @@
 | Capability | Canonical owner / implementation pointer | Maturity / discovery note |
 | --- | --- | --- |
 | New-session bootstrap / task routing | `CHAT_INIT.md` | Minimal bootstrap、task router、direct-leaf bypass、cross-owner review trigger。 |
+| Repository read acquisition / recovery | `CHAT_INIT.md` → `Repository Read Acquisition / Recovery Gate` | Connector-first、public canonical fallback、minimum user-supplied section、fail-closed blocked state；read fallback不擴張 authority或write scope。 |
 | Research-bootstrap project mode / write boundary / handoff | `PROJECT_BOOTSTRAP.md` → `啟用條件（Activation Gate）`、`Research Write Allowlist`、`Exit / Handoff Gate` | Opt-in pre-implementation research mode；不擴張一般 implementation source write authority。 |
 | Reuse-first research / post-adoption context closure | `PROJECT_BOOTSTRAP.md` → `Reuse-First Research Gate`、`Post-Adoption Context Closure Gate` | Architecture freeze 前先做 bounded reuse discovery；採用後以 thin local integration contract 降低長期 upstream Context 成本。 |
 | Stage-transition actor revalidation | `PROJECT_BOOTSTRAP.md` → `Stage-Transition Actor Revalidation Gate`；behavioral evidence：`DEBUG_VALIDATION.md` → `BEH-010`、`evals/runs/BEH-010-2026-09-07-formal-001.json` | **Contract + formal behavioral evidence 已存在**；actor choice依 current responsibility／mutation／capability／authority重新判定，不繼承上一 Stage。 |
@@ -29,6 +30,7 @@
 | Thin activation adapters | `ACTIVATION_ADAPTERS.md` | **Manual thin activation adapter contract 已存在**；native marketplace installer／startup hook／generated per-tool command pack 尚未宣稱存在。 |
 | Repository information architecture / durable project memory | `AI_CONTEXT.md` | Always-on／Hot／Cold／Evidence／Current canonical／Historical、retrieval cost、Context Cohesion。 |
 | Repository-level absence / capability review | `AI_CONTEXT.md` → `Absence Claim Coverage Gate` | 已有 normative coverage contract；不要把 search miss 當 absence proof。 |
+| Original-vs-retrospective evidence integrity | `INFORMATION_INTEGRITY.md` → `Original vs Retrospective Evidence Guard` | Later evidence可改 current truth，但不可把 hindsight回寫成較早 decision point 當時已知／已判斷。 |
 | Session compaction / rehydration | `CHATGPT_WORKFLOW.md` → `Session Compaction / Rehydration Contract`；adapter：`SESSION_HANDOFF_TEMPLATE.md` | **Contract + thin handoff adapter 已存在**；自動判斷 compaction 時機／自動產生 handoff 的 runtime automation 尚未宣稱存在。 |
 | Behavioral evaluation | `DEBUG_VALIDATION.md` → `Behavioral Evaluation MVP`；`evals/regression_matrix.json`；`tools/behavioral_eval.py` + tests | **Normative BEH contract、formal evidence、deterministic record validator與 bounded regression selector 已存在**；fresh-session model invocation／semantic grading仍是 external/manual layer。 |
 | Deterministic validation / enforcement admission | `DEBUG_VALIDATION.md` → `Deterministic Enforcement Admission Gate`；`tools/playbook_check.py` + tests | Policy與 executable checker分層；checker只證明實際檢查的 invariant。 |
