@@ -66,11 +66,12 @@ Doctor v1 的 deterministic engine 只接受 filesystem root，但支援兩種**
 
 - 不得因「讓人更容易從頭讀完」就在 AI-facing canonical owner 重複 README 已有的介紹、教學或完整 policy；
 - human-friendly explanation、導入步驟、產品定位與分享語境優先收斂到 README；
-- AI-facing surface 優先最佳化 stable authority、bounded retrieval、exact routing、low duplication 與 machine／agent interpretability；
+- AI-facing surface 優先最佳化 stable authority、bounded retrieval、exact routing、low duplication、terminology stability 與 machine／agent interpretability；**不要求繁體中文優先，也不要求所有 AI-facing 文件使用同一自然語言**；
+- AI-facing wording 若英文、繁中或中英混合其中一種能更精確表達 canonical concept、降低歧義或改善 stable search/retrieval，就使用該表達；不要為語言一致性犧牲 semantic precision；
 - README 可以摘要 canonical capability，但不得成為第二份 normative authority；規則語意仍由對應 canonical owner 決定；
 - 人類可直接閱讀任何檔案，不代表該檔案因此成為 human-facing primary surface。
 
-核心原則：**Human enters through README; AI enters through project governance / `CHAT_INIT.md` and routed canonical owners. Human readability remains useful, but AI-facing operational surfaces are optimized first for reliable machine/agent retrieval and authority.**
+核心原則：**Human enters through README; AI enters through project governance / `CHAT_INIT.md` and routed canonical owners. README optimizes human readability; AI-facing operational surfaces optimize semantic precision, stable terminology, retrieval and authority.**
 
 ## 文件責任與讀取紀律（Document ownership / reading discipline）
 
@@ -156,9 +157,16 @@ Routing metadata 優先只保存穩定 ID/path/owner/entrypoint；除非本身�
 
 ## 語言（Language）
 
-文件以繁體中文為主；API、protocol、model、Git、toolchain、正式英文名稱與必要 cross-reference 等技術名詞可保留英文。
+Language policy follows the information surface, not a repository-wide translation preference.
 
-中文正文優先使用「手冊／實戰手冊」，不要在不需要正式英文辨識的地方混用 `Playbook`。
+- **`README.md`** is the human-facing primary surface. Its prose should be high-quality Traditional Chinese by default; concise bilingual Chinese/English terminology is encouraged when it improves onboarding, sharing, or exact technical recognition.
+- **All other canonical Markdown, indexes, adapters, evals, tooling contracts, and governance surfaces are AI／agent-facing.** They have no Traditional-Chinese-first requirement. Use the natural language or bilingual form that maximizes semantic precision, stable terminology, low ambiguity, machine/agent interpretability, and retrieval/search reliability.
+- Keep exact identifiers, API/protocol names, status values, schema keys, paths, commands, model/tool names, quoted literals, and externally defined technical terms in their canonical form. Do not translate an exact term when translation would weaken matching or authority resolution.
+- Within one canonical concept, prefer one stable term over stylistic synonym rotation. If English is more exact or more standard for the concept, English-first wording is acceptable; if Traditional Chinese is equally precise and clearer, it is also acceptable.
+- Do not rewrite or translate existing AI-facing documents merely to make their natural language uniform. Language-only churn needs a concrete precision, ambiguity, routing, retrieval, or maintenance benefit.
+- Human inspectability remains useful, but it is not a reason to reduce AI-facing semantic precision.
+
+核心原則：**README optimizes Traditional-Chinese／bilingual human communication; AI-facing surfaces optimize semantic precision and reliable retrieval, regardless of natural language.**
 
 ## Git 安全（Git safety）
 
