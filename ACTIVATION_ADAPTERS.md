@@ -38,6 +38,36 @@ Project-specific governance and technical source of truth remain higher authorit
 Do not infer repository write or execution authority from access capability.
 ```
 
+## ChatGPT-side Codex Host Instruction Health Check
+
+當 ChatGPT 收到 Codex 回報時，先依 project／Playbook current authority 做一般 result reconciliation。只有回報出現**具體 activation／bootstrap symptom**，才觸發 bounded Host Instruction Health Check；不要把任何 Codex 錯誤都直接歸因於個人化設定。
+
+可觸發檢查的 material signals 包括：
+
+- 已驗證 workspace／repository 與 Codex 回報使用的 repository identity 不一致，且不像單純 project-state drift；
+- project `AGENTS.md` 明確採用 Playbook，但 Codex聲稱未採用，或跳過 declared baseline；
+- floating baseline 應 resolve exact revision，Codex卻完全未做 identity probe、用 memory 猜 SHA，或把 moving ref 冒充 immutable revision；
+- 必要 read-only bootstrap probe 被 permission gate 阻擋，而 runtime 明明可 request approval，Codex卻直接宣告 unavailable；
+- Codex 在一般 bootstrap 無必要地讀 Playbook README、whole Playbook、BACKLOG／Cold／history 或做 broad repository scan；
+- Codex 把 persistent host instruction、filesystem／network capability 或 permission approval 當成 mutation／scope expansion authority；
+- 同類 activation behavior 在 fresh session 重複偏離 current adapter contract。
+
+不應單獨觸發 host-instruction diagnosis 的例子：單次 timestamp 錯誤、source/test failure、正常 network outage、project technical mismatch、validation failure；這些先依各自 canonical owner分類，除非另有 evidence 指向 activation／host config drift。
+
+Health Check 建議流程：
+
+`Codex report anomaly → canonical/project reconciliation → classify symptom → activation mismatch plausible? → inspect current adapter identity → ask user to verify Codex personal instruction only if needed → compare against current copy-ready block → full replacement if missing/stale/mixed → minimal fresh-chat regression`
+
+一般原則：
+
+- ChatGPT 不得假裝能看到或修改使用者的 Codex 個人化設定；若產品沒有 settings-read/write capability，請使用者到 Codex Settings / Personalization / Codex Instructions 檢查，並在必要時貼出文字或截圖。
+- 先確認 Playbook current adapter revision，再比較設定，避免拿舊聊天室裡的 host instruction 當 current expected value。
+- 若設定缺失、過期、混合多版或 materially inconsistent，提供**完整可整段覆蓋**的 current copy-ready instruction；不要只給 delta patch 造成殘留規則。
+- 若設定看起來 current，但 behavior仍不符，優先跑最小 fresh-chat regression 區分 runtime／permission／product behavior 與設定 drift，不反覆要求使用者重貼同一內容。
+- Health Check 是 diagnosis／recovery，不授權修改 project repository、擴張 current task、或把 Codex runtime bug持久化成 project work。
+
+核心原則：**先證明是 activation symptom，再檢查 host instruction；不要把任何怪回報都當成設定壞掉。**
+
 ## Codex Desktop — copy-ready persistent instruction
 
 This is the **canonical human-installable Codex host instruction** for runtimes that expose a persistent personal-instruction field. It is an activation / recovery adapter, not a second copy of the Playbook. Detailed Git, permission, reporting, validation, architecture, task-admission, and execution rules remain in their routed canonical owners.
