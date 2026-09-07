@@ -99,19 +99,19 @@ When the health check finds missing, stale, or mixed instructions, use the curre
 
 **繁體中文**
 
-Codex 個人化指示屬於**使用者／App 層級的持久設定**，不是 repository 檔案，也不是一般單一聊天室 Prompt。以目前的手動 thin activation 導入方式：
+Codex 個人化指示屬於**使用者／App 層級的持久設定**，不是儲存庫檔案，也不是只對單一聊天室生效的普通提示。以目前需要手動安裝的薄型啟動方式：
 
-1. 開啟 Codex 的 Settings／Personalization／Codex Instructions（不同產品版本的文字可能略有差異）。
+1. 開啟 Codex 的 Settings／Personalization／Codex Instructions（不同產品版本的介面文字可能略有差異）。
 2. 從 [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) → **Codex Desktop — copy-ready persistent instruction** 複製目前完整版本。
-3. 整段取代設定欄位，不要把不同版本用增量方式混在一起。
-4. 開啟正確的 project repository／workspace，再建立全新的 Codex 聊天。
-5. 若必要的唯讀 bootstrap probe 被 sandbox／network permission gate 擋住，Codex 可能會要求完成該 exact operation 所需的最低權限；核准不代表取得更廣的 mutation authority。
+3. 將整個設定欄位完整取代，不要把不同版本以增量方式混在一起。
+4. 開啟正確的專案儲存庫／工作區，再建立全新的 Codex 聊天。
+5. 若啟動階段必要的唯讀查詢被 sandbox／network 權限限制擋住，Codex 可能會要求執行該操作所需的最低權限；核准只解除這個操作的能力限制，不代表取得更廣的修改權限。
 
-目前這個設定仍需要人類安裝一次。一般 ChatGPT／Codex Prompt 本身不能證明 Codex 個人化指示已被永久寫入；除非產品真的提供 settings 讀寫能力，ChatGPT 也不得宣稱自己能直接查看或修改該設定。
+目前這個設定仍需要使用者手動安裝一次。一般 ChatGPT／Codex 提示本身不能證明 Codex 個人化指示已被永久寫入；除非產品真的提供設定讀寫能力，ChatGPT 也不得宣稱自己能直接查看或修改該設定。
 
-若日後 Codex 回報與預期 activation 行為 materially 不一致，ChatGPT 應先核對 project／canonical evidence，再依 [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) 的 **Codex Host Instruction Health Check** 做有界診斷。典型訊號包括：repository／workspace identity 錯誤、project 已宣告採用 Playbook 但 Codex 說未採用、floating ref 沒有 resolve exact revision、明明可要求最低唯讀權限卻直接宣告 unavailable、bootstrap 無必要地 broad-read，或把 host instruction／capability 誤當 mutation authority。單純 timestamp 錯誤或一般 source／test failure 不足以單獨觸發這個診斷。
+若日後 Codex 的回報與預期啟動行為有實質不一致，ChatGPT 應先核對專案目前狀態與權威證據，再依 [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) 的 **Codex 個人化指示健康檢查（Host Instruction Health Check）** 做有界診斷。典型訊號包括：儲存庫／工作區身分錯誤、專案已宣告採用 Playbook 但 Codex 說未採用、浮動基準未解析成確切不可變版本、明明可以要求最低唯讀權限卻直接宣告 unavailable、啟動時出現不必要的大範圍讀取，或把個人化指示／工具能力誤當成修改權限。單純時間戳錯誤或一般原始碼／測試失敗，不足以單獨觸發這個診斷。
 
-若 health check 確認設定缺失、過期或混合多版，使用目前完整 copy-ready block 整段覆蓋，再用最小 fresh-chat regression 驗證。
+若健康檢查確認設定缺失、過期或混合多版，使用目前可直接複製的完整區塊整段覆蓋，再用最小的全新聊天室迴歸測試驗證。
 
 ## Quick workflow / 快速流程
 
@@ -177,6 +177,8 @@ AI 自己發現「相依套件版本更新檢查器（dependency freshness scann
 
 Playbook 會把 **觀察 → 建議 → 准入工作** 分開。正式 `BEH-002` 全新工作階段實測中，這個可選檢查器只保持為低承諾的 Cold 候選項目；「被記錄」沒有變成實作權限，也沒有猜測寫入目標，未來要升級成 Hot 仍需真實觸發條件與一致性核對。
 
+證據：[`BEH-002 正式測試`](evals/runs/BEH-002-2026-09-07-formal-002.json) · 權威主責：[`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md)
+
 ### 2. Test Passed ≠ Done / 測試通過 ≠ 真實世界已完成
 
 **Before**
@@ -195,6 +197,8 @@ Evidence: [`BEH-014 formal run`](evals/runs/BEH-014-2026-09-07-formal-001.json) 
 
 Playbook 要求每個 PASS 只證明它真正涵蓋的範圍。正式 `BEH-014` 實測中，模型保留待完成的硬體／裝置驗證、正式環境與儲存庫完成關卡，以及明確的部署權限；沒有把工作流程的綠燈升格成全域完成狀態或部署權限。
 
+證據：[`BEH-014 正式測試`](evals/runs/BEH-014-2026-09-07-formal-001.json) · 權威主責：[`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md)
+
 ### 3. Who Actually Has Authority? / 現在到底該由誰做？
 
 **Before**
@@ -212,6 +216,8 @@ Evidence: [`BEH-010 formal run`](evals/runs/BEH-010-2026-09-07-formal-002.json) 
 上一個階段（Stage）由 Codex 完成原始碼實作，下一句「好，繼續」如果直接沿用上一個執行角色，就可能又產生 Codex 提示，即使新的工作其實只有有界官方文件研究、來源溯源與證據彙整。
 
 Playbook 依**目前責任**重新選擇執行角色，而不是沿用上一個角色。正式 `BEH-010` 實測中，ChatGPT 重新判斷新階段、維持唯讀研究、直接完成證據工作，直到後續真的出現需要程式代理負責的修改時，才考慮交接給 Codex。
+
+證據：[`BEH-010 正式測試`](evals/runs/BEH-010-2026-09-07-formal-002.json) · 權威主責：[`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md)
 
 These three cases intentionally stay small. The Showcase is a proof surface, not a second documentation system. More scenarios live under [`evals/`](evals/), while normative behavior stays with each canonical owner.
 
