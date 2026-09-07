@@ -79,6 +79,20 @@ The snippet above is the smallest bootstrap, not the full deterministic adoption
 
 上面只是最小啟動宣告，不是完整的確定性導入契約。若要使用可由 Adoption Doctor 檢查、可直接調整的範例，請從 [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) 開始。
 
+## Quick workflow / 快速流程
+
+**English**
+
+Find existing references first. Let ChatGPT handle the work it can do directly—routing, authority resolution, read-only research, synthesis, architecture clarification, and bounded validation when the runtime is available. If an implementation gap remains, confirm the exact scope before handing that gap to Codex. After Codex reports back, ChatGPT reads the current repository state again and reconciles the evidence before deciding whether the work is done or another Stage is needed.
+
+**繁體中文**
+
+先找現有參考，再讓 ChatGPT 先處理可以直接完成的工作，包括路由、權威判定、唯讀研究、整理、架構釐清，以及執行環境允許時的有界驗證。若仍存在需要實作的缺口，先確認精確範圍，再把該缺口交給 Codex。Codex 回報後，由 ChatGPT 重新回讀目前儲存庫狀態並核對證據，再判斷是否完成或需要進入下一個 Stage。
+
+![AI Development Playbook quick workflow](assets/readme-workflow.svg)
+
+> **Illustrative workflow / 流程概覽**：The diagram is a human-facing summary, not a second normative authority. Canonical rules remain in the linked Playbook owner documents.／本圖是人類閱讀用的流程摘要，不是第二份規範權威；正式規則仍以 Playbook 對應的權威主責文件為準。
+
 ## Why this exists / 為什麼需要它
 
 **English**
