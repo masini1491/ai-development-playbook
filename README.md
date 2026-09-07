@@ -10,9 +10,9 @@
 
 AI Development Playbook is a reusable **GitHub-native governance and information-integrity layer** for ChatGPT, Codex, and other AI engineering workflows.
 
-It treats GitHub as durable project memory and source of truth, ChatGPT as the reasoning and bounded ephemeral-compute layer, and Codex / coding agents as authorized repository implementers. The goal is not to add more prompts or process. The goal is to keep **context, authority, evidence, execution, validation, and cost** distinguishable as a project evolves across sessions and agents.
+It treats GitHub as durable project memory and the source of truth, ChatGPT as the reasoning and bounded ephemeral compute layer, and Codex / coding agents as authorized repository implementers. The goal is not to add more prompts or process overhead. The goal is to keep **context, authority, evidence, execution, validation, and cost** distinguishable as a project evolves across sessions and agents.
 
-You do **not** need to load or read the whole repository. A project declares the Playbook as a common baseline, an AI session starts from [`CHAT_INIT.md`](CHAT_INIT.md), and then reads only the minimum canonical sections required by the current task.
+You do **not** need to load the entire repository into context or read it end to end. A project declares the Playbook as a common baseline, an AI session starts from [`CHAT_INIT.md`](CHAT_INIT.md), and then reads only the minimum canonical sections required by the current task.
 
 **繁體中文**
 
@@ -26,7 +26,7 @@ AI Development Playbook 是一套可重用、**以 GitHub 為原生基礎的 AI 
 
 > **Dogfooding note / 自我實作說明**：This repository is primarily maintained by ChatGPT under the explicit maintainer contract in [`AGENTS.md`](AGENTS.md). This is a governed maintainer workflow, **not** a claim of fully autonomous repository maintenance.／本儲存庫主要由 ChatGPT 依 [`AGENTS.md`](AGENTS.md) 的明確維護者契約進行維護；這是一套受治理的維護流程，**不是**「完全自主維護儲存庫」的宣稱。
 
-## 5-minute first use / 5 分鐘開始使用
+## 5-minute quick start / 5 分鐘開始使用
 
 **English**
 
@@ -34,8 +34,8 @@ If you already have a GitHub project:
 
 1. Add a small Playbook declaration to the project-root `AGENTS.md`.
 2. Choose one active Playbook baseline, such as `main` or a pinned release tag.
-3. Start a new ChatGPT / AI / coding-agent session by reading that baseline's [`CHAT_INIT.md`](CHAT_INIT.md).
-4. Let the AI route to only the canonical sections needed for the current task, while keeping the project's own governance and technical truth higher authority.
+3. Start each new ChatGPT / AI / coding-agent session from that baseline's [`CHAT_INIT.md`](CHAT_INIT.md).
+4. Let the AI route only to the canonical sections needed for the current task, while keeping the project's own governance and technical truth higher authority.
 
 Minimal bootstrap:
 
@@ -52,7 +52,7 @@ This project's own `AGENTS.md`, technical source of truth, and project-specific 
 remain higher authority. Do not load the whole Playbook into Context by default.
 ```
 
-Shortest model:
+Shortest path:
 
 `Project AGENTS.md → Playbook baseline → CHAT_INIT.md → project governance/current truth → minimum-sufficient canonical owner`
 
@@ -83,19 +83,19 @@ The snippet above is the smallest bootstrap, not the full deterministic adoption
 
 **English**
 
-Codex personal instructions are a **user / app-level persistent setting**, not a repository file and not an ordinary one-chat prompt. For the current manually installed thin activation path:
+Codex personal instructions are a **persistent user/app-level setting**, not a repository file or an ordinary one-chat prompt. For the current manually installed thin-activation setup:
 
-1. Open Codex Settings / Personalization / Codex Instructions (wording may vary by product version).
+1. Open Codex Settings → Personalization → Codex Instructions (wording may vary by product version).
 2. Open [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt), select all, and copy the complete file into Codex Instructions.
-3. Replace the whole field instead of merging partial revisions.
-4. Open the intended project repository/workspace and start a fresh Codex chat.
-5. If a required read-only bootstrap probe is sandbox/network-gated, Codex may ask for the minimum permission needed for that exact operation; approval does not grant broader mutation authority.
+3. Replace the entire field; do not merge partial revisions.
+4. Open the intended project repository/workspace, then start a fresh Codex chat.
+5. If a required read-only bootstrap probe is blocked by sandbox or network permissions, Codex may ask for the minimum permission required for that exact operation; approval does not grant broader mutation authority.
 
-This setup is currently human-installed. A normal ChatGPT/Codex prompt does not itself prove that the persistent Codex instruction field was changed, and ChatGPT must not claim it can inspect or modify that setting unless the product exposes an actual settings capability.
+This setup currently requires a one-time manual installation. A normal ChatGPT/Codex prompt does not by itself establish that the persistent Codex Instructions field has been changed, and ChatGPT must not claim it can inspect or modify that setting unless the product exposes an actual settings capability.
 
-If Codex later produces a report that materially conflicts with the expected activation behavior, ChatGPT should first reconcile the project/canonical evidence, then use the bounded **Codex Host Instruction Health Check** in [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md). Typical signals include wrong repository/workspace identity, missing Playbook adoption despite a current project declaration, skipped floating-ref exact revision resolution, failure to request available minimum read permission, unexpected broad bootstrap reading, or treating host instructions/capabilities as mutation authority. A timestamp-only error or ordinary source/test failure is not enough by itself.
+If Codex later reports behavior that materially conflicts with the expected activation flow, ChatGPT should first reconcile the current project state with canonical evidence, then use the bounded **Codex Host Instruction Health Check** in [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md). Typical signals include wrong repository/workspace identity, missing Playbook adoption despite a current project declaration, skipped floating-ref exact revision resolution, failure to request available minimum read permission, unexpected broad bootstrap reading, or treating host instructions/capabilities as mutation authority. A timestamp-only error or ordinary source/test failure is not enough by itself.
 
-When the health check finds missing, stale, or mixed instructions, replace the whole Codex Instructions field with the current complete [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt), then verify with a minimal fresh-chat regression.
+If the health check finds missing, stale, or mixed instructions, replace the whole Codex Instructions field with the current complete [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt), then verify with a minimal fresh-chat regression.
 
 **繁體中文**
 
@@ -117,7 +117,7 @@ Codex 個人化指示屬於**使用者／App 層級的持久設定**，不是儲
 
 **English**
 
-Find existing references first. Let ChatGPT handle the work it can do directly—routing, authority resolution, read-only research, synthesis, architecture clarification, and bounded validation when the runtime is available. If an implementation gap remains, confirm the exact scope before handing that gap to Codex. After Codex reports back, ChatGPT reads the current repository state again and reconciles the evidence before deciding whether the work is done or another Stage is needed.
+Start by finding existing references. Let ChatGPT handle the work it can do directly—routing, authority resolution, read-only research, synthesis, architecture clarification, and bounded validation when the runtime is available. If an implementation gap remains, confirm the exact scope before handing that gap to Codex. After Codex reports back, ChatGPT reads the current repository state again and reconciles the evidence before deciding whether the work is done or another Stage is needed.
 
 **繁體中文**
 
@@ -131,7 +131,7 @@ Find existing references first. Let ChatGPT handle the work it can do directly�
 
 **English**
 
-AI coding often fails in ways that are not really "coding" failures:
+AI-assisted development often fails in ways that are not really coding failures:
 
 - a useful idea silently becomes unauthorized work;
 - a test passes and gets reported as if the real system is done;
@@ -157,13 +157,13 @@ Playbook 的做法不是塞入更大的提示詞，而是把這些失敗模式�
 
 ## Before / After showcase / 前後對照案例
 
-> **Illustrative, non-normative evidence layer / 說明性、非規範性證據層**：These cases summarize real Playbook behavioral-regression fixtures and formal fresh-session results. They are inspectable evidence of the behavior being tested, **not third-party testimonials and not replacement policy**. Canonical rules remain in the linked owner documents.／以下案例整理 Playbook 已實際執行的行為迴歸測試情境與正式全新工作階段結果；它們是可檢查的行為證據，**不是第三方推薦，也不取代權威規則**。規範性規則仍由所連結的主責文件管理。
+> **Illustrative, non-normative evidence layer / 說明性、非規範性證據層**：These cases summarize real Playbook behavioral regression fixtures and formal fresh-session results. They provide inspectable evidence of the behavior under test, **not third-party testimonials and not a replacement for policy**. Canonical rules remain in the linked owner documents.／以下案例整理 Playbook 已實際執行的行為迴歸測試情境與正式全新工作階段結果；它們是可檢查的行為證據，**不是第三方推薦，也不取代權威規則**。規範性規則仍由所連結的主責文件管理。
 
 ### 1. Useful Idea ≠ Authorized Work / 有價值的想法 ≠ 已授權工作
 
 **Before**
 
-An AI notices that a dependency-freshness scanner would be useful. The user replies, “OK, note it down.” A naive workflow can silently turn that suggestion into a committed task, add it to the active queue, or even begin implementation.
+An AI notices that a dependency-freshness scanner would be useful. The user replies, “OK, note it down.” A naive workflow can silently turn that suggestion into an authorized task, add it to the active queue, or even begin implementation.
 
 **After**
 
@@ -203,11 +203,11 @@ Playbook 要求每個 PASS 只證明它真正涵蓋的範圍。正式 `BEH-014` 
 
 **Before**
 
-Codex implemented the previous Stage, so the next generic “OK, continue” automatically produces another Codex handoff—even when the new work is only bounded documentation research, provenance, and evidence synthesis.
+Codex implemented the previous Stage, so the next generic “OK, continue” automatically produces another Codex handoff—even when the new work is only bounded documentation research, provenance checks, and evidence synthesis.
 
 **After**
 
-The Playbook chooses the actor from the **current responsibility**, not the previous actor. In the formal `BEH-010` run, ChatGPT re-evaluated the new Stage, kept the research read-only, did the evidence work directly, and deferred Codex until a later Stage actually required coding-agent-owned mutation.
+The Playbook chooses the actor from the **current responsibility**, not the previous actor. In the formal `BEH-010` run, ChatGPT re-evaluated the new Stage, kept the research read-only, did the evidence work directly, and deferred Codex until a later Stage actually required a mutation owned by a coding agent.
 
 Evidence: [`BEH-010 formal run`](evals/runs/BEH-010-2026-09-07-formal-002.json) · Canonical owner: [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md)
 
@@ -219,7 +219,7 @@ Playbook 依**目前責任**重新選擇執行角色，而不是沿用上一個�
 
 證據：[`BEH-010 正式測試`](evals/runs/BEH-010-2026-09-07-formal-002.json) · 權威主責：[`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md)
 
-These three cases intentionally stay small. The Showcase is a proof surface, not a second documentation system. More scenarios live under [`evals/`](evals/), while normative behavior stays with each canonical owner.
+These three cases are intentionally compact. The Showcase is a proof surface, not a second documentation system. More scenarios live under [`evals/`](evals/), while normative behavior stays with each canonical owner.
 
 以上三個案例刻意保持小型。Showcase 是證據展示層，不是第二套文件系統；更多測試情境留在 [`evals/`](evals/)，規範性行為仍由各權威主責文件管理。
 
@@ -227,13 +227,13 @@ These three cases intentionally stay small. The Showcase is a proof surface, not
 
 **English**
 
-- **Context engineering** — Always-on / Hot / Cold / Evidence / Historical responsibilities prevent every task from paying for the whole repository memory.
+- **Context engineering** — Always-on / Hot / Cold / Evidence / Historical responsibilities keep each task from paying the context cost of the entire repository history.
 - **Agent governance** — Persistence, default loading, write authority, and execution authority are separate concepts.
 - **Repository memory** — Current canonical GitHub state outranks old chat state or model memory.
 - **Task routing** — `CHAT_INIT.md` routes a task to the minimum canonical owner instead of encouraging whole-repository reading.
 - **Workflow interoperability** — External spec, skills, or governance systems can coexist without losing Playbook authority / loading / evidence boundaries.
 - **Validation and evidence** — Deterministic checks, behavioral evaluation, runtime / hardware / production evidence, and completion read-back remain distinct.
-- **Cost-aware execution** — Evidence → Context → Model → Reasoning → Agent → Validation expands only when evidence shows the cheaper level is insufficient.
+- **Cost-aware execution** — The Evidence → Context → Model → Reasoning → Agent → Validation chain expands only when evidence shows the cheaper level is insufficient.
 - **Ephemeral compute** — ChatGPT may run bounded deterministic workloads in a suitable sandbox without gaining repository write authority from that capability alone.
 
 **繁體中文**
@@ -251,11 +251,11 @@ These three cases intentionally stay small. The Showcase is a proof surface, not
 
 **English**
 
-The Playbook does not try to replace an agent runtime, skills package, spec framework, or enterprise compliance suite. Its job is to make long-running AI work against real repositories **reconstructable, bounded, and evidence-driven**.
+The Playbook does not try to replace an agent runtime, skills package, spec framework, or enterprise compliance suite. Its job is to make long-running AI work on real repositories **reconstructable, bounded, and evidence-driven**.
 
 Its five main differentiators are:
 
-1. **Repository Information Architecture for AI** — GitHub is organized around surface responsibility, retrieval intent, current authority, coordination, evidence, and history, not just file storage.
+1. **Repository Information Architecture for AI** — Repository surfaces are organized around responsibility, retrieval intent, current authority, coordination, evidence, and history—not just file storage.
 2. **Context has a lifecycle** — Information can be durable without being default-loaded into every task.
 3. **Persistence ≠ loading ≠ write ≠ execution** — Being visible, remembered, or technically callable does not grant authority.
 4. **Real-world evidence is first-class** — Software PASS does not automatically replace hardware, bench, production, or user-observed evidence.
@@ -285,7 +285,7 @@ Playbook 不試圖取代代理執行環境（agent runtime）、技能套件、�
 
 > The common Playbook defines **how to develop**. Each real project repository defines **what the system is**.
 
-> A repository should let AI reach one sufficient current authority at minimum retrieval cost. Files, indexes, registries, summaries, metadata, and manifests are means, not goals.
+> A repository should let AI reach one sufficient current source of authority at minimum retrieval cost. Files, indexes, registries, summaries, metadata, and manifests are means, not goals.
 
 **繁體中文**
 
@@ -299,7 +299,7 @@ Playbook 不試圖取代代理執行環境（agent runtime）、技能套件、�
 
 **English**
 
-Adoption Doctor is a read-only / report-only deterministic check for a target project's Playbook adoption and routing contract. It does not replace project-specific semantic review and does not gain target-repository write authority by running a check.
+Adoption Doctor is a deterministic, read-only, report-only check of a target project's Playbook adoption and routing contract. It does not replace project-specific semantic review, and running it does not grant write authority to the target repository.
 
 Local Path Mode:
 
@@ -311,7 +311,7 @@ ChatGPT GitHub Snapshot Mode:
 
 `GitHub canonical → ChatGPT minimum-sufficient snapshot → adoption_doctor.py → PASS / WARN / FAIL report`
 
-A ChatGPT session with repository-read capability may retrieve only the files required by Doctor's active checks, materialize a temporary snapshot, and run the same deterministic engine when its runtime contract is satisfied. The snapshot is only an execution input; it is not a new source of truth.
+A ChatGPT session with repository-read capability may retrieve only the files required by the Doctor's active checks, materialize a temporary snapshot, and run the same deterministic engine when its runtime contract is satisfied. The snapshot is only an execution input; it is not a new source of truth.
 
 **繁體中文**
 
@@ -421,7 +421,7 @@ Whole-repository capability / gap / absence review:
 
 **English**
 
-The Playbook stores cross-project development method, not product-specific truth. Each real project still owns its own:
+The Playbook stores cross-project development methods, not product-specific truth. Each real project still owns its own:
 
 - technical source of truth;
 - current task / blocker / evidence;
