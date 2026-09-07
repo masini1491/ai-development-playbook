@@ -15,7 +15,8 @@
     "BEH-011",
     "BEH-012",
     "BEH-013",
-    "BEH-014"
+    "BEH-014",
+    "BEH-015"
   ],
   "change_classes": {
     "repository-authority": [
@@ -44,7 +45,8 @@
     ],
     "session-compaction-rehydration": [
       "BEH-009",
-      "BEH-010"
+      "BEH-010",
+      "BEH-015"
     ],
     "actor-admission-and-handoff": [
       "BEH-010",
@@ -57,7 +59,8 @@
       "BEH-011",
       "BEH-012",
       "BEH-013",
-      "BEH-014"
+      "BEH-014",
+      "BEH-015"
     ],
     "information-integrity": [
       "BEH-008",
