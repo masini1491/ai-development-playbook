@@ -60,6 +60,14 @@ Doctor v1 的 deterministic engine 只接受 filesystem root，但支援兩種**
 
 `README.md` 是本 repository **唯一以人類閱讀為主要設計目的的 primary surface**。一般人類使用者應能只靠 README 理解本手冊的定位、導入方式、使用方法與主要能力；不要求依序閱讀其餘 canonical 文件才能開始使用。
 
+README 的 human-facing language / layout contract：
+
+- 預設維持單一 `README.md`，不要只因需要 English + Traditional Chinese 就建立平行 translation README。
+- 主要主題採 **section-level bilingual semantic units**：English first，緊接 Traditional Chinese counterpart；不要把兩種語言拆成兩個巨大區塊，也不要逐句交錯。
+- 維持 **contract-level semantic parity**：產品定位、能力聲明、authority boundary、onboarding、Showcase facts、caveats 與 links 必須語意一致；不要求 sentence parity、相同句數、相同語序、相同修辭或完全相同 heading tree。
+- 每次 material README mutation 都在同次變更做 lightweight bilingual parity check；不要依賴日後定期大規模 translation refresh 才補 drift。
+- 不用行數、KB、wall-clock age 或單純內容變長作 split-README threshold。只有出現真實 navigation／reading friction、反覆 semantic drift，或 meaningful language-routing user feedback 時，才重開 single-vs-split README judgment；Showcase 膨脹屬獨立 spin-out 問題，不自動觸發語言拆檔。
+
 除 README 外，本 repository 的 canonical Markdown、routing index、adapter、eval、tooling contract 與治理文件主要是 **AI／agent-facing operational information surfaces**：用於 authority resolution、routing、execution、validation、evidence 與 durable project memory。它們仍應保持可被人類檢查與維護，但不以 tutorial-style human reading flow 作為主要最佳化目標。
 
 維護時：
@@ -71,7 +79,7 @@ Doctor v1 的 deterministic engine 只接受 filesystem root，但支援兩種**
 - README 可以摘要 canonical capability，但不得成為第二份 normative authority；規則語意仍由對應 canonical owner 決定；
 - 人類可直接閱讀任何檔案，不代表該檔案因此成為 human-facing primary surface。
 
-核心原則：**Human enters through README; AI enters through project governance / `CHAT_INIT.md` and routed canonical owners. README optimizes human readability; AI-facing operational surfaces optimize semantic precision, stable terminology, retrieval and authority.**
+核心原則：**Human enters through README; AI enters through project governance / `CHAT_INIT.md` and routed canonical owners. README optimizes bilingual human readability; AI-facing operational surfaces optimize semantic precision, stable terminology, retrieval and authority.**
 
 ## 文件責任與讀取紀律（Document ownership / reading discipline）
 
@@ -159,14 +167,14 @@ Routing metadata 優先只保存穩定 ID/path/owner/entrypoint；除非本身�
 
 Language policy follows the information surface, not a repository-wide translation preference.
 
-- **`README.md`** is the human-facing primary surface. Its prose should be high-quality Traditional Chinese by default; concise bilingual Chinese/English terminology is encouraged when it improves onboarding, sharing, or exact technical recognition.
+- **`README.md`** follows the canonical human-facing language / layout contract in `Audience / Surface Contract` above: English first with a high-quality Traditional Chinese counterpart at section level; audience-aware rewriting is allowed while contract-level semantic parity is preserved.
 - **All other canonical Markdown, indexes, adapters, evals, tooling contracts, and governance surfaces are AI／agent-facing.** They have no Traditional-Chinese-first requirement. Use the natural language or bilingual form that maximizes semantic precision, stable terminology, low ambiguity, machine/agent interpretability, and retrieval/search reliability.
 - Keep exact identifiers, API/protocol names, status values, schema keys, paths, commands, model/tool names, quoted literals, and externally defined technical terms in their canonical form. Do not translate an exact term when translation would weaken matching or authority resolution.
 - Within one canonical concept, prefer one stable term over stylistic synonym rotation. If English is more exact or more standard for the concept, English-first wording is acceptable; if Traditional Chinese is equally precise and clearer, it is also acceptable.
 - Do not rewrite or translate existing AI-facing documents merely to make their natural language uniform. Language-only churn needs a concrete precision, ambiguity, routing, retrieval, or maintenance benefit.
 - Human inspectability remains useful, but it is not a reason to reduce AI-facing semantic precision.
 
-核心原則：**README optimizes Traditional-Chinese／bilingual human communication; AI-facing surfaces optimize semantic precision and reliable retrieval, regardless of natural language.**
+核心原則：**README optimizes English／Traditional-Chinese human communication under one canonical bilingual contract; AI-facing surfaces optimize semantic precision and reliable retrieval, regardless of natural language.**
 
 ## Git 安全（Git safety）
 
