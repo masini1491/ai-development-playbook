@@ -86,7 +86,7 @@ The snippet above is the smallest bootstrap, not the full deterministic adoption
 Codex personal instructions are a **user / app-level persistent setting**, not a repository file and not an ordinary one-chat prompt. For the current manually installed thin activation path:
 
 1. Open Codex Settings / Personalization / Codex Instructions (wording may vary by product version).
-2. Copy the entire current block from [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) → **Codex Desktop — copy-ready persistent instruction**.
+2. Open [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt), select all, and copy the complete file into Codex Instructions.
 3. Replace the whole field instead of merging partial revisions.
 4. Open the intended project repository/workspace and start a fresh Codex chat.
 5. If a required read-only bootstrap probe is sandbox/network-gated, Codex may ask for the minimum permission needed for that exact operation; approval does not grant broader mutation authority.
@@ -95,14 +95,14 @@ This setup is currently human-installed. A normal ChatGPT/Codex prompt does not 
 
 If Codex later produces a report that materially conflicts with the expected activation behavior, ChatGPT should first reconcile the project/canonical evidence, then use the bounded **Codex Host Instruction Health Check** in [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md). Typical signals include wrong repository/workspace identity, missing Playbook adoption despite a current project declaration, skipped floating-ref exact revision resolution, failure to request available minimum read permission, unexpected broad bootstrap reading, or treating host instructions/capabilities as mutation authority. A timestamp-only error or ordinary source/test failure is not enough by itself.
 
-When the health check finds missing, stale, or mixed instructions, use the current complete copy-ready block as a full replacement, then verify with a minimal fresh-chat regression.
+When the health check finds missing, stale, or mixed instructions, replace the whole Codex Instructions field with the current complete [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt), then verify with a minimal fresh-chat regression.
 
 **繁體中文**
 
 Codex 個人化指示屬於**使用者／App 層級的持久設定**，不是儲存庫檔案，也不是只對單一聊天室生效的普通提示。以目前需要手動安裝的薄型啟動方式：
 
 1. 開啟 Codex 的 Settings／Personalization／Codex Instructions（不同產品版本的介面文字可能略有差異）。
-2. 從 [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) → **Codex Desktop — copy-ready persistent instruction** 複製目前完整版本。
+2. 開啟 [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt)，全選整份內容，並複製到 Codex Instructions。
 3. 將整個設定欄位完整取代，不要把不同版本以增量方式混在一起。
 4. 開啟正確的專案儲存庫／工作區，再建立全新的 Codex 聊天。
 5. 若啟動階段必要的唯讀查詢被 sandbox／network 權限限制擋住，Codex 可能會要求執行該操作所需的最低權限；核准只解除這個操作的能力限制，不代表取得更廣的修改權限。
@@ -111,7 +111,7 @@ Codex 個人化指示屬於**使用者／App 層級的持久設定**，不是儲
 
 若日後 Codex 的回報與預期啟動行為有實質不一致，ChatGPT 應先核對專案目前狀態與權威證據，再依 [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) 的 **Codex 個人化指示健康檢查（Host Instruction Health Check）** 做有界診斷。典型訊號包括：儲存庫／工作區身分錯誤、專案已宣告採用 Playbook 但 Codex 說未採用、浮動基準未解析成確切不可變版本、明明可以要求最低唯讀權限卻直接宣告 unavailable、啟動時出現不必要的大範圍讀取，或把個人化指示／工具能力誤當成修改權限。單純時間戳錯誤或一般原始碼／測試失敗，不足以單獨觸發這個診斷。
 
-若健康檢查確認設定缺失、過期或混合多版，使用目前可直接複製的完整區塊整段覆蓋，再用最小的全新聊天室迴歸測試驗證。
+若健康檢查確認設定缺失、過期或混合多版，請用目前完整的 [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) 整段覆蓋 Codex Instructions，再用最小的全新聊天室迴歸測試驗證。
 
 ## Quick workflow / 快速流程
 
