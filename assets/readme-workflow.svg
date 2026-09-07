@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080">
+  <defs>
+    <style>
+      .bg{fill:#fbfdff}.title{font:700 46px "Noto Sans CJK TC",Arial,sans-serif;fill:#0f2a5f}.subtitle{font:700 26px "Noto Sans CJK TC",Arial,sans-serif;fill:#1976d2}.lead{font:22px "Noto Sans CJK TC",Arial,sans-serif;fill:#16325c}
+      .boxTitle{font:700 22px "Noto Sans CJK TC",Arial,sans-serif;fill:#102a56}.body{font:18px "Noto Sans CJK TC",Arial,sans-serif;fill:#17345d}.small{font:16px "Noto Sans CJK TC",Arial,sans-serif;fill:#26466f}.tiny{font:15px "Noto Sans CJK TC",Arial,sans-serif;fill:#526b8c}
+      .num{font:700 26px "Noto Sans CJK TC",Arial,sans-serif;fill:#fff;text-anchor:middle;dominant-baseline:middle}.ruleNum{font:700 23px "Noto Sans CJK TC",Arial,sans-serif;fill:#fff;text-anchor:middle;dominant-baseline:middle}
+      .arrow{fill:none;stroke:#355a89;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.arrowG{fill:none;stroke:#0b8f63;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.arrowR{fill:none;stroke:#e73568;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#355a89"/></marker>
+    <marker id="arrowG" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#0b8f63"/></marker>
+    <marker id="arrowR" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#e73568"/></marker>
+  </defs>
+
+  <rect class="bg" width="1600" height="1080"/>
+  <text x="800" y="58" class="title" text-anchor="middle">How to Use This Repo / 如何使用這個 Repo</text>
+  <text x="800" y="96" class="subtitle" text-anchor="middle">README Edition — Quick Workflow / README 版快速流程</text>
+  <rect x="170" y="116" width="1260" height="74" rx="18" fill="#e8f3ff"/>
+  <text x="800" y="145" class="lead" text-anchor="middle">Find existing references first. Let ChatGPT do what it can. Confirm the gap, then let Codex close it.</text>
+  <text x="800" y="174" class="lead" text-anchor="middle">先找現有參考，先讓 ChatGPT 完成能做的部分；確認缺口後，再由 Codex 補上。</text>
+
+  <rect x="35" y="220" width="330" height="285" rx="18" fill="#eef7ff" stroke="#2f8de4" stroke-width="2"/>
+  <circle cx="78" cy="260" r="28" fill="#2185df"/><text x="78" y="260" class="num">1</text>
+  <text x="120" y="270" class="boxTitle">Bootstrap / 啟動</text>
+  <text x="60" y="318" class="body"><tspan x="60" dy="0">Project AGENTS.md declares</tspan><tspan x="60" dy="25">the Playbook baseline</tspan></text>
+  <text x="60" y="382" class="body"><tspan x="60" dy="0">在專案 AGENTS.md 宣告</tspan><tspan x="60" dy="25">Playbook 基準版本</tspan></text>
+  <rect x="55" y="425" width="290" height="60" rx="12" fill="#dceeff"/>
+  <text x="70" y="448" class="small"><tspan x="70" dy="0">Project AGENTS.md → baseline</tspan><tspan x="70" dy="23">→ CHAT_INIT.md</tspan></text>
+
+  <rect x="385" y="220" width="500" height="285" rx="18" fill="#fff8e7" stroke="#e5a31b" stroke-width="2"/>
+  <circle cx="428" cy="260" r="28" fill="#f3aa1a"/><text x="428" y="260" class="num">2</text>
+  <text x="470" y="255" class="boxTitle"><tspan x="470" dy="0">Find Existing References First /</tspan><tspan x="470" dy="27">先找現有參考</tspan></text>
+  <text x="415" y="330" class="body"><tspan x="415" dy="0">Read only the minimum current sources you need</tspan><tspan x="415" dy="25">只讀目前需要的最低必要來源</tspan></text>
+  <rect x="720" y="312" width="145" height="66" rx="14" fill="#f47a24"/><text x="792" y="339" font-family="Noto Sans CJK TC,Arial,sans-serif" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">Reuse first</text><text x="792" y="365" font-family="Noto Sans CJK TC,Arial,sans-serif" font-size="19" font-weight="700" fill="#fff" text-anchor="middle">先重用</text>
+  <rect x="410" y="385" width="450" height="98" rx="12" fill="#fff0cc"/>
+  <text x="430" y="412" class="small"><tspan x="430" dy="0">• README • AGENTS.md • canonical docs</tspan><tspan x="430" dy="24">• current TASKS / Hot items</tspan><tspan x="430" dy="24">• existing research / evals • release tag or main</tspan></text>
+
+  <rect x="905" y="220" width="405" height="285" rx="18" fill="#ebfbf3" stroke="#16a66d" stroke-width="2"/>
+  <circle cx="948" cy="260" r="28" fill="#109966"/><text x="948" y="260" class="num">3</text>
+  <text x="990" y="260" class="boxTitle"><tspan x="990" dy="0">ChatGPT First /</tspan><tspan x="990" dy="28">先由 ChatGPT 處理</tspan></text>
+  <text x="935" y="336" class="small"><tspan x="935" dy="0">• routing &amp; authority / 路由與權威判定</tspan><tspan x="935" dy="27">• read-only research / 唯讀研究整理</tspan><tspan x="935" dy="27">• clarify architecture / 釐清架構</tspan><tspan x="935" dy="27">• bounded validation / 有界驗證</tspan><tspan x="935" dy="27">• authorized docs updates / 授權文件更新</tspan></text>
+
+  <rect x="1330" y="220" width="235" height="285" rx="18" fill="#f6f9fd" stroke="#8ab7e8" stroke-width="2"/>
+  <text x="1448" y="267" class="boxTitle" text-anchor="middle">Key Rules / 核心規則</text>
+  <line x1="1350" y1="286" x2="1545" y2="286" stroke="#c8d9ec"/>
+  <circle cx="1374" cy="330" r="23" fill="#5aa7e8"/><text x="1374" y="330" class="ruleNum">1</text>
+  <text x="1412" y="326" class="body">Reuse first</text><text x="1412" y="348" class="small">先重用</text>
+  <circle cx="1374" cy="400" r="23" fill="#5aa7e8"/><text x="1374" y="400" class="ruleNum">2</text>
+  <text x="1412" y="396" class="body">Capability ≠ authority</text><text x="1412" y="418" class="small">能力 ≠ 權限</text>
+  <circle cx="1374" cy="470" r="23" fill="#5aa7e8"/><text x="1374" y="470" class="ruleNum">3</text>
+  <text x="1412" y="466" class="body">PASS ≠ Done</text><text x="1412" y="488" class="small">PASS ≠ 已完成</text>
+
+  <path d="M365 360 H385" class="arrow" marker-end="url(#arrow)"/>
+  <path d="M885 360 H905" class="arrowG" marker-end="url(#arrowG)"/>
+  <path d="M1105 505 V535 H800" class="arrow" marker-end="url(#arrow)"/>
+
+  <polygon points="800,520 935,585 800,650 665,585" fill="#f3efff" stroke="#7859e6" stroke-width="2"/>
+  <text x="800" y="565" text-anchor="middle" font-family="Noto Sans CJK TC,Arial,sans-serif" font-size="38" font-weight="700" fill="#352778">?</text>
+  <text x="800" y="596" class="body" text-anchor="middle">Gap remaining? /</text><text x="800" y="622" class="body" text-anchor="middle">還有缺口嗎？</text>
+  <rect x="535" y="535" width="100" height="36" rx="10" fill="#dbf8e9"/><text x="585" y="560" font-family="Noto Sans CJK TC,Arial,sans-serif" font-size="20" font-weight="700" fill="#087c55" text-anchor="middle">No / 否</text>
+  <rect x="965" y="535" width="100" height="36" rx="10" fill="#ffe1ea"/><text x="1015" y="560" font-family="Noto Sans CJK TC,Arial,sans-serif" font-size="20" font-weight="700" fill="#d82b5a" text-anchor="middle">Yes / 是</text>
+
+  <path d="M665 585 H270 V690" class="arrowG" marker-end="url(#arrowG)"/>
+  <rect x="55" y="690" width="390" height="190" rx="18" fill="#ebfbf3" stroke="#16a66d" stroke-width="2"/>
+  <circle cx="100" cy="732" r="28" fill="#109966"/><text x="100" y="732" class="num">4A</text>
+  <text x="145" y="728" class="boxTitle"><tspan x="145" dy="0">Finish in ChatGPT /</tspan><tspan x="145" dy="27">由 ChatGPT 直接完成</tspan></text>
+  <text x="90" y="807" class="body"><tspan x="90" dy="0">Return result, summary, or recommendation</tspan><tspan x="90" dy="28">直接回傳結果、摘要或建議</tspan></text>
+
+  <path d="M935 585 H1195 V690" class="arrowR" marker-end="url(#arrowR)"/>
+  <rect x="500" y="690" width="390" height="190" rx="18" fill="#fff0f5" stroke="#ec4b77" stroke-width="2"/>
+  <circle cx="545" cy="732" r="28" fill="#e83f70"/><text x="545" y="732" class="num">4B</text>
+  <text x="590" y="739" class="boxTitle">Confirm Scope / 確認範圍</text>
+  <text x="540" y="786" class="body"><tspan x="540" dy="0">Confirm exact task, repo,</tspan><tspan x="540" dy="26">and boundaries first</tspan><tspan x="540" dy="26">先確認精確任務、儲存庫與邊界</tspan></text>
+  <path d="M890 785 H925" class="arrowR" marker-end="url(#arrowR)"/>
+  <rect x="925" y="690" width="575" height="190" rx="18" fill="#f2efff" stroke="#7658e9" stroke-width="2"/>
+  <circle cx="970" cy="732" r="28" fill="#6850dc"/><text x="970" y="732" class="num">5</text>
+  <text x="1015" y="730" class="boxTitle"><tspan x="1015" dy="0">Codex Closes the Gap /</tspan><tspan x="1015" dy="28">交給 Codex 補缺口</tspan></text>
+  <text x="1010" y="804" class="small"><tspan x="1010" dy="0">• code changes / 程式修改　• tests / 測試</tspan><tspan x="1010" dy="27">• build or tooling changes / 建置或工具鏈修改</tspan><tspan x="1010" dy="27">• report evidence back / 回報證據與結果</tspan></text>
+
+  <path d="M250 880 V918 H800" class="arrowG"/>
+  <path d="M1210 880 V918 H800" class="arrow"/>
+  <path d="M800 918 V935" class="arrow" marker-end="url(#arrow)"/>
+  <rect x="350" y="925" width="900" height="112" rx="18" fill="#eaf4ff" stroke="#2b85dc" stroke-width="2"/>
+  <circle cx="397" cy="981" r="28" fill="#2185df"/><text x="397" y="981" class="num">6</text>
+  <text x="445" y="963" class="boxTitle">ChatGPT Reconcile / ChatGPT 回讀核對</text>
+  <text x="445" y="992" class="small">Read back current state, reconcile evidence, decide done / next stage / new-session handoff</text>
+  <text x="445" y="1018" class="small">回讀目前狀態、核對證據，再決定完成／下一階段／新聊天室交接</text>
+
+  <text x="800" y="1062" class="tiny" text-anchor="middle">Illustrative workflow only. Canonical rules remain in the linked Playbook owner documents. / 本圖僅供流程概覽；正式規則仍以對應 Playbook 權威主責文件為準。</text>
+</svg>
