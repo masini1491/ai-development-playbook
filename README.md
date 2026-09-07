@@ -22,7 +22,7 @@ AI Development Playbook 是一套可重用的 **GitHub-native AI 工程治理與
 
 你**不需要**完整載入或從頭讀完這個 repository。實際專案只要宣告 Playbook 為共通 baseline，AI session 從 [`CHAT_INIT.md`](CHAT_INIT.md) 進入，再依目前 Task 只讀最低必要的 canonical sections。
 
-> **Human-facing language contract / 人類閱讀語言契約**：`README.md` 是本 repository 唯一的 primary human-facing surface。每個主要主題以 **English first → Traditional Chinese counterpart** 的固定方式呈現；兩種語言維持 contract-level semantic parity，但不要求逐句翻譯、相同句數或完全相同修辭。其餘 AI-facing canonical surfaces 依 semantic precision、stable terminology 與 retrieval reliability 選擇最適合的自然語言。
+> **Human-facing language / 人類閱讀語言**：This README follows the canonical bilingual human-surface contract in [`AGENTS.md`](AGENTS.md): English first with a high-quality Traditional Chinese counterpart at section level. `AGENTS.md` owns the normative layout / parity / split criteria; this README only follows that contract.／本 README 依 [`AGENTS.md`](AGENTS.md) 的 canonical bilingual human-surface contract 呈現：主要主題採 English first，再接高品質繁體中文 counterpart。排版、semantic parity 與 split criteria 的規範權威在 `AGENTS.md`；README 本身只遵循，不自行治理。
 
 > **Dogfooding note / 自我實作說明**：This repository is primarily maintained by ChatGPT under the explicit maintainer contract in [`AGENTS.md`](AGENTS.md). This is a governed maintainer workflow, **not** a claim of fully autonomous repository maintenance.／本 repository 主要由 ChatGPT 依 [`AGENTS.md`](AGENTS.md) 的明確 maintainer contract 維護；這是受治理的 maintainer workflow，**不是**「完全自主維護」宣稱。
 
