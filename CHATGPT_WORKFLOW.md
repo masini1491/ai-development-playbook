@@ -314,9 +314,11 @@ Compaction 是 conversation-level state management，**不自動產生任何 dur
 
 觸發規則：
 
-- **Material boundary trigger**：Stage 完成、task responsibility materially 改變、準備 architecture freeze、repository mutation、completion acceptance、Codex handoff、deployment／external mutation或其他會受 Playbook authority影響的 material decision 前，若本 Stage 尚未確認 current Playbook identity，先做一次 declared floating ref 的 HEAD probe。
-- **Coarse freshness trigger**：若同一 material Stage 長時間持續、沒有自然 boundary，且距上次 Playbook identity 確認已約 **60 分鐘**，在下一個實質工程回合開始時做一次 HEAD-only probe。這是 bounded freshness target，不是 background timer、scheduler 或每則訊息 polling；execution surface 無可信時間時，不猜 elapsed minutes，改依 material-work／Stage trigger。
-- 使用者或 current project governance 明確指出 Playbook／project rules 已更新、要求 latest，或已有 concrete evidence 顯示 baseline可能 stale 時，立即 probe，不等 60 分鐘。
+- **Explicit update signal**：使用者或 current project governance 明確指出 Playbook／project rules 已更新、要求 latest，或已有 concrete evidence 顯示目前 working identity 可能 stale 時，立即 probe。
+- **Material boundary trigger**：Stage 完成、task responsibility materially 改變、準備 architecture freeze、repository mutation、completion acceptance、Codex handoff、deployment／external mutation或其他 material decision 前，若 Playbook currentness 可能影響本次 scope／actor／authority／validation／reporting／STOP 判斷，先做一次 declared floating ref 的 HEAD probe。
+- **Currentness-sensitive decision trigger**：即使沒有明確 Stage boundary，只要當前回答或 next action 的 correctness materially 依賴 current Playbook rule，而該 rule 自上次 identity 確認後可能已被新 evidence／revision改變，也應先 probe。
+- **Concrete stale evidence**：已知另一 session、maintainer action、commit notification、read-back mismatch 或其他可驗證訊號顯示 Playbook authority可能已前進時，立即 probe。
+- **Wall-clock age alone ≠ freshness trigger**：經過幾分鐘／幾小時、聊天室閒置多久或訊息數量本身，不足以要求重新查 HEAD；不建立固定分鐘數、background timer、scheduler 或 per-message polling。沒有 material freshness signal 時，沿用 last-confirmed identity直到出現上述 trigger。
 
 Probe 結果處理：
 
@@ -329,7 +331,7 @@ Probe 結果處理：
 
 Playbook identity probe 只回答「declared baseline/ref 是否改變」；它不授權新的 repository write、execution、deployment、credential或 external-service action，也不取代 project-specific current governance read-back。
 
-核心原則：**Check identity cheaply, reload selectively. Material boundaries trigger freshness first；長 Stage 約每 60 分鐘只做一次 HEAD-only 補查，不做 per-message polling。Pinned baseline 不自動漂移。**
+核心原則：**Freshness follows authority-changing events and revision evidence, not wall-clock age. Check identity cheaply, reload selectively. Pinned baseline 不自動漂移。**
 
 ## Actor Admission / Handoff Gate
 
