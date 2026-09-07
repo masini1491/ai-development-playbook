@@ -79,6 +79,40 @@ The snippet above is the smallest bootstrap, not the full deterministic adoption
 
 上面只是最小啟動宣告，不是完整的確定性導入契約。若要使用可由 Adoption Doctor 檢查、可直接調整的範例，請從 [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) 開始。
 
+## Codex Desktop setup and recovery / Codex Desktop 設定與復原
+
+**English**
+
+Codex personal instructions are a **user / app-level persistent setting**, not a repository file and not an ordinary one-chat prompt. For the current manually installed thin activation path:
+
+1. Open Codex Settings / Personalization / Codex Instructions (wording may vary by product version).
+2. Copy the entire current block from [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) → **Codex Desktop — copy-ready persistent instruction**.
+3. Replace the whole field instead of merging partial revisions.
+4. Open the intended project repository/workspace and start a fresh Codex chat.
+5. If a required read-only bootstrap probe is sandbox/network-gated, Codex may ask for the minimum permission needed for that exact operation; approval does not grant broader mutation authority.
+
+This setup is currently human-installed. A normal ChatGPT/Codex prompt does not itself prove that the persistent Codex instruction field was changed, and ChatGPT must not claim it can inspect or modify that setting unless the product exposes an actual settings capability.
+
+If Codex later produces a report that materially conflicts with the expected activation behavior, ChatGPT should first reconcile the project/canonical evidence, then use the bounded **Codex Host Instruction Health Check** in [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md). Typical signals include wrong repository/workspace identity, missing Playbook adoption despite a current project declaration, skipped floating-ref exact revision resolution, failure to request available minimum read permission, unexpected broad bootstrap reading, or treating host instructions/capabilities as mutation authority. A timestamp-only error or ordinary source/test failure is not enough by itself.
+
+When the health check finds missing, stale, or mixed instructions, use the current complete copy-ready block as a full replacement, then verify with a minimal fresh-chat regression.
+
+**繁體中文**
+
+Codex 個人化指示屬於**使用者／App 層級的持久設定**，不是 repository 檔案，也不是一般單一聊天室 Prompt。以目前的手動 thin activation 導入方式：
+
+1. 開啟 Codex 的 Settings／Personalization／Codex Instructions（不同產品版本的文字可能略有差異）。
+2. 從 [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) → **Codex Desktop — copy-ready persistent instruction** 複製目前完整版本。
+3. 整段取代設定欄位，不要把不同版本用增量方式混在一起。
+4. 開啟正確的 project repository／workspace，再建立全新的 Codex 聊天。
+5. 若必要的唯讀 bootstrap probe 被 sandbox／network permission gate 擋住，Codex 可能會要求完成該 exact operation 所需的最低權限；核准不代表取得更廣的 mutation authority。
+
+目前這個設定仍需要人類安裝一次。一般 ChatGPT／Codex Prompt 本身不能證明 Codex 個人化指示已被永久寫入；除非產品真的提供 settings 讀寫能力，ChatGPT 也不得宣稱自己能直接查看或修改該設定。
+
+若日後 Codex 回報與預期 activation 行為 materially 不一致，ChatGPT 應先核對 project／canonical evidence，再依 [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) 的 **Codex Host Instruction Health Check** 做有界診斷。典型訊號包括：repository／workspace identity 錯誤、project 已宣告採用 Playbook 但 Codex 說未採用、floating ref 沒有 resolve exact revision、明明可要求最低唯讀權限卻直接宣告 unavailable、bootstrap 無必要地 broad-read，或把 host instruction／capability 誤當 mutation authority。單純 timestamp 錯誤或一般 source／test failure 不足以單獨觸發這個診斷。
+
+若 health check 確認設定缺失、過期或混合多版，使用目前完整 copy-ready block 整段覆蓋，再用最小 fresh-chat regression 驗證。
+
 ## Quick workflow / 快速流程
 
 **English**
@@ -202,7 +236,7 @@ These three cases intentionally stay small. The Showcase is a proof surface, not
 - **代理治理（Agent governance）**：持久化（Persistence）、預設載入、寫入權限與執行權限分開判斷。
 - **儲存庫記憶（Repository memory）**：GitHub 目前的權威狀態高於舊聊天室或模型記憶。
 - **任務路由（Task routing）**：從 `CHAT_INIT.md` 依任務直達最低必要的權威主責文件，而不是鼓勵全文掃描整個儲存庫。
-- **工作流程互通（Workflow interoperability）**：外部規格、技能或治理框架可以共存，同時保留 Playbook 的權威、載入與證據邊界。
+- **工作流程互通（Workflow interoperability）**：外部規格、技能與治理框架可以共存，同時保留 Playbook 的權威、載入與證據邊界。
 - **驗證與證據（Validation and evidence）**：確定性檢查、行為評估、執行環境／硬體／正式環境證據與完成後回讀彼此分開，不互相冒充。
 - **成本感知執行（Cost-aware execution）**：Evidence → Context → Model → Reasoning → Agent → Validation 這條鏈只有在證據顯示較低成本層級不足時才逐級擴張。
 - **暫態運算（Ephemeral compute）**：ChatGPT 可在合適的沙箱環境執行有界確定性工作負載，但不會只因「能執行」就取得儲存庫寫入權限。
