@@ -308,6 +308,29 @@ Compaction 是 conversation-level state management，**不自動產生任何 dur
 
 核心原則：**Compaction 的目的是刪掉不再需要的 Context，同時保存足以安全重建 current task state 的最小 checkpoint；它不是把整個聊天永久化，也不是建立新的 authority。長期聊天室在 responsibility transition仍需 bounded rehydrate current actor routing，不能靠舊分工慣性決定下一個 executor。**
 
+### Playbook Freshness Probe
+
+長期 ChatGPT engineering session 不應把啟動時讀到的 Playbook identity 永久當成 current。對**跟隨浮動 Playbook ref**（例如 project governance 明確要求 latest/current `main`）的 session，採低成本 HEAD-only freshness probe；對**固定 SHA／tag baseline** 的 project，baseline 本身是 authority，不得因 upstream `main` 變更就自行升級。
+
+觸發規則：
+
+- **Material boundary trigger**：Stage 完成、task responsibility materially 改變、準備 architecture freeze、repository mutation、completion acceptance、Codex handoff、deployment／external mutation或其他會受 Playbook authority影響的 material decision 前，若本 Stage 尚未確認 current Playbook identity，先做一次 declared floating ref 的 HEAD probe。
+- **Coarse freshness trigger**：若同一 material Stage 長時間持續、沒有自然 boundary，且距上次 Playbook identity 確認已約 **60 分鐘**，在下一個實質工程回合開始時做一次 HEAD-only probe。這是 bounded freshness target，不是 background timer、scheduler 或每則訊息 polling；execution surface 無可信時間時，不猜 elapsed minutes，改依 material-work／Stage trigger。
+- 使用者或 current project governance 明確指出 Playbook／project rules 已更新、要求 latest，或已有 concrete evidence 顯示 baseline可能 stale 時，立即 probe，不等 60 分鐘。
+
+Probe 結果處理：
+
+- **HEAD unchanged**：保留已確認 working contract，不重新載入 Playbook、不全文掃描文件。
+- **HEAD changed**：先比較 last-confirmed Playbook identity 與 current declared ref 的 bounded commit/file diff，辨識是否觸及目前 task／actor／authority／validation／reporting所依賴的 canonical owner；只重讀 material changed sections 與必要 routing dependency。不得因 HEAD 有任何 commit 就全文重載。
+- **Changed but irrelevant**：記錄／維持新的 observed Playbook identity 即可，current task contract不因無關變更重建。
+- **Changed and relevant**：以 current higher-authority contract更新 working context；若變更 materially改變 current Stage scope、actor、permission、validation或STOP boundary，先 reconcile再繼續，不把舊 session contract硬撐成 current truth。
+- **Probe unavailable**：不得猜「應該沒變」。保留 last-confirmed identity與 freshness gap；只有當 current decision correctness materially依賴 latest Playbook authority時才 STOP／延後該 decision，否則可在清楚標示 freshness limitation下繼續最低風險工作。
+- **Pinned baseline**：可依使用者要求觀察 upstream newer HEAD 作為 update evidence，但沒有 project governance／使用者明確 baseline change 時，不把 newer HEAD自動升格成本 session authority。
+
+Playbook identity probe 只回答「declared baseline/ref 是否改變」；它不授權新的 repository write、execution、deployment、credential或 external-service action，也不取代 project-specific current governance read-back。
+
+核心原則：**Check identity cheaply, reload selectively. Material boundaries trigger freshness first；長 Stage 約每 60 分鐘只做一次 HEAD-only 補查，不做 per-message polling。Pinned baseline 不自動漂移。**
+
 ## Actor Admission / Handoff Gate
 
 **Codex handoff 不是 project workflow 的預設下一步。** ChatGPT 在準備產生 Codex Prompt、或上一個 Stage 完成準備決定 next action 時，先判斷目前工作真正需要哪個 actor。
