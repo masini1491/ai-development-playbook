@@ -84,7 +84,7 @@ Codex reporting language / timestamp / pre-send compliance 由 `CODEX_EXECUTION.
 - 只有缺少資訊會實質改變 **task identity、target repository、scope、completion criterion、authority、permission、execution feasibility、validation requirement 或安全邊界** 時，才需要澄清。
 - 澄清只問最低必要問題；若一個問題就足以解除 blocker，不把整份 internal schema／checklist丟給使用者。
 - 能安全標成 `N/A`、project-defined default 或 current canonical value 的欄位，直接正規化；不得為形式製造 user friction。
-- 若資訊不足但可在清楚縮小 scope 後安全處理，優先 reduced scope，並明確保留未判斷／未授權部分；不要要求與當前 decision 無關的資料。
+- 若資訊不足但可在清楚縮小 scope 後安全處理，優先 reduced scope，並明確保留未判斷／未授權部分；不要要求與當前 decision無關的資料。
 - Internal schema 可以比 user-facing input 更完整；除非使用者要求 audit、正式 record、copy-ready technical contract 或 debugging trace，不需要把全部 normalization detail 展示出來。
 - 這個 gate 不授權猜測 project fact、permission、secret、runtime capability 或 high-impact premise；遇到這類 material uncertainty 仍須回 canonical authority 或 STOP。
 
@@ -245,6 +245,34 @@ ChatGPT 不因「還能做更多」就自動建立一串 TASKS/BACKLOG。
 - 目前回答開始需要反覆回找「真正 current premise／decision／next action」才能避免混淆。
 
 不要只因聊天很長就機械式 compaction；若 current Context 仍清楚、沒有 material retrieval/handoff risk，保持原狀通常更便宜。
+
+### Proactive New-Session Handoff Gate
+
+Bounded compaction 與 fresh-session handoff 是不同強度的 conversation-state action。當同一聊天室的可觀察 session-health risk 已高到「繼續在原 session reasoning」比「建立最低充分 checkpoint 後重新 rehydrate」更容易誤用 stale premise、遺漏 constraint 或增加 recovery cost 時，ChatGPT 應**主動建議從下一個適當 Stage／decision boundary 開新聊天室接續**；不要等到實際 context failure、明顯失憶或使用者主動抱怨才處理。
+
+可支持主動 handoff 的 material signals 包括：
+
+- current answer 已反覆需要重新定位 current premise／decision／authority，才能避免被大量舊 branch 或 superseded state干擾；
+- 使用者需要糾正先前已明確成立的 material constraint／evidence／scope，且原因與長 session 的 stale-context confusion一致；
+- 同一 session 已跨多個 Stage、大量 tool output／search evidence，而下一階段只需要其中一小部分 current working set；
+- 已做過 bounded compaction／checkpoint，但不久後又出現相同 retrieval confusion 或 stale-premise風險；
+- 下一步即將進入 architecture freeze、completion acceptance、repository mutation、deployment／external mutation或其他高影響 decision，而目前 session-health risk 足以 materially影響 correctness。
+
+一般原則：
+
+- **不要捏造 context meter。** 除非 execution surface 明確暴露可信的 current-context／remaining-capacity metadata，ChatGPT 不得宣稱「已用掉 X%」「只剩 Y tokens」或用猜測的 hidden threshold當 handoff evidence；有可靠 meter時也只把它當一項 evidence，不取代 observable correctness/retrieval signals。
+- **Length alone ≠ handoff trigger。** 聊天很長但 current working set仍清楚、canonical pointers穩定、沒有 material stale/retrieval risk時，不為形式反覆催使用者換聊天室。
+- 若 material risk 可在本 session 用一次 bounded compaction／canonical reconciliation安全消除，先採較低成本手段；若風險仍存在，或剛好位於自然 Stage boundary，主動建議 fresh session。
+- 建議 handoff 時先完成**最低充分 checkpoint**；可使用 `SESSION_HANDOFF_TEMPLATE.md` 或等價 payload，但不複製整段聊天。Checkpoint 保持 evidence status、scope、permission、STOP condition 與 canonical pointers，不把 summary升格成 current truth。
+- Fresh session 必須依下方 Rehydration contract重新確認 current repository／authority；**new chat ≠ inherited authority**。
+- Handoff recommendation 是 conversation-level recovery decision，不自動建立 TASKS／Cold item／durable obligation，也不擴張 repository write、execution、deployment或credential authority。
+- 若下一步 correctness materially依賴已受污染／無法可靠 reconciliation 的 context，先停在 handoff boundary；若只是成本／便利性改善而非 correctness blocker，清楚建議新聊天室即可，不把它假裝成安全性 STOP。
+
+推薦流程：
+
+`Observe session-health signals → bounded compaction / canonical reconciliation if sufficient → material risk remains? → minimum checkpoint → recommend fresh session → fresh-session canonical rehydration`
+
+核心原則：**不要等到聊天室真的失控才換；也不要假裝知道隱藏 token 百分比。以可觀察的 stale/retrieval risk 判斷何時 fresh-session handoff 比繼續累積同一 Context 更可靠。**
 
 ### 最低充分 compaction payload
 
