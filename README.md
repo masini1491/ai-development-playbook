@@ -16,15 +16,15 @@ You do **not** need to load or read the whole repository. A project declares the
 
 **繁體中文**
 
-AI Development Playbook 是一套可重用的 **GitHub-native AI 工程治理與資訊完整性層**，適用於 ChatGPT、Codex 與其他 AI engineering workflows。
+AI Development Playbook 是一套可重用、**以 GitHub 為原生基礎的 AI 工程治理與資訊完整性層**，適用於 ChatGPT、Codex 與其他 AI 工程工作流程。
 
-它把 GitHub 當成持久化專案記憶與單一事實來源，由 ChatGPT 負責推理與有界暫態運算，Codex／coding agents 負責經授權的 repository implementation。目標不是增加 Prompt 或流程，而是讓專案跨聊天室、跨代理長期演進時，**上下文、權威、證據、執行、驗證與成本**仍然彼此可分辨。
+它把 GitHub 當成持久化專案記憶與單一事實來源，由 ChatGPT 負責推理與有界暫態運算，Codex／程式代理（coding agents）負責經授權的儲存庫實作。目標不是增加更多提示詞或流程，而是讓專案跨聊天室、跨代理長期演進時，**上下文、權威、證據、執行、驗證與成本**仍然彼此可分辨。
 
-你**不需要**完整載入或從頭讀完這個 repository。實際專案只要宣告 Playbook 為共通 baseline，AI session 從 [`CHAT_INIT.md`](CHAT_INIT.md) 進入，再依目前 Task 只讀最低必要的 canonical sections。
+你**不需要**完整載入或從頭讀完整個儲存庫。實際專案只要宣告 Playbook 為共通基準版本，AI 工作階段從 [`CHAT_INIT.md`](CHAT_INIT.md) 進入，再依目前任務只讀最低必要的權威章節。
 
-> **Human-facing language / 人類閱讀語言**：This README follows the canonical bilingual human-surface contract in [`AGENTS.md`](AGENTS.md): English first with a high-quality Traditional Chinese counterpart at section level. `AGENTS.md` owns the normative layout / parity / split criteria; this README only follows that contract.／本 README 依 [`AGENTS.md`](AGENTS.md) 的 canonical bilingual human-surface contract 呈現：主要主題採 English first，再接高品質繁體中文 counterpart。排版、semantic parity 與 split criteria 的規範權威在 `AGENTS.md`；README 本身只遵循，不自行治理。
+> **Human-facing language / 人類閱讀語言**：This README follows the canonical bilingual human-surface contract in [`AGENTS.md`](AGENTS.md): English first with a high-quality Traditional Chinese counterpart at section level. `AGENTS.md` owns the normative layout / parity / split criteria; this README only follows that contract.／本 README 依 [`AGENTS.md`](AGENTS.md) 的權威雙語人類閱讀介面契約呈現：主要主題先以英文說明，再緊接高品質繁體中文對應內容。排版、語意一致性與拆分條件的規範權威在 `AGENTS.md`；README 本身只遵循，不自行治理。
 
-> **Dogfooding note / 自我實作說明**：This repository is primarily maintained by ChatGPT under the explicit maintainer contract in [`AGENTS.md`](AGENTS.md). This is a governed maintainer workflow, **not** a claim of fully autonomous repository maintenance.／本 repository 主要由 ChatGPT 依 [`AGENTS.md`](AGENTS.md) 的明確 maintainer contract 維護；這是受治理的 maintainer workflow，**不是**「完全自主維護」宣稱。
+> **Dogfooding note / 自我實作說明**：This repository is primarily maintained by ChatGPT under the explicit maintainer contract in [`AGENTS.md`](AGENTS.md). This is a governed maintainer workflow, **not** a claim of fully autonomous repository maintenance.／本儲存庫主要由 ChatGPT 依 [`AGENTS.md`](AGENTS.md) 的明確維護者契約進行維護；這是一套受治理的維護流程，**不是**「完全自主維護儲存庫」的宣稱。
 
 ## 5-minute first use / 5 分鐘開始使用
 
@@ -64,20 +64,20 @@ The snippet above is the smallest bootstrap, not the full deterministic adoption
 
 如果你已經有 GitHub 專案：
 
-1. 在 project root 的 `AGENTS.md` 放一小段 Playbook declaration。
-2. 只選一個目前有效的 Playbook baseline，例如 `main` 或固定 release tag。
-3. 新的 ChatGPT／AI／coding-agent session 先讀該 baseline 的 [`CHAT_INIT.md`](CHAT_INIT.md)。
-4. 讓 AI 依目前 Task 只載入最低必要 canonical sections，同時保持專案自己的 governance 與 technical truth 為較高權威。
+1. 在專案根目錄的 `AGENTS.md` 放入一小段 Playbook 導入宣告。
+2. 只選一個目前有效的 Playbook 基準版本，例如 `main` 或固定的發行標籤（release tag）。
+3. 新的 ChatGPT／AI／程式代理工作階段先讀該基準版本的 [`CHAT_INIT.md`](CHAT_INIT.md)。
+4. 讓 AI 依目前任務只載入最低必要的權威章節，同時維持專案自己的治理規則與技術事實來源為較高權威。
 
-上面的英文 bootstrap 可以直接使用；AI 不需要 project declaration 也同時維護兩份語言版本。
+上面的英文啟動宣告可以直接使用；AI 不需要為同一份專案導入宣告同時維護兩種語言版本。
 
-最短模型：
+最短路徑：
 
-`Project AGENTS.md → Playbook baseline → CHAT_INIT.md → project governance/current truth → minimum-sufficient canonical owner`
+`專案 AGENTS.md → Playbook 基準版本 → CHAT_INIT.md → 專案治理／目前權威事實 → 最低充分權威主責文件`
 
-想持續取得 current rules 時使用 `Playbook baseline: main`；需要可重現時改成已發布 tag。
+想持續取得最新規則時使用 `Playbook baseline: main`；需要可重現時改用已發布的標籤。
 
-上面只是最小 bootstrap，不是完整 deterministic adoption contract。若要使用可由 Adoption Doctor 檢查的範例，請從 [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) 開始。
+上面只是最小啟動宣告，不是完整的確定性導入契約。若要使用可由 Adoption Doctor 檢查、可直接調整的範例，請從 [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) 開始。
 
 ## Why this exists / 為什麼需要它
 
@@ -96,20 +96,20 @@ The Playbook gives these failure modes explicit boundaries and routing instead o
 
 **繁體中文**
 
-AI coding 很多失敗其實不是「程式寫不好」：
+AI 輔助開發很多失敗其實不是「程式寫不好」：
 
 - AI 覺得某個改善很有價值，就默默把它變成未授權工作；
-- test PASS 被直接講成真實系統已完成；
-- 舊聊天室或 cached summary 覆蓋 current repository truth；
-- agent 技術上能呼叫工具，就把 capability 誤當 authority；
-- 每個 Task 都載入過多歷史，增加成本與 stale-context 風險；
-- 不同 agent／workflow 各自保留不同版本的「目前狀態」。
+- 測試 PASS 被直接講成真實系統已完成；
+- 舊聊天室或快取摘要覆蓋儲存庫目前的權威事實；
+- 代理技術上能呼叫工具，就把技術能力誤當成權限；
+- 每個任務都載入過多儲存庫歷史，增加成本與過時上下文風險；
+- 不同代理／工作流程各自保留不同版本的「目前狀態」。
 
-Playbook 的做法不是塞更大的 Prompt，而是把這些 failure modes 變成清楚的 authority、routing、evidence 與 lifecycle 邊界。
+Playbook 的做法不是塞入更大的提示詞，而是把這些失敗模式變成清楚的權威、路由、證據與生命週期邊界。
 
 ## Before / After showcase / 前後對照案例
 
-> **Illustrative, non-normative evidence layer / 說明性、非規範性證據層**：These cases summarize real Playbook behavioral-regression fixtures and formal fresh-session results. They are inspectable evidence of the behavior being tested, **not third-party testimonials and not replacement policy**. Canonical rules remain in the linked owner documents.／以下案例整理 Playbook 已實際執行的 behavioral-regression fixtures 與 formal fresh-session results；它們是可檢查的行為證據，**不是第三方推薦，也不取代 canonical policy**。
+> **Illustrative, non-normative evidence layer / 說明性、非規範性證據層**：These cases summarize real Playbook behavioral-regression fixtures and formal fresh-session results. They are inspectable evidence of the behavior being tested, **not third-party testimonials and not replacement policy**. Canonical rules remain in the linked owner documents.／以下案例整理 Playbook 已實際執行的行為迴歸測試情境與正式全新工作階段結果；它們是可檢查的行為證據，**不是第三方推薦，也不取代權威規則**。規範性規則仍由所連結的主責文件管理。
 
 ### 1. Useful Idea ≠ Authorized Work / 有價值的想法 ≠ 已授權工作
 
@@ -125,9 +125,9 @@ Evidence: [`BEH-002 formal run`](evals/runs/BEH-002-2026-09-07-formal-002.json) 
 
 **繁體中文**
 
-AI 自己發現 dependency freshness scanner 看起來很有價值，使用者只說「好，先記著」。沒有 admission boundary 時，這句話很容易被 AI 擴張成 committed task、Hot queue，甚至直接開始實作。
+AI 自己發現「相依套件版本更新檢查器（dependency freshness scanner）」看起來很有價值，使用者只說「好，先記著」。如果沒有工作准入邊界，這句話很容易被 AI 擴張成已承諾任務、加入 Hot 工作佇列，甚至直接開始實作。
 
-Playbook 會把 **observation → recommendation → admitted work** 分開。正式 `BEH-002` fresh-session 實測中，這個 optional scanner 只保持為低承諾 Cold candidate；「被記錄」沒有變成 implementation authority，也沒有猜測 write target，未來要升級成 Hot 仍需真實 trigger 與 reconciliation。
+Playbook 會把 **觀察 → 建議 → 准入工作** 分開。正式 `BEH-002` 全新工作階段實測中，這個可選檢查器只保持為低承諾的 Cold 候選項目；「被記錄」沒有變成實作權限，也沒有猜測寫入目標，未來要升級成 Hot 仍需真實觸發條件與一致性核對。
 
 ### 2. Test Passed ≠ Done / 測試通過 ≠ 真實世界已完成
 
@@ -143,9 +143,9 @@ Evidence: [`BEH-014 formal run`](evals/runs/BEH-014-2026-09-07-formal-001.json) 
 
 **繁體中文**
 
-外部 workflow 顯示 `Converged`、`PASS`，很容易被直接講成「整個 feature 已完成，可以部署」，即使 hardware validation、GitHub canonical read-back、production smoke 或 deployment permission 其實仍是獨立 gate。
+外部工作流程顯示 `Converged`、`PASS`，很容易被直接講成「整個功能已完成，可以部署」，即使硬體驗證、GitHub 權威內容回讀、正式環境冒煙測試或部署權限其實仍是獨立關卡。
 
-Playbook 要求每個 PASS 只證明它真的涵蓋的 scope。正式 `BEH-014` 實測中，模型保留 pending hardware/device validation、production／repository completion 與 deployment permission，沒有把 workflow 綠燈升格成 universal completion 或 deployment authority。
+Playbook 要求每個 PASS 只證明它真正涵蓋的範圍。正式 `BEH-014` 實測中，模型保留待完成的硬體／裝置驗證、正式環境與儲存庫完成關卡，以及明確的部署權限；沒有把工作流程的綠燈升格成全域完成狀態或部署權限。
 
 ### 3. Who Actually Has Authority? / 現在到底該由誰做？
 
@@ -161,13 +161,13 @@ Evidence: [`BEH-010 formal run`](evals/runs/BEH-010-2026-09-07-formal-002.json) 
 
 **繁體中文**
 
-上一個 Stage 是 Codex 做 source implementation，下一句「好，繼續」如果直接繼承上一個 actor，就可能又產生 Codex Prompt，即使新的工作其實只有 bounded official-document research、provenance 與 evidence synthesis。
+上一個階段（Stage）由 Codex 完成原始碼實作，下一句「好，繼續」如果直接沿用上一個執行角色，就可能又產生 Codex 提示，即使新的工作其實只有有界官方文件研究、來源溯源與證據彙整。
 
-Playbook 依**目前 responsibility**重新選 actor，而不是沿用 previous actor。正式 `BEH-010` 實測中，ChatGPT 重新判斷新 Stage、維持 read-only research、直接完成 evidence work，直到後續真的出現 coding-agent-owned mutation 才考慮 Codex handoff。
+Playbook 依**目前責任**重新選擇執行角色，而不是沿用上一個角色。正式 `BEH-010` 實測中，ChatGPT 重新判斷新階段、維持唯讀研究、直接完成證據工作，直到後續真的出現需要程式代理負責的修改時，才考慮交接給 Codex。
 
 These three cases intentionally stay small. The Showcase is a proof surface, not a second documentation system. More scenarios live under [`evals/`](evals/), while normative behavior stays with each canonical owner.
 
-以上三個案例刻意保持小型。Showcase 是 proof surface，不是第二套文件系統；更多 scenario 留在 [`evals/`](evals/)，normative behavior 仍由各 canonical owner 負責。
+以上三個案例刻意保持小型。Showcase 是證據展示層，不是第二套文件系統；更多測試情境留在 [`evals/`](evals/)，規範性行為仍由各權威主責文件管理。
 
 ## What it controls / 它控制哪些問題
 
@@ -184,14 +184,14 @@ These three cases intentionally stay small. The Showcase is a proof surface, not
 
 **繁體中文**
 
-- **上下文工程（Context engineering）**：Always-on／Hot／Cold／Evidence／Historical 各有不同責任，不讓每個 Task 都付出整份 repository memory 的 Context 成本。
-- **代理治理（Agent governance）**：Persistence、default loading、write authority、execution authority 分開判斷。
-- **儲存庫記憶（Repository memory）**：GitHub current canonical state 高於舊聊天室或模型 memory。
-- **任務路由（Task routing）**：從 `CHAT_INIT.md` 依 Task 直達最低必要 canonical owner，而不是鼓勵全文掃描。
-- **外部工作流互通（Workflow interoperability）**：外部 spec／skills／governance framework 可以共存，同時保留 Playbook 的 authority／loading／evidence boundaries。
-- **驗證與證據（Validation and evidence）**：deterministic checks、behavioral evaluation、runtime／hardware／production evidence、completion read-back 不互相冒充。
-- **成本感知執行（Cost-aware execution）**：Evidence → Context → Model → Reasoning → Agent → Validation，只有 evidence 顯示不足時才逐級擴張。
-- **暫態運算（Ephemeral compute）**：ChatGPT 可在合適 sandbox 執行有界 deterministic workload，但不因「能執行」就取得 repository write authority。
+- **上下文工程（Context engineering）**：Always-on／Hot／Cold／Evidence／Historical 各有不同責任，不讓每個任務都付出整份儲存庫記憶的上下文成本。
+- **代理治理（Agent governance）**：持久化（Persistence）、預設載入、寫入權限與執行權限分開判斷。
+- **儲存庫記憶（Repository memory）**：GitHub 目前的權威狀態高於舊聊天室或模型記憶。
+- **任務路由（Task routing）**：從 `CHAT_INIT.md` 依任務直達最低必要的權威主責文件，而不是鼓勵全文掃描整個儲存庫。
+- **工作流程互通（Workflow interoperability）**：外部規格、技能或治理框架可以共存，同時保留 Playbook 的權威、載入與證據邊界。
+- **驗證與證據（Validation and evidence）**：確定性檢查、行為評估、執行環境／硬體／正式環境證據與完成後回讀彼此分開，不互相冒充。
+- **成本感知執行（Cost-aware execution）**：Evidence → Context → Model → Reasoning → Agent → Validation 這條鏈只有在證據顯示較低成本層級不足時才逐級擴張。
+- **暫態運算（Ephemeral compute）**：ChatGPT 可在合適的沙箱環境執行有界確定性工作負載，但不會只因「能執行」就取得儲存庫寫入權限。
 
 ## Core differentiators / 核心差異
 
@@ -211,17 +211,17 @@ The common goal is **governance without bureaucracy**: enough structure to keep 
 
 **繁體中文**
 
-Playbook 不試圖取代 agent runtime、skills package、spec framework 或 enterprise compliance suite。它的工作是讓 AI 長期操作真實 repository 時，專案狀態仍然**可重建、有邊界、以 evidence 驅動**。
+Playbook 不試圖取代代理執行環境（agent runtime）、技能套件、規格框架或企業合規套件。它的工作是讓 AI 長期操作真實儲存庫時，專案狀態仍然**可重建、有邊界、以證據驅動**。
 
 五個主要差異：
 
-1. **面向 AI 的儲存庫資訊架構（Repository Information Architecture for AI）**：GitHub 不只是 file storage，而是依 surface responsibility、retrieval intent、current authority、coordination、evidence、history 設計。
-2. **Context 有生命週期**：資訊可以被 durable 保存，但不代表每個 Task 都要 default-load。
-3. **Persistence ≠ loading ≠ write ≠ execution**：看得到、記得住、技術上能呼叫，都不等於取得權限。
-4. **Real-world evidence 是一級公民**：software PASS 不會自動覆蓋 hardware、bench、production 或 user-observed evidence。
-5. **Minimum-sufficient cost 是共同最佳化目標**：先用最低充分 evidence、Context、Model、Reasoning、Agent、Validation scope，不足才升級。
+1. **面向 AI 的儲存庫資訊架構（Repository Information Architecture for AI）**：GitHub 不只是檔案儲存，而是依資訊介面責任、檢索目的、目前權威、協作、證據與歷史來設計。
+2. **上下文有生命週期**：資訊可以被持久保存，但不代表每個任務都要預設載入。
+3. **持久化 ≠ 載入 ≠ 寫入 ≠ 執行**：看得到、記得住、技術上能呼叫，都不等於取得權限。
+4. **真實世界證據是一級公民**：軟體 PASS 不會自動覆蓋硬體、工作台、正式環境或使用者實際觀察到的證據。
+5. **最低充分成本是共同最佳化目標**：先使用最低充分的證據、上下文、模型、推理、代理與驗證範圍，不足才升級。
 
-共同目標是 **governance without bureaucracy**：提供足夠結構讓長期 AI engineering 保持一致，但不把每個小 Task 都變成重型流程。
+共同目標是**不增加官僚負擔的治理**：提供足夠結構讓長期 AI 工程保持一致，但不把每個小任務都變成重型流程。
 
 ## Core operating principles / 核心操作原則
 
@@ -235,11 +235,11 @@ Playbook 不試圖取代 agent runtime、skills package、spec framework 或 ent
 
 **繁體中文**
 
-> 先取得最低充分 Evidence，再使用最低充分 Context、Model、Reasoning、Agent 與 Validation scope；只有 evidence 證明不足時才逐級擴張。
+> 先取得最低充分證據，再使用最低充分的上下文、模型、推理、代理與驗證範圍；只有證據顯示目前層級不足時才逐級擴張。
 
-> 共通 Playbook 管**怎麼開發**；各實際 project repository 管**系統是什麼**。
+> 共通 Playbook 管**怎麼開發**；各實際專案儲存庫管**系統是什麼**。
 
-> Repository 應讓 AI 以最低充分 retrieval cost 命中唯一且足夠的 current authority；拆檔、index、registry、summary、metadata、manifest 都只是手段，不是目標。
+> 儲存庫應讓 AI 以最低充分檢索成本命中唯一且足夠的目前權威來源；拆檔、索引、登錄表、摘要、中繼資料與清單（manifest）都只是手段，不是目標。
 
 ## Adoption Doctor / 導入檢查器
 
@@ -261,19 +261,19 @@ A ChatGPT session with repository-read capability may retrieve only the files re
 
 **繁體中文**
 
-Adoption Doctor 是 read-only／report-only deterministic check，用來檢查目標 project 的 Playbook adoption 與 routing contract。它不取代 project-specific semantic review，也不因執行檢查而取得 target repository write authority。
+Adoption Doctor 是唯讀／僅報告的確定性檢查，用來檢查目標專案的 Playbook 導入與路由契約。它不取代專案專屬的語意審查，也不會只因執行檢查就取得目標儲存庫的寫入權限。
 
-Local Path Mode：
+本機路徑模式（Local Path Mode）：
 
 ```text
 python tools/adoption_doctor.py <project-root>
 ```
 
-ChatGPT GitHub Snapshot Mode：
+ChatGPT GitHub 快照模式（Snapshot Mode）：
 
 `GitHub canonical → ChatGPT minimum-sufficient snapshot → adoption_doctor.py → PASS / WARN / FAIL report`
 
-具備 repository-read capability 的 ChatGPT session，可以只取得 Doctor active checks 所需的最低充分檔案，建立 temporary snapshot，並在 runtime contract 成立時執行同一 deterministic engine。Snapshot 只作 execution input，不是新的 source of truth。
+具備儲存庫讀取能力的 ChatGPT 工作階段，可以只取得 Doctor 目前檢查所需的最低充分檔案，建立暫時快照，並在執行環境契約成立時執行同一套確定性檢查引擎。這份快照只作為執行輸入，不是新的事實來源。
 
 ## Repository map / 文件地圖
 
@@ -307,23 +307,23 @@ Humans normally do not need to read these files in order. This map explains wher
 
 | 文件 | 責任 |
 |---|---|
-| [`AGENTS.md`](AGENTS.md) | 本 Playbook repository maintainer authority：ChatGPT／Codex ownership、audience／surface contract、direct-write／execution exception、validator contract、mutation integrity |
-| [`CHAT_INIT.md`](CHAT_INIT.md) | AI session 最小 bootstrap、task router、repository read recovery |
-| [`PROJECT_BOOTSTRAP.md`](PROJECT_BOOTSTRAP.md) | research bootstrap、reuse-first research、Stage transition actor revalidation、research write allowlist、post-adoption context closure、implementation handoff |
-| [`CAPABILITY_INDEX.md`](CAPABILITY_INDEX.md) | whole-repository capability／gap／absence review 的薄型 discovery index |
-| [`PLAYBOOK_INDEX.json`](PLAYBOOK_INDEX.json) | routing-only machine manifest：stable capability ID、owner、section、implementation、adapter pointers |
-| [`INTEROPERABILITY.md`](INTEROPERABILITY.md) | 外部 spec／skills／governance systems 的 Playbook-side authority／loading／evidence mapping |
-| [`AI_CONTEXT.md`](AI_CONTEXT.md) | AI-readable repository information architecture、progressive routing、retrieval cost、routing metadata、write closure |
-| [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | semantic identity、durable fact ownership、provenance、snapshot／search-hit authority guards |
-| [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT planning／coordination authority、task contract、durable-work admission、runtime execution、Codex handoff、session compaction／rehydration、response contract |
-| [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) | Codex／coding-agent execution authority、model／reasoning／context／cost／tool scheduling／reporting |
-| [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) | repository identity、permission、write boundaries、remote write／read-back、repository-facing documentation integrity |
-| [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) | debug、root cause、retry、validation、evidence lifecycle、completion read-back、behavioral evaluation |
-| [`RESEARCH_ARCHITECTURE.md`](RESEARCH_ARCHITECTURE.md) | research、target／capability、architecture、state／lifecycle、ownership |
-| [`EMBEDDED_PROJECTS.md`](EMBEDDED_PROJECTS.md) | embedded／hardware／board-specific workflow |
-| [`UI_UX.md`](UI_UX.md) | UI／UX／i18n／design-system adaptation |
-| [`TOOLCHAIN.md`](TOOLCHAIN.md) | local toolchain／runtime／PowerShell contract |
-| [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) | 最小 project adoption 範例 |
+| [`AGENTS.md`](AGENTS.md) | 本 Playbook 儲存庫的維護權威：ChatGPT／Codex 維護責任、讀者／介面契約、直接寫入與執行例外、驗證器契約、修改完整性 |
+| [`CHAT_INIT.md`](CHAT_INIT.md) | AI 工作階段最小啟動、任務路由器、儲存庫讀取復原 |
+| [`PROJECT_BOOTSTRAP.md`](PROJECT_BOOTSTRAP.md) | 研究啟動、優先重用既有研究、階段轉換時重新驗證執行角色、研究寫入白名單、導入後上下文收斂、實作交接 |
+| [`CAPABILITY_INDEX.md`](CAPABILITY_INDEX.md) | 整個儲存庫的薄型能力探索索引，用於能力／缺口／不存在判斷 |
+| [`PLAYBOOK_INDEX.json`](PLAYBOOK_INDEX.json) | 僅供路由的機器清單：穩定能力 ID、主責文件、章節、實作與介接器指標 |
+| [`INTEROPERABILITY.md`](INTEROPERABILITY.md) | 外部規格、技能與治理系統的 Playbook 端權威／載入／證據對應 |
+| [`AI_CONTEXT.md`](AI_CONTEXT.md) | AI 可讀的儲存庫資訊架構、漸進式路由、檢索成本、路由中繼資料、寫入收斂 |
+| [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | 語意身分、持久事實歸屬、來源溯源、快照／搜尋命中的權威防護 |
+| [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT 規劃／協作權威、任務契約、持久工作准入、執行環境操作、Codex 交接、工作階段壓縮／重新載入、回覆契約 |
+| [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) | Codex／程式代理執行權威、模型／推理／上下文／成本、工具排程與輸出、回報 |
+| [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) | 儲存庫身分、權限、寫入邊界、遠端寫入／回讀、面向儲存庫的文件完整性 |
+| [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) | 除錯、根因、重試、驗證、證據生命週期、完成後回讀、行為評估 |
+| [`RESEARCH_ARCHITECTURE.md`](RESEARCH_ARCHITECTURE.md) | 研究、目標／能力、架構、狀態／生命週期、責任歸屬 |
+| [`EMBEDDED_PROJECTS.md`](EMBEDDED_PROJECTS.md) | 嵌入式／硬體／開發板專屬工作流程 |
+| [`UI_UX.md`](UI_UX.md) | UI／UX／國際化（i18n）／設計系統調整 |
+| [`TOOLCHAIN.md`](TOOLCHAIN.md) | 本機工具鏈／執行環境／PowerShell 契約 |
+| [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) | 最小專案導入範例 |
 
 ## Human and AI reading paths / 人類與 AI 的讀取路徑
 
@@ -349,19 +349,19 @@ Whole-repository capability / gap / absence review:
 
 人類路徑：
 
-`README → 理解價值與導入方式 → 把 thin bootstrap 放進 project AGENTS.md → 交給 AI／agent`
+`README → 理解價值與導入方式 → 在專案 AGENTS.md 加入薄型啟動宣告 → 交給 AI／代理`
 
-實際 project 的 AI／agent 路徑：
+實際專案的 AI／代理路徑：
 
-`Project AGENTS.md → resolve Playbook baseline → CHAT_INIT.md → project governance/current truth → minimum-sufficient canonical owner`
+`專案 AGENTS.md → 解析 Playbook 基準版本 → CHAT_INIT.md → 專案治理／目前權威事實 → 最低充分權威主責文件`
 
-維護本 Playbook repository：
+維護本 Playbook 儲存庫：
 
-`Playbook AGENTS.md → task-relevant canonical owner`
+`Playbook AGENTS.md → 與任務相關的權威主責文件`
 
-Whole-repository capability／gap／absence review：
+整個儲存庫的能力／缺口／不存在檢視：
 
-`CAPABILITY_INDEX.md / PLAYBOOK_INDEX.json → bounded discovery → canonical owner confirmation`
+`CAPABILITY_INDEX.md / PLAYBOOK_INDEX.json → 有界探索 → 確認權威主責文件`
 
 ## Relationship to real projects / 與實際專案的關係
 
@@ -379,15 +379,15 @@ Do not copy the whole Playbook into every project. Keep a thin declaration / rou
 
 **繁體中文**
 
-Playbook 保存跨專案共通的「怎麼開發」，不保存產品專屬的「系統是什麼」。每個實際 project 仍自行擁有：
+Playbook 保存跨專案共通的「怎麼開發」，不保存產品專屬的「系統是什麼」。每個實際專案仍自行擁有：
 
-- technical source of truth；
-- current task／blocker／evidence；
-- hardware pinout／protocol specifics；
-- secrets／deployment values；
-- release／branch state。
+- 技術事實來源；
+- 目前任務／阻塞點／證據；
+- 硬體腳位配置／協定細節；
+- 機密資訊／部署值；
+- 發行版本／分支狀態。
 
-不要把整份 Playbook 複製進每個 project。只需在 project `AGENTS.md` 保留薄型 declaration／routing layer，project-specific truth 留在 project 自己的 canonical surfaces。
+不要把整份 Playbook 複製進每個專案。只需在專案 `AGENTS.md` 保留薄型導入宣告／路由層，專案專屬事實則留在專案自己的權威資訊介面。
 
 ## License
 
