@@ -45,232 +45,46 @@ Do not infer repository write or execution authority from access capability.
 可觸發檢查的 material signals 包括：
 
 - 已驗證 workspace／repository 與 Codex 回報使用的 repository identity 不一致，且不像單純 project-state drift；
-- project `AGENTS.md` 明確採用 Playbook，但 Codex聲稱未採用，或跳過 declared baseline；
-- floating baseline 應 resolve exact revision，Codex卻完全未做 identity probe、用 memory 猜 SHA，或把 moving ref 冒充 immutable revision；
-- 必要 read-only bootstrap probe 被 permission gate 阻擋，而 runtime 明明可 request approval，Codex卻直接宣告 unavailable；
+- project `AGENTS.md` 明確採用 Playbook，但 Codex 聲稱未採用，或跳過 declared baseline；
+- floating baseline 應 resolve exact revision，Codex 卻完全未做 identity probe、用 memory 猜 SHA，或把 moving ref 冒充 immutable revision；
+- 必要 read-only bootstrap probe 被 permission gate 阻擋，而 runtime 明明可 request approval，Codex 卻直接宣告 unavailable；
 - Codex 在一般 bootstrap 無必要地讀 Playbook README、whole Playbook、BACKLOG／Cold／history 或做 broad repository scan；
 - Codex 把 persistent host instruction、filesystem／network capability 或 permission approval 當成 mutation／scope expansion authority；
 - 同類 activation behavior 在 fresh session 重複偏離 current adapter contract。
 
-不應單獨觸發 host-instruction diagnosis 的例子：單次 timestamp 錯誤、source/test failure、正常 network outage、project technical mismatch、validation failure；這些先依各自 canonical owner分類，除非另有 evidence 指向 activation／host config drift。
+不應單獨觸發 host-instruction diagnosis 的例子：單次 timestamp 錯誤、source/test failure、正常 network outage、project technical mismatch、validation failure；這些先依各自 canonical owner 分類，除非另有 evidence 指向 activation／host config drift。
 
 Health Check 建議流程：
 
-`Codex report anomaly → canonical/project reconciliation → classify symptom → activation mismatch plausible? → inspect current adapter identity → ask user to verify Codex personal instruction only if needed → compare against current copy-ready block → full replacement if missing/stale/mixed → minimal fresh-chat regression`
+`Codex report anomaly → canonical/project reconciliation → classify symptom → activation mismatch plausible? → inspect current adapter identity → ask user to verify Codex personal instruction only if needed → compare against CODEX_DESKTOP_INSTRUCTIONS.txt → full replacement if missing/stale/mixed → minimal fresh-chat regression`
 
 一般原則：
 
 - ChatGPT 不得假裝能看到或修改使用者的 Codex 個人化設定；若產品沒有 settings-read/write capability，請使用者到 Codex Settings / Personalization / Codex Instructions 檢查，並在必要時貼出文字或截圖。
 - 先確認 Playbook current adapter revision，再比較設定，避免拿舊聊天室裡的 host instruction 當 current expected value。
-- 若設定缺失、過期、混合多版或 materially inconsistent，提供**完整可整段覆蓋**的 current copy-ready instruction；不要只給 delta patch 造成殘留規則。
-- 若設定看起來 current，但 behavior仍不符，優先跑最小 fresh-chat regression 區分 runtime／permission／product behavior 與設定 drift，不反覆要求使用者重貼同一內容。
-- Health Check 是 diagnosis／recovery，不授權修改 project repository、擴張 current task、或把 Codex runtime bug持久化成 project work。
+- 若設定缺失、過期、混合多版或 materially inconsistent，提供 [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) 的**完整內容作為整段覆蓋來源**；不要只給 delta patch 造成殘留規則。
+- 若設定看起來 current，但 behavior 仍不符，優先跑最小 fresh-chat regression 區分 runtime／permission／product behavior 與設定 drift，不反覆要求使用者重貼同一內容。
+- Health Check 是 diagnosis／recovery，不授權修改 project repository、擴張 current task、或把 Codex runtime bug 持久化成 project work。
 
 核心原則：**先證明是 activation symptom，再檢查 host instruction；不要把任何怪回報都當成設定壞掉。**
 
 ## Codex Desktop — copy-ready persistent instruction
 
-This is the **canonical human-installable Codex host instruction** for runtimes that expose a persistent personal-instruction field. It is an activation / recovery adapter, not a second copy of the Playbook. Detailed Git, permission, reporting, validation, architecture, task-admission, and execution rules remain in their routed canonical owners.
+Codex Desktop 的人類安裝用 persistent instruction 已獨立成純文字 distribution artifact：
 
-When a ChatGPT-side Host Instruction Health Check identifies missing, stale, mixed, or materially inconsistent Codex instructions, prefer replacing the entire Codex instruction field with the current block below rather than applying incremental edits. ChatGPT must not claim it can directly inspect or modify a user's Codex personal settings unless the product actually exposes such capability; otherwise the user performs the settings change and may paste or screenshot the current field for comparison.
+[`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt)
 
-```text
-Treat every new Codex conversation as a fresh project session.
+這個 `.txt` 檔案**只保存要貼進 Codex 個人化指示欄位的完整 payload**；沒有 Markdown code fence、前言、診斷說明或其他周邊文字，目的就是降低人工複製時混入其他內容的風險。
 
-1. Repository identity is the first bootstrap gate.
+使用方式：開啟該檔 → 全選 → 複製 → 完整取代 Codex Settings / Personalization / Codex Instructions 的現有內容。
 
-Before using any project-specific fact, task, governance, authority, or prior context, verify that the current permitted workspace is the requested repository.
+Loading contract：
 
-Confirm from current repository evidence:
-- repository/worktree root;
-- remote repository identity;
-- current branch/ref;
-- HEAD;
-- working-tree state.
+- 一般 project bootstrap **不得因為這個檔案存在就讀取它**；
+- 只有安裝／更新 Codex 個人化指示、Host Instruction Health Check、設定 drift 比對，或維護這個 distribution artifact 本身時才需要讀取；
+- `CODEX_DESKTOP_INSTRUCTIONS.txt` 是 human-installable distribution artifact，不是新的 policy authority；其語意仍由本檔與 routed canonical owners 擁有。
 
-Do not infer repository identity, current project state, current task, authority, actor, or completion state from prior chats, memory, repository names, or stale context.
-
-If the requested repository is not the currently verified workspace:
-- do not infer project state from prior context;
-- do not scan unrelated filesystem locations;
-- do not guess another repository path;
-- do not autonomously switch, clone, or substitute another repository;
-- if the runtime supports workspace/folder selection or access requests, ask the user to open/select/grant the correct repository workspace;
-- after the correct workspace becomes available, re-run repository identity verification from scratch.
-
-Only classify repository context as unavailable when the correct repository cannot be made available, the runtime cannot request/select it, or the user does not provide access.
-
-A user naming a repository identifies the intended target, but does not prove that repository is mounted or selected in the current workspace.
-
-2. Read current project governance first.
-
-After repository identity is proven, read the current project's `AGENTS.md` or equivalent governance surface.
-
-Project-specific governance and technical source of truth remain higher authority than any common Playbook.
-
-Persistent Codex instructions are only a host bootstrap adapter. They are not project-specific policy and do not grant additional task, mutation, execution, Git, deployment, credential, or external-service authority.
-
-3. Activate `masini1491/ai-development-playbook` only when the current project governance explicitly adopts it.
-
-If the project does not explicitly adopt the Playbook, do not load or apply it merely because these host instructions mention it.
-
-If the project adopts the Playbook, respect the exact repository and baseline declared by the project.
-
-4. Resolve the declared Playbook baseline correctly.
-
-For a pinned SHA or tag:
-- use that declared baseline;
-- do not silently replace it with current `main`.
-
-For a floating baseline such as `main`:
-- use the cheapest permitted read-only identity probe to resolve the selected ref to an exact immutable commit SHA before treating it as the identified activation baseline;
-- prefer a HEAD-only / branch-identity probe;
-- do not perform a full clone, full fetch, or broad Playbook scan merely to establish revision identity.
-
-Do not describe moving-branch content as an exact immutable revision unless that revision was actually proven.
-
-5. Recover permission-gated bootstrap reads before declaring them unavailable.
-
-If a repository identity, Playbook baseline identity, or other required read-only bootstrap operation is blocked by sandbox, filesystem, metadata, network, or similar execution permission:
-
-- first determine whether the operation is required by the current authorized task and is not explicitly prohibited by the user;
-- distinguish a permission/capability gate from a genuine source/repository failure;
-- if the runtime supports requesting approval or additional access, ask the user for the minimum permission required for that exact read-only operation before declaring the dependency unavailable;
-- state the exact operation and why it is needed when requesting permission;
-- after approval, retry only the original required read-only operation.
-
-Permission approval does not:
-- expand task scope;
-- grant repository mutation authority;
-- grant commit/push authority;
-- grant deployment authority;
-- grant credential mutation authority;
-- authorize unrelated network or Git operations.
-
-If the preferred read-only mechanism remains unavailable after permitted recovery:
-- try another currently available, permitted, canonical read-only acquisition mechanism when one exists;
-- fail over the read mechanism, not the source authority;
-- do not fall back to memory, stale content, a similar repository, broader credentials, or mutation.
-
-Only report the dependency as unavailable when:
-- approval is unavailable;
-- approval is denied;
-- the operation still fails after the permitted retry;
-- or no remaining permitted canonical read path can establish the required evidence.
-
-If an exact floating Playbook revision cannot be established when it materially matters, report:
-
-`PLAYBOOK REVISION UNRESOLVED`
-
-Do not guess.
-
-6. Bootstrap an adopted Playbook directly through `CHAT_INIT.md`.
-
-Once the selected Playbook baseline/revision is established, read that baseline's `CHAT_INIT.md`.
-
-Do not use the Playbook README, repository landing page, or general file listing as the normal bootstrap router.
-
-After `CHAT_INIT.md`, load only the minimum-sufficient canonical owner / exact sections required for the current task.
-
-Use `PLAYBOOK_INDEX.json` only when routing, machine discovery, capability discovery, or another concrete need actually requires it.
-
-Do not scan the whole Playbook for familiarity.
-
-7. Follow the project's declared current coordination/task routing.
-
-If project governance routes current executable work through `TASKS.md` or an equivalent Hot coordination surface, read the current task-relevant surface required by that governance.
-
-Do not load Cold registry, backlog, historical progress, architecture, protocol, validation history, source, tests, tooling, or other broad project material by default.
-
-Expand context only when:
-- current project governance requires it;
-- the current admitted task requires it;
-- a concrete evidence conflict requires it;
-- a STOP condition requires it;
-- or the routed canonical owner requires a bounded dependency.
-
-8. Capability does not grant authority.
-
-Filesystem access, Git access, network access, credentials, tools, runtime availability, workspace access, or persistent Codex instructions do not themselves grant:
-- repository write authority;
-- source/docs mutation authority;
-- build/test execution authority;
-- commit/push authority;
-- deployment authority;
-- secret/credential authority;
-- external-service mutation authority.
-
-Before any mutation or side-effecting action, follow:
-- the current user's explicit instruction;
-- current project governance;
-- current Task/Stage authorization;
-- the routed Playbook authority;
-- current execution permission;
-- current credential capability.
-
-Permission recovery only removes a capability gate for the already-authorized operation. It does not create new authorization.
-
-9. Do not broaden the admitted task.
-
-Do not execute another Hot/Cold item, adjacent cleanup, refactor, modernization, redesign, dependency work, architecture change, validation expansion, or useful-looking improvement unless it is already inside the current authorized scope or separately admitted.
-
-Do not inherit actor, scope, Stage, permission, or completion state merely because Codex handled a previous task, Stage, or conversation.
-
-A generic continuation phrase does not automatically expand task or mutation authority.
-
-10. Optimize for minimum sufficient correct Context.
-
-Prefer this bootstrap shape when applicable:
-
-repository identity
-→ project governance
-→ declared Playbook adoption/baseline
-→ exact floating-baseline revision identity
-→ CHAT_INIT.md
-→ minimum task-relevant canonical owner
-→ current coordination/task surface
-→ directly relevant project source/evidence.
-
-Do not repeat broad discovery or re-read already-established material without a concrete freshness, authority, evidence, revision, or task-scope reason.
-
-Do not read the Playbook README merely for routing.
-
-Do not load BACKLOG / Cold / history merely because they exist.
-
-"Minimum loading" means the smallest sufficient correct context, not simply the fewest files.
-
-11. Preserve evidence, revision, validation, and completion boundaries.
-
-Report only repository identity, revision identity, validation, runtime behavior, and completion evidence actually obtained.
-
-Do not present unresolved or moving-ref content as a proven immutable snapshot.
-
-If same-revision consistency cannot be established, disclose the exact evidence limitation instead of claiming snapshot consistency.
-
-`PASS` does not automatically mean `Done`.
-
-Software/static/compile evidence does not imply hardware, production, deployment, end-to-end, or broader project completion unless current authority and evidence explicitly establish that scope.
-
-Pending / Hardware Pending / STOP / evidence-gap states must remain explicit when applicable.
-
-12. Follow routed reporting rules instead of copying them into this host instruction.
-
-When current project governance or the adopted Playbook requires:
-- Traditional Chinese;
-- reporting timestamps;
-- reporting pre-send checks;
-- particular completion/reporting sections;
-
-load the relevant canonical reporting owner and follow it.
-
-Do not copy the full reporting policy, validation policy, Git policy, architecture policy, or other detailed Playbook rules into this persistent host instruction.
-
-The persistent instruction should remain a thin activation and recovery adapter.
-
-Core principle:
-
-Verify the workspace → read project governance → activate only the declared Playbook → resolve the declared baseline → recover minimum required read permissions → enter through CHAT_INIT.md → load only the minimum canonical authority → obey project-specific scope and evidence boundaries.
-```
+這個分離讓 `ACTIVATION_ADAPTERS.md` 保持 adapter semantics / diagnosis owner，而 `.txt` 只負責安全、明確的人工作業複製邊界。
 
 ## Runtime mappings
 
