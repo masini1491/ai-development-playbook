@@ -14,6 +14,7 @@
     {"id":"bootstrap.research-handoff","owner":"PROJECT_BOOTSTRAP.md","section":"Exit / Handoff Gate","kind":"contract"},
     {"id":"bootstrap.post-adoption-context-closure","owner":"PROJECT_BOOTSTRAP.md","section":"Post-Adoption Context Closure Gate","kind":"contract"},
     {"id":"discovery.capability-index","owner":"CAPABILITY_INDEX.md","kind":"routing"},
+    {"id":"activation.chatgpt-host-instruction-health","owner":"ACTIVATION_ADAPTERS.md","section":"ChatGPT Host Instruction Health Check","kind":"contract"},
     {"id":"activation.codex-host-instruction-health","owner":"ACTIVATION_ADAPTERS.md","section":"ChatGPT-side Codex Host Instruction Health Check","kind":"contract"},
     {"id":"interoperability.external-workflow-authority","owner":"INTEROPERABILITY.md","section":"Generic Interoperability Contract","kind":"contract"},
     {"id":"interoperability.openspec","owner":"INTEROPERABILITY.md","section":"OpenSpec","kind":"contract"},

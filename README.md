@@ -79,6 +79,34 @@ The snippet above is the smallest bootstrap, not the full deterministic adoption
 
 上面只是最小啟動宣告，不是完整的確定性導入契約。若要使用可由 Adoption Doctor 檢查、可直接調整的範例，請從 [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) 開始。
 
+## ChatGPT Custom Instructions setup and recovery / ChatGPT 自訂指令設定與復原
+
+**English**
+
+ChatGPT Custom Instructions are a **persistent user-level host setting**, not project governance and not proof that every project adopts this Playbook. For the current manually installed thin-activation setup:
+
+1. Open ChatGPT Settings → Personalization → Custom Instructions (wording may vary by product version).
+2. Open [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt), select all, and replace the Custom Instructions field with the complete file. Do not merge partial revisions.
+3. Start a **fresh ChatGPT chat** for validation; do not use an already-contextualized conversation as proof that the new host instruction is active.
+4. For repository/project work, the host instruction must still read current project governance first. The project itself decides whether it adopts this Playbook and which baseline it declares; adoption alone must not default to current Playbook `main`.
+
+The copy-ready artifact is intentionally kept within **5,000 characters**, matching the field limit observed during this adapter's manual validation. Treat that number as a product-version-specific installation constraint, not a Playbook policy rule.
+
+If fresh chats materially skip repository identity/governance, assume an undeclared Playbook baseline, broaden a generic continuation into new work, or treat capability as authority, use the bounded **ChatGPT Host Instruction Health Check** in [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md). If the setting is missing, stale, or mixed, replace the whole field with the current [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt), then rerun a minimal fresh-chat regression.
+
+**繁體中文**
+
+ChatGPT 自訂指令屬於**使用者層級的持久 host setting**，不是專案 governance，也不代表所有專案會因為這個設定就自動採用本 Playbook。以目前需要手動安裝的薄型啟動方式：
+
+1. 開啟 ChatGPT 的 Settings／Personalization／Custom Instructions（不同產品版本介面文字可能略有差異）。
+2. 開啟 [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt)，全選整份內容並完整取代 Custom Instructions 欄位；不要把不同版本以增量方式混在一起。
+3. 用**全新 ChatGPT 聊天室**驗證；不要拿已累積舊 context 的既有聊天室當成新 host instruction 已生效的證據。
+4. 進入 repository／project 工作後，host instruction 仍必須先讀 current project governance。是否採用 Playbook、採用哪個 baseline 都由專案自己宣告；不能只因「採用 Playbook」就預設使用 Playbook current `main`。
+
+這份 copy-ready artifact 目前刻意維持在 **5,000 字元以內**，對應本 adapter 目前人工驗證時觀察到的 ChatGPT 欄位限制。這個數字是產品版本相關的安裝限制，不是 Playbook policy。
+
+若 fresh chat 出現未確認 repository identity／governance、擅自假設 undeclared Playbook baseline、把「好，繼續」之類 continuation 擴張成新工作，或把 capability 誤當 authority，可依 [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) 的 **ChatGPT Host Instruction Health Check** 做有界診斷。若設定缺失、過期或混合多版，請用目前完整的 [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) 整段覆蓋，再跑最小 fresh-chat regression。
+
 ## Codex Desktop setup and recovery / Codex Desktop 設定與復原
 
 **English**

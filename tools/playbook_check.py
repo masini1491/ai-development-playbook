@@ -25,6 +25,8 @@ CHAT_INIT_ROUTER_HEADING = "最低必要路由"
 MACHINE_INDEX_NAME = "PLAYBOOK_INDEX.json"
 MACHINE_INDEX_SCHEMA_VERSION = 1
 MACHINE_INDEX_AUTHORITY = "routing-only"
+CHATGPT_CUSTOM_INSTRUCTIONS_NAME = "CHATGPT_CUSTOM_INSTRUCTIONS.txt"
+CHATGPT_CUSTOM_INSTRUCTIONS_MAX_CHARS = 5000
 
 
 @dataclass(frozen=True, order=True)
@@ -288,6 +290,21 @@ def _check_fences(path: Path, root: Path, text: str) -> list[Diagnostic]:
     return [Diagnostic(_relative_display(path, root), open_fence[2], "FENCE_UNCLOSED", f"Unclosed Markdown fence opened with {open_fence[0] * open_fence[1]}")]
 
 
+def _check_chatgpt_custom_instructions(root: Path) -> list[Diagnostic]:
+    path = root / CHATGPT_CUSTOM_INSTRUCTIONS_NAME
+    if not path.exists():
+        return []
+    text = path.read_text(encoding="utf-8")
+    diagnostics: list[Diagnostic] = []
+    if not text.strip():
+        diagnostics.append(Diagnostic(CHATGPT_CUSTOM_INSTRUCTIONS_NAME, 1, "CHATGPT_CUSTOM_INSTRUCTIONS", "ChatGPT Custom Instructions artifact must not be empty"))
+    if len(text) > CHATGPT_CUSTOM_INSTRUCTIONS_MAX_CHARS:
+        diagnostics.append(Diagnostic(CHATGPT_CUSTOM_INSTRUCTIONS_NAME, 1, "CHATGPT_CUSTOM_INSTRUCTIONS", f"ChatGPT Custom Instructions artifact exceeds {CHATGPT_CUSTOM_INSTRUCTIONS_MAX_CHARS} characters: {len(text)}"))
+    if "```" in text or "~~~" in text:
+        diagnostics.append(Diagnostic(CHATGPT_CUSTOM_INSTRUCTIONS_NAME, 1, "CHATGPT_CUSTOM_INSTRUCTIONS", "ChatGPT Custom Instructions artifact must be copy-ready plain text without Markdown fences"))
+    return diagnostics
+
+
 def _machine_index_target(root: Path, relative: Any) -> Path | None:
     if not isinstance(relative, str) or not relative.strip():
         return None
@@ -397,6 +414,7 @@ def check_repository(root: Path) -> list[Diagnostic]:
         diagnostics.extend(_check_section_router(path, root, text))
         diagnostics.extend(_check_chat_init_router(path, root, text))
         diagnostics.extend(_check_fences(path, root, text))
+    diagnostics.extend(_check_chatgpt_custom_instructions(root))
     diagnostics.extend(_check_machine_index(root))
     return sorted(diagnostics)
 

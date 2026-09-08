@@ -51,6 +51,8 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
   → `CHATGPT_WORKFLOW.md` → `ChatGPT-side Runtime Execution`
 - Codex Prompt mode／delivery／copy-ready／Codex result reconciliation／ChatGPT user-facing response contract
   → `CHATGPT_WORKFLOW.md`；依對應 heading bounded-read
+- Fresh ChatGPT session 出現 repository identity／project governance／Playbook adoption、undeclared baseline 被預設成 current `main`、跳過 `CHAT_INIT.md`、generic continuation 擴張 AI-originated work、或 capability 被誤當 authority 等具體 activation anomaly
+  → 先做 project／canonical reconciliation；若仍合理懷疑 host-instruction drift，再讀 `ACTIVATION_ADAPTERS.md` → `ChatGPT Host Instruction Health Check`，必要時比對 `ChatGPT — copy-ready custom instruction`。不要把一般回答錯誤都直接歸因於 Custom Instructions。
 - Codex 回報出現 repository/workspace、Playbook adoption、floating-baseline identity、permission recovery、unexpected broad bootstrap reading、host-instruction authority 等具體 activation anomaly
   → 先做 project／canonical reconciliation；若仍合理懷疑 host-instruction drift，再讀 `ACTIVATION_ADAPTERS.md` → `ChatGPT-side Codex Host Instruction Health Check`，必要時比對 `Codex Desktop — copy-ready persistent instruction`。不要把任何一般 Codex error 都直接歸因於個人化設定。
 - AI 可讀性、Context lifecycle、Always-on／Hot／Cold／Evidence／Historical、task/evidence dossier、routing／retrieval cost

@@ -14,6 +14,8 @@
 
 若 project 採用 floating Playbook baseline（例如 `main`），在把該 baseline 視為本次 identified activation baseline 前，先用最低成本、已允許的 read-only identity probe resolve 成 exact immutable revision。Moving ref 只用來選 revision；後續需要 same-revision consistency 時仍依 `INFORMATION_INTEGRITY.md` 的 Snapshot Consistency Guard。這不要求 full clone、full fetch 或全文掃描 Playbook。
 
+若只知道 project「採用 Playbook」但尚未從 current project governance 讀到 declared baseline，該 baseline 應維持 **unresolved**；不得因 host instruction、舊聊天或本 Playbook 的 current `main` 存在，就自行把 `main` 當成目標 project 的 default baseline。
+
 若上述必要的 read-only workspace／repository identity／Playbook baseline probe 因 sandbox、filesystem、metadata、network 或類似 execution permission 被阻擋，不應直接把 dependency 判成 unavailable。Runtime 若能 request approval／access，先向使用者要求完成該 exact read-only operation 所需的最低 permission，核准後只重試原本被 gate 阻擋的操作；approval 不擴張 task scope、mutation、commit/push、deployment、credential 或其他 network/Git authority。若 preferred read mechanism 仍不可用，才改用目前可用且已允許的其他 canonical read-only acquisition path；**fail over the read mechanism, not the authority**。只有 approval unavailable／denied、permission 後原操作仍失敗，且沒有其他合法 canonical read path 時，才標記對應 bootstrap dependency unresolved／unavailable。完整 permission semantics 仍由 `REPOSITORY_EXECUTION.md` 擁有，adapter 只保存 bootstrap survival pointer。
 
 Adapter 不應：
@@ -37,6 +39,51 @@ For machine-readable discovery you may consult PLAYBOOK_INDEX.json when actually
 Project-specific governance and technical source of truth remain higher authority.
 Do not infer repository write or execution authority from access capability.
 ```
+
+## ChatGPT — copy-ready custom instruction
+
+ChatGPT 的人類安裝用 persistent Custom Instructions 已獨立成純文字 distribution artifact：
+
+[`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt)
+
+這個 `.txt` 檔案只保存要貼進 ChatGPT Settings / Personalization / Custom Instructions 的完整 thin-bootstrap payload；沒有 Markdown code fence、前言或診斷文字。它是 user-level host adapter，不是 project-specific policy，也不會因被安裝就讓任何 project 自動採用 Playbook。
+
+目前 distribution contract 將 payload 維持在 **5,000 characters 以內**，以符合本 adapter 目前人工驗證時 ChatGPT Custom Instructions 欄位的限制；這是 product-version-specific installation constraint，不是 Playbook policy authority。若產品限制改變，應更新 distribution artifact／validator，而不是複製更多 policy 進 host setting。
+
+Loading contract：
+
+- 一般 project bootstrap **不得因為這個檔案存在就讀取它**；
+- 只有安裝／更新 ChatGPT Custom Instructions、`ChatGPT Host Instruction Health Check`、設定 drift 比對，或維護這個 distribution artifact 本身時才需要讀取；
+- normal project task 仍由 project governance 決定是否採用 Playbook、採用哪個 baseline，再進 `CHAT_INIT.md`；
+- 安裝／更新後使用 **fresh chat regression** 驗證，不把既有聊天室的舊 context 當成 host instruction 已生效的證據。
+
+## ChatGPT Host Instruction Health Check
+
+只有 fresh ChatGPT session 出現具體 activation／bootstrap symptom，才做 bounded Host Instruction Health Check；不要把一般回答錯誤、source/test failure 或單次 wording 差異都歸因於 Custom Instructions。
+
+可觸發檢查的 material signals 包括：
+
+- 未建立 target repository／project current identity 就直接使用 prior chat、memory 或 stale project facts；
+- 未讀 current project governance 就自行套用 Playbook；
+- 只知道 project「採用 Playbook」，卻在 declared baseline 尚未建立時自行預設 Playbook current `main`；
+- project 已採用 Playbook但 fresh chat 跳過 declared baseline／`CHAT_INIT.md`，或無必要 broad-scan README／whole Playbook；
+- generic continuation（例如「好，繼續」）把 AI-originated observation 自動升格成 canonical／executable work；
+- 把 connector／filesystem／network／runtime capability 或 permission approval 當成 mutation／scope authority；
+- 同類 activation behavior 在 fresh sessions 重複偏離 current adapter contract。
+
+Health Check 建議流程：
+
+`Fresh-chat anomaly → canonical/project reconciliation → activation mismatch plausible? → inspect current adapter revision → ask user to verify ChatGPT Custom Instructions only if needed → compare against CHATGPT_CUSTOM_INSTRUCTIONS.txt → full replacement if missing/stale/mixed → minimal fresh-chat regression`
+
+一般原則：
+
+- 除非產品實際提供 settings-read/write capability，ChatGPT 不得假裝能直接看到或修改使用者的 Custom Instructions；必要時請使用者開啟設定、貼出文字或截圖。
+- 先確認 Playbook current adapter revision，再比對 host setting；不要拿舊聊天室中的 payload 當 current expected value。
+- 若設定缺失、過期、混合多版或 materially inconsistent，使用 [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) **整段覆蓋**，不要做 delta patch。
+- 若設定 current 但 behavior 仍偏離，優先用最小 fresh-chat regression 區分 product/runtime behavior 與設定 drift。
+- Health Check 只做 diagnosis／recovery，不建立 project task、擴張 mutation authority，或把 runtime anomaly 自動持久化成 repository obligation。
+
+核心原則：**先證明是 fresh-session activation symptom，再檢查 host instruction；project governance／declared baseline 仍是實際專案 authority。**
 
 ## ChatGPT-side Codex Host Instruction Health Check
 
@@ -90,13 +137,13 @@ Loading contract：
 
 | Runtime family | Thin activation use |
 | --- | --- |
-| ChatGPT | Put the generic bootstrap in project/work instructions or send it once at session start; repository-native reads should then follow `CHAT_INIT.md`. |
+| ChatGPT | For persistent user-level setup, install [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) as a thin host adapter; project/work instructions may still use the generic bootstrap. In both cases, actual project adoption/baseline must come from current project governance before `CHAT_INIT.md`. |
 | Codex / coding agent | Prefer project `AGENTS.md` as the activation surface; the launch prompt should point to current project governance rather than copy Playbook rules. If the selected workspace is not the requested repository, request the minimum user workspace/access correction and re-run identity verification before loading project state. |
 | Claude Code / Cursor / Gemini / other coding assistants | Use the runtime's persistent project-instruction surface, if available, only to install the generic bootstrap pointer; keep detailed rules in the Playbook. |
 | Custom CLI / IDE extension | Parse `PLAYBOOK_INDEX.json` for stable capability IDs / owner pointers, then read the canonical Markdown owner before making a decision. |
 
 ## Activation maturity boundary
 
-This repository now provides **manual thin activation adapters + machine-readable routing discovery**. It does **not** claim native marketplace installers, hooks, generated per-tool command packs, or automatic startup integration for every runtime.
+This repository now provides **manual thin activation adapters + copy-ready ChatGPT/Codex host payloads + machine-readable routing discovery**. It does **not** claim native marketplace installers, hooks, generated per-tool command packs, or automatic startup integration for every runtime.
 
 Core principle: **Activate by pointer, not policy copy.**

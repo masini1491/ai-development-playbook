@@ -79,6 +79,22 @@ class PlaybookCheckTests(unittest.TestCase):
         diagnostics = playbook_check.check_repository(root)
         self.assertEqual(["A.md", "B.md"], [item.path for item in diagnostics])
 
+    def test_chatgpt_custom_instructions_at_limit_passes(self) -> None:
+        root = self.make_repo({"CHATGPT_CUSTOM_INSTRUCTIONS.txt": "a" * 5000})
+        self.assertEqual([], playbook_check.check_repository(root))
+
+    def test_chatgpt_custom_instructions_over_limit_fails(self) -> None:
+        root = self.make_repo({"CHATGPT_CUSTOM_INSTRUCTIONS.txt": "a" * 5001})
+        diagnostics = playbook_check.check_repository(root)
+        self.assertEqual(["CHATGPT_CUSTOM_INSTRUCTIONS"], [item.code for item in diagnostics])
+        self.assertIn("exceeds 5000 characters", diagnostics[0].message)
+
+    def test_chatgpt_custom_instructions_markdown_fence_fails(self) -> None:
+        root = self.make_repo({"CHATGPT_CUSTOM_INSTRUCTIONS.txt": "```text\nbootstrap\n```\n"})
+        diagnostics = playbook_check.check_repository(root)
+        self.assertEqual(["CHATGPT_CUSTOM_INSTRUCTIONS"], [item.code for item in diagnostics])
+        self.assertIn("copy-ready plain text", diagnostics[0].message)
+
     def test_machine_index_valid_targets_and_sections_pass(self) -> None:
         manifest = {
             "schema_version": 1,
