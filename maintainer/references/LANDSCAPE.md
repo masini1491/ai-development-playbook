@@ -21,7 +21,7 @@ For `DISCOVERED` entries, resolve the source's current exact immutable revision 
 | `awslabs/aidlc-workflows` | Full AI SDLC governance / harness-neutral workflow | HIGH | REVIEWED | Deterministic workflow/phase/stage state machines, approval gates, append-only audit trail, human-affirmed durable learning, harness-neutral core and generated runtime projections | `227745d03bdd1879f51409eeba051e4c6c585b5f` → `awslabs-aidlc-workflows.md` |
 | `Fission-AI/OpenSpec` | Spec / admission lifecycle / cross-repo planning | HIGH | REVIEWED | Explicit explore→propose admission boundary, current specs vs future deltas, update-vs-new identity heuristic, Stores for shared cross-repo planning | `e062b9572be933564ba3899d059377dfa1393e32` → `Fission-AI-OpenSpec.md` |
 | `gastownhall/beads` | Durable agent memory / dependency-aware task graph | HIGH | REVIEWED | Structured long-horizon memory, typed provenance/dependency graph, external gates, atomic task claiming, semantic compaction, maintainer/contributor separation | `a690b0a8c4d1ddc4f0bd9bf767499625dd71bc96` → `gastownhall-beads.md` |
-| `GSA-TTS/agentic-coding-playbook` | Governance / authority / compliance-oriented agent workflow | HIGH | DISCOVERED | Universal contract + project layer, fail-closed prerequisites, deterministic checks and governance composition | resolve at review |
+| `GSA-TTS/agentic-coding-playbook` | Governance / authority / compliance-oriented agent workflow | HIGH | REVIEWED | Universal contract + thin project layer, deterministic fail-closed prerequisite identity, pinned fallback acquisition, generated routing/validation | `9ea8add75a017bed007230a530da4a943c3eebdf` → `GSA-TTS-agentic-coding-playbook.md` |
 | `github/spec-kit` | Spec-driven development / work admission | HIGH | DISCOVERED | Constitution/spec/plan/tasks/implement flow, idea shaping and decision gates, implementation/spec convergence | resolve at review |
 | `NeoLabHQ/context-engineering-kit` | Context self-reflection / pluginized learning | MEDIUM | DISCOVERED | Reflect→memorize loops, granular loading, judge/subagent patterns, claims about reliability vs token cost worth independent verification | resolve at review |
 | `humanlayer/advanced-context-engineering-for-coding-agents` | Brownfield context engineering / session compaction | MEDIUM | DISCOVERED | Frequent intentional compaction, research→plan→implement, durable specs and context-window management in large codebases | resolve at review |
@@ -33,11 +33,11 @@ For `DISCOVERED` entries, resolve the source's current exact immutable revision 
 
 Unless a concrete incident or maintainer question changes priority, the lowest-sufficient next review order is:
 
-1. `GSA-TTS/agentic-coding-playbook` — authority/fail-closed/compliance composition.
-2. `NeoLabHQ/context-engineering-kit` — self-reflection and durable-learning promotion patterns.
-3. `github/spec-kit` — spec-driven admission, shaping, and convergence patterns now that OpenSpec provides the lighter comparison baseline.
-4. `humanlayer/advanced-context-engineering-for-coding-agents` — brownfield session/context management and compaction discipline.
-5. `obra/superpowers` — procedure enforcement and subagent workflow comparison after the authority-oriented sources are covered.
+1. `NeoLabHQ/context-engineering-kit` — self-reflection and durable-learning promotion patterns.
+2. `github/spec-kit` — spec-driven admission, shaping, and convergence patterns now that OpenSpec provides the lighter comparison baseline.
+3. `humanlayer/advanced-context-engineering-for-coding-agents` — brownfield session/context management and compaction discipline.
+4. `obra/superpowers` — procedure enforcement and subagent workflow comparison after the authority-oriented sources are covered.
+5. `cnfjlhj/completion-learn` — post-completion learning and promotion criteria after the broader reflection/context sources are covered.
 
 This order is research priority only. It does not authorize mutation, task admission, installation, adoption, or implementation.
 
