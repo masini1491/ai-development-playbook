@@ -49,6 +49,7 @@
 | AI-originated durable work admission | `CHATGPT_WORKFLOW.md` → `AI-originated Durable Work Admission Gate` | Observation／recommendation／admitted work分離；Cold candidate不自動取得 execution authority。 |
 | Evidence lifecycle / real-world evidence | `DEBUG_VALIDATION.md`；embedded/hardware差異另見 `EMBEDDED_PROJECTS.md` | Software/test evidence不自動覆蓋 hardware／bench／production／user-observed evidence。 |
 | Cost-aware execution | `CODEX_EXECUTION.md` | `Evidence → Context → Model → Reasoning → Agent → Validation`，依證據逐層 escalation。 |
+| Prompt-authorized child model / reasoning routing | `CHATGPT_WORKFLOW.md` → `Prompt-authorized Child Profile Routing`；`CODEX_EXECUTION.md` → root/child profile contract、`Child Profile Routing 回報（Completion / Final）`、`Agent 數量` | **Normative contract 已存在**；root profile維持 user-selected，只有原本合法 delegation 的 bounded child 才可向上／向下 override model／reasoning；final report區分 requested/accepted override 與 independently observable effective profile。Runtime capability／observability仍依 execution surface。 |
 | ChatGPT bounded ephemeral execution | `CHATGPT_WORKFLOW.md` → `ChatGPT-side Runtime Execution` | Runtime capability不等於 repository mutation authority；只執行最低充分 deterministic workload。 |
 | Research / architecture / ownership | `RESEARCH_ARCHITECTURE.md` | Research、state/lifecycle、target/capability、ownership與 external-service authority separation。 |
 
