@@ -4,6 +4,17 @@
 
 ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready Prompt、review Codex result 與自己的回覆時間戳，改由 `CHATGPT_WORKFLOW.md` 維護。
 
+## Section Router
+
+- root／child model profile、override authority、mixed-profile execution → `Root / Child Profile Routing`、`Subagent / Delegation Gate`、`Parallel Multi-Agent Gate`、`升級處理`
+- Codex user-facing language／timestamp／child-routing summary → `Codex 回報語言`、`Codex 回報時間戳`、`Child Profile Routing 回報`、`Reporting Pre-Send Gate`
+- repository execution／Git／permission preflight → `Prompt execution gates`、`REPOSITORY_EXECUTION.md`
+- model ladder／reasoning calibration／usage budget → `模型分工`、`推理強度校準`、`Usage window-aware execution budgeting`
+- Context expansion／subagent decision／parallelization → `Progressive Context`、`Subagent / Delegation Gate`、`Parallel Multi-Agent Gate`
+- execution mode／scope escalation／source readability → `執行模式`、`Scope Expansion ≠ Model Escalation`、`Source readability boundary`
+- tools／batch scheduling／long-running output → `Tool／Skill Surface Discipline`、`Independent Tool Scheduling Discipline`、`Long-running tool output discipline`
+- corrupted／runaway generation → `Runaway / Corrupted Generation STOP Guard`
+
 ## 核心原則
 
 選擇能安全完成目前任務的**最低成本**模型、推理強度、Context、Agent 數量與 Validation scope。
@@ -12,12 +23,15 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 本檔大部分章節仍依 Task 做 Progressive Reading；但 **Codex user-facing reporting contract 是 always-on cross-cutting contract**。只要 project `AGENTS.md`／正式 routing 已把 Codex reporting 指向本檔，每個 Codex execution 都至少必須取得本檔的「Codex 回報語言」、「Codex 回報時間戳」與「Reporting Pre-Send Gate」規則，再依 Task 讀其他最低必要章節。不得因本次工作只是 MQTT、BLE、文件、maintenance、validation 或其他特定 domain，就把 reporting contract 判成無關而跳過。
 
+## Root / Child Profile Routing
+
 **Root model / reasoning** 由使用者在 Codex UI／launch configuration 選擇；Codex 不得自行改變目前 root thread 的 model 或 reasoning，也不得把 child override 冒充 root 已切換。
 
-**Child model / reasoning** 只有在 current user instruction、project governance 或 admitted Codex Prompt 已明確授權 subagent／delegation，而且該 subtask 已獨立通過本檔「Agent 數量」與成本／耦合 gate 時，才可在 spawn child 時依最低充分原則指定 model／reasoning override。未指定 override 時 child 繼承 parent profile。
+**Child model / reasoning** 只有在 current user instruction、project governance 或 admitted Codex Prompt 已明確授權 subagent／delegation，而且該 subtask 已獨立通過本檔 `Subagent / Delegation Gate` 時，才可在 spawn child 時依最低充分原則指定 model／reasoning override。未指定 override 時 child 繼承 parent profile。
 
 - Child profile override 只改變該 child 的 execution profile，不擴張 Task／Stage、repository write、permission、credential、deployment 或 external-service authority。
 - **想使用不同 model／reasoning 本身不是 delegation authority。** 不得為了避開 root UI 切換而把 tightly-coupled、critical-path 或本來應由 root 完成的工作硬拆成 child。
+- Child 可是 serial delegation；**不需要**先證明 parallelization benefit。只有同時執行多個 child／workstream 時，才另外套用 `Parallel Multi-Agent Gate`。
 - 若 main critical path 本身已 materially 超出 current root profile，依下方「升級處理」回報並由使用者決定是否重新 launch；不要用 child routing 偷渡 root escalation。
 - 若 execution surface 不支援 requested child model／reasoning、runtime 沒有暴露對應可用 profile，或 override 被拒絕，原樣回報 limitation；不得猜 model slug／effort 或假裝切換成功。
 
@@ -185,7 +199,7 @@ Condition-triggered 原則：
 
 - 不把特定方案名稱、固定 window 數字、model credit rate 或 promotional pricing 寫成穩定 baseline；volatile product facts 以當下官方 Rate Card / Help Center / product UI 為準。
 - 若官方 authority 顯示同一 account / plan 的多個 supported agentic features 可能共享 included usage allowance、usage-credit balance 或其他 resource pool，評估 Codex usage／credits 消耗時先確認 **resource pool scope 與同帳號 concurrent / recent agentic workloads**；不得把 quota／balance 變化預設全部歸因於目前 Codex thread，也不得在 shared-consumption evidence 尚未排除前直接推論 Codex token efficiency、model multiplier 或 client regression。Supported feature set、共享方式與 account-specific applicability 以最新官方 authority / Usage UI 為準，不把功能清單寫死。
-- 使用高成本／受限模型前，除了確認 account／plan 的 shared resource pool，也確認是否存在 **model-specific allowance／entitlement scope**；不得從「總 Work／Codex allowance 尚有剩餘」推定目前模型仍可使用相同比例的 included allowance。Model-specific eligibility、included usage 與追加 credits 條件屬 volatile product facts，以當下官方 authority／Usage UI 為準，不把方案或固定數字寫死。
+- 使用高成本／受限模型前，除了確認 account／plan 的 shared resource pool，也確認是否存在 **model-specific allowance／entitlement scope**；不得從「總 Work／Codex allowance 尚有剩餘」推定目前模型仍可使用相同比例的 included allowance。Model-specific eligibility、included usage 與追加 credits 條件屬 volatile product facts，以當下官方 authority／Usage UI為準，不把方案或固定數字寫死。
 - 對 reset、credit、quota restoration 等 usage-resource action，在建議使用或實際消耗前先確認 resource semantics：additive、replacement、banked、pay-as-you-go 或其他當下官方定義。不得把 reset 一律視為額外額度，也不得在 semantics 未確認時假設 unused allowance 會保留。
 - 若存在短期 window，大型工作避免把低價值 discovery、重複 repo-wide exploration、無效 retry、非必要 full regression、verbose tool output 與高成本 reasoning 全集中在同一 window。
 - 維持 `最低充分 Evidence → 最低充分 Model/Reasoning/Context → Targeted Validation`；不為保留短期額度降低已證明必要的 reasoning 或跳過 required validation。
@@ -238,15 +252,34 @@ Codex 無權自行換 **root** model／reasoning。達到 root escalation condit
 
 不要預設最大 Context、1M context、Fast、Ultra、Max 或 Multi-Agent。
 
-## Agent 數量
+## Subagent / Delegation Gate
 
-預設 1。
+預設由 root agent 自己完成目前工作；建立 child 是 execution decomposition decision，不是 model-picker workaround。
 
-只有真正獨立、彼此不共享 root cause，而且平行化有明確成本效益的 workstream 才考慮 Multi-Agent。
+一個 bounded subtask 可使用 **serial 或 parallel child delegation**，但在 spawn 前至少確認：
 
-**Child profile routing 在 delegation admission 之後才判斷。** 想使用不同 model／reasoning、想少一次手動 UI 切換、或某 child profile看起來更便宜／更強，都不能單獨成立 Multi-Agent；先證明 child subtask 本身適合 delegation，再比較 inherit parent 或 override 哪個 profile的 end-to-end cost／quality較合理。
+- subtask 有清楚 bounded scope、input／output 或 review question，child 不需要接管整個 root mental model；
+- delegation 不會擴張 current Task／Stage、write、permission、credential、deployment 或 external-service authority；
+- handoff／reconciliation 成本合理，且 child 執行相較 root 直接完成有 material end-to-end cost、quality、specialization 或 isolation benefit；
+- 若 root 下一步會立即依賴 child 結果，serial delegation 可以成立；但若需要高頻來回共享 mutable state、共同 root cause 或 tightly-coupled reasoning，優先留在 root；
+- 想使用不同 model／reasoning、少一次手動 UI 切換、降低單價、增加 token budget 或把 retry 換個 agent，本身都**不能**成立 delegation authority。
+
+Delegation 成立後，才依 `Root / Child Profile Routing` 判斷 child 繼承 parent profile 或指定最低充分 model／reasoning override。
 
 不得把加 agent 當 retry 方法。
+
+## Parallel Multi-Agent Gate
+
+`Subagent / Delegation Gate` 已成立，不代表一定要 parallel。只有同時執行多個 child／workstream 確實能降低 end-to-end cost／latency，且不破壞 correctness 時才平行化。
+
+平行化通常還需同時滿足：
+
+- workstreams 真正獨立，沒有需要先由其中一方產生的 prerequisite；
+- 不共享同一 mutable root cause、transaction boundary、write target state 或 order-sensitive side effect；
+- 結果可分別完成後由 root bounded reconcile，不需要高頻 cross-agent synchronization；
+- parallelization benefit 足以抵銷額外 agent、Context、coordination 與 reconciliation 成本。
+
+若上述條件不成立，保留 root execution 或使用單一 serial child；**沒有 parallel benefit 不會反向否定原本合法的 serial delegation。**
 
 ## 執行模式（Execution mode）
 

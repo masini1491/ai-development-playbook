@@ -4,6 +4,19 @@
 
 本檔不重新定義 Codex execution、Git／permission、coordination surface lifecycle、AI Context architecture、validation 或 architecture policy；需要時路由到對應 canonical 文件。
 
+## Section Router
+
+- 回覆語言／時間戳／呈現方式 → `ChatGPT 回覆語言與時間戳`、`ChatGPT 工程回覆呈現契約`
+- task contract／clarification／scope exclusion → `Task Contract：Goal / Context / Exclusions`
+- durable work／Hot-Cold admission／follow-up → `Persistence／Coordination Admission`、`AI-originated Durable Work Admission Gate`、`Task Identity / Revision Gate`、`Follow-up / New Work Gate`
+- 長 session compaction／freshness／handoff → `Session Compaction / Rehydration Contract`
+- actor 選擇／Codex handoff／Prompt mode → `Actor Admission / Handoff Gate`、`Codex Prompt 模式選擇`、`Prompt 建議設定與固定資訊`、`Prompt-authorized Child Profile Routing`
+- copy-ready Prompt／Prompt slimming → `可直接複製的 Codex Prompt`、`Prompt lean／長度診斷`
+- ChatGPT sandbox／deterministic runtime → `ChatGPT-side Runtime Execution`
+- Codex completion reconciliation → `Codex 結果 reconciliation`
+- repository write／permission／Git boundary → `REPOSITORY_EXECUTION.md`
+- Codex model／reasoning／Agent／execution cost → `CODEX_EXECUTION.md`
+
 ## 核心流程
 
 一般專案聊天室優先遵循：
@@ -398,7 +411,7 @@ TASKS Short-launch若 referenced Hot Stage已保存設定，不重複展開；�
 
 最低充分語義必須保留：
 
-- 只有原本就符合 `CODEX_EXECUTION.md`「Agent 數量」／delegation gate 的 bounded subtask 才可 spawn child；
+- 只有原本就符合 `CODEX_EXECUTION.md` 的 `Subagent / Delegation Gate` 的 bounded subtask 才可 spawn child；
 - 對已合法 delegation 的 child，Codex 可依 `CODEX_EXECUTION.md` 的最低充分 end-to-end cost／quality 原則，在 runtime **向上或向下** override child model／reasoning；可包含不同模型或同模型不同 reasoning；
 - **不得為了換 model／reasoning、少一次 root UI 操作、降低單價或 retry 而創造 child**；root profile仍由使用者決定，main critical path若需要 root escalation則走既有 STOP／relaunch gate；
 - completion／final report仍依 `CODEX_EXECUTION.md` 的 `Child profile routing: NONE | USED` 與 observability boundary 回報。
@@ -521,7 +534,7 @@ Python、Node.js、Shell/Bash、Java、Go、Rust、C/C++ compiler、Git、SQLite
 
 - **Execution capability 與 retrieval/network capability 分開判斷。** `git clone`、connector、archive download 或 HTTP 失敗，不代表 local runtime 不可用，也不代表 source/validator 有錯。
 - **只執行 project 已擁有或目前 scope 明確建立的 command/check。** ChatGPT 有 shell、Python、compiler 或其他 runtime，不構成新增 script、修改 production source、擴張 Task/Stage 或建立 automation framework 的理由。
-- **Canonical identity 要可證明。** 在 current canonical workspace 執行時使用其 Git/working-tree evidence；若由 connector／remote source 重建 snapshot，pin exact commit/tree，correctness需要時以 blob/hash/size或等價 canonical evidence確認 materialized input。不得拿 stale/local approximation冒充 current repository。
+- **Canonical identity 要可證明。** 在 current canonical workspace 執行時使用其 Git/working-tree evidence；若由 connector／remote source重建 snapshot，pin exact commit/tree，correctness需要時以 blob/hash/size或等價 canonical evidence確認 materialized input。不得拿 stale/local approximation冒充 current repository。
 - **Execution owner 不改變 command semantics。** 同一 validator/test由 ChatGPT、Codex、CI或human執行時，其 pass/fail contract不應因 actor 改寫；誰被授權執行仍由 project governance決定。
 - **Execution failure 先分類再修改。** SOURCE、TOOLCHAIN、ENVIRONMENT、INFRASTRUCTURE、SERVICE、AUTHENTICATION、AUTHORIZATION、HARDWARE_REQUIRED 與 permission/network gate分開處理；只有符合 `DEBUG_VALIDATION.md` 的 source evidence才可直接合理化 production source patch。
 - **PASS 只證明實際涵蓋的 scope。** Unit test、validator、compile、schema check或script exit 0不得升格成未實際覆蓋的 security/runtime/hardware/production PASS。
