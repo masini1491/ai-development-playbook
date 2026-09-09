@@ -29,6 +29,14 @@ For `DISCOVERED` entries, resolve the source's current exact immutable revision 
 | `cnfjlhj/completion-learn` | Post-completion learning / capability sedimentation | MEDIUM | REVIEWED | Completion ≠ retained capability, reduced-support/near-transfer drills, explicit no-change outcome, owner-first tool evolution | `66a91d56578976d7183381ac9be9c6e9130e24cf` → `cnfjlhj-completion-learn.md` |
 | `Dicklesworthstone/agentic_coding_flywheel_setup` | Reproducible agent runtime bootstrap / integrity | MEDIUM | DEFERRED | Technically relevant, but the reviewed source license contains an explicit OpenAI/Anthropic restriction; substantive comparative ingestion/adoption is not pursued under that constraint | review halted at license gate; no dossier |
 
+## Maintainer syntheses
+
+A synthesis exists only when multiple reviewed sources show a stable independent retrieval intent. It remains maintainer evidence and does not become canonical authority merely by summarizing several references.
+
+| Topic | Status | Sources | File |
+| --- | --- | --- | --- |
+| Learned-rule promotion / self-correction | SYNTHESIZED | AI-DLC, Context Engineering Kit, completion-learn, Superpowers | `SYNTHESIS-learned-rule-promotion.md` |
+
 ## Current review order
 
 No additional discovered repository is currently queued. A new source should be added only when a concrete maintainer question or independent research need justifies it.
@@ -39,13 +47,16 @@ This inventory is research priority only. It does not authorize mutation, task a
 
 Do not create a cross-source synthesis merely because more candidates were discovered. Create a maintainer topic synthesis only after multiple bounded reviews show a stable independent retrieval intent, such as a recurring failure mode, repeated architectural trade-off, or evidence pattern that is easier to reason about across sources than inside individual dossiers.
 
-Candidate synthesis topics may eventually include:
+Current synthesis coverage:
+
+- **self-reflection / learned-rule promotion** → `SYNTHESIS-learned-rule-promotion.md`
+
+Other candidate synthesis topics remain evidence-dependent:
 
 - routing / context loading strategies;
 - admission / task lifecycle;
 - durable agent memory and compaction;
 - runtime adapter / distribution architecture;
-- self-reflection / learned-rule promotion;
 - deterministic governance and documentation drift detection.
 
 A synthesis remains maintainer evidence until independently promoted through normal Playbook governance.
