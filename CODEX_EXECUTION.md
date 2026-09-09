@@ -79,7 +79,11 @@ Codex 的**每一個實質 user-facing 回覆**最後一行都應附上絕對時
 - 預設 `Asia/Taipei`；使用者明確指定其他時區時改用該時區並清楚標示。
 - 時間戳代表這份 Codex 回覆產生／完成時間，不是 commit、device、server event 或 validation evidence 發生時間。
 - 時間戳不取代 commit SHA、branch、validation evidence、TASKS state 或其他 completion evidence。
+- **優先直接讀取 execution environment／platform 提供的 current wall clock，再轉換成要求的 reporting timezone；不得由模型自行推算目前時間。** Windows 可使用 `Get-Date`／runtime API，Unix-like surface 可使用 `date`／runtime API，實際 mechanism 依目前 execution surface 選最低成本可驗證來源。
+- 若 runtime/platform clock 可直接取得且 UTC／local timezone 讀值 coherent，不為形式額外連 GitHub 或其他 external service 校時。
+- 若 runtime/platform clock unavailable、明顯矛盾或已有 concrete stale evidence，才依 `INFORMATION_INTEGRITY.md` → `Reporting Wall-clock Source Guard` 使用 cache-aware external sanity／fallback anchor；GitHub HTTP `Date` 不得被當成 unconditional primary clock。
 - execution environment 無法取得可信目前時間時，不得猜測；標記 `回報時間：UNAVAILABLE`。
+- 若 final draft 出現 `??:??`、`YYYY-MM-DD HH:mm` placeholder、錯誤時區、明顯 stale timestamp 或其他 malformed time，但 runtime clock本身可取得，視為 **reporting / formatting failure**：重新從可信 runtime/platform source取值並修復 draft，不把它誤報成 system-clock failure。
 - 這是 cross-cutting reporting contract，可由 project governance / playbook routing 啟用；**不要求 ChatGPT 為了 activation 把完整 reporting policy 或固定時間句重複塞進每一份 Codex launch Prompt**。
 
 ### Child Profile Routing 回報（Completion / Final）
@@ -105,9 +109,10 @@ Reporting policy 被讀取或在 Prompt 中重述，仍不等於最後送出的�
 1. **User-facing classification**：本次輸出若會形成使用者可見、可據此判斷狀態或作為後續工作依據的自然語言訊息，就進入本 gate；不得因稱為 progress、intermediate、summary 或非 final 而跳過。
 2. **Language check**：最終草稿的自然語言回覆符合本檔「Codex 回報語言」或使用者／project 當次明確覆蓋的 reporting language；技術原文不需翻譯。
 3. **Child-routing report check（completion/final only）**：若本次是 completion summary／final report，確認已依上節標記 `Child profile routing: NONE` 或 `USED`，並保留 effective-profile observability boundary；一般 progress/STOP reply 不為形式補此欄。
-4. **Timestamp source check**：使用可信的目前時間產生 absolute timestamp；若 execution environment 無法取得可信目前時間，使用 `回報時間：UNAVAILABLE`，不得猜測、沿用舊時間或保留 `YYYY-MM-DD HH:mm` placeholder。
-5. **Final-line check**：檢查最終草稿最後一個非空白行是否為本 contract 要求的 timestamp line，且沒有任何正文、附註、citation、summary 或其他內容出現在其後。
-6. **Fail-closed repair**：若 language、required child-routing summary、timestamp presence、格式或 final-line position 任一項不合格，先修正最終草稿並重新檢查；**未通過 pre-send check 的 user-facing reply 不得送出**。
+4. **Timestamp source check**：直接使用可信 runtime/platform current wall clock產生 absolute timestamp，依需要轉換 reporting timezone；不使用模型推算、舊回覆、commit timestamp或 placeholder。只有 primary clock unavailable／suspect時才依 `INFORMATION_INTEGRITY.md` 的 `Reporting Wall-clock Source Guard` 使用 conditional external sanity/fallback；仍無可信來源則使用 `回報時間：UNAVAILABLE`。
+5. **Timestamp render check**：最終草稿不得保留 `??:??`、`YYYY-MM-DD HH:mm`、錯誤 timezone 或其他 malformed/stale timestamp。若 runtime time可取得但 render失敗，重新取值並修復；這是 reporting failure，不是 system-clock failure evidence。
+6. **Final-line check**：檢查最終草稿最後一個非空白行是否為本 contract 要求的 timestamp line，且沒有任何正文、附註、citation、summary 或其他內容出現在其後。
+7. **Fail-closed repair**：若 language、required child-routing summary、timestamp source/render、格式或 final-line position 任一項不合格，先修正最終草稿並重新檢查；**未通過 pre-send check 的 user-facing reply 不得送出**。
 
 若 execution surface 原生提供 output validator、response post-processing hook、schema check 或其他可在送出前對最終文字做 deterministic validation 的能力，優先用它執行上述可機械判定項目；若沒有這類能力，仍必須做 bounded final-draft self-check。不得把 model-only self-check 宣稱為平台層 deterministic guarantee，也不得為了單一 reporting rule自行建立高複雜度 validator、agent loop 或外部服務。
 

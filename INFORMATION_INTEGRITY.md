@@ -92,6 +92,28 @@ Evidence metadata 必須保存實際可證明的 precision，不得用格式完�
 
 核心原則：**Timestamp format does not define timestamp meaning. Preserve clock identity before comparing time, freshness or order.**
 
+### Reporting Wall-clock Source Guard
+
+AI／agent 若需要「目前時間」作 user-facing reporting timestamp、acquisition/observation marker 或 clock sanity check，**時間來源本身也是 evidence decision**；不得把模型自然語言生成的時間感當成 clock evidence。
+
+推薦 hierarchy：
+
+`direct platform / runtime wall clock → conditional external wall-clock sanity / fallback anchor → UNAVAILABLE`
+
+一般原則：
+
+- execution／platform surface 若能直接提供 current wall clock，且 OS/runtime UTC、local timezone 或其他可交叉檢查的讀值彼此一致，優先使用該來源；不為形式額外連外校時。
+- Model-inferred time、聊天上下文推算、上一則回覆時間、commit author/committer timestamp、檔案 mtime 或其他不是 current-clock contract 的欄位，**不得**升格為可信目前時間。
+- Monotonic clock 適合量測 elapsed duration／RTT，不是絕對 wall-clock source；只有與可信 wall-clock anchor 建立 mapping 後才可推導 absolute time。
+- Runtime/platform clock unavailable、明顯自相矛盾或已有 concrete stale evidence 時，才考慮 external service time 作 **sanity/fallback anchor**。External anchor 的 freshness／cache／transport semantics 必須一起判斷，不能只看一個 timestamp 字串。
+- HTTP `Date` 代表 HTTP response 的時間語意，不保證每次 request 都是 fresh origin wall clock。GitHub／其他 API 的 `Date` 可受 cache、revalidation、intermediary 或秒級 precision 影響；單次 raw offset 不足以證明 local runtime clock drift。
+- 需要 fresh external sanity evidence 時，可依 surface 能力使用 cache-bypass／revalidation hint、unique nonce、`Age`／`Cache-Control`／request identity 等 metadata 與多次 bounded samples；若 freshness仍無法建立，標記 `TIME SOURCE INCONCLUSIVE`，不要挑一筆方便的 sample 當標準答案。
+- 外部 sample 與 coherent runtime clock衝突時，先區分 **local clock error**、**remote/cache staleness**、**transport delay/precision**；沒有足夠 evidence 不宣稱其中任一方「漂移」。
+- 若 runtime clock 已可直接驗證正常，但最終 AI 回覆仍出現 `??:??`、placeholder、錯誤時區、明顯 stale timestamp 或格式缺失，優先分類為 **reporting / formatting failure**；除非另有 evidence，不反推為 system-clock failure。
+- Reporting timestamp 只需符合其 contract 所要求的 precision；來源只到秒／分鐘時不得包裝成更高精度的 clock accuracy claim。
+
+核心原則：**Use directly observed runtime/platform wall clock for reporting; use external HTTP time only as a cache-aware fallback or sanity anchor; model-inferred time is not clock evidence.**
+
 ## Negative Observation / Unknown Semantics Guard
 
 「沒有觀察到」與「已證明不存在」是不同 evidence statement。Timeout、silence、not advertised、search miss、bounded passive observation、parser unavailable、unsupported query、empty result 或其他 negative result，只能支持其**實際觀察 contract**允許的結論。
