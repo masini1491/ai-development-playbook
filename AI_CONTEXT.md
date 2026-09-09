@@ -119,6 +119,26 @@ Active campaign／Stage 若仍高度共享 mutable premise、blocker、validatio
 - 跨 topic 只讀真正參與本次 decision / execution / validation 的 sections；「相關」不等於「必讀」。
 - Available context ≠ required context；資訊存在不代表本次必須載入。
 
+### Session-local Verified Context Reuse
+
+同一 session 已經以 current canonical evidence 確認 repository／ref、route、owner、leaf 或其他 task-relevant authority 後，若沒有 material freshness／scope trigger，可直接重用已載 Context；**不要為 routing ceremony 在每個 follow-up 重複 fetch、probe 或重跑相同 owner discovery。**
+
+推薦流程：
+
+`Verified current route / owner / leaf → reuse while material premises stay stable → freshness / scope trigger → cheap identity / bounded-diff probe → selectively invalidate / reload affected Context`
+
+一般原則：
+
+- 同一 follow-up、同一 narrow intent 或同一 canonical owner，且 currentness 不影響新結論時，沿用已確認 route／owner；只讀新出現的最低必要 leaf／evidence。
+- Material trigger 包括：使用者／governance 明確要求 latest/current、concrete stale evidence、repository/ref identity 改變、剛完成會影響本題 authority 的 mutation、task scope／owner／authority materially 改變，或 current decision correctness 明確依賴 freshness。
+- Identity／HEAD unchanged 時，保留已載 Context，不為形式重讀 canonical files。
+- Identity／HEAD changed 時，先 bounded 比較 changed owners／paths／dependencies；只有與本題 material 相關的 Context 才 invalidated / reload。無關變更只更新 observed identity，不重建整個 mental model。
+- 若 changed surface 可能透過 shared premise／generated metadata／cross-owner dependency 影響目前已載內容，或 bounded coverage 無法證明 selective reload 足夠，應擴張 rehydration 到最低充分共同 owner；必要時 STOP 在 freshness evidence boundary。
+- Pinned SHA／tag／project-declared immutable baseline 仍是 authority；看到 upstream newer HEAD 不得自行把 pinned baseline升級。
+- Session reuse 是**已驗證 Context 的 reuse**，不是 conversation memory 升格為 canonical authority；一旦 material trigger 成立，仍回 current authority reconciliation。
+
+核心原則：**Reuse verified Context until something material invalidates it；freshness 應做 selective invalidation，不應預設 full reload。**
+
 ### Absence Claim Coverage Gate
 
 Progressive Reading 的 STOP 條件取決於本次要支持的 **decision／claim**，不是 AI 目前已載入多少 Context。尤其 repository-level 的 negative claim（例如「不存在」、「缺少」、「尚未實作」、「沒有對應 contract／tooling」）需要比單一 positive lookup 更廣、但仍 bounded 的 retrieval coverage。
@@ -223,6 +243,30 @@ Budget／trigger 可依 repository 規模與使用型態定義，例如：
 Routing integrity check 是 **bounded maintenance check，不是每次 repo-wide audit**。小型 direct-reference repository 可以只檢查一條 path；大型 registry／router 架構才需要較完整的 parent/child、authority-class、stale-route 檢查。
 
 核心原則：**Maintenance trigger 告訴你何時重新檢查 AI 資訊架構；Routing Integrity Check 確認一次 mutation 後 AI 仍找得到唯一 current authority；兩者都不自動決定要不要拆。**
+
+### Optional Deterministic Hot-path Regression Guard
+
+Repository 已有反覆 retrieval pain、高頻 AI 使用、machine routing metadata 或 routing regression evidence 時，可以把**可機械判定的 hot-path invariants**做成 lightweight deterministic check；這是條件式 maintenance mechanism，不是所有 repository 的必備 framework。
+
+適合直接 `FAIL` 的通常是 correctness／routing integrity invariant，例如：
+
+- required routing target 不存在；
+- stable ID／route 發生非法 duplicate；
+- routing-only schema 混入被 project 明確禁止的 state／content authority field；
+- manifest／router 指向錯誤 owner、非法 path 或無法解析的 canonical target；
+- project 已明確定義的 generated routing metadata 發生 deterministic drift。
+
+適合作為 `WARN`／architecture review signal 的通常是 growth／cost heuristic，例如 always-on bytes、router size、entry count、routing hop depth、manifest growth 或其他 project-local budget。除非 repository 已有獨立 correctness evidence 與明確 contract，**不要把這類 heuristic 升成 universal hard failure。**
+
+一般原則：
+
+- 不建立跨 repository universal KB、行數、entry count、hop depth 或 token threshold；project-local threshold 只代表其自身 workload 的 review budget。
+- Checker 驗證 structure／routing invariant，不複製 canonical policy／status／工程結論成第二份 authority。
+- 新增 checker 本身也必須通過 maintenance-value／retrieval-cost 判斷；小型 direct-routing repository 若 bounded manual check 更便宜，就不要為形式自動化。
+- Hot-path guard 不要求一次清理全部 legacy；主要形成 **forward ratchet**，防止新的 AI-facing mutation 在沒有 concrete retrieval／correctness benefit 時持續惡化 common path。
+- 若 warning 長期沒有 decision value、false-positive noise 過高或 checker maintenance cost 超過捕捉到的 regression value，應縮減／移除，而不是因存在就永久保留。
+
+核心原則：**Deterministically fail broken routing; review growth as a signal. Guard the hot path without turning local heuristics into universal correctness law.**
 
 ## Generated Routing Metadata／Drift Check
 
@@ -396,8 +440,16 @@ Project 一旦新增 BACKLOG、task dossier、evidence staging 或其他 durable
 - **Write closure**：允許的高頻 mutation 是否會迫使不相關 derived files一起更新？
 - **Net effect**：整體 expected retrieval cost 是下降、持平，還是只是把內容拆散？
 
+### Hot-path growth ratchet
+
+新的 AI-facing mutation 不應在沒有 concrete retrieval／correctness／scope-isolation benefit 時，惡化一般高頻 task 的最低充分 working set，例如增加 always-on Context、固定 routing hop、重複 reconciliation 或不必要的 tool round-trip。
+
+- Ratchet 主要約束 **new mutation**；既有 legacy 不因歷史大小自動 `FAIL`，可依實際 retrieval pain 漸進 normalize。
+- 若新增一層 routing／metadata／checker，應能指出它換來的 precision、correctness、scope isolation、Context 節省或 regression detectability；只有「結構比較完整」不足以合理化成本。
+- Common path 變長不必然錯；但增加的 retrieval cost 必須有本題或可重複 workload 的 material benefit，而不是 ceremony。
+
 刪除內容也要檢查：少字不一定更快；若刪掉必要 router / authority declaration，使 AI 必須多次搜尋才能重建 mental model，retrieval cost 反而上升。
 
-本 gate 不要求固定 metric、benchmark 或 token accounting；只有在 repository 規模／使用頻率值得時才建立自動化量測。
+本 gate 不要求固定 metric、benchmark 或 token accounting；只有在 repository 規模／使用頻率值得時才建立自動化量測或 deterministic hot-path guard。
 
 核心原則：**Rule / structure quality = correctness + authority clarity + retrieval cost。讓 AI 讀得少，不是讓 repository 變得碎；是讓它更快命中唯一且足夠的 current authority。**

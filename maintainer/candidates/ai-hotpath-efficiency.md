@@ -76,7 +76,7 @@ This evidence is deliberately sanitized. It may support the architectural patter
 
 ## Reconciliation with current canonical Playbook
 
-Current canonical owners already cover much of the underlying model:
+Current canonical owners already covered much of the underlying model before this candidate was partially promoted:
 
 - `AI_CONTEXT.md`
   - Expected Retrieval Cost;
@@ -95,79 +95,85 @@ Current canonical owners already cover much of the underlying model:
   - Independent Tool Scheduling Discipline;
   - long-running output discipline.
 
-Therefore the evidence does **not** currently establish that the Playbook lacks routing, reuse, batching, or retrieval-cost governance.
+Therefore the evidence never established that the Playbook lacked routing, reuse, batching, or retrieval-cost governance. The useful result was a narrower operational refinement.
 
-The possible incremental value is narrower:
+## Promotion reconciliation
 
-1. **Session-local verified context reuse**
-   - make explicit that verified route / owner / leaf state can remain active within a session until a material freshness / scope trigger invalidates it;
-   - when current HEAD changes, prefer bounded change detection and selective invalidation / reload over unconditional global rehydration when correctness permits.
+### Promoted to `AI_CONTEXT.md`
 
-2. **Hot-path regression ratchet / guard pattern**
-   - optionally allow repositories with demonstrated retrieval pain to encode routing-only invariants and growth review signals in deterministic checks;
-   - preserve the distinction between correctness `FAIL` and architecture-review `WARN`;
-   - avoid cargo-cult universal byte / line thresholds.
+The following two cross-project refinements are now canonical in the existing AI Context owner:
 
-3. **Deterministic runtime transport efficiency**
-   - distinguish runtime-asset identity reuse from process / interpreter / module reuse;
-   - when safe and supported, batch compatible independent executions while preserving individual semantic identity;
-   - prefer minimum-sufficient machine-result projection for the model, while retaining audit-grade detail only when required.
+1. **Session-local verified context reuse / selective invalidation**
+   - verified route / owner / leaf state may be reused within a session until a material freshness / scope trigger occurs;
+   - unchanged identity does not require ceremonial reread;
+   - changed identity should use bounded change detection and selectively invalidate / reload affected Context when coverage is sufficient;
+   - reuse never promotes conversation memory over canonical authority.
 
-These are candidate refinements, not yet canonical requirements.
+2. **Hot-path growth ratchet / optional deterministic regression guard**
+   - new AI-facing mutations should not worsen the common minimum-sufficient working set without a concrete retrieval / correctness / scope-isolation benefit;
+   - repositories with demonstrated retrieval pain may encode machine-checkable routing invariants in lightweight deterministic guards;
+   - broken routing / schema invariants may `FAIL`, while size / growth / hop heuristics normally remain `WARN` / architecture-review signals;
+   - no universal byte, line, entry-count, hop-depth, or token threshold is introduced.
 
-## Why this may matter
+This promotion reused the existing canonical owner; it did not create a new canonical surface, mandatory validator, TASKS item, formal eval, or execution authority.
 
-The three evidence streams converged from different workloads:
+### Still candidate / more evidence needed
+
+The remaining incremental topic is **deterministic runtime transport efficiency**, especially:
+
+- persistent interpreter / imported-module reuse beyond ordinary runtime-asset reuse;
+- minimum-sufficient machine-result projection for model consumption while retaining audit-grade data when required;
+- broader evidence that compatible execution batching preserves semantic identity across multiple non-divination workloads.
+
+Existing canonical rules already cover runtime-asset reuse and general independent batching. The remaining question is whether process/module lifecycle reuse and compact result transport deserve stronger cross-project semantics.
+
+## Why the remainder may matter
+
+The evidence streams came from different workloads:
 
 - repeated stochastic runtime execution;
 - engineering knowledge retrieval;
 - private structured context retrieval.
 
-That convergence suggests the performance problem is not domain-specific. A repository can satisfy ordinary "progressive reading" guidance yet still become slow through repeated freshness ceremony, repeated routing, repeated process startup, oversized machine transport, or unguarded growth of always-on routing surfaces.
+That convergence suggests the performance problem is not domain-specific. A repository can satisfy ordinary "progressive reading" guidance yet still become slow through repeated process startup, oversized machine transport, or execution-surface ceremony even after retrieval reuse is solved.
 
-The stronger candidate principle is therefore:
+The remaining candidate principle is therefore narrower than the original:
 
-> **Optimize end-to-end minimum-sufficient working-set cost, including repeated session retrieval and execution transport—not merely initial file loading.**
+> **After retrieval hot paths are already efficient, determine whether runtime process/module lifecycle and result transport also need a reusable minimum-sufficient contract.**
 
-## Risks / competing explanations
+## Risks / competing explanations for the remainder
 
-Do not promote this pattern without accounting for:
+Do not promote the remaining runtime pattern without accounting for:
 
-- stale-context risk if session reuse outlives a material authority change;
-- incorrect selective invalidation if a changed owner has hidden cross-owner effects;
-- premature `STOP` when evidence coverage is insufficient for a negative / repository-wide claim;
-- over-fragmentation caused by adding specialized routers for every low-frequency intent;
-- cargo-cult size limits that optimize bytes rather than authority clarity / retrieval quality;
 - batching that accidentally merges semantic identities, state, RNG outcomes, validation boundaries, or failure handling;
 - compact transport that removes provenance / diagnostics actually required for the current decision;
 - assuming persistent interpreter / module state on execution surfaces that do not guarantee it;
+- mistaking a domain-specific micro-optimization for a cross-project contract;
 - exposing private adopter provenance or content in a public maintainer artifact.
 
-## Evidence that would change the decision
+## Evidence that would change the remaining decision
 
-Evidence favoring canonical promotion could include:
+Evidence favoring further canonical promotion could include:
 
-- repeated real projects showing measurable latency / tool-round-trip / loaded-context reduction without correctness regressions;
-- behavioral evidence that agents reliably reuse verified session context but revalidate on material triggers;
-- a bounded experiment showing selective invalidation avoids unnecessary rereads without stale-authority errors;
-- repeated retrieval regressions caught by a lightweight deterministic hot-path checker before they reached normal users;
-- runtime evidence that process / module reuse, batching, or compact result projection materially reduces overhead while preserving semantic and validation boundaries.
+- a second non-divination deterministic workload showing material process/module reuse benefit while preserving canonical identity and fresh-result semantics;
+- repeated evidence that compact machine-result projection materially reduces model/tool overhead without hiding required diagnostics or provenance;
+- behavioral evidence that agents correctly fall back when interpreter/module persistence is unavailable;
+- nearby-task transfer showing the runtime transport rule is recoverable without domain-specific scaffolding.
 
 Evidence favoring `NO CHANGE` could include:
 
-- current `AI_CONTEXT.md`, `CHATGPT_WORKFLOW.md`, and `CODEX_EXECUTION.md` already causing fresh agents to derive these behaviors reliably;
-- added canonical text increasing always-on / routing cost more than it improves behavior;
-- deterministic hot-path checks producing mostly noisy architecture warnings or project-specific thresholds;
-- selective reuse / invalidation causing stale-state regressions that outweigh the saved retrieval cost.
+- existing `CHATGPT_WORKFLOW.md` runtime-asset reuse plus `CODEX_EXECUTION.md` independent scheduling rules already causing agents to derive the needed optimizations reliably;
+- execution surfaces varying too much for process/module reuse to support a stable cross-project contract;
+- compact transport creating more provenance/debugging ambiguity than the saved Context is worth.
 
 ## Candidate evaluation path
 
-If this candidate is later admitted for evidence gathering, prefer a bounded comparison rather than immediate policy mutation:
+If the remaining runtime candidate is later admitted for evidence gathering, prefer a bounded comparison rather than immediate policy mutation:
 
-1. choose one real adopter task with repeated same-session retrieval or runtime execution;
-2. establish baseline behavior / overhead;
-3. apply the smallest candidate fast-path behavior;
-4. verify correctness / identity / freshness boundaries;
+1. choose one real non-divination deterministic workload with repeated execution;
+2. establish baseline execution / transport overhead;
+3. apply the smallest process/module reuse or compact-result behavior;
+4. verify correctness / identity / freshness / diagnostics boundaries;
 5. reduce scaffolding and repeat in a nearby task;
 6. decide `NO CHANGE`, `RECOMMENDATION ONLY`, `MORE EVIDENCE NEEDED`, or propose a specific existing canonical owner update.
 
@@ -175,8 +181,8 @@ Do not manufacture a new framework or checker solely to prove this candidate.
 
 ## Current conclusion
 
-**Status: `CANDIDATE / MORE EVIDENCE NEEDED`.**
+**Status: `PARTIALLY PROMOTED / RUNTIME REMAINDER MORE EVIDENCE NEEDED`.**
 
-The cross-project convergence is strong enough to preserve as maintainer evidence. It is not yet strong enough to justify a new canonical surface, mandatory validator, universal routing metric, or task admission.
+Session-local verified Context reuse and conditional hot-path regression guidance have been promoted into the existing canonical AI Context owner. Runtime process/module reuse and compact machine-result transport remain maintainer-only evidence candidates.
 
 Current obligation remains `NONE`.
