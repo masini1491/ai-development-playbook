@@ -23,7 +23,7 @@ For `DISCOVERED` entries, resolve the source's current exact immutable revision 
 | `gastownhall/beads` | Durable agent memory / dependency-aware task graph | HIGH | REVIEWED | Structured long-horizon memory, typed provenance/dependency graph, external gates, atomic task claiming, semantic compaction, maintainer/contributor separation | `a690b0a8c4d1ddc4f0bd9bf767499625dd71bc96` → `gastownhall-beads.md` |
 | `GSA-TTS/agentic-coding-playbook` | Governance / authority / compliance-oriented agent workflow | HIGH | REVIEWED | Universal contract + thin project layer, deterministic fail-closed prerequisite identity, pinned fallback acquisition, generated routing/validation | `9ea8add75a017bed007230a530da4a943c3eebdf` → `GSA-TTS-agentic-coding-playbook.md` |
 | `github/spec-kit` | Spec-driven development / work admission | HIGH | DISCOVERED | Constitution/spec/plan/tasks/implement flow, idea shaping and decision gates, implementation/spec convergence | resolve at review |
-| `NeoLabHQ/context-engineering-kit` | Context self-reflection / pluginized learning | MEDIUM | DISCOVERED | Reflect→memorize loops, granular loading, judge/subagent patterns, claims about reliability vs token cost worth independent verification | resolve at review |
+| `NeoLabHQ/context-engineering-kit` | Context self-reflection / pluginized learning | MEDIUM | REVIEWED | Reflect→curate→memorize loop, granular context loading, independent judge/meta-judge patterns, provider-aware capability degradation | `23e2428e809d77717f8acc9659c374a3a1fcb93e` → `NeoLabHQ-context-engineering-kit.md` |
 | `humanlayer/advanced-context-engineering-for-coding-agents` | Brownfield context engineering / session compaction | MEDIUM | DISCOVERED | Frequent intentional compaction, research→plan→implement, durable specs and context-window management in large codebases | resolve at review |
 | `obra/superpowers` | Procedure / skills / behavioral enforcement | MEDIUM | DISCOVERED | Structured design→plan→implementation flow, TDD, verification-before-completion, subagent workflows and skill behavior evaluation | resolve at review |
 | `cnfjlhj/completion-learn` | Post-completion learning / capability sedimentation | MEDIUM | DISCOVERED | Distinguishes task completion from durable learning; useful for maintainer promotion criteria and self-correction flow | resolve at review |
@@ -33,11 +33,11 @@ For `DISCOVERED` entries, resolve the source's current exact immutable revision 
 
 Unless a concrete incident or maintainer question changes priority, the lowest-sufficient next review order is:
 
-1. `NeoLabHQ/context-engineering-kit` — self-reflection and durable-learning promotion patterns.
-2. `github/spec-kit` — spec-driven admission, shaping, and convergence patterns now that OpenSpec provides the lighter comparison baseline.
-3. `humanlayer/advanced-context-engineering-for-coding-agents` — brownfield session/context management and compaction discipline.
-4. `obra/superpowers` — procedure enforcement and subagent workflow comparison after the authority-oriented sources are covered.
-5. `cnfjlhj/completion-learn` — post-completion learning and promotion criteria after the broader reflection/context sources are covered.
+1. `github/spec-kit` — spec-driven admission, shaping, and convergence patterns now that OpenSpec provides the lighter comparison baseline.
+2. `humanlayer/advanced-context-engineering-for-coding-agents` — brownfield session/context management and compaction discipline.
+3. `obra/superpowers` — procedure enforcement and subagent workflow comparison after the authority-oriented sources are covered.
+4. `cnfjlhj/completion-learn` — post-completion learning and promotion criteria after the broader reflection/context sources are covered.
+5. `Dicklesworthstone/agentic_coding_flywheel_setup` — reproducible bootstrap, generated metadata closure, integrity/doctor/recovery implementation patterns.
 
 This order is research priority only. It does not authorize mutation, task admission, installation, adoption, or implementation.
 
