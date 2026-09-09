@@ -12,7 +12,14 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 本檔大部分章節仍依 Task 做 Progressive Reading；但 **Codex user-facing reporting contract 是 always-on cross-cutting contract**。只要 project `AGENTS.md`／正式 routing 已把 Codex reporting 指向本檔，每個 Codex execution 都至少必須取得本檔的「Codex 回報語言」、「Codex 回報時間戳」與「Reporting Pre-Send Gate」規則，再依 Task 讀其他最低必要章節。不得因本次工作只是 MQTT、BLE、文件、maintenance、validation 或其他特定 domain，就把 reporting contract 判成無關而跳過。
 
-模型與推理強度由使用者在 Codex UI 手動選擇。Codex 不得自行 Luna→Terra→Sol→Astra，也不得自行 Low→Medium→High。
+**Root model / reasoning** 由使用者在 Codex UI／launch configuration 選擇；Codex 不得自行改變目前 root thread 的 model 或 reasoning，也不得把 child override 冒充 root 已切換。
+
+**Child model / reasoning** 只有在 current user instruction、project governance 或 admitted Codex Prompt 已明確授權 subagent／delegation，而且該 subtask 已獨立通過本檔「Agent 數量」與成本／耦合 gate 時，才可在 spawn child 時依最低充分原則指定 model／reasoning override。未指定 override 時 child 繼承 parent profile。
+
+- Child profile override 只改變該 child 的 execution profile，不擴張 Task／Stage、repository write、permission、credential、deployment 或 external-service authority。
+- **想使用不同 model／reasoning 本身不是 delegation authority。** 不得為了避開 root UI 切換而把 tightly-coupled、critical-path 或本來應由 root 完成的工作硬拆成 child。
+- 若 main critical path 本身已 materially 超出 current root profile，依下方「升級處理」回報並由使用者決定是否重新 launch；不要用 child routing 偷渡 root escalation。
+- 若 execution surface 不支援 requested child model／reasoning、runtime 沒有暴露對應可用 profile，或 override 被拒絕，原樣回報 limitation；不得猜 model slug／effort 或假裝切換成功。
 
 新開、Branch / Fork、Resume 或跨 session handoff 後，若 Model / Reasoning 會影響成本或能力：
 
@@ -61,6 +68,20 @@ Codex 的**每一個實質 user-facing 回覆**最後一行都應附上絕對時
 - execution environment 無法取得可信目前時間時，不得猜測；標記 `回報時間：UNAVAILABLE`。
 - 這是 cross-cutting reporting contract，可由 project governance / playbook routing 啟用；**不要求 ChatGPT 為了 activation 把完整 reporting policy 或固定時間句重複塞進每一份 Codex launch Prompt**。
 
+### Child Profile Routing 回報（Completion / Final）
+
+每個 Codex completion summary／final report 都要讓使用者能判斷本次執行期間**是否曾使用不同的 child model／reasoning profile**；不要求每一則中間 progress message 重複此資訊。
+
+最低充分格式可為單行或短段落：
+
+- 沒有 child profile override：`Child profile routing: NONE`。
+- 有 override：`Child profile routing: USED`，並列出每個 materially distinct child profile 的 **requested model／reasoning、bounded subtask／role，以及結果狀態**；同 profile 多次重複使用可合併，不為形式列完整 agent log。
+- 若 runtime 有獨立可觀察的 effective profile metadata，可標記 `effective profile verified`；若只能證明 spawn request 接受且 child 正常執行，必須標記 `override request accepted / effective profile not independently observable` 或等價限制。
+- 不使用 child 自我描述、自然語言聲稱「我是某模型」或 parent 的推測作為 effective profile 證據。
+- Child routing summary 是 execution transparency，不取代 task result、validation、Git 或 completion evidence，也不把 model switch 本身當成成功證據。
+
+核心原則：**使用者應能從 final report 看出是否發生過 mixed-profile execution，以及可證明到哪一層；requested override ≠ independently verified effective profile。**
+
 ## Reporting Pre-Send Gate
 
 Reporting policy 被讀取或在 Prompt 中重述，仍不等於最後送出的文字一定符合 contract。對每一個實質 user-facing reply，Codex 在送出前必須對**最終草稿本身**執行一次 bounded pre-send compliance check；這是 reporting contract 的最後一哩 gate，不是新的 project-specific policy。
@@ -69,11 +90,12 @@ Reporting policy 被讀取或在 Prompt 中重述，仍不等於最後送出的�
 
 1. **User-facing classification**：本次輸出若會形成使用者可見、可據此判斷狀態或作為後續工作依據的自然語言訊息，就進入本 gate；不得因稱為 progress、intermediate、summary 或非 final 而跳過。
 2. **Language check**：最終草稿的自然語言回覆符合本檔「Codex 回報語言」或使用者／project 當次明確覆蓋的 reporting language；技術原文不需翻譯。
-3. **Timestamp source check**：使用可信的目前時間產生 absolute timestamp；若 execution environment 無法取得可信目前時間，使用 `回報時間：UNAVAILABLE`，不得猜測、沿用舊時間或保留 `YYYY-MM-DD HH:mm` placeholder。
-4. **Final-line check**：檢查最終草稿最後一個非空白行是否為本 contract 要求的 timestamp line，且沒有任何正文、附註、citation、summary 或其他內容出現在其後。
-5. **Fail-closed repair**：若 language、timestamp presence、格式或 final-line position 任一項不合格，先修正最終草稿並重新檢查；**未通過 pre-send check 的 user-facing reply 不得送出**。
+3. **Child-routing report check（completion/final only）**：若本次是 completion summary／final report，確認已依上節標記 `Child profile routing: NONE` 或 `USED`，並保留 effective-profile observability boundary；一般 progress/STOP reply 不為形式補此欄。
+4. **Timestamp source check**：使用可信的目前時間產生 absolute timestamp；若 execution environment 無法取得可信目前時間，使用 `回報時間：UNAVAILABLE`，不得猜測、沿用舊時間或保留 `YYYY-MM-DD HH:mm` placeholder。
+5. **Final-line check**：檢查最終草稿最後一個非空白行是否為本 contract 要求的 timestamp line，且沒有任何正文、附註、citation、summary 或其他內容出現在其後。
+6. **Fail-closed repair**：若 language、required child-routing summary、timestamp presence、格式或 final-line position 任一項不合格，先修正最終草稿並重新檢查；**未通過 pre-send check 的 user-facing reply 不得送出**。
 
-若 execution surface 原生提供 output validator、response post-processing hook、schema check 或其他可在送出前對最終文字做 deterministic validation 的能力，優先用它執行上述可機械判定項目；若沒有這類能力，仍必須做 bounded final-draft self-check。不得把 model-only self-check 宣稱為平台層 deterministic guarantee，也不得為了單一 timestamp 規則自行建立高複雜度 validator、agent loop 或外部服務。
+若 execution surface 原生提供 output validator、response post-processing hook、schema check 或其他可在送出前對最終文字做 deterministic validation 的能力，優先用它執行上述可機械判定項目；若沒有這類能力，仍必須做 bounded final-draft self-check。不得把 model-only self-check 宣稱為平台層 deterministic guarantee，也不得為了單一 reporting rule自行建立高複雜度 validator、agent loop 或外部服務。
 
 Pre-Send Gate 只驗證 reporting artifact 是否符合 contract，不證明其中的 Git、validation、completion 或 technical claim 為真；這些仍由 `DEBUG_VALIDATION.md`、`REPOSITORY_EXECUTION.md` 與 project authority 的 canonical evidence 決定。
 
@@ -188,16 +210,16 @@ Condition-triggered 原則：
 
 ## 升級處理（Escalation）
 
-Codex 無權自行換模型。達到 escalation condition 時：
+Codex 無權自行換 **root** model／reasoning。達到 root escalation condition 時：
 
 1. STOP
 2. 保留 evidence handoff
 3. 回報目前 root cause / observability 狀態
 4. 列出已完成 validation 與 remaining blocker
-5. 建議下一模型／推理強度
+5. 建議下一 root model／推理強度
 6. 由使用者決定是否重新 launch
 
-換模型後沿用既有 evidence，不得只因換模型就重新 repo-wide exploration。
+已明確授權且通過 delegation gate 的 child profile override 不等同 root escalation；它只服務該 bounded child subtask。換 root model 後沿用既有 evidence，不得只因換模型就重新 repo-wide exploration。
 
 ## Progressive Context
 
@@ -221,6 +243,8 @@ Codex 無權自行換模型。達到 escalation condition 時：
 預設 1。
 
 只有真正獨立、彼此不共享 root cause，而且平行化有明確成本效益的 workstream 才考慮 Multi-Agent。
+
+**Child profile routing 在 delegation admission 之後才判斷。** 想使用不同 model／reasoning、想少一次手動 UI 切換、或某 child profile看起來更便宜／更強，都不能單獨成立 Multi-Agent；先證明 child subtask 本身適合 delegation，再比較 inherit parent 或 override 哪個 profile的 end-to-end cost／quality較合理。
 
 不得把加 agent 當 retry 方法。
 
