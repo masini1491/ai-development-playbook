@@ -8,7 +8,7 @@
 
 - `REVIEWED` — a bounded maintainer comparative review exists under `maintainer/references/`.
 - `DISCOVERED` — candidate identified; no maintainer dossier yet.
-- `DEFERRED` — intentionally not prioritized for review at present.
+- `DEFERRED` — intentionally not prioritized or not suitable for substantive maintainer review under current constraints.
 
 For `DISCOVERED` entries, resolve the source's current exact immutable revision only when a real bounded review begins; do not treat this inventory as a freshness snapshot of unreviewed repositories.
 
@@ -27,15 +27,13 @@ For `DISCOVERED` entries, resolve the source's current exact immutable revision 
 | `humanlayer/advanced-context-engineering-for-coding-agents` | Brownfield context engineering / session compaction | MEDIUM | REVIEWED | Frequent intentional compaction, research→plan→implement, high-leverage upstream review, fresh-context checkpointing | `f2bc7aec4575418d2d2e83fec078266cc56d3e6a` → `humanlayer-advanced-context-engineering-for-coding-agents.md` |
 | `obra/superpowers` | Procedure / skills / behavioral enforcement | MEDIUM | REVIEWED | Behavioral TDD for skills, trigger-only discovery metadata, context-isolated subagent execution, recovery ledger, role-sensitive child routing | `b36e0829c6d0140e93cfef2ca599b1b07d4a7797` → `obra-superpowers.md` |
 | `cnfjlhj/completion-learn` | Post-completion learning / capability sedimentation | MEDIUM | REVIEWED | Completion ≠ retained capability, reduced-support/near-transfer drills, explicit no-change outcome, owner-first tool evolution | `66a91d56578976d7183381ac9be9c6e9130e24cf` → `cnfjlhj-completion-learn.md` |
-| `Dicklesworthstone/agentic_coding_flywheel_setup` | Reproducible agent runtime bootstrap / integrity | MEDIUM | DISCOVERED | Manifest-driven generation, doctor checks, checksum verification, idempotent setup, immutable release/SHA discipline | resolve at review |
+| `Dicklesworthstone/agentic_coding_flywheel_setup` | Reproducible agent runtime bootstrap / integrity | MEDIUM | DEFERRED | Technically relevant, but the reviewed source license contains an explicit OpenAI/Anthropic restriction; substantive comparative ingestion/adoption is not pursued under that constraint | review halted at license gate; no dossier |
 
 ## Current review order
 
-Unless a concrete incident or maintainer question changes priority, the lowest-sufficient next review order is:
+No additional discovered repository is currently queued. A new source should be added only when a concrete maintainer question or independent research need justifies it.
 
-1. `Dicklesworthstone/agentic_coding_flywheel_setup` — reproducible bootstrap, generated metadata closure, integrity/doctor/recovery implementation patterns.
-
-This order is research priority only. It does not authorize mutation, task admission, installation, adoption, or implementation.
+This inventory is research priority only. It does not authorize mutation, task admission, installation, adoption, or implementation.
 
 ## When to synthesize
 
