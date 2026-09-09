@@ -388,9 +388,26 @@ Standalone仍只帶最低充分 Context；self-contained ≠ 完整聊天/全部
 
 Codex model / reasoning / Context / Agent / execution-mode成本規則由 `CODEX_EXECUTION.md` 維護。ChatGPT依該 authority選最低充分建議。
 
-Direct Short Prompt / Standalone Full Prompt前段至少包含 target repo/branch、推薦模型、推理強度、1–3句理由、是否值得便宜模型前置蒐證；必要時補 Context / execution mode。
+Direct Short Prompt / Standalone Full Prompt前段至少包含 target repo/branch、推薦 root model、root reasoning、1–3句理由、是否值得便宜模型前置蒐證；必要時補 Context / execution mode。這裡的 model/reasoning 是**使用者要在 Codex UI／launch surface 選的 root profile**，不是宣告整個 Prompt 執行期間所有合法 child 都必須沿用同一 profile。
 
-TASKS Short-launch若 referenced Hot Stage已保存設定，不重複展開；可在可複製 Prompt外用一行顯示 UI 建議。
+TASKS Short-launch若 referenced Hot Stage已保存設定，不重複展開；可在可複製 Prompt外用一行顯示 root UI 建議。
+
+### Prompt-authorized Child Profile Routing
+
+除非使用者或 current project governance 明確禁止 subagent／Multi-Agent，ChatGPT 產生 Codex handoff Prompt 時，**預設在同一份 copy-ready Prompt 內給出最低充分的 child profile routing authorization**。這個預設授權只是打開合法 routing 能力，**不代表要求 Codex 一定 spawn child**。
+
+最低充分語義必須保留：
+
+- 只有原本就符合 `CODEX_EXECUTION.md`「Agent 數量」／delegation gate 的 bounded subtask 才可 spawn child；
+- 對已合法 delegation 的 child，Codex 可依 `CODEX_EXECUTION.md` 的最低充分 end-to-end cost／quality 原則，在 runtime **向上或向下** override child model／reasoning；可包含不同模型或同模型不同 reasoning；
+- **不得為了換 model／reasoning、少一次 root UI 操作、降低單價或 retry 而創造 child**；root profile仍由使用者決定，main critical path若需要 root escalation則走既有 STOP／relaunch gate；
+- completion／final report仍依 `CODEX_EXECUTION.md` 的 `Child profile routing: NONE | USED` 與 observability boundary 回報。
+
+ChatGPT 不需要在產 Prompt 時預先列舉所有可能 child 或硬編每個 profile。若 exact bounded subtask／profile 只有 runtime 才能判斷，可直接授權 Codex在上述 gate內自行選最低充分 child profile；若目前 evidence 已足以固定某個 child role／profile，則可在 Prompt 中明確 pin 該 override。
+
+TASKS Short-launch 也適用本預設，但保持 lean：若 project governance／Hot contract 尚未提供等價 authorization，只需補一條 bounded child-routing authorization pointer，不複製整段 execution policy。若 current task 明顯不適合 delegation、execution surface不支援 child profile override，或 higher authority禁止 subagent，則不啟用／明確關閉，不得假裝 mixed-profile execution 可用。
+
+核心原則：**Root profile 是 launch choice；合法 child profile 是 runtime routing choice。Prompt 預設授權 bounded mixed-model／mixed-reasoning execution，但不把 profile switching 變成 delegation authority。**
 
 ## Codex reporting contract activation
 
