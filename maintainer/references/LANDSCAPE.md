@@ -25,7 +25,7 @@ For `DISCOVERED` entries, resolve the source's current exact immutable revision 
 | `github/spec-kit` | Spec-driven development / work admission | HIGH | REVIEWED | Explicit pre-admission idea assessment, constitution/spec/plan/tasks separation, read-only cross-artifact analysis, append-only implementation convergence, artifact persistence models | `0c8e31ff0a98c362696c2edb6a1bb25a37f68544` → `github-spec-kit.md` |
 | `NeoLabHQ/context-engineering-kit` | Context self-reflection / pluginized learning | MEDIUM | REVIEWED | Reflect→curate→memorize loop, granular context loading, independent judge/meta-judge patterns, provider-aware capability degradation | `23e2428e809d77717f8acc9659c374a3a1fcb93e` → `NeoLabHQ-context-engineering-kit.md` |
 | `humanlayer/advanced-context-engineering-for-coding-agents` | Brownfield context engineering / session compaction | MEDIUM | REVIEWED | Frequent intentional compaction, research→plan→implement, high-leverage upstream review, fresh-context checkpointing | `f2bc7aec4575418d2d2e83fec078266cc56d3e6a` → `humanlayer-advanced-context-engineering-for-coding-agents.md` |
-| `obra/superpowers` | Procedure / skills / behavioral enforcement | MEDIUM | DISCOVERED | Structured design→plan→implementation flow, TDD, verification-before-completion, subagent workflows and skill behavior evaluation | resolve at review |
+| `obra/superpowers` | Procedure / skills / behavioral enforcement | MEDIUM | REVIEWED | Behavioral TDD for skills, trigger-only discovery metadata, context-isolated subagent execution, recovery ledger, role-sensitive child routing | `b36e0829c6d0140e93cfef2ca599b1b07d4a7797` → `obra-superpowers.md` |
 | `cnfjlhj/completion-learn` | Post-completion learning / capability sedimentation | MEDIUM | DISCOVERED | Distinguishes task completion from durable learning; useful for maintainer promotion criteria and self-correction flow | resolve at review |
 | `Dicklesworthstone/agentic_coding_flywheel_setup` | Reproducible agent runtime bootstrap / integrity | MEDIUM | DISCOVERED | Manifest-driven generation, doctor checks, checksum verification, idempotent setup, immutable release/SHA discipline | resolve at review |
 
@@ -33,9 +33,8 @@ For `DISCOVERED` entries, resolve the source's current exact immutable revision 
 
 Unless a concrete incident or maintainer question changes priority, the lowest-sufficient next review order is:
 
-1. `obra/superpowers` — procedure enforcement and subagent workflow comparison after the authority/context-oriented sources are covered.
-2. `cnfjlhj/completion-learn` — post-completion learning and promotion criteria after the broader reflection/context sources are covered.
-3. `Dicklesworthstone/agentic_coding_flywheel_setup` — reproducible bootstrap, generated metadata closure, integrity/doctor/recovery implementation patterns.
+1. `cnfjlhj/completion-learn` — post-completion learning and promotion criteria after the broader reflection/context and behavioral-procedure sources are covered.
+2. `Dicklesworthstone/agentic_coding_flywheel_setup` — reproducible bootstrap, generated metadata closure, integrity/doctor/recovery implementation patterns.
 
 This order is research priority only. It does not authorize mutation, task admission, installation, adoption, or implementation.
 
