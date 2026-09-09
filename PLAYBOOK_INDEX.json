@@ -39,6 +39,7 @@
     {"id":"work.ai-originated-admission","owner":"CHATGPT_WORKFLOW.md","section":"AI-originated Durable Work Admission Gate","kind":"contract"},
     {"id":"execution.chatgpt-runtime","owner":"CHATGPT_WORKFLOW.md","section":"ChatGPT-side Runtime Execution","kind":"contract"},
     {"id":"execution.codex-cost-aware","owner":"CODEX_EXECUTION.md","kind":"contract"},
+    {"id":"execution.codex-child-profile-routing","owner":"CHATGPT_WORKFLOW.md","section":"Prompt-authorized Child Profile Routing","kind":"contract"},
     {"id":"repository.write-authority","owner":"REPOSITORY_EXECUTION.md","section":"聊天室級 Repository 寫入鎖","kind":"contract"},
     {"id":"validation.behavioral-evaluation","owner":"DEBUG_VALIDATION.md","section":"Behavioral Evaluation MVP","kind":"contract"},
     {"id":"validation.execution-placement","owner":"DEBUG_VALIDATION.md","section":"Validation Execution Placement Gate","kind":"contract"},
