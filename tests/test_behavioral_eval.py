@@ -24,10 +24,11 @@ class BehavioralEvalTests(unittest.TestCase):
         return {
             "schema_version": 1,
             "authority": "selection-only",
-            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 16)],
+            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 17)],
             "change_classes": {
                 "routing": ["BEH-008", "BEH-009", "BEH-010", "BEH-012", "BEH-015"],
-                "validation": ["BEH-004", "BEH-005", "BEH-014"],
+                "validation": ["BEH-004", "BEH-005", "BEH-014", "BEH-016"],
+                "permission-recovery": ["BEH-004", "BEH-016"],
                 "session-compaction-rehydration": ["BEH-009", "BEH-010", "BEH-015"],
                 "phase3-cold-start-core": [
                     "BEH-002",
@@ -58,7 +59,7 @@ class BehavioralEvalTests(unittest.TestCase):
         self.assertEqual([], behavioral_eval.validate_record(record))
 
     def test_phase3_supplemental_scenario_records_pass(self) -> None:
-        for scenario_id in ("BEH-011", "BEH-012", "BEH-013", "BEH-014", "BEH-015"):
+        for scenario_id in ("BEH-011", "BEH-012", "BEH-013", "BEH-014", "BEH-015", "BEH-016"):
             with self.subTest(scenario_id=scenario_id):
                 record = self.valid_record()
                 record["scenario_id"] = scenario_id
@@ -146,6 +147,14 @@ class BehavioralEvalTests(unittest.TestCase):
             ["BEH-009", "BEH-010", "BEH-015"],
             behavioral_eval.select_regression_scenarios(
                 self.valid_matrix(), "session-compaction-rehydration"
+            ),
+        )
+
+    def test_select_permission_recovery_regression(self) -> None:
+        self.assertEqual(
+            ["BEH-004", "BEH-016"],
+            behavioral_eval.select_regression_scenarios(
+                self.valid_matrix(), "permission-recovery"
             ),
         )
 

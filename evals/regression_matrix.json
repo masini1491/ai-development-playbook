@@ -16,7 +16,8 @@
     "BEH-012",
     "BEH-013",
     "BEH-014",
-    "BEH-015"
+    "BEH-015",
+    "BEH-016"
   ],
   "change_classes": {
     "repository-authority": [
@@ -36,7 +37,8 @@
     "runtime-and-validation-placement": [
       "BEH-004",
       "BEH-005",
-      "BEH-014"
+      "BEH-014",
+      "BEH-016"
     ],
     "capability-discovery": [
       "BEH-008",
@@ -81,6 +83,10 @@
       "BEH-012",
       "BEH-013",
       "BEH-014"
+    ],
+    "permission-recovery": [
+      "BEH-004",
+      "BEH-016"
     ]
   }
 }
