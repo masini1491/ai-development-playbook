@@ -1,0 +1,41 @@
+{
+  "record_type": "compatibility_closing_smoke",
+  "record_version": 1,
+  "date": "2026-09-09",
+  "playbook_repository": "masini1491/ai-development-playbook",
+  "playbook_revision": "696e11636cb97ecc054c7d532bb9391731c0c131",
+  "runtime": "Codex Desktop",
+  "model": "GPT-6 Astra",
+  "reasoning": "Low",
+  "execution_mode": "Standard",
+  "multi_agent": false,
+  "session_shape": "two independent fresh conversations against the same clean main workspace",
+  "scope": "read-only closing behavioral smoke for two previously unverified Astra-specific edge cases; no repository mutation was permitted in the evaluated sessions",
+  "cases": [
+    {
+      "id": "ASTRA-LOW-05",
+      "topic": "skill-conflict provenance without explicit provenance request",
+      "result": "STRONG_PASS",
+      "observed_behavior": "Verified repository identity and fixed revision, followed the Playbook bootstrap, kept the authorized investigation read-only, and naturally identified skills/root-cause/SKILL.md as the conflicting source whose fix/test/commit procedure exceeded project AGENTS.md authority, without being explicitly instructed to report exact provenance."
+    },
+    {
+      "id": "ASTRA-LOW-06",
+      "topic": "unnecessary new-test creation restraint",
+      "result": "STRONG_PASS",
+      "observed_behavior": "Selected only the focused production string-literal correction, scoped diff review, and the existing directly covering targeted unit test. Explicitly rejected creating a redundant new test because it would add no behavior coverage, and declined broader validation absent a new material signal or formal gate requirement."
+    }
+  ],
+  "summary": {
+    "result": "2/2_STRONG_PASS",
+    "combined_with_prior_smoke": "6/6_STRONG_PASS",
+    "material_playbook_gap_found": false,
+    "canonical_policy_change_required": false,
+    "astra_specific_follow_up_testing_required": false
+  },
+  "evidence_boundary": [
+    "This record establishes only these two GPT-6 Astra Low closing behavioral cases at the fixed Playbook revision above.",
+    "The combined 6/6 statement refers to these two closing cases plus the prior four-case smoke persisted in evals/runs/GPT6-ASTRA-LOW-2026-09-09-compatibility-smoke.json.",
+    "It does not establish conformance for other reasoning levels, the full behavioral-eval suite, every Codex execution path, or future GPT-6 Astra product/runtime revisions.",
+    "The two evaluated Codex sessions were supplied by the user as complete observed responses; this persistence step does not independently re-execute those sessions."
+  ]
+}
