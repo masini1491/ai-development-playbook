@@ -20,7 +20,7 @@ For `DISCOVERED` entries, resolve the source's current exact immutable revision 
 | `ldastey-dev/agentic-context` | Context routing / multi-agent distribution | HIGH | REVIEWED | On-demand keyword routing, thin runtime adapters, generated wrappers, cross-platform deploy validation | `502dc83effca9cff6018859f05bcc581c8a11eb2` → `ldastey-dev-agentic-context.md` |
 | `awslabs/aidlc-workflows` | Full AI SDLC governance / harness-neutral workflow | HIGH | REVIEWED | Deterministic workflow/phase/stage state machines, approval gates, append-only audit trail, human-affirmed durable learning, harness-neutral core and generated runtime projections | `227745d03bdd1879f51409eeba051e4c6c585b5f` → `awslabs-aidlc-workflows.md` |
 | `Fission-AI/OpenSpec` | Spec / admission lifecycle / cross-repo planning | HIGH | REVIEWED | Explicit explore→propose admission boundary, current specs vs future deltas, update-vs-new identity heuristic, Stores for shared cross-repo planning | `e062b9572be933564ba3899d059377dfa1393e32` → `Fission-AI-OpenSpec.md` |
-| `gastownhall/beads` | Durable agent memory / dependency-aware task graph | HIGH | DISCOVERED | Structured long-horizon memory, blockers/dependencies, atomic task claiming, semantic compaction, maintainer/contributor separation | resolve at review |
+| `gastownhall/beads` | Durable agent memory / dependency-aware task graph | HIGH | REVIEWED | Structured long-horizon memory, typed provenance/dependency graph, external gates, atomic task claiming, semantic compaction, maintainer/contributor separation | `a690b0a8c4d1ddc4f0bd9bf767499625dd71bc96` → `gastownhall-beads.md` |
 | `GSA-TTS/agentic-coding-playbook` | Governance / authority / compliance-oriented agent workflow | HIGH | DISCOVERED | Universal contract + project layer, fail-closed prerequisites, deterministic checks and governance composition | resolve at review |
 | `github/spec-kit` | Spec-driven development / work admission | HIGH | DISCOVERED | Constitution/spec/plan/tasks/implement flow, idea shaping and decision gates, implementation/spec convergence | resolve at review |
 | `NeoLabHQ/context-engineering-kit` | Context self-reflection / pluginized learning | MEDIUM | DISCOVERED | Reflect→memorize loops, granular loading, judge/subagent patterns, claims about reliability vs token cost worth independent verification | resolve at review |
@@ -33,11 +33,11 @@ For `DISCOVERED` entries, resolve the source's current exact immutable revision 
 
 Unless a concrete incident or maintainer question changes priority, the lowest-sufficient next review order is:
 
-1. `gastownhall/beads` — durable memory, dependency graph, and multi-agent task ownership.
-2. `GSA-TTS/agentic-coding-playbook` — authority/fail-closed/compliance composition.
-3. `NeoLabHQ/context-engineering-kit` — self-reflection and durable-learning promotion patterns.
-4. `github/spec-kit` — spec-driven admission, shaping, and convergence patterns now that OpenSpec provides the lighter comparison baseline.
-5. `humanlayer/advanced-context-engineering-for-coding-agents` — brownfield session/context management and compaction discipline.
+1. `GSA-TTS/agentic-coding-playbook` — authority/fail-closed/compliance composition.
+2. `NeoLabHQ/context-engineering-kit` — self-reflection and durable-learning promotion patterns.
+3. `github/spec-kit` — spec-driven admission, shaping, and convergence patterns now that OpenSpec provides the lighter comparison baseline.
+4. `humanlayer/advanced-context-engineering-for-coding-agents` — brownfield session/context management and compaction discipline.
+5. `obra/superpowers` — procedure enforcement and subagent workflow comparison after the authority-oriented sources are covered.
 
 This order is research priority only. It does not authorize mutation, task admission, installation, adoption, or implementation.
 
