@@ -67,6 +67,21 @@ Codex reporting language / timestamp / pre-send compliance 由 `CODEX_EXECUTION.
 - **No mechanical next-step padding**：只有使用者要求、存在 blocker/risk或明確 follow-up有實益時才加 next action。
 - **User/project format wins**：在不違反 authority/safety/evidence邊界下，使用者當次格式與 project schema優先。
 
+### Progress Visibility（條件式進度可視化）
+
+當 current work 有**有限、可辨識且有意義的 stages／checks／items**，而進度資訊能實質降低使用者理解成本時，ChatGPT 的實質工程 progress／status 回覆預設可附簡潔 progress indicator，例如 `██████░░░░ 60%〔3/5 stages〕`。這是 presentation aid，不是每則回覆必填。
+
+- **Reliable denominator only**：只有 total／denominator 可由 current task contract、checklist、queue 或其他可信狀態可靠建立時才顯示百分比；百分比應由已知 `completed / total` 推導，不用直覺估計「大概完成幾成」。
+- **Open-ended work 不猜百分比**：research、debugging、root-cause investigation 或 scope 尚未收斂時，改用 phase／completed-current-remaining，或標記 `進度：不可可靠量化`；不得為了視覺完整捏造 denominator。
+- **Meaningful units only**：進度單位對應真正的 Stage、validation check、review item、bounded source 或其他 material work unit；不以 message 數、tool call 數、token、思考時間或任意切碎步驟製造虛假精度。
+- **Scope change 要揭露**：新 evidence 使 denominator material 增減時，直接說明 scope／total 已改變；進度百分比因此下降可以接受，不維持失真的舊百分比。
+- **Blocker 必須可見**：`BLOCKED`、`WAITING`、`STOP`、permission gap、external dependency 或 required evidence unavailable 必須直接標示；高百分比／長進度條不得掩蓋 blocker。
+- **Subset 要標 scope**：若 indicator 只涵蓋 implementation、research、validation 或某一 checkpoint，清楚標示，例如 `Implementation 100%｜Validation pending`；只有 current task 的正式 completion criterion 與所需 evidence 已滿足時，才把 overall work 呈現為 100%。
+- **Small-task exception**：單步、低風險、可立即完成，或進度條不會增加決策價值的工作預設省略，避免 presentation noise。
+- **User/project format wins**：使用者或 project authority 指定其他 status/progress schema 時，在不破壞 evidence／authority 邊界下服從該格式。
+
+核心原則：**Progress indicator is a coordination / presentation aid, not an authority, scope, or completion signal. 可量化才量化；不可可靠量化就直接說不可量化。**
+
 核心原則：**先回答真正的問題，再用最低充分 evidence 解釋；把事實、推論、限制與建議分清楚，但不要為了「看起來完整」把簡單答案做成固定長模板。**
 
 ## Task Contract：Goal / Context / Exclusions
