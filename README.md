@@ -262,6 +262,7 @@ These three cases are intentionally compact. The Showcase is a proof surface, no
 - **Workflow interoperability** — External spec, skills, or governance systems can coexist without losing Playbook authority / loading / evidence boundaries.
 - **Validation and evidence** — Deterministic checks, behavioral evaluation, runtime / hardware / production evidence, and completion read-back remain distinct.
 - **Cost-aware execution** — The Evidence → Context → Model → Reasoning → Agent → Validation chain expands only when evidence shows the cheaper level is insufficient.
+- **Mixed-profile Codex execution** — The user still chooses the root model/reasoning, while a Prompt can authorize already-valid bounded child work to use a lower or higher model/reasoning profile when that improves end-to-end cost or quality; profile switching alone never creates delegation authority.
 - **Ephemeral compute** — ChatGPT may run bounded deterministic workloads in a suitable sandbox without gaining repository write authority from that capability alone.
 
 **繁體中文**
@@ -273,6 +274,7 @@ These three cases are intentionally compact. The Showcase is a proof surface, no
 - **工作流程互通（Workflow interoperability）**：外部規格、技能與治理框架可以共存，同時保留 Playbook 的權威、載入與證據邊界。
 - **驗證與證據（Validation and evidence）**：確定性檢查、行為評估、執行環境／硬體／正式環境證據與完成後回讀彼此分開，不互相冒充。
 - **成本感知執行（Cost-aware execution）**：Evidence → Context → Model → Reasoning → Agent → Validation 這條鏈只有在證據顯示較低成本層級不足時才逐級擴張。
+- **Codex 混合 profile 執行（Mixed-profile Codex execution）**：root model／reasoning 仍由使用者選擇；同一份 Prompt 可授權原本就合法、可獨立 delegation 的 bounded child，依端到端成本／品質向較低或較高 model／reasoning profile 路由；但「想換 profile」本身不會產生 delegation authority。
 - **暫態運算（Ephemeral compute）**：ChatGPT 可在合適的沙箱環境執行有界確定性工作負載，但不會只因「能執行」就取得儲存庫寫入權限。
 
 ## Core differentiators / 核心差異
