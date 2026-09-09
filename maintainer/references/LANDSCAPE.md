@@ -18,7 +18,7 @@ For `DISCOVERED` entries, resolve the source's current exact immutable revision 
 | --- | --- | --- | --- | --- | --- |
 | `Seekers2001/docs-governance` | Documentation governance / drift / evidence | HIGH | REVIEWED | Thin documentation spine, read-only audits, TEST-ID linkage, contract-first and regression governance patterns | `6907415467ebdbde1f50179f88340b66c74ad8d0` → `Seekers2001-docs-governance.md` |
 | `ldastey-dev/agentic-context` | Context routing / multi-agent distribution | HIGH | REVIEWED | On-demand keyword routing, thin runtime adapters, generated wrappers, cross-platform deploy validation | `502dc83effca9cff6018859f05bcc581c8a11eb2` → `ldastey-dev-agentic-context.md` |
-| `awslabs/aidlc-workflows` | Full AI SDLC governance / harness-neutral workflow | HIGH | DISCOVERED | Task/stage lifecycle, approval gates, audit trail, persistent state/knowledge, one core across multiple harnesses | resolve at review |
+| `awslabs/aidlc-workflows` | Full AI SDLC governance / harness-neutral workflow | HIGH | REVIEWED | Deterministic workflow/phase/stage state machines, approval gates, append-only audit trail, human-affirmed durable learning, harness-neutral core and generated runtime projections | `227745d03bdd1879f51409eeba051e4c6c585b5f` → `awslabs-aidlc-workflows.md` |
 | `Fission-AI/OpenSpec` | Spec / admission lifecycle / cross-repo planning | HIGH | DISCOVERED | Explore→propose→spec/design/tasks→apply→archive, brownfield orientation, shared cross-repo requirements | resolve at review |
 | `gastownhall/beads` | Durable agent memory / dependency-aware task graph | HIGH | DISCOVERED | Structured long-horizon memory, blockers/dependencies, atomic task claiming, semantic compaction, maintainer/contributor separation | resolve at review |
 | `GSA-TTS/agentic-coding-playbook` | Governance / authority / compliance-oriented agent workflow | HIGH | DISCOVERED | Universal contract + project layer, fail-closed prerequisites, deterministic checks and governance composition | resolve at review |
@@ -33,11 +33,11 @@ For `DISCOVERED` entries, resolve the source's current exact immutable revision 
 
 Unless a concrete incident or maintainer question changes priority, the lowest-sufficient next review order is:
 
-1. `awslabs/aidlc-workflows` — broadest overlap with Playbook Task/Stage, validation, runtime adapters, durable state, and approval semantics.
-2. `Fission-AI/OpenSpec` — admission/spec lifecycle and cross-repo source-of-truth handling.
-3. `gastownhall/beads` — durable memory, dependency graph, and multi-agent task ownership.
-4. `GSA-TTS/agentic-coding-playbook` — authority/fail-closed/compliance composition.
-5. `NeoLabHQ/context-engineering-kit` — self-reflection and durable-learning promotion patterns.
+1. `Fission-AI/OpenSpec` — admission/spec lifecycle and cross-repo source-of-truth handling.
+2. `gastownhall/beads` — durable memory, dependency graph, and multi-agent task ownership.
+3. `GSA-TTS/agentic-coding-playbook` — authority/fail-closed/compliance composition.
+4. `NeoLabHQ/context-engineering-kit` — self-reflection and durable-learning promotion patterns.
+5. `github/spec-kit` — spec-driven admission, shaping, and convergence patterns after OpenSpec establishes the lighter comparison baseline.
 
 This order is research priority only. It does not authorize mutation, task admission, installation, adoption, or implementation.
 
