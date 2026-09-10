@@ -122,6 +122,18 @@ Cold/Candidate item、historical material或 AI 先前建議不因被持久化�
 
 任何新增、刪除、搬移、拆分、合併 rule / file / router / information surface，都必須通過 `AI_CONTEXT.md` 的 **AI Readability / Retrieval Cost Change Gate**。少字、拆檔或新增 index 本身都不代表 AI 更快。
 
+### Existing mechanism retirement evidence boundary
+
+既有 rule / adapter / always-on mechanism 若因新 model、runtime 或其他 capability 進步而考慮簡化、縮窄適用範圍或退休，可使用 `DEBUG_VALIDATION.md` 的既有 behavioral/comparative evaluation mechanism 做 bounded ablation；但 **ablation PASS 只代表在實際 checked scope 中未觀察到 material marginal behavioral value，不等於該 mechanism globally unnecessary，也不等於 safe global removal 已成立。**
+
+- Control 與 removal candidate 必須維持相同的 canonical invariant、expected behavior 與 forbidden behavior；不得先放寬 rubric／completion contract，再用新標準證明移除後「仍 PASS」。
+- Evidence conclusion 與 retirement scope 不得超過實際覆蓋的 model／runtime／environment／scenario scope。只在特定新 model 或 runtime 觀察到冗餘時，最多支持對應 scope 的簡化／activation narrowing；不得自動泛化成跨 runtime／跨 model removal。
+- Canonical authority、safety、permission、completion、activation 或 routing responsibility 不能只因模型在沒有明示 instruction 時「通常也會做對」就視為已被替代；behavioral tendency 不是 normative ownership 的替代證據。
+- Retirement 前必須先辨識原 mechanism 實際承擔的 normative／routing responsibility，並確認其他 **current canonical mechanism** 已在 intended retirement scope 充分承接；若仍有 unique responsibility、coverage gap 或 authority ambiguity，保留／縮窄該 mechanism，而不是用沒有觀察到 regression 作 global deletion authority。
+- 這是 condition-triggered maintainer inference boundary，不建立固定 ablation cadence、feature-debt registry、新 eval family 或全量 regression 義務。實際 evaluation design 仍由 `DEBUG_VALIDATION.md` 擁有；刪除／簡化後的 retrieval、authority 與 information-architecture impact 仍由 `AI_CONTEXT.md` 的 **AI Readability / Retrieval Cost Change Gate** 判斷。
+
+核心原則：**No observed marginal behavioral value in a bounded ablation ≠ globally unnecessary. Safe retirement additionally requires unchanged invariants, scope-matched evidence, and complete transfer of the mechanism's current normative／routing responsibility.**
+
 ### ChatGPT direct-write mutation integrity
 
 本 repository 允許 ChatGPT 直接維護 canonical 文件，因此 direct-write completion 不能只確認「新內容存在」。每次 GitHub direct-write 後，至少做與 mutation scope 相稱的 canonical read-back；若使用整檔 replacement、長文件重寫、大片段搬移或其他可能造成 unintended deletion／truncation 的高 blast-radius mutation，還必須檢查 changed-file diff/stat 與必要的保留區段／尾端內容，確認沒有超出意圖的刪除、截斷、重複或 authority loss。
