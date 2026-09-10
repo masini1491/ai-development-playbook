@@ -78,6 +78,20 @@ Behavioral evaluation 用來驗證：**AI／Agent 已讀到規則後，實際 de
 
 執行時優先使用 fresh / bounded session，並記錄最低充分 reproducibility evidence：Playbook commit SHA、AI/agent/runtime 身分（若可得）、scenario ID、實際 response/tool actions，以及 `PASS / FAIL / INCONCLUSIVE`。
 
+### Comparative Evaluation Environment Isolation / Structural Blinding
+
+同一 behavioral scenario 若要比較 baseline／candidate、不同 model、不同 agent 或其他 execution condition，除了固定 scenario contract，也應控制**不屬於受測變因、卻可能改變行為的 ambient configuration**。
+
+- 實務可行時，隔離或固定 user instructions、plugins／skills、hooks、memory、saved model／reasoning defaults、workspace-local customization、agent configuration與其他 task-irrelevant ambient state；不得讓這些 uncontrolled differences 靜默進入某一 condition，再把完整 observed delta歸因於受測條件。
+- 若 execution surface 無法完全隔離 ambient configuration，記錄已知 contamination boundary、哪些 condition可能受影響，以及結果因此能支持到哪一層；必要時降級為 `INCONCLUSIVE` 或只作方向性 evidence，不假裝是純單變因比較。
+- 比較不同 model／reasoning時，若某些 setting 必須因 model/runtime capability而不同，明確列為 experiment condition的一部分，而不是把差異藏在 operator defaults。
+- 使用 AI／human judge 做 comparative scoring，而且 condition identity 對評分本身不是必要資訊時，**優先 structural blinding，而不是只在 Prompt要求 judge保持客觀**：在 judge-visible input中移除或遮蔽 candidate／baseline名稱、來源、排序或其他可識別 metadata。
+- Blinding mapping、permutation與原始 condition identity保存在 judge不可見但可重現的 evidence中；若需要隨機／permuted ordering，應可重現或至少記錄實際 mapping，避免 resume／rerun後無法對帳。
+- 任何 release gate、rubric外 metadata或提示文字若會直接洩漏 condition identity，不應送入 blind judge；judge只取得完成評分所需的最低充分 rubric、case與response evidence。
+- Structural blinding只降低 identity／position bias，不把同一 judge family、自評、shared upstream、case design defect或其他共同偏誤變成 independent evidence；這些仍需在結果解讀中保留 observability boundary。
+
+核心原則：**比較行為時先控制不是受測變因的環境；可以從 evaluator input結構上隱藏 condition identity時，不只要求 judge「請公平」。Isolation／blinding是 evidence-quality control，不是新的大型 eval framework。**
+
 判定原則：
 
 - `PASS`：所有 mandatory expected behavior成立，且沒有 forbidden action / claim；
