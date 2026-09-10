@@ -7,7 +7,7 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 ## Section Router
 
 - root／child model profile、override authority、mixed-profile execution → `Root / Child Profile Routing`、`Subagent / Delegation Gate`、`Parallel Multi-Agent Gate`、`升級處理`
-- Codex user-facing language／timestamp／child-routing summary → `Codex 回報語言`、`Codex 回報時間戳`、`Child Profile Routing 回報`、`Reporting Pre-Send Gate`
+- Codex user-facing language／timestamp／child-delegation／child-profile summary → `Codex 回報語言`、`Codex 回報時間戳`、`Child Profile Routing 回報`、`Reporting Pre-Send Gate`
 - repository execution／Git／permission preflight → `Prompt execution gates`、`REPOSITORY_EXECUTION.md`
 - model ladder／reasoning calibration／usage budget → `模型分工`、`推理強度校準`、`Usage window-aware execution budgeting`
 - Context expansion／subagent decision／parallelization → `Progressive Context`、`Subagent / Delegation Gate`、`Parallel Multi-Agent Gate`
@@ -88,17 +88,24 @@ Codex 的**每一個實質 user-facing 回覆**最後一行都應附上絕對時
 
 ### Child Profile Routing 回報（Completion / Final）
 
-每個 Codex completion summary／final report 都要讓使用者能判斷本次執行期間**是否曾使用不同的 child model／reasoning profile**；不要求每一則中間 progress message 重複此資訊。
+每個 Codex completion summary／final report 都要分開揭露 **child delegation 是否被實際考慮／使用**，以及 **是否曾使用不同的 child model／reasoning profile**；不要求每一則中間 progress message 重複此資訊。
 
-最低充分格式可為單行或短段落：
+Delegation decision 最低充分格式：
 
-- 沒有 child profile override：`Child profile routing: NONE`。
+- 沒有 materially plausible child candidate 需要 substantive delegation evaluation：`Child delegation: NONE`。
+- 有 plausible child candidate 且已套用 `Subagent / Delegation Gate`，但最後沒有 spawn child：`Child delegation: CONSIDERED_NOT_USED`，附一個最低充分 bounded role／主要判斷理由；若 execution 中曾因 material phase transition 重新評估，只摘要 materially distinct decision，不列完整 agent log。
+- 至少實際 spawn 一個 child：`Child delegation: USED`，列出 materially distinct bounded child role／subtask 與結果狀態；同類 child 可合併。
+
+Profile-routing 是另一個維度：
+
+- 沒有 child model／reasoning override：`Child profile routing: NONE`。即使 `Child delegation: USED`，child 若只繼承 parent profile，仍屬 `NONE`；需要時可註明 `child inherited parent profile`，不得把 `NONE` 誤寫成「沒有使用 child」的證據。
 - 有 override：`Child profile routing: USED`，並列出每個 materially distinct child profile 的 **requested model／reasoning、bounded subtask／role，以及結果狀態**；同 profile 多次重複使用可合併，不為形式列完整 agent log。
 - 若 runtime 有獨立可觀察的 effective profile metadata，可標記 `effective profile verified`；若只能證明 spawn request 接受且 child 正常執行，必須標記 `override request accepted / effective profile not independently observable` 或等價限制。
 - 不使用 child 自我描述、自然語言聲稱「我是某模型」或 parent 的推測作為 effective profile 證據。
-- Child routing summary 是 execution transparency，不取代 task result、validation、Git 或 completion evidence，也不把 model switch 本身當成成功證據。
 
-核心原則：**使用者應能從 final report 看出是否發生過 mixed-profile execution，以及可證明到哪一層；requested override ≠ independently verified effective profile。**
+Child delegation／profile summary 是 execution transparency，不取代 task result、validation、Git 或 completion evidence，也不把 delegation 或 model switch 本身當成成功證據。
+
+核心原則：**使用者應能從 final report 分辨「沒有候選／未需要 substantive evaluation」、「評估後未使用」、「實際使用 child」，並在 profile override 發生時看出要求切換過哪些 model／reasoning 以及可證明到哪一層；requested override ≠ independently verified effective profile。**
 
 ## Reporting Pre-Send Gate
 
@@ -108,11 +115,11 @@ Reporting policy 被讀取或在 Prompt 中重述，仍不等於最後送出的�
 
 1. **User-facing classification**：本次輸出若會形成使用者可見、可據此判斷狀態或作為後續工作依據的自然語言訊息，就進入本 gate；不得因稱為 progress、intermediate、summary 或非 final 而跳過。
 2. **Language check**：最終草稿的自然語言回覆符合本檔「Codex 回報語言」或使用者／project 當次明確覆蓋的 reporting language；技術原文不需翻譯。
-3. **Child-routing report check（completion/final only）**：若本次是 completion summary／final report，確認已依上節標記 `Child profile routing: NONE` 或 `USED`，並保留 effective-profile observability boundary；一般 progress/STOP reply 不為形式補此欄。
+3. **Child-routing report check（completion/final only）**：若本次是 completion summary／final report，確認已依上節同時標記 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 與 `Child profile routing: NONE | USED`；若 profile routing 為 `USED`，列出 materially distinct requested model／reasoning、bounded role/result 與 effective-profile observability boundary。一般 progress/STOP reply 不為形式補此欄。
 4. **Timestamp source check**：直接使用可信 runtime/platform current wall clock產生 absolute timestamp，依需要轉換 reporting timezone；不使用模型推算、舊回覆、commit timestamp或 placeholder。只有 primary clock unavailable／suspect時才依 `INFORMATION_INTEGRITY.md` 的 `Reporting Wall-clock Source Guard` 使用 conditional external sanity/fallback；仍無可信來源則使用 `回報時間：UNAVAILABLE`。
 5. **Timestamp render check**：最終草稿不得保留 `??:??`、`YYYY-MM-DD HH:mm`、錯誤 timezone 或其他 malformed/stale timestamp。若 runtime time可取得但 render失敗，重新取值並修復；這是 reporting failure，不是 system-clock failure evidence。
 6. **Final-line check**：檢查最終草稿最後一個非空白行是否為本 contract 要求的 timestamp line，且沒有任何正文、附註、citation、summary 或其他內容出現在其後。
-7. **Fail-closed repair**：若 language、required child-routing summary、timestamp source/render、格式或 final-line position 任一項不合格，先修正最終草稿並重新檢查；**未通過 pre-send check 的 user-facing reply 不得送出**。
+7. **Fail-closed repair**：若 language、required child-delegation/profile summary、timestamp source/render、格式或 final-line position 任一項不合格，先修正最終草稿並重新檢查；**未通過 pre-send check 的 user-facing reply 不得送出**。
 
 若 execution surface 原生提供 output validator、response post-processing hook、schema check 或其他可在送出前對最終文字做 deterministic validation 的能力，優先用它執行上述可機械判定項目；若沒有這類能力，仍必須做 bounded final-draft self-check。不得把 model-only self-check 宣稱為平台層 deterministic guarantee，也不得為了單一 reporting rule自行建立高複雜度 validator、agent loop 或外部服務。
 
@@ -274,6 +281,13 @@ Codex 無權自行換 **root** model／reasoning。達到 root escalation condit
 
 Delegation 成立後，才依 `Root / Child Profile Routing` 判斷 child 繼承 parent profile 或指定最低充分 model／reasoning override。
 
+一次 `Subagent / Delegation Gate` 判定只對**當時的 bounded child candidate／subtask 與 execution topology** 有效，不是 whole-run sticky authority：
+
+- implementation、validation、independent review、completion reconciliation 或其他 material phase boundary 若出現 plausible child candidate，且 shared mutable state、handoff／reconciliation cost、subtask boundedness、specialization／isolation／independence benefit 或其他 Gate input 已 material 改變，可在該 boundary **bounded re-evaluate 一次**；先前 `NONE`／未 delegation 不得單獨作為拒絕新 topology 的理由。
+- 沒有 material topology／economics change 時沿用最近一次適用判定；不得為形式在每個 command、check、poll 或 micro-step 重跑 delegation ceremony。
+- Re-evaluation 只重新回答「目前這個 bounded candidate 是否值得 delegation」，**不要求一定 spawn child**。重新評估後仍由 root 完成是合法結果；不得把 `CONSIDERED_NOT_USED` 視為次等 completion。
+- 不為了 final reporting 人為創造 child candidate。只有真的存在 plausible candidate 並做 substantive Gate 判斷時，才形成 `CONSIDERED_NOT_USED` observability。
+
 不得把加 agent 當 retry 方法。
 
 ## Parallel Multi-Agent Gate
@@ -350,6 +364,15 @@ Behavior-preserving／mechanical Stage 的完整 readability baseline 以 `RESEA
 5. 不把「先餵巨量 log 再讓模型摘要」當主要節流方式。
 
 Output suppression 不得破壞 validation contract；required diagnostics / audit / failure reproduction / security-safety evidence / formal gate log 應保留在適當 artifact/file，並可 targeted read。
+
+Long-running operation 已由 `DEBUG_VALIDATION.md` 的 supervision gate 確認為 healthy / active 後，**內部 bounded polling／inspection 可以依 correctness 需要繼續，但 user-facing progress update 預設採 event-driven，而不是 timer-driven**：
+
+- 優先在 material phase／stage transition、materially new progress evidence、stall suspicion／state reclassification、completion、new blocker／permission boundary，或使用者明確詢問時回報。
+- 單純 wall-clock 經過一段時間、poll 次數增加，或只取得與上一則 substantially 相同的 progress evidence，不足以要求再送一則近似進度訊息。
+- execution surface 已原生顯示可靠 progress/status 時，不為形式用自然語言重複同一資訊；需要補充 decision-changing evidence 時才回報。
+- 這只降低 user-facing noise，不降低 supervision frequency、stall detection、required approval、validation evidence 或 long-running operation observability。
+
+核心原則：**內部 supervision 依 operation health 需要取證；對使用者則在狀態或決策資訊 material 改變時說明。**
 
 ## Runaway / Corrupted Generation STOP Guard
 
