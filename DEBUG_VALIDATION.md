@@ -7,7 +7,7 @@
 
 ## Section Router
 
-- 根因／多來源結果／首次診斷 → `Root Cause 分類標籤`、`多來源／多 Agent 結果協調`、`首次接觸診斷 Harness`
+- 根因／多來源結果／首次診斷／required failure-path observability／controlled fault injection → `Root Cause 分類標籤`、`多來源／多 Agent 結果協調`、`首次接觸診斷 Harness`、`Required Failure-Path Observability / Controlled Fault Injection`
 - operational failure／retry／等待 → `執行失敗分類`、`重試紀律`、`長時間 Operation 監督`
 - build／CI／昂貴流程 preflight → `Build／CI Phase Attribution`、`決定性 Fail-Fast Preflight`
 - deterministic rule／validator／hook／behavioral eval／execution placement → `Deterministic Enforcement Admission Gate`、`Behavioral Evaluation MVP`、`Validation Execution Placement Gate`
@@ -269,6 +269,22 @@ Diagnostic harness 一般應：
 Harness PASS 只證明其實際 target / backend / fixture / measurement profile 的 scope；不得把 isolated smoke、自建 test consumer、mock 或相似硬體結果直接升格成 production/network/hardware PASS。Embedded first-contact 的 target/device evidence delta 另見 `EMBEDDED_PROJECTS.md`。
 
 核心原則：**先用最低風險、最低擾動的 isolated evidence consumer 了解未知 contract；diagnostic harness 是 observability 工具，不是繞過正式 production / authorization boundary 的捷徑。**
+
+### Required Failure-Path Observability / Controlled Fault Injection
+
+當 formal validation contract 已要求某個 real-runtime / hardware failure behavior，但 static、mock、host-only 或正常安全操作無法證明該 failure path，且目前缺少可安全、可重現的 trigger，可考慮最低充分的 test-only diagnostic / fault-injection mechanism。這是補足既有 required evidence 的 observability，不是新增 production requirement，也不建立一般 chaos-testing obligation。
+
+Admission / design boundary：
+
+- 必須先證明該 failure behavior 已由 current canonical validation／technical contract 要求；不得為了合理化 probe 自行創造新的 safety／runtime requirement。
+- Lower-tier evidence 若已足夠，不增加 fault injection；只有所需 evidence tier／runtime contract 無法由現有方法合法關閉時才啟用。
+- Mechanism 應命中真正 production ownership／transaction／lifecycle boundary；平行 mock、duplicate state machine 或只模擬結果的 test path只能證明自己的模型，不能冒充 production failure path。
+- 維持 default inert、bounded、explicitly triggered，並優先 reversible／one-shot；不保存或輸出 secret。State-changing／destructive injection 只有在已明確授權且沒有較低風險替代時才成立。
+- Injection authority 只允許產生 required evidence，不得改變被驗證的 production invariant、擴張 production capability、放寬 fail-safe semantics 或順手修正鄰近 behavior。
+- Injected failure、實際 fail-safe response 與 subsequent clean recovery／continuity 是不同 evidence claims；trigger 成功不等於 failure behavior PASS，failure PASS 也不等於 recovery／lifecycle continuity PASS。
+- 若無法在 current Task／Stage、permission、credential、hardware／runtime authority 內建立安全且可重現的 mechanism，保持 `INSUFFICIENT OBSERVABILITY`／對應 Pending 並 STOP；不得以 speculative production change、manual destructive manipulation 或 lower-tier PASS 補推完成。
+
+核心原則：**When a required high-tier failure path cannot be safely observed, add only the minimum controlled observability needed to hit the real production boundary; fault injection creates evidence, not new production authority.**
 
 ## 執行失敗分類（Operational failure taxonomy）
 
