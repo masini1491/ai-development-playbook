@@ -79,6 +79,40 @@ The snippet above is the smallest bootstrap, not the full deterministic adoption
 
 上面只是最小啟動宣告，不是完整的確定性導入契約。若要使用可由 Adoption Doctor 檢查、可直接調整的範例，請從 [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) 開始。
 
+## One-message ChatGPT bootstrap / 一句話讓 ChatGPT 開始使用
+
+**English**
+
+If you want to try the Playbook in ChatGPT without changing persistent settings first, start a fresh chat and send:
+
+```text
+Use the GitHub Connector to read the latest `main` of `masini1491/ai-development-playbook`.
+
+Follow the repository's `AGENTS.md`, `CHAT_INIT.md`, and routing rules to initialize. Read only the minimum-sufficient canonical owners required for the current task; do not scan the whole repository or substitute stale memory for current GitHub state.
+
+After initialization, use this Playbook to assist with my engineering work.
+```
+
+If the GitHub Connector is unavailable, ChatGPT should say so explicitly rather than silently relying on model memory or incomplete repository content.
+
+For repeated use, see the persistent ChatGPT Custom Instructions setup below.
+
+**繁體中文**
+
+如果只是想先在 ChatGPT 快速試用 Playbook，不需要先修改永久設定。開一個新的 ChatGPT 聊天室並貼上：
+
+```text
+請透過 GitHub Connector 讀取 `masini1491/ai-development-playbook` 最新 `main`。
+
+先依 repo 的 `AGENTS.md`、`CHAT_INIT.md` 與 routing 規則初始化，只讀本次任務最低充分的 canonical owners，不要完整掃描 repository，也不要以舊記憶代替 current GitHub state。
+
+初始化完成後，請依這套 Playbook 協助我接下來的工程工作。
+```
+
+如果 GitHub Connector 無法使用，ChatGPT 應明確回報，而不是默默改用模型記憶或不完整的儲存庫內容繼續。
+
+如果準備長期使用，再依下方的 ChatGPT Custom Instructions 設定進行持久化安裝。
+
 ## ChatGPT Custom Instructions setup and recovery / ChatGPT 自訂指令設定與復原
 
 **English**
