@@ -17,7 +17,9 @@
     "BEH-013",
     "BEH-014",
     "BEH-015",
-    "BEH-016"
+    "BEH-016",
+    "BEH-017",
+    "BEH-018"
   ],
   "change_classes": {
     "repository-authority": [
@@ -54,6 +56,12 @@
       "BEH-010",
       "BEH-013"
     ],
+    "delegation-and-child-routing": [
+      "BEH-017"
+    ],
+    "reporting-contract": [
+      "BEH-018"
+    ],
     "routing-or-information-architecture": [
       "BEH-008",
       "BEH-009",
@@ -68,7 +76,8 @@
       "BEH-008",
       "BEH-011",
       "BEH-012",
-      "BEH-014"
+      "BEH-014",
+      "BEH-018"
     ],
     "external-workflow-interoperability": [
       "BEH-013",
