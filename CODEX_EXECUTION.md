@@ -176,25 +176,28 @@ Astra 不作一般 development、repository discovery、grep/find、mechanical p
 
 模型選擇比較的是 **end-to-end task cost / correctness / completion probability**，不是只比較單位 token rate；也不得因 Astra 是最新或最強模型就跳過 Luna → Terra → Sol 的最低充分原則。
 
+Model 與 Reasoning 應視為同一個 **joint execution profile** 做 end-to-end 校準，而不是兩條只能各自或同步向上升級的獨立階梯。較強 model 搭配較低 reasoning 可能比較弱 model 搭配較高 reasoning 更符合 correctness／cost／retry 目標；因此每次 material model change 都應重新評估該 model 的最低充分 reasoning，不預設繼承前一 model 的 effort。
+
 Astra 的 availability、credit/token rate、Fast multiplier、Context 與 promotional terms 屬 volatile product facts，每次依當下官方 authority 判斷，不寫死進 Playbook。
 
-因此模型階梯是 **Luna → Terra → Sol → Astra（條件式最高階）**；新增 Astra 不代表把原本適合 Sol 的工作全部上移。
+因此模型階梯是 **Luna → Terra → Sol → Astra（條件式最高階）**；新增 Astra 不代表把原本適合 Sol 的工作全部上移。模型階梯用來界定候選能力層級，不取代 model × reasoning pair 的聯合校準。
 
 Repository 很大不是使用 Sol／Astra 或 High 的理由。
 
 ## 推理強度校準（Reasoning Calibration）
 
-「最低充分 reasoning」應以 evidence 校準，不只憑直覺往下壓成本。
+「最低充分 reasoning」應以 evidence 校準，不只憑直覺往下壓成本；真正最佳化的單位是最低充分 **model × reasoning pair**。
 
-對穩定、可重複、已有代表性 validation/eval 的工作，可定期比較目前 reasoning 與低一級設定：
+對穩定、可重複、已有代表性 validation/eval 的工作，可定期比較目前 execution profile 與較低成本候選 pair：
 
 - 使用相同或可比較的代表性 task / fixture / validation contract；
-- 比較 correctness、required evidence、validation quality 與 task success；
-- 只有必要品質沒有下降時，才把較低 reasoning 升為新的預設；
-- 若低一級導致漏讀 contract、錯誤 root cause、驗證不足或更多 retry，保留較高 reasoning；
-- 不得只為省 Credits 降低已證明必要的 reasoning。
+- 比較 correctness、required evidence、validation quality、retry／rework 與 task success；若 allowance／credits／latency 會 materially 影響選擇，也一併比較 end-to-end cost；
+- 同一 model 下可先比較低一級 reasoning；切換到不同 model 時，從該 model 的較低 reasoning 重新建立最低充分 baseline，不因前一 model 使用 High 就預設新 model 也需要 High；
+- 較強 model × 較低 reasoning 若已滿足相同 completion／validation contract，可優先於較弱 model × 較高 reasoning；反之若低 reasoning 導致漏讀 contract、錯誤 root cause、驗證不足或更多 retry，保留較高 reasoning／原 pair；
+- **Reasoning escalation 不能補足 missing instructions、Context、files、permissions、tools、credentials 或 execution capability。** 若 failure 的真正 blocker 是 input／authority／capability gap，先補足或正確回報該 gap，再判斷是否需要提高 reasoning；
+- 不得只為省 Credits 降低已證明必要的 reasoning，也不得只因 model 升級就同步提高 reasoning。
 
-這是校準既有預設的方法，不要求每個 Stage 都做 reasoning A/B test。
+這是校準既有預設的方法，不要求每個 Stage 都做完整 model × reasoning matrix A/B test；只在 model change、representative evidence、cost profile 或 repeated retry 顯示現行 pair 可能非最低充分時做 bounded recalibration。
 
 ## Usage window-aware execution budgeting
 
