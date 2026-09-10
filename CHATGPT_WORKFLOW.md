@@ -41,7 +41,10 @@ ChatGPT 的**實質工程回覆**最後一行預設附上絕對時間戳：
 - 使用絕對日期時間，不以「剛剛／今天」作唯一 freshness marker。
 - 時間戳代表這份 ChatGPT 回覆產生時間，不是 commit / device / server / validation evidence time。
 - 時間戳不取代 repository SHA、diff、validation evidence 或 coordination state。
+- 目前時間優先使用 execution／platform surface 直接提供的可信 current wall clock；primary source unavailable／suspect 時，才依 `INFORMATION_INTEGRITY.md` → `Reporting Wall-clock Source Guard` 使用 conditional external sanity／fallback，不由模型自行推算目前時間。
+- 送出最終回覆前，檢查 timestamp 是否仍為 `??:??`、`YYYY-MM-DD HH:mm` placeholder、錯誤時區、malformed 或明顯 stale；若可信 current time 可取得，重新取值並修復 final draft，若仍無可信來源則使用 `回覆時間：UNAVAILABLE`，不得送出假的時間字串。
 - 無法取得可信目前時間時使用 `回覆時間：UNAVAILABLE`，不得猜測。
+- 本 contract 要求時間戳時，最終草稿最後一個非空白行必須是完整 timestamp line；不得在其後追加正文、附註或其他內容。
 
 Codex reporting language / timestamp / pre-send compliance 由 `CODEX_EXECUTION.md` 維護。
 
@@ -78,7 +81,7 @@ Codex reporting language / timestamp / pre-send compliance 由 `CODEX_EXECUTION.
 - **Blocker 必須可見**：`BLOCKED`、`WAITING`、`STOP`、permission gap、external dependency 或 required evidence unavailable 必須直接標示；高百分比／長進度條不得掩蓋 blocker。
 - **Subset 要標 scope**：若 indicator 只涵蓋 implementation、research、validation 或某一 checkpoint，清楚標示，例如 `Implementation 100%｜Validation pending`；只有 current task 的正式 completion criterion 與所需 evidence 已滿足時，才把 overall work 呈現為 100%。
 - **Small-task exception**：單步、低風險、可立即完成，或進度條不會增加決策價值的工作預設省略，避免 presentation noise。
-- **User/project format wins**：使用者或 project authority 指定其他 status/progress schema 時，在不破壞 evidence／authority 邊界下服從該格式。
+- **User/project format wins**：使用者或 project authority 指定其他 status/progress schema 時，在不破壞 evidence／authority邊界下服從該格式。
 
 核心原則：**Progress indicator is a coordination / presentation aid, not an authority, scope, or completion signal. 可量化才量化；不可可靠量化就直接說不可量化。**
 
