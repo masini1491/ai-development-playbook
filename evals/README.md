@@ -2,6 +2,12 @@
 
 本目錄保存 `DEBUG_VALIDATION.md` → `Behavioral Evaluation MVP` 的 empirical run evidence；不複製 scenario 的 Expected／Forbidden policy，也不成為第二份 behavioral authority。
 
+Scenario ownership：
+
+- `DEBUG_VALIDATION.md`：BEH-001–010 canonical scenarios；
+- `evals/PHASE3_COLD_START.md`：BEH-011–016 supplemental Phase 3 scenarios；
+- `evals/BEH_017_018_SUPPLEMENTAL.md`：BEH-017–018 targeted supplemental scenarios。
+
 ## Run record
 
 每筆 JSON run record 至少保存：
