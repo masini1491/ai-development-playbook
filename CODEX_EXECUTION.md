@@ -10,7 +10,7 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 - Codex user-facing language／timestamp／child-delegation／child-profile summary → `Codex 回報語言`、`Codex 回報時間戳`、`Child Profile Routing 回報`、`Reporting Pre-Send Gate`
 - repository execution／Git／permission preflight → `Prompt execution gates`、`REPOSITORY_EXECUTION.md`
 - model ladder／reasoning calibration／usage budget → `模型分工`、`推理強度校準`、`Usage window-aware execution budgeting`
-- Context expansion／subagent decision／parallelization → `Progressive Context`、`Subagent / Delegation Gate`、`Parallel Multi-Agent Gate`
+- Context expansion／subagent decision／routing observability／parallelization → `Progressive Context`、`Subagent / Delegation Gate`、`Routing Decision Observability`、`Parallel Multi-Agent Gate`
 - execution mode／scope escalation／source readability → `執行模式`、`Scope Expansion ≠ Model Escalation`、`Source readability boundary`
 - tools／batch scheduling／long-running output → `Tool／Skill Surface Discipline`、`Independent Tool Scheduling Discipline`、`Long-running tool output discipline`
 - corrupted／runaway generation → `Runaway / Corrupted Generation STOP Guard`
@@ -289,6 +289,26 @@ Delegation 成立後，才依 `Root / Child Profile Routing` 判斷 child 繼承
 - 不為了 final reporting 人為創造 child candidate。只有真的存在 plausible candidate 並做 substantive Gate 判斷時，才形成 `CONSIDERED_NOT_USED` observability。
 
 不得把加 agent 當 retry 方法。
+
+## Routing Decision Observability
+
+本節只在 execution surface 已存在 **deterministic／machine-assisted routing mechanism**，且該 mechanism 會 materially 影響 actor、child delegation、model／reasoning profile、Context scope、agent／skill 或 execution topology 選擇時啟用。純人工／模型的一次性 judgment 不因本節被迫建立新的 router、schema、trace store 或 logging framework。
+
+若 routing mechanism 已存在，debug／validation surface 應能用**最低充分的結構化 decision facts**重建：
+
+`material input signals / constraints → routing decision → material policy override / rejection reason（若有）`
+
+一般原則：
+
+- 區分「task／route premise 怎麼被分類」與「後續 candidate scoring／profile selection」；不要讓 final winner 反向掩蓋前一層分類原因。
+- 至少保留 materially 影響選擇的 rule／criterion、reason 與 signals／constraints；欄位名稱與 serialization 依 implementation 決定，不在 Playbook 寫死。
+- 若 project／runtime／safety／authority evidence 對較早 routing result 形成 override，應能辨識原先 decision 與 override reason；不得只留下最終值而失去 causality。
+- Rejected alternatives 只需保留會 materially 解釋 safety／authority／domain／cost routing 的 bounded policy reason；不要求保存所有候選、完整 scoring dump、hidden chain-of-thought 或 token-level reasoning transcript。
+- Routing trace 是 **observability / validation evidence**，不是新的 execution authority；不得因某 route 被選中就擴張 Task／Stage、write、permission、credential、deployment 或 external-service scope。
+- 普通 user-facing reply 不為形式 dump routing internals。只有 debug、regression、architecture review、routing mismatch 或其他需要 explanation evidence 的 surface 才讀取最低充分 trace。
+- 若 project 已有 executable router／selector，代表性正向／負向 routing fixtures 可用來驗證 decision causality與policy boundary；但本節本身不要求沒有 router 的 project 新增 eval family、fixture registry 或 automation。
+
+核心原則：**Routing mechanism 若會改變 execution path，就應可被 bounded debug；保留可驗證的 causal decision facts，不把 private reasoning transcript 變成治理要求。**
 
 ## Parallel Multi-Agent Gate
 
