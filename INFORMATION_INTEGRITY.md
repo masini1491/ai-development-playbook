@@ -1,8 +1,8 @@
 # Information Integrity Guards
 
-> **Authority**：跨專案 semantic identity、derived artifact authority、durable confirmed fact ownership、evidence provenance precision／lineage independence／temporal semantics／negative observation semantics、scope-qualified status propagation、private-to-public generalization、remote snapshot consistency、search-result authority/currentness。
+> **Authority**：跨專案 semantic identity、derived artifact authority、durable confirmed fact ownership、evidence provenance precision／provisional-vs-settled observation／lineage independence／temporal semantics／negative observation semantics、scope-qualified status propagation、private-to-public generalization、remote snapshot consistency、search-result authority/currentness。
 >
-> **Read when**：目前工作涉及 aggregate/bundle identity、跨來源 synthesis、evidence metadata/provenance/independence、時間或多 clock 語意、negative observation／unknown、status scope、private evidence 公開泛化、remote canonical snapshot validation、repository search hit authority，或把 confirmed fact 保存到 report／analysis／eval 等 derived artifact。
+> **Read when**：目前工作涉及 aggregate/bundle identity、跨來源 synthesis、evidence metadata/provenance/independence、estimate／preflight value 與 post-execution actual 的 evidence boundary、時間或多 clock 語意、negative observation／unknown、status scope、private evidence 公開泛化、remote canonical snapshot validation、repository search hit authority，或把 confirmed fact 保存到 report／analysis／eval 等 derived artifact。
 >
 > 本檔只保存跨專案 integrity contract；domain-specific ID 格式、lifecycle 名稱、資料 schema、validation ladder 與公開／機密分類細節仍由各 project owner 決定。
 
@@ -57,6 +57,21 @@ Evidence metadata 必須保存實際可證明的 precision，不得用格式完�
 - 後續取得更高精度 evidence 時，可以追加／升級 provenance；不得把後來取得的 metadata 回寫成「當時已知」。
 
 核心原則：**Preserve evidence precision; verification does not propagate transitively across provenance fields.**
+
+## Provisional Estimate / Settled Observation Guard
+
+Pre-execution estimate、forecast、reservation、preflight approximation 或其他 provisional value 可以支援 planning／admission／budgeting，但**不是 post-execution actual observation，也不得只因 execution 已完成就自動升格為 settled fact**。
+
+一般原則：
+
+- cost、latency、token／credit usage、resource consumption、duration、size、throughput 或其他 execution quantity，若在執行前只能估算，應保留 `estimated`／`provisional`／等價 evidence status；不得以格式完整、模型精準或 historical average 為由呈現成 measured actual。
+- 若 correctness、billing、quota accounting、SLA 判斷、capacity planning、completion report 或其他 material decision 依賴 settled value，且 execution surface 能取得 post-execution measurement／provider record／authoritative usage evidence，應以 actual evidence reconciliation estimate，而不是讓 preflight value 靜默成為 final truth。
+- `reserved / held / budgeted / predicted / expected` 與 `consumed / billed / measured / observed / settled` 是不同 semantic states；只有 authoritative contract 明確定義兩者等價時才可合併。
+- Reconciliation 可以保留 `estimate → actual → delta / settlement`，也可以只更新 current derived view；若原估算本身具有 audit、billing dispute、benchmark 或 planning-comparison 價值，不應為了方便而覆寫掉原 provisional record。
+- 若 execution surface 沒有可靠 actual／settlement evidence，或本次只需 planning estimate 而 final actual 不影響 correctness，不為形式建立 accounting framework；但 user-facing／durable record 必須繼續標示它是 estimate，不得冒充 measured or settled value。
+- Tolerance、rounding、provider billing unit、sampling window、reconciliation cadence 與 authoritative usage source 由 target project／service contract決定；本 guard 不寫死單一成本模型。
+
+核心原則：**Estimate is planning evidence, not settled evidence. When a material decision depends on actual usage and authoritative post-execution evidence exists, reconcile instead of promoting the estimate by convenience.**
 
 ## Evidence Lineage / Independence Guard
 
@@ -218,4 +233,4 @@ Repository search、全文搜尋、semantic search、code search、filename matc
 
 ## Boundary
 
-這些 guards 不要求所有 project 使用 global monotonic ID，也不規定 Tarot/Vault 類的 `reflective_only`、`waiting_for_reality` 等 domain lifecycle；不替代 target project 的 confidentiality classification、validation ladder 或 domain schema。跨專案只採用上面的 identity、derived authority、durable ownership、provenance precision／lineage independence／temporal semantics、negative-observation／unknown semantics、scope-qualified status、private-to-public generalization、original-vs-retrospective evidence、snapshot consistency 與 search-hit authority 原則。
+這些 guards 不要求所有 project 使用 global monotonic ID，也不規定 Tarot/Vault 類的 `reflective_only`、`waiting_for_reality` 等 domain lifecycle；不替代 target project 的 confidentiality classification、validation ladder 或 domain schema。跨專案只採用上面的 identity、derived authority、durable ownership、provenance precision、provisional-vs-settled observation、lineage independence／temporal semantics、negative-observation／unknown semantics、scope-qualified status、private-to-public generalization、original-vs-retrospective evidence、snapshot consistency 與 search-hit authority 原則。
