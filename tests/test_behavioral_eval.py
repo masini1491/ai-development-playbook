@@ -24,7 +24,7 @@ class BehavioralEvalTests(unittest.TestCase):
         return {
             "schema_version": 1,
             "authority": "selection-only",
-            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 17)],
+            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 19)],
             "change_classes": {
                 "routing": ["BEH-008", "BEH-009", "BEH-010", "BEH-012", "BEH-015"],
                 "validation": ["BEH-004", "BEH-005", "BEH-014", "BEH-016"],
@@ -58,8 +58,17 @@ class BehavioralEvalTests(unittest.TestCase):
         record["stimulus"] = "Re-evaluate the next actor after a Codex-completed Stage."
         self.assertEqual([], behavioral_eval.validate_record(record))
 
-    def test_phase3_supplemental_scenario_records_pass(self) -> None:
-        for scenario_id in ("BEH-011", "BEH-012", "BEH-013", "BEH-014", "BEH-015", "BEH-016"):
+    def test_supplemental_scenario_records_pass(self) -> None:
+        for scenario_id in (
+            "BEH-011",
+            "BEH-012",
+            "BEH-013",
+            "BEH-014",
+            "BEH-015",
+            "BEH-016",
+            "BEH-017",
+            "BEH-018",
+        ):
             with self.subTest(scenario_id=scenario_id):
                 record = self.valid_record()
                 record["scenario_id"] = scenario_id
