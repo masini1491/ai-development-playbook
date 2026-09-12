@@ -226,6 +226,12 @@
       "kind": "contract"
     },
     {
+      "id": "repository.actor-topology",
+      "owner": "REPOSITORY_EXECUTION.md",
+      "section": "Repository Actor Topology / Maintenance Ownership",
+      "kind": "contract"
+    },
+    {
       "id": "validation.behavioral-evaluation",
       "owner": "DEBUG_VALIDATION.md",
       "section": "Behavioral Evaluation MVP",
