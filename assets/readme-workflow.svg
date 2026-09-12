@@ -15,8 +15,8 @@
   <text x="800" y="58" class="title" text-anchor="middle">How to Use This Repo / 如何使用這個 Repo</text>
   <text x="800" y="96" class="subtitle" text-anchor="middle">README Edition — Quick Workflow / README 版快速流程</text>
   <rect x="170" y="116" width="1260" height="74" rx="18" fill="#e8f3ff"/>
-  <text x="800" y="145" class="lead" text-anchor="middle">Find existing references first. Let ChatGPT do what it can. Confirm the gap, then let Codex close it.</text>
-  <text x="800" y="174" class="lead" text-anchor="middle">先找現有參考，先讓 ChatGPT 完成能做的部分；確認缺口後，再由 Codex 補上。</text>
+  <text x="800" y="145" class="lead" text-anchor="middle">Find existing references. Resolve authority. Choose the lowest-sufficient authorized actor.</text>
+  <text x="800" y="174" class="lead" text-anchor="middle">先找現有參考、確認權威，再選擇最低充分且已獲授權的執行角色。</text>
 
   <rect x="35" y="220" width="330" height="285" rx="18" fill="#eef7ff" stroke="#2f8de4" stroke-width="2"/>
   <circle cx="78" cy="260" r="28" fill="#2185df"/><text x="78" y="260" class="num">1</text>
@@ -36,8 +36,8 @@
 
   <rect x="905" y="220" width="405" height="285" rx="18" fill="#ebfbf3" stroke="#16a66d" stroke-width="2"/>
   <circle cx="948" cy="260" r="28" fill="#109966"/><text x="948" y="260" class="num">3</text>
-  <text x="990" y="260" class="boxTitle"><tspan x="990" dy="0">ChatGPT First /</tspan><tspan x="990" dy="28">先由 ChatGPT 處理</tspan></text>
-  <text x="935" y="336" class="small"><tspan x="935" dy="0">• routing &amp; authority / 路由與權威判定</tspan><tspan x="935" dy="27">• read-only research / 唯讀研究整理</tspan><tspan x="935" dy="27">• clarify architecture / 釐清架構</tspan><tspan x="935" dy="27">• bounded validation / 有界驗證</tspan><tspan x="935" dy="27">• authorized docs updates / 授權文件更新</tspan></text>
+  <text x="990" y="260" class="boxTitle"><tspan x="990" dy="0">Resolve Actor &amp; Authority /</tspan><tspan x="990" dy="28">確認角色與權限</tspan></text>
+  <text x="935" y="336" class="small"><tspan x="935" dy="0">• current responsibility / 目前責任</tspan><tspan x="935" dy="27">• repository actor topology / 角色拓撲</tspan><tspan x="935" dy="27">• task authority / 任務授權</tspan><tspan x="935" dy="27">• capability &amp; permission / 能力與權限</tspan><tspan x="935" dy="27">• execute / handoff / STOP / 執行、交接或停止</tspan></text>
 
   <rect x="1330" y="220" width="235" height="285" rx="18" fill="#f6f9fd" stroke="#8ab7e8" stroke-width="2"/>
   <text x="1448" y="267" class="boxTitle" text-anchor="middle">Key Rules / 核心規則</text>
@@ -62,8 +62,8 @@
   <path d="M665 585 H270 V690" class="arrowG" marker-end="url(#arrowG)"/>
   <rect x="55" y="690" width="390" height="190" rx="18" fill="#ebfbf3" stroke="#16a66d" stroke-width="2"/>
   <circle cx="100" cy="732" r="28" fill="#109966"/><text x="100" y="732" class="num">4A</text>
-  <text x="145" y="728" class="boxTitle"><tspan x="145" dy="0">Finish in ChatGPT /</tspan><tspan x="145" dy="27">由 ChatGPT 直接完成</tspan></text>
-  <text x="90" y="807" class="body"><tspan x="90" dy="0">Return result, summary, or recommendation</tspan><tspan x="90" dy="28">直接回傳結果、摘要或建議</tspan></text>
+  <text x="145" y="728" class="boxTitle"><tspan x="145" dy="0">Return / Finish /</tspan><tspan x="145" dy="27">回傳／完成</tspan></text>
+  <text x="90" y="807" class="body"><tspan x="90" dy="0">Return result, summary, or recommendation</tspan><tspan x="90" dy="28">回傳結果、摘要或建議</tspan></text>
 
   <path d="M935 585 H1195 V690" class="arrowR" marker-end="url(#arrowR)"/>
   <rect x="500" y="690" width="390" height="190" rx="18" fill="#fff0f5" stroke="#ec4b77" stroke-width="2"/>
@@ -73,17 +73,17 @@
   <path d="M890 785 H925" class="arrowR" marker-end="url(#arrowR)"/>
   <rect x="925" y="690" width="575" height="190" rx="18" fill="#f2efff" stroke="#7658e9" stroke-width="2"/>
   <circle cx="970" cy="732" r="28" fill="#6850dc"/><text x="970" y="732" class="num">5</text>
-  <text x="1015" y="730" class="boxTitle"><tspan x="1015" dy="0">Codex Closes the Gap /</tspan><tspan x="1015" dy="28">交給 Codex 補缺口</tspan></text>
-  <text x="1010" y="804" class="small"><tspan x="1010" dy="0">• code changes / 程式修改　• tests / 測試</tspan><tspan x="1010" dy="27">• build or tooling changes / 建置或工具鏈修改</tspan><tspan x="1010" dy="27">• report evidence back / 回報證據與結果</tspan></text>
+  <text x="1015" y="730" class="boxTitle"><tspan x="1015" dy="0">Authorized Actor Executes /</tspan><tspan x="1015" dy="28">由獲授權角色執行</tspan></text>
+  <text x="1010" y="804" class="small"><tspan x="1010" dy="0">• code/docs/tests / 程式、文件、測試</tspan><tspan x="1010" dy="27">• build/tooling/other mutation / 建置、工具與其他修改</tspan><tspan x="1010" dy="27">• report evidence back / 回報證據與結果</tspan></text>
 
   <path d="M250 880 V918 H800" class="arrowG"/>
   <path d="M1210 880 V918 H800" class="arrow"/>
   <path d="M800 918 V935" class="arrow" marker-end="url(#arrow)"/>
   <rect x="350" y="925" width="900" height="112" rx="18" fill="#eaf4ff" stroke="#2b85dc" stroke-width="2"/>
   <circle cx="397" cy="981" r="28" fill="#2185df"/><text x="397" y="981" class="num">6</text>
-  <text x="445" y="963" class="boxTitle">ChatGPT Reconcile / ChatGPT 回讀核對</text>
-  <text x="445" y="992" class="small">Read back current state, reconcile evidence, decide done / next stage / new-session handoff</text>
-  <text x="445" y="1018" class="small">回讀目前狀態、核對證據，再決定完成／下一階段／新聊天室交接</text>
+  <text x="445" y="963" class="boxTitle">Canonical Reconcile / 權威回讀核對</text>
+  <text x="445" y="992" class="small">Read back current state, reconcile evidence, decide done / next stage / handoff</text>
+  <text x="445" y="1018" class="small">回讀目前狀態、核對證據，再決定完成／下一階段／交接</text>
 
   <text x="800" y="1062" class="tiny" text-anchor="middle">Illustrative workflow only. Canonical rules remain in the linked Playbook owner documents. / 本圖僅供流程概覽；正式規則仍以對應 Playbook 權威主責文件為準。</text>
 </svg>
