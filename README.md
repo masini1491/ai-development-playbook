@@ -10,7 +10,7 @@
 
 AI Development Playbook is a reusable **GitHub-native governance and information-integrity layer** for ChatGPT, Codex, and other AI engineering workflows.
 
-It treats GitHub as durable project memory and the source of truth, while each repository declares which authorized actor may plan, implement, validate, and maintain its artifacts. ChatGPT, Codex / coding agents, human maintainers, or other executors can all participate when current project governance gives them that responsibility. The goal is not to add more prompts or process overhead. The goal is to keep **context, authority, evidence, execution, validation, and cost** distinguishable as a project evolves across sessions and agents.
+It treats GitHub as durable project memory and the source of truth. An adopting repository chooses one of two project AI modes—`ChatGPT-Only` or `ChatGPT+Codex`—and then uses its own governance to narrow the actual path/action authority inside that profile. Human maintainers, CI, hardware validation, and external services can still participate without becoming additional AI modes. The goal is not to add more prompts or process overhead. The goal is to keep **context, authority, evidence, execution, validation, and cost** distinguishable as a project evolves across sessions and agents.
 
 You do **not** need to load the entire repository into context or read it end to end. A project declares the Playbook as a common baseline, an AI session starts from [`CHAT_INIT.md`](CHAT_INIT.md), and then reads only the minimum canonical sections required by the current task.
 
@@ -18,7 +18,7 @@ You do **not** need to load the entire repository into context or read it end to
 
 AI Development Playbook 是一套可重用、**以 GitHub 為原生基礎的 AI 工程治理與資訊完整性層**，適用於 ChatGPT、Codex 與其他 AI 工程工作流程。
 
-它把 GitHub 當成持久化專案記憶與單一事實來源，而每個 repository 由自己的 governance 宣告：哪些已授權角色可以規劃、實作、驗證與維護對應 artifact。ChatGPT、Codex／程式代理（coding agents）、human maintainer 或其他執行者，都只有在目前專案權威明確授權相應責任時才參與。目標不是增加更多提示詞或流程，而是讓專案跨聊天室、跨代理長期演進時，**上下文、權威、證據、執行、驗證與成本**仍然彼此可分辨。
+它把 GitHub 當成持久化專案記憶與單一事實來源。採用本手冊的 repository 只需選擇兩種 project AI mode 之一：`ChatGPT-Only` 或 `ChatGPT+Codex`；再由專案自己的 governance 在該 profile 內縮窄實際 path／action authority。Human maintainer、CI、硬體驗證與 external service 仍可參與，但不會因此形成第三種 AI mode。目標不是增加更多提示詞或流程，而是讓專案跨聊天室、跨代理長期演進時，**上下文、權威、證據、執行、驗證與成本**仍然彼此可分辨。
 
 你**不需要**完整載入或從頭讀完整個儲存庫。實際專案只要宣告 Playbook 為共通基準版本，AI 工作階段從 [`CHAT_INIT.md`](CHAT_INIT.md) 進入，再依目前任務只讀最低必要的權威章節。
 
@@ -34,8 +34,9 @@ If you already have a GitHub project:
 
 1. Add a small Playbook declaration to the project-root `AGENTS.md`.
 2. Choose one active Playbook baseline, such as `main` or a pinned release tag.
-3. Start each new ChatGPT / AI / coding-agent session from that baseline's [`CHAT_INIT.md`](CHAT_INIT.md).
-4. Let the AI route only to the canonical sections needed for the current task, while keeping the project's own governance and technical truth higher authority.
+3. Choose exactly one project AI mode: `ChatGPT-Only` or `ChatGPT+Codex`.
+4. Start each new ChatGPT / AI / coding-agent session from that baseline's [`CHAT_INIT.md`](CHAT_INIT.md).
+5. Let the AI route only to the canonical sections needed for the current task, while keeping the project's own governance and technical truth higher authority.
 
 Minimal bootstrap:
 
@@ -44,6 +45,7 @@ Minimal bootstrap:
 
 This project uses `masini1491/ai-development-playbook` as a common AI engineering baseline.
 Playbook baseline: `main`
+Project AI mode: ChatGPT-Only
 
 A new AI / agent session must first read the selected Playbook baseline's `CHAT_INIT.md`,
 then load only the minimum canonical sections required by the current task.
@@ -52,9 +54,11 @@ This project's own `AGENTS.md`, technical source of truth, and project-specific 
 remain higher authority. Do not load the whole Playbook into Context by default.
 ```
 
+Change the mode line to `Project AI mode: ChatGPT+Codex` when you want the collaboration profile that can admit Codex for project-governance-authorized implementation work. If the mode line is missing, mode selection is unresolved—not a third mode—and AI must not guess which profile you intended.
+
 Shortest path:
 
-`Project AGENTS.md → Playbook baseline → CHAT_INIT.md → project governance/current truth → minimum-sufficient canonical owner`
+`Project AGENTS.md → Playbook baseline → Project AI mode → CHAT_INIT.md → project governance/current truth → minimum-sufficient canonical owner`
 
 Use `Playbook baseline: main` when you intentionally want current rules. Use a released tag when reproducibility matters.
 
@@ -66,14 +70,15 @@ The snippet above is the smallest bootstrap, not the full deterministic adoption
 
 1. 在專案根目錄的 `AGENTS.md` 放入一小段 Playbook 導入宣告。
 2. 只選一個目前有效的 Playbook 基準版本，例如 `main` 或固定的發行標籤（release tag）。
-3. 新的 ChatGPT／AI／程式代理工作階段先讀該基準版本的 [`CHAT_INIT.md`](CHAT_INIT.md)。
-4. 讓 AI 依目前任務只載入最低必要的權威章節，同時維持專案自己的治理規則與技術事實來源為較高權威。
+3. Project AI mode 只選一種：`ChatGPT-Only` 或 `ChatGPT+Codex`。
+4. 新的 ChatGPT／AI／程式代理工作階段先讀該基準版本的 [`CHAT_INIT.md`](CHAT_INIT.md)。
+5. 讓 AI 依目前任務只載入最低必要的權威章節，同時維持專案自己的治理規則與技術事實來源為較高權威。
 
-上面的英文啟動宣告可以直接使用；AI 不需要為同一份專案導入宣告同時維護兩種語言版本。
+上面的英文啟動宣告可以直接使用；若要讓 Codex 可依 project governance 被准入 implementation 工作，把 mode 那一行改成 `Project AI mode: ChatGPT+Codex`。若沒有宣告 mode，代表 mode selection unresolved，不是第三種 mode，AI 不得自行猜測。
 
 最短路徑：
 
-`專案 AGENTS.md → Playbook 基準版本 → CHAT_INIT.md → 專案治理／目前權威事實 → 最低充分權威主責文件`
+`專案 AGENTS.md → Playbook 基準版本 → Project AI mode → CHAT_INIT.md → 專案治理／目前權威事實 → 最低充分權威主責文件`
 
 想持續取得最新規則時使用 `Playbook baseline: main`；需要可重現時改用已發布的標籤。
 
@@ -90,6 +95,8 @@ Use the GitHub Connector to read the latest `main` of `masini1491/ai-development
 
 Follow the repository's `AGENTS.md`, `CHAT_INIT.md`, and routing rules to initialize. Read only the minimum-sufficient canonical owners required for the current task; do not scan the whole repository or substitute stale memory for current GitHub state.
 
+If the target project adopts this Playbook, resolve its declared Project AI mode (`ChatGPT-Only` or `ChatGPT+Codex`). If the mode is undeclared, treat it as unresolved and do not guess a third topology.
+
 After initialization, use this Playbook to assist with my engineering work.
 ```
 
@@ -105,6 +112,8 @@ For repeated use, see the persistent ChatGPT Custom Instructions setup below.
 請透過 GitHub Connector 讀取 `masini1491/ai-development-playbook` 最新 `main`。
 
 先依 repo 的 `AGENTS.md`、`CHAT_INIT.md` 與 routing 規則初始化，只讀本次任務最低充分的 canonical owners，不要完整掃描 repository，也不要以舊記憶代替 current GitHub state。
+
+若目標專案採用本 Playbook，請解析它宣告的 Project AI mode（`ChatGPT-Only` 或 `ChatGPT+Codex`）。若未宣告，視為 unresolved，不要自行猜出第三種 topology。
 
 初始化完成後，請依這套 Playbook 協助我接下來的工程工作。
 ```
@@ -179,11 +188,11 @@ Codex 個人化指示屬於**使用者／App 層級的持久設定**，不是儲
 
 **English**
 
-Start by finding existing references and current project authority. Resolve the responsibility and mutation surface, then choose the **lowest-sufficient authorized actor** from the repository's current actor topology. ChatGPT may execute work directly when it has both authority and capability; Codex / coding agents, human maintainers, or other actors may be selected when the project assigns them that responsibility. After execution or handoff, read back the current canonical state and reconcile the evidence before deciding whether the work is done or another Stage is needed.
+Start by finding existing references and current project authority, then resolve the project's declared AI mode: `ChatGPT-Only` or `ChatGPT+Codex`. Inside that profile, resolve the responsibility and mutation surface and choose the **lowest-sufficient authorized actor** from the repository's lower-level authority contract. `ChatGPT-Only` keeps Codex out of the repository workflow; `ChatGPT+Codex` admits Codex only for implementation work that current project governance / Stage actually assigns to it. After execution or handoff, read back the current canonical state and reconcile the evidence before deciding whether the work is done or another Stage is needed.
 
 **繁體中文**
 
-先找現有參考與目前專案權威，再確認這一步真正需要的責任與修改範圍，接著依 repository 的 current actor topology 選擇**最低充分且已獲授權的執行角色**。ChatGPT 在同時具備authority與capability時可以直接執行；若專案把責任交給 Codex／其他程式代理、human maintainer 或其他角色，就依該治理交接。執行或交接完成後，再回讀目前 canonical state、核對證據，最後判斷是否完成或需要下一個 Stage。
+先找現有參考與目前專案權威，再解析專案宣告的 AI mode：`ChatGPT-Only` 或 `ChatGPT+Codex`。接著在該 profile 內確認這一步真正需要的責任與修改範圍，依 repository 的 lower-level authority contract 選擇**最低充分且已獲授權的執行角色**。`ChatGPT-Only` 不讓 Codex 進入該 repository workflow；`ChatGPT+Codex` 也只有在 current project governance／Stage 真正把 implementation 工作分派給 Codex 時才 handoff。執行或交接完成後，再回讀目前 canonical state、核對證據，最後判斷是否完成或需要下一個 Stage。
 
 ![AI Development Playbook quick workflow](assets/readme-workflow.svg)
 
@@ -265,21 +274,21 @@ Playbook 要求每個 PASS 只證明它真正涵蓋的範圍。正式 `BEH-014` 
 
 **Before**
 
-A previous Stage used Codex, or a generic workflow assumes that implementation-facing artifacts must always be handed to a coding agent. That can create another Codex handoff even when the new work is read-only research—or block ChatGPT from a source/docs/tests mutation that the repository explicitly authorizes it to maintain.
+A project can accidentally fall back to an old generic “ChatGPT plans, Codex implements” habit, or a previous Codex Stage can create handoff inertia. That can force Codex into work even when the selected project mode is `ChatGPT-Only`, or when the next Stage is read-only research that does not need Codex.
 
 **After**
 
-The Playbook chooses the actor from the **current responsibility and repository-declared actor topology**, not from the previous actor or artifact type alone. `BEH-010` protects against handoff inertia across Stages; `BEH-019` protects the complementary case where ChatGPT is already the authorized implementation / maintenance actor and no Codex handoff should be invented.
+The Playbook first resolves the **selected Project AI mode**, then applies the repository's lower-level path/action authority and current Stage. `BEH-010` protects against handoff inertia across Stages; `BEH-019` protects the complementary `ChatGPT-Only` case where ChatGPT is already the authorized AI implementation / maintenance actor and no Codex handoff should be invented.
 
-Evidence: [`BEH-010 formal run`](evals/runs/BEH-010-2026-09-07-formal-002.json) · [`BEH-019 scenario`](evals/BEH_019_SUPPLEMENTAL.md) · Canonical owners: [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md), [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md)
+Evidence: [`BEH-010 formal run`](evals/runs/BEH-010-2026-09-07-formal-002.json) · [`BEH-019 scenario`](evals/BEH_019_SUPPLEMENTAL.md) · Canonical owners: [`PROJECT_MODES.md`](PROJECT_MODES.md), [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md), [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md)
 
 **繁體中文**
 
-上一個 Stage 曾由 Codex 執行，或舊式流程直接假設「只要碰到 implementation artifact 就一定要交給程式代理」，都可能造成錯誤分工：新的工作明明只是研究／證據整理卻又被慣性丟給 Codex；反過來，repository 已明確授權 ChatGPT 維護 source／docs／tests 時，也可能被通用舊規則錯誤擋住。
+專案很容易不小心退回舊式「ChatGPT 規劃、Codex 實作」慣性，或因上一個 Stage 用過 Codex 而產生 handoff inertia。這可能讓已選 `ChatGPT-Only` 的 repository 仍被錯誤塞入 Codex，也可能讓下一步明明只是 read-only research，卻因前一階段習慣再次交給 Codex。
 
-Playbook 現在依**目前責任與 repository 明確宣告的 actor topology**選擇執行角色，而不是只看上一個actor或artifact類型。`BEH-010` 防止跨Stage的handoff inertia；`BEH-019`則保護另一個互補情境：ChatGPT本來就是已授權的implementation／maintenance actor時，不應虛構Codex handoff。
+Playbook 現在會先解析**已選 Project AI mode**，再套用 repository 的 lower-level path／action authority 與 current Stage。`BEH-010` 防止跨 Stage 的 handoff inertia；`BEH-019` 則保護互補的 `ChatGPT-Only` 情境：ChatGPT 本來就是已授權的 AI implementation／maintenance actor 時，不應虛構 Codex handoff。
 
-證據：[`BEH-010 正式測試`](evals/runs/BEH-010-2026-09-07-formal-002.json) · [`BEH-019 情境`](evals/BEH_019_SUPPLEMENTAL.md) · 權威主責：[`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md)、[`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md)
+證據：[`BEH-010 正式測試`](evals/runs/BEH-010-2026-09-07-formal-002.json) · [`BEH-019 情境`](evals/BEH_019_SUPPLEMENTAL.md) · 權威主責：[`PROJECT_MODES.md`](PROJECT_MODES.md)、[`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md)、[`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md)
 
 These three cases are intentionally compact. The Showcase is a proof surface, not a second documentation system. More scenarios live under [`evals/`](evals/), while normative behavior stays with each canonical owner.
 
@@ -291,7 +300,7 @@ These three cases are intentionally compact. The Showcase is a proof surface, no
 
 - **Context engineering** — Always-on / Hot / Cold / Evidence / Historical responsibilities keep each task from paying the context cost of the entire repository history.
 - **Agent governance** — Persistence, default loading, write authority, and execution authority are separate concepts.
-- **Repository actor topology** — Project governance declares which actor owns planning, source/docs/tests/tooling mutation, validation, Git, release, deployment, or other responsibilities; the Playbook supplies a conservative fallback rather than a universal ChatGPT→Codex workflow.
+- **Two project AI modes + lower-level authority** — A project chooses `ChatGPT-Only` or `ChatGPT+Codex`; repository governance then narrows responsibility, path/action authority, validation, Git, release, deployment, and other boundaries inside that profile. Undeclared mode means unresolved, not a third topology.
 - **Repository memory** — Current canonical GitHub state outranks old chat state or model memory.
 - **Task routing** — `CHAT_INIT.md` routes a task to the minimum canonical owner instead of encouraging whole-repository reading.
 - **Workflow interoperability** — External spec, skills, or governance systems can coexist without losing Playbook authority / loading / evidence boundaries.
@@ -304,7 +313,7 @@ These three cases are intentionally compact. The Showcase is a proof surface, no
 
 - **上下文工程（Context engineering）**：Always-on／Hot／Cold／Evidence／Historical 各有不同責任，不讓每個任務都付出整份儲存庫記憶的上下文成本。
 - **代理治理（Agent governance）**：持久化（Persistence）、預設載入、寫入權限與執行權限分開判斷。
-- **儲存庫角色拓撲（Repository actor topology）**：由project governance宣告planning、source／docs／tests／tooling修改、validation、Git、release、deployment等責任由誰承擔；Playbook只提供保守fallback，不把ChatGPT→Codex寫成所有repository的固定workflow。
+- **兩種 Project AI mode + lower-level authority**：專案只選 `ChatGPT-Only` 或 `ChatGPT+Codex`；再由 repository governance 在該 profile 內縮窄責任、path／action authority、validation、Git、release、deployment 等邊界。未宣告 mode 代表 unresolved，不是第三種 topology。
 - **儲存庫記憶（Repository memory）**：GitHub 目前的權威狀態高於舊聊天室或模型記憶。
 - **任務路由（Task routing）**：從 `CHAT_INIT.md` 依任務直達最低必要的權威主責文件，而不是鼓勵全文掃描整個儲存庫。
 - **工作流程互通（Workflow interoperability）**：外部規格、技能與治理框架可以共存，同時保留 Playbook 的權威、載入與證據邊界。
@@ -405,6 +414,7 @@ Humans normally do not need to read these files in order. This map explains wher
 |---|---|
 | [`AGENTS.md`](AGENTS.md) | Maintainer authority for this Playbook repository: ChatGPT / Codex ownership, audience / surface contract, direct-write and execution exceptions, validator contract, mutation integrity |
 | [`CHAT_INIT.md`](CHAT_INIT.md) | Minimum AI-session bootstrap, task router, repository-read recovery |
+| [`PROJECT_MODES.md`](PROJECT_MODES.md) | Canonical two-value project AI mode selection: `ChatGPT-Only` or `ChatGPT+Codex`; undeclared-mode semantics |
 | [`PROJECT_BOOTSTRAP.md`](PROJECT_BOOTSTRAP.md) | Research bootstrap, reuse-first research, stage-transition actor revalidation, research write allowlist, post-adoption context closure, implementation actor transition / handoff |
 | [`CAPABILITY_INDEX.md`](CAPABILITY_INDEX.md) | Thin whole-repository capability-discovery index for capability / gap / absence review |
 | [`PLAYBOOK_INDEX.json`](PLAYBOOK_INDEX.json) | Routing-only machine manifest: stable capability IDs, owners, sections, implementation and adapter pointers |
@@ -413,7 +423,7 @@ Humans normally do not need to read these files in order. This map explains wher
 | [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | Semantic identity, durable fact ownership, provenance, snapshot / search-hit authority guards |
 | [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT planning / coordination authority, task contract, durable-work admission, actor admission / optional Codex handoff, runtime execution, session compaction / rehydration, response contract |
 | [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) | Codex / coding-agent execution authority, model / reasoning / context / cost / tool scheduling / reporting when that actor is selected |
-| [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) | Repository identity, actor topology / maintenance ownership, permission, write boundaries, remote write / read-back, repository-facing documentation integrity |
+| [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) | Repository identity, lower-level actor / path-action authority, permission, write boundaries, remote write / read-back, repository-facing documentation integrity |
 | [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) | Debug, root cause, retry, validation, evidence lifecycle, completion read-back, behavioral evaluation |
 | [`RESEARCH_ARCHITECTURE.md`](RESEARCH_ARCHITECTURE.md) | Research, target / capability, architecture, state / lifecycle, ownership |
 | [`EMBEDDED_PROJECTS.md`](EMBEDDED_PROJECTS.md) | Embedded / hardware / board-specific workflow |
@@ -429,6 +439,7 @@ Humans normally do not need to read these files in order. This map explains wher
 |---|---|
 | [`AGENTS.md`](AGENTS.md) | 本 Playbook 儲存庫的維護權威：ChatGPT／Codex 維護責任、讀者／介面契約、直接寫入與執行例外、驗證器契約、修改完整性 |
 | [`CHAT_INIT.md`](CHAT_INIT.md) | AI 工作階段最小啟動、任務路由器、儲存庫讀取復原 |
+| [`PROJECT_MODES.md`](PROJECT_MODES.md) | 只允許 `ChatGPT-Only` 或 `ChatGPT+Codex` 的 project AI mode 權威，以及未宣告 mode 的語意 |
 | [`PROJECT_BOOTSTRAP.md`](PROJECT_BOOTSTRAP.md) | 研究啟動、優先重用既有研究、階段轉換時重新驗證執行角色、研究寫入白名單、導入後上下文收斂、implementation actor轉換／交接 |
 | [`CAPABILITY_INDEX.md`](CAPABILITY_INDEX.md) | 整個儲存庫的薄型能力探索索引，用於能力／缺口／不存在判斷 |
 | [`PLAYBOOK_INDEX.json`](PLAYBOOK_INDEX.json) | 僅供路由的機器清單：穩定能力 ID、主責文件、章節、實作與介接器指標 |
@@ -437,7 +448,7 @@ Humans normally do not need to read these files in order. This map explains wher
 | [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | 語意身分、持久事實歸屬、來源溯源、快照／搜尋命中的權威防護 |
 | [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT 規劃／協作權威、任務契約、持久工作准入、actor admission／條件式Codex交接、執行環境操作、工作階段壓縮／重新載入、回覆契約 |
 | [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) | Codex／程式代理被選中時的執行權威、模型／推理／上下文／成本、工具排程與輸出、回報 |
-| [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) | 儲存庫身分、actor topology／maintenance ownership、權限、寫入邊界、遠端寫入／回讀、面向儲存庫的文件完整性 |
+| [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) | 儲存庫身分、lower-level actor／path-action authority、權限、寫入邊界、遠端寫入／回讀、面向儲存庫的文件完整性 |
 | [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) | 除錯、根因、重試、驗證、證據生命週期、完成後回讀、行為評估 |
 | [`RESEARCH_ARCHITECTURE.md`](RESEARCH_ARCHITECTURE.md) | 研究、目標／能力、架構、狀態／生命週期、責任歸屬 |
 | [`EMBEDDED_PROJECTS.md`](EMBEDDED_PROJECTS.md) | 嵌入式／硬體／開發板專屬工作流程 |
@@ -451,11 +462,11 @@ Humans normally do not need to read these files in order. This map explains wher
 
 Human path:
 
-`README → understand value and adoption → add thin bootstrap to project AGENTS.md → hand the task to AI / agent`
+`README → understand value and adoption → choose Playbook baseline + Project AI mode → add thin bootstrap to project AGENTS.md → hand the task to AI / agent`
 
 AI / agent path for a real project:
 
-`Project AGENTS.md → resolve Playbook baseline → CHAT_INIT.md → project governance/current truth → minimum-sufficient canonical owner`
+`Project AGENTS.md → resolve Playbook baseline + Project AI mode → CHAT_INIT.md → project governance/current truth → minimum-sufficient canonical owner`
 
 Maintaining this Playbook repository:
 
@@ -469,11 +480,11 @@ Whole-repository capability / gap / absence review:
 
 人類路徑：
 
-`README → 理解價值與導入方式 → 在專案 AGENTS.md 加入薄型啟動宣告 → 交給 AI／代理`
+`README → 理解價值與導入方式 → 選擇 Playbook 基準版本 + Project AI mode → 在專案 AGENTS.md 加入薄型啟動宣告 → 交給 AI／代理`
 
 實際專案的 AI／代理路徑：
 
-`專案 AGENTS.md → 解析 Playbook 基準版本 → CHAT_INIT.md → 專案治理／目前權威事實 → 最低充分權威主責文件`
+`專案 AGENTS.md → 解析 Playbook 基準版本 + Project AI mode → CHAT_INIT.md → 專案治理／目前權威事實 → 最低充分權威主責文件`
 
 維護本 Playbook 儲存庫：
 
@@ -491,7 +502,7 @@ The Playbook stores cross-project development methods, not product-specific trut
 
 - technical source of truth;
 - current task / blocker / evidence;
-- actor / maintenance ownership and repository write boundary;
+- selected Project AI mode plus lower-level maintenance / repository write boundary;
 - hardware pinout / protocol specifics;
 - secrets / deployment values;
 - release / branch state.
@@ -504,7 +515,7 @@ Playbook 保存跨專案共通的「怎麼開發」，不保存產品專屬的�
 
 - 技術事實來源；
 - 目前任務／阻塞點／證據；
-- actor／maintenance ownership 與repository寫入邊界；
+- 已選 Project AI mode 與 lower-level maintenance／repository寫入邊界；
 - 硬體腳位配置／協定細節；
 - 機密資訊／部署值；
 - 發行版本／分支狀態。
