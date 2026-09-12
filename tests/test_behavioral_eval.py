@@ -24,12 +24,13 @@ class BehavioralEvalTests(unittest.TestCase):
         return {
             "schema_version": 1,
             "authority": "selection-only",
-            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 19)],
+            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 20)],
             "change_classes": {
-                "routing": ["BEH-008", "BEH-009", "BEH-010", "BEH-012", "BEH-015"],
+                "routing": ["BEH-008", "BEH-009", "BEH-010", "BEH-012", "BEH-015", "BEH-019"],
                 "validation": ["BEH-004", "BEH-005", "BEH-014", "BEH-016"],
                 "permission-recovery": ["BEH-004", "BEH-016"],
                 "session-compaction-rehydration": ["BEH-009", "BEH-010", "BEH-015"],
+                "actor-admission-and-handoff": ["BEH-010", "BEH-013", "BEH-019"],
                 "phase3-cold-start-core": [
                     "BEH-002",
                     "BEH-006",
@@ -39,6 +40,7 @@ class BehavioralEvalTests(unittest.TestCase):
                     "BEH-012",
                     "BEH-013",
                     "BEH-014",
+                    "BEH-019",
                 ],
             },
         }
@@ -68,6 +70,7 @@ class BehavioralEvalTests(unittest.TestCase):
             "BEH-016",
             "BEH-017",
             "BEH-018",
+            "BEH-019",
         ):
             with self.subTest(scenario_id=scenario_id):
                 record = self.valid_record()
@@ -147,6 +150,7 @@ class BehavioralEvalTests(unittest.TestCase):
                 "BEH-012",
                 "BEH-013",
                 "BEH-014",
+                "BEH-019",
             ],
             behavioral_eval.select_regression_scenarios(self.valid_matrix(), "phase3-cold-start-core"),
         )
@@ -164,6 +168,14 @@ class BehavioralEvalTests(unittest.TestCase):
             ["BEH-004", "BEH-016"],
             behavioral_eval.select_regression_scenarios(
                 self.valid_matrix(), "permission-recovery"
+            ),
+        )
+
+    def test_select_actor_topology_regression(self) -> None:
+        self.assertEqual(
+            ["BEH-010", "BEH-013", "BEH-019"],
+            behavioral_eval.select_regression_scenarios(
+                self.valid_matrix(), "actor-admission-and-handoff"
             ),
         )
 
