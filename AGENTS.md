@@ -13,7 +13,7 @@
 - **本 repository 的 AI 程式執行權只屬於具備目前任務所需 runtime / toolchain 的 ChatGPT session**：只有能實際滿足該 command 的 executable/version/dependency 與必要 filesystem/network capability 的 ChatGPT session，才可執行本 repository 內的 validator、tests 或其他程式／script。ChatGPT 能產生某語言的程式碼，不代表目前 execution environment 一定具備該語言的 runtime。若目前 session 不具備最低必要執行能力，應明確回報無法執行，不得因此交由 Codex、其他 coding agent、GitHub Actions、pre-commit 或其他自動化機制代跑，除非使用者日後明確改變本規則。
 - **Codex / coding agent 對本 repository 預設唯讀**：可讀取並遵守本手冊，但不得以一般 project coordination → Codex implementation workflow 修改本 repository，也不得執行本 repository 內的程式／tests。
 - 本 repository 的 `TASKS.md` 若存在，只作為 ChatGPT 維護本手冊時的暫時 unfinished-work queue；不代表要交由 Codex 執行。
-- 對一般目標 project repository，ChatGPT direct-write path 依 `REPOSITORY_EXECUTION.md` 的 **Coordination Write Allowlist**：default 只有 root `TASKS.md`；project 可明確 opt-in `BACKLOG.md`、Hot task dossier或 sanitized evidence staging。其他 path 仍 read-only，由 Codex 在明確授權 scope 內修改。
+- 對一般採用本 Playbook 的 project repository，先依 `PROJECT_MODES.md` 選 `ChatGPT-Only` 或 `ChatGPT+Codex`，再依 `REPOSITORY_EXECUTION.md` 的 lower-level path/action authority決定實際 mutation。Mode 未宣告時維持 conservative fallback（ChatGPT default direct-write僅 root `TASKS.md`，除非 project governance另有已生效 allowlist）；`ChatGPT-Only` 可在 project governance／Task/Stage明確授權的範圍內由 ChatGPT 維護 source/docs/tests/tooling；`ChatGPT+Codex` 才依 current governance／Stage把指定 implementation mutation交給 Codex／coding-agent executor。Mode selection或tool capability都不會自行擴張 authority。
 - 不得把一般 project 的 ChatGPT coordination write boundary反向套用到本手冊自身。
 
 若使用者日後明確變更本 repository 的維護 ownership，再依最新指示調整。
@@ -95,13 +95,15 @@ README 的 human-facing language / layout contract：
 
 `CHAT_INIT.md` 是**新聊天室最小 bootstrap + task router**：AI 可直接從它進入，不必先讀 README；它只負責建立 repository / authority / minimal routing 起點，不複製完整 Git、coordination、Prompt、toolchain 或 validation policy。
 
+`PROJECT_MODES.md` 是**採用本 Playbook 的 project AI mode selection authority**：只定義 `ChatGPT-Only` 與 `ChatGPT+Codex` 兩個 user-selectable AI profiles，以及 mode 未宣告時的 unresolved semantics；不得在其他 canonical owner另建第三、第四種 project AI mode。
+
 `AI_CONTEXT.md` 是 **跨專案 AI-readable repository information architecture authority**：負責 Always-on / Hot / Cold / Evidence / Current / Historical surface semantics、Progressive Routing、Independent Retrieval Intent、Thin Metadata、Derived Metadata Write-Closure 與 Readability / Retrieval Cost Change Gate；不得在其他文件複製完整 context policy。
 
 `CHATGPT_WORKFLOW.md` 是 **ChatGPT／planning conversation authority**：負責 coordination admission、AI-originated durable work、Task identity/revision、Codex Prompt mode / delivery、copy-ready contract、Codex result reconciliation、ChatGPT 回覆 presentation contract 與時間戳；不得收進 Codex execution / cost policy全文。
 
-`CODEX_EXECUTION.md` 是 **Codex／coding agent execution authority**：負責 model / reasoning / Context / Agent、execution mode、cost / usage budgeting、tool scheduling/output、escalation 與 Codex reporting。
+`CODEX_EXECUTION.md` 是 **Codex／coding agent execution authority**：負責 model / reasoning / Context / Agent、execution mode、cost / usage budgeting、tool scheduling/output、escalation 與 Codex reporting；只有 selected mode／current Stage已合法選中Codex時才進入其 task-specific execution contract。
 
-`REPOSITORY_EXECUTION.md`、`DEBUG_VALIDATION.md`、`RESEARCH_ARCHITECTURE.md` 等 shared topic 文件只保存真正跨 agent 共用的 repository、permission/write boundary、evidence、validation、architecture contract。
+`REPOSITORY_EXECUTION.md`、`DEBUG_VALIDATION.md`、`RESEARCH_ARCHITECTURE.md` 等 shared topic 文件只保存真正跨 agent 共用的 repository lower-level actor/path-action authority、permission/write boundary、evidence、validation、architecture contract；其中 `REPOSITORY_EXECUTION.md` 不另建 user-selectable AI mode。
 
 AI／coding agent 不應預設完整掃描全部文件；先從 `CHAT_INIT.md` 進入，再依 task topic讀最低必要主題／section。Exact target 已明確時可 direct-leaf bypass，不為 routing ceremony 多讀中間層。
 
@@ -162,13 +164,13 @@ Cold/Candidate item、historical material或 AI 先前建議不因被持久化�
 
 優先修改既有主題文件，不要為每個新細節建立新檔。但若跨專案 evidence 顯示已形成穩定、可獨立 retrieval、具有清楚 ownership 的新 information architecture domain，可建立新 canonical owner；建立後其他文件只做 routing。
 
-若不同 agent / lifecycle 已形成清楚且持續的 ownership boundary，例如 ChatGPT planning 與 Codex execution，應依 owner 分離 canonical policy；**不要因舊檔名或舊 routing 存在就永久保留 ownership mixing**。
+若 selected mode／current lifecycle 已形成清楚且持續的 ownership boundary，例如 `ChatGPT+Codex` 中 ChatGPT planning 與 Codex execution，應依 owner 分離 canonical policy；**不要因舊檔名或舊 routing 存在就永久保留 ownership mixing**。這是 policy-file ownership guidance，不建立新的 project AI mode。
 
 若規則已存在 canonical topic owner，README、CHAT_INIT、其他文件只保留最低必要 routing；不要因方便閱讀再複製完整 normative policy。
 
 ## 禁止重複規則（No duplicated policy）
 
-穩定規則只保留一個主要 authority；其他文件以簡短引用/routing 為主，避免同一 policy 在多檔全文複製造成 drift。
+穩定規則只保留一個主要 authority；其他文件以簡短引用/routing為主，避免同一 policy 在多檔全文複製造成 drift。
 
 Routing metadata 優先只保存穩定 ID/path/owner/entrypoint；除非本身是 canonical owner，不複製 volatile current status、validation result、architecture conclusion 或 evidence。
 
