@@ -19,7 +19,8 @@
     "BEH-015",
     "BEH-016",
     "BEH-017",
-    "BEH-018"
+    "BEH-018",
+    "BEH-019"
   ],
   "change_classes": {
     "repository-authority": [
@@ -29,7 +30,8 @@
       "BEH-009",
       "BEH-012",
       "BEH-013",
-      "BEH-014"
+      "BEH-014",
+      "BEH-019"
     ],
     "coordination-admission": [
       "BEH-002",
@@ -54,7 +56,8 @@
     ],
     "actor-admission-and-handoff": [
       "BEH-010",
-      "BEH-013"
+      "BEH-013",
+      "BEH-019"
     ],
     "delegation-and-child-routing": [
       "BEH-017"
@@ -70,7 +73,8 @@
       "BEH-012",
       "BEH-013",
       "BEH-014",
-      "BEH-015"
+      "BEH-015",
+      "BEH-019"
     ],
     "information-integrity": [
       "BEH-008",
@@ -91,7 +95,8 @@
       "BEH-011",
       "BEH-012",
       "BEH-013",
-      "BEH-014"
+      "BEH-014",
+      "BEH-019"
     ],
     "permission-recovery": [
       "BEH-004",
