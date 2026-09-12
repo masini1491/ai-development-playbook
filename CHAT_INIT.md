@@ -47,8 +47,8 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
 
 - ChatGPT planning／task contract／澄清／coordination admission／AI-originated work
   → `CHATGPT_WORKFLOW.md`；依需要直達 `Task Contract：Goal / Context / Exclusions`、`Agent-Normalized Contract／Minimal Clarification Gate`、`Persistence／Coordination Admission`
-- 新 repository／pre-implementation 階段由 ChatGPT 蒐集 reference、形成 research synthesis／requirements／architecture，Codex 尚未接手且需要 bounded direct-write
-  → `PROJECT_BOOTSTRAP.md`；確認 `research-bootstrap` activation、Research Write Allowlist 與 exit/handoff gate，再依需要讀 `REPOSITORY_EXECUTION.md`
+- 新 repository／pre-implementation 階段由 ChatGPT 蒐集 reference、形成 research synthesis／requirements／architecture，穩定 implementation actor／source mutation lifecycle 尚未接手且需要 bounded direct-write
+  → `PROJECT_BOOTSTRAP.md`；確認 `research-bootstrap` activation、Research Write Allowlist 與 exit／actor-transition gate，再依需要讀 `REPOSITORY_EXECUTION.md`
 - ChatGPT-side deterministic runtime execution
   → `CHATGPT_WORKFLOW.md` → `ChatGPT-side Runtime Execution`
 - Codex Prompt mode／delivery／copy-ready／Codex result reconciliation／ChatGPT user-facing response contract
@@ -67,12 +67,12 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
   → `INFORMATION_INTEGRITY.md`；只讀對應 guard；evidence lifecycle 的其他規則仍由 `DEBUG_VALIDATION.md` 負責
 - Codex model／Reasoning／Context／Agent、execution mode、usage／cost、tool scheduling/output、Codex reporting
   → `CODEX_EXECUTION.md`；reporting 直達 `Codex 回報語言`、`Codex 回報時間戳（Always-on Reporting Timestamp）`、`Reporting Pre-Send Gate`，其他只讀 task-relevant section
-- Git、Repository Identity、workspace／remote permission、Coordination Write Allowlist、ChatGPT／Codex 寫入分工、repository-facing documentation integrity
-  → `REPOSITORY_EXECUTION.md`；先用檔首 `Section Router`
+- Git、Repository Identity、workspace／remote permission、Coordination Write Allowlist、repository actor topology／maintenance ownership／write boundary、repository-facing documentation integrity
+  → `REPOSITORY_EXECUTION.md`；先用檔首 `Section Router`，actor責任問題直達 `Repository Actor Topology / Maintenance Ownership`
 - 除錯、根因、重試、驗證、evidence lifecycle、後續 evidence 與歷史判斷／紀錄 reconciliation
   → `DEBUG_VALIDATION.md`；先用檔首 `Section Router`
 - 研究、新技術／協定、architecture、target/capability、state/lifecycle、ownership
-  → `RESEARCH_ARCHITECTURE.md`；先用檔首 `Section Router`
+  → `RESEARCH_ARCHITECTURE.md`；只讀對應 section
 - 嵌入式／硬體／板級／硬體驗證差異
   → `EMBEDDED_PROJECTS.md`
 - UI／UX／人機互動／i18n／design-system adaptation
@@ -86,7 +86,7 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
 
 ## 權威與執行注意
 
-Authority、Repository Identity、ChatGPT／Codex 寫入邊界、coordination lifecycle、AI Context surface semantics、permission gates、ChatGPT Prompt delivery、Codex model／Reasoning、reporting timestamp、PowerShell baseline、root-cause labels 與 validation contract **不在本檔重複定義**。
+Authority、Repository Identity、repository actor topology／write boundary、coordination lifecycle、AI Context surface semantics、permission gates、ChatGPT Prompt delivery、Codex model／Reasoning、reporting timestamp、PowerShell baseline、root-cause labels 與 validation contract **不在本檔重複定義**。
 
 需要其中任一規則時，讀上方對應 canonical 主題文件；實際專案最新正式 technical/governance source of truth 仍高於本手冊。
 
