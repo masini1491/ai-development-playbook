@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Development Playbook — GitHub-native governance for AI coding</title>
+  <meta name="description" content="A GitHub-native playbook for reliable long-running AI coding with ChatGPT, Codex, and coding agents: context engineering, agent governance, repository memory, validation, and cost-aware task routing.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://masini1491.github.io/ai-development-playbook/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AI Development Playbook">
+  <meta property="og:description" content="GitHub-native governance and context architecture for reliable long-running AI-assisted software development.">
+  <meta property="og:url" content="https://masini1491.github.io/ai-development-playbook/">
+  <style>
+    :root { color-scheme: light dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; line-height: 1.6; }
+    main { max-width: 880px; margin: 0 auto; padding: 56px 24px 72px; }
+    h1 { font-size: clamp(2rem, 6vw, 3.8rem); line-height: 1.05; margin: 0 0 18px; }
+    h2 { margin-top: 48px; line-height: 1.2; }
+    .lead { font-size: 1.2rem; max-width: 760px; }
+    .muted { opacity: .75; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 8px; }
+    .button { display: inline-block; padding: 10px 16px; border: 1px solid currentColor; border-radius: 10px; text-decoration: none; font-weight: 650; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .card { border: 1px solid color-mix(in srgb, currentColor 22%, transparent); border-radius: 14px; padding: 18px; }
+    ul { padding-left: 1.25rem; }
+    code { font-size: .95em; }
+    footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent); }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="muted">Discovery landing page · Canonical project content lives in GitHub</p>
+    <h1>AI Development Playbook</h1>
+    <p class="lead">
+      A GitHub-native governance and information-integrity layer for reliable, long-running AI coding
+      with ChatGPT, Codex, and other coding agents.
+    </p>
+    <p>
+      It is designed for projects that need durable repository memory, explicit agent authority,
+      bounded context retrieval, evidence-aware validation, and cost-aware task routing across sessions.
+    </p>
+    <div class="actions">
+      <a class="button" href="https://github.com/masini1491/ai-development-playbook">Open the GitHub repository</a>
+      <a class="button" href="https://github.com/masini1491/ai-development-playbook#5-minute-quick-start--5-%E5%88%86%E9%90%98%E9%96%8B%E5%A7%8B%E4%BD%BF%E7%94%A8">5-minute quick start</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>When this playbook is a good fit</h2>
+    <div class="grid">
+      <div class="card">
+        <strong>Multi-session AI coding</strong>
+        <p>Work continues across chats or agents and stale context must not silently become project truth.</p>
+      </div>
+      <div class="card">
+        <strong>ChatGPT + Codex workflows</strong>
+        <p>You want clear separation between planning, implementation authority, execution capability, and validation evidence.</p>
+      </div>
+      <div class="card">
+        <strong>Repository memory</strong>
+        <p>GitHub should remain the durable source of truth instead of relying on one conversation's memory.</p>
+      </div>
+      <div class="card">
+        <strong>Context engineering</strong>
+        <p>Agents should load only the minimum canonical information required for the current task.</p>
+      </div>
+      <div class="card">
+        <strong>Agent governance</strong>
+        <p>You need explicit boundaries for who may read, write, execute, validate, deploy, or stop.</p>
+      </div>
+      <div class="card">
+        <strong>Evidence integrity</strong>
+        <p>Software PASS, hardware evidence, production state, and unverified assumptions must stay distinguishable.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Probably unnecessary when</h2>
+    <ul>
+      <li>You are writing a one-off script or a short single-session prototype.</li>
+      <li>Your repository already has an equivalent, explicit AI-governance and durable-context architecture.</li>
+      <li>You do not need cross-session continuity, agent handoffs, or evidence-sensitive validation.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What it helps organize</h2>
+    <p>
+      Context engineering · AI coding agent governance · ChatGPT and Codex collaboration · repository memory ·
+      task routing · permission and authority boundaries · validation evidence · debugging discipline ·
+      cost-aware model use.
+    </p>
+    <p>
+      The Playbook exposes two user-selectable project AI modes, <code>ChatGPT-Only</code> and
+      <code>ChatGPT+Codex</code>. The adopting project's own governance remains higher authority and narrows
+      the actual path/action permissions inside the selected mode.
+    </p>
+  </section>
+
+  <section lang="zh-Hant">
+    <h2>繁體中文摘要</h2>
+    <p>
+      AI Development Playbook 是一套以 GitHub 為持久專案記憶與事實來源的 AI 協作開發治理層，
+      適合跨聊天室、跨代理、長期演進的開發工作。它聚焦於 context engineering、agent governance、
+      任務路由、權限邊界、驗證證據與成本控制，而不是增加更多提示詞儀式。
+    </p>
+    <p>
+      如果你的專案需要 ChatGPT／Codex 長期協作、避免舊 context 冒充 current truth，
+      或希望 AI 只讀本次任務最低必要的權威資訊，這套 Playbook 才較有價值。
+      一次性腳本或短期 prototype 通常不需要這麼完整的治理。
+    </p>
+  </section>
+
+  <footer>
+    <p>
+      <strong>Authority note:</strong> this page is intentionally thin and non-normative.
+      The repository <a href="https://github.com/masini1491/ai-development-playbook#readme">README</a>
+      is the primary human-facing surface, and repository governance/canonical owners define actual rules.
+    </p>
+    <p class="muted">MIT licensed · Source: <a href="https://github.com/masini1491/ai-development-playbook">masini1491/ai-development-playbook</a></p>
+  </footer>
+</main>
+</body>
+</html>
