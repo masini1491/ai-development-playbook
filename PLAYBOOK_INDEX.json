@@ -12,6 +12,11 @@
       "kind": "contract"
     },
     {
+      "id": "project.ai-mode-selection",
+      "owner": "PROJECT_MODES.md",
+      "kind": "contract"
+    },
+    {
       "id": "bootstrap.repository-read-recovery",
       "owner": "CHAT_INIT.md",
       "section": "Repository Read Acquisition / Recovery Gate",
