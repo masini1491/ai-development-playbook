@@ -22,7 +22,7 @@ Project AI mode: ChatGPT+Codex
 
 If a project has not declared either value, that is **mode not yet selected**, not a third mode. Until selection is explicit, do not guess from available tools, previous sessions, repository shape, or the presence/absence of Codex; retain the conservative authority fallback from `REPOSITORY_EXECUTION.md`.
 
-For **AI project mode selection**, this file is the canonical owner. `REPOSITORY_EXECUTION.md` → `Repository Actor Topology / Maintenance Ownership` remains the lower-level authority mechanism that decides path/action authority, permissions, write-target locking, and safe fallback behavior **inside the selected mode**. Its generic actor-topology language does not create additional user-selectable AI project modes.
+For **AI project mode selection**, this file is the canonical owner. `REPOSITORY_EXECUTION.md` → `Repository Actor Topology / Maintenance Ownership` remains the lower-level authority mechanism that decides path/action authority, permissions, write-target locking, and safe fallback behavior **inside the selected mode**. Lower-level actor/path-action declarations do not create additional user-selectable AI project modes.
 
 ## `ChatGPT-Only`
 
@@ -60,8 +60,10 @@ or:
 這個專案用 ChatGPT+Codex。
 ```
 
-ChatGPT should normalize that choice into the repository's durable governance before relying on it across future sessions. A chat-only choice is sufficient for the current conversation when explicit, but a fresh session must not rely on old chat memory instead of current repository governance.
+An explicit chat choice is sufficient to resolve the mode for the **current conversation**. Durable persistence into `AGENTS.md` or equivalent project governance is a separate repository mutation: perform it only when Current Write Target, existing governance mutation authority, current Task/Stage authorization, and permission/capability all allow that write. Mode selection itself does not grant ChatGPT permission to rewrite governance. If durable persistence is not currently authorized, retain the current-chat choice for this session and leave the repository unchanged rather than self-expanding authority.
+
+A fresh session must not rely on old chat memory instead of current repository governance. If the durable declaration is still absent, the fresh session returns to **mode not yet selected** until the user or current project governance explicitly selects one again.
 
 Changing an existing project's mode is a governance change. Do not infer a mode switch from a one-off handoff, temporary tool outage, generic continuation such as「好／繼續」, or the fact that one actor completed the previous Stage.
 
-核心原則：**User chooses one of two AI project modes; repository governance persists it; lower-level authority gates still decide what the selected actors may actually do.**
+核心原則：**User chooses one of two AI project modes; durable persistence still requires ordinary governance-write authority; lower-level authority gates decide what the selected actors may actually do.**
