@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://masini1491.github.io/ai-development-playbook/sitemap.xml
