@@ -44,6 +44,7 @@
 | Adoption Doctor | `AGENTS.md` → minimal validator contract；`tools/adoption_doctor.py` + `tests/test_adoption_doctor.py` | Read-only/report-only；支援 Local Path Mode 與 ChatGPT GitHub Snapshot Mode。 |
 | GitHub connector-first snapshot acquisition | `AGENTS.md` → `ChatGPT GitHub Snapshot Mode` | Connector retrieval capability 與 local Python/network capability分層；connector可正常而 sandbox DNS受限。 |
 | Conversation-scoped repository write authority | `REPOSITORY_EXECUTION.md` → `聊天室級 Repository 寫入鎖` | `Repository access ≠ conversation write authority`；同一聊天室只有一個 Current Write Target。 |
+| Repository-declared actor topology / maintenance ownership | `REPOSITORY_EXECUTION.md` → `Repository Actor Topology / Maintenance Ownership`；behavioral scenario：`evals/BEH_019_SUPPLEMENTAL.md` | **Normative contract + regression scenario 已存在**；project governance決定誰可維護 source/docs/tests/tooling等責任，Playbook只提供 coordination-only conservative fallback，不把ChatGPT→Codex handoff固定成universal workflow。 |
 | Permission / capability layering | `REPOSITORY_EXECUTION.md` → `授權與能力分層` | Task authorization、execution permission、credential capability取交集。 |
 | Completion evidence / canonical read-back | `DEBUG_VALIDATION.md` → `完成證據關卡` | Agent自然語言 report不是 remote completion authority。 |
 | AI-originated durable work admission | `CHATGPT_WORKFLOW.md` → `AI-originated Durable Work Admission Gate` | Observation／recommendation／admitted work分離；Cold candidate不自動取得 execution authority。 |
