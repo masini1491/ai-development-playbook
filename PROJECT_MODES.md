@@ -22,6 +22,8 @@ Project AI mode: ChatGPT+Codex
 
 If a project has not declared either value, that is **mode not yet selected**, not a third mode. Until selection is explicit, do not guess from available tools, previous sessions, repository shape, or the presence/absence of Codex; retain the conservative authority fallback from `REPOSITORY_EXECUTION.md`.
 
+For **AI project mode selection**, this file is the canonical owner. `REPOSITORY_EXECUTION.md` → `Repository Actor Topology / Maintenance Ownership` remains the lower-level authority mechanism that decides path/action authority, permissions, write-target locking, and safe fallback behavior **inside the selected mode**. Its generic actor-topology language does not create additional user-selectable AI project modes.
+
 ## `ChatGPT-Only`
 
 ChatGPT is the repository's AI maintainer across planning and implementation work. Within the intersection of current project governance, Current Write Target, Task/Stage authorization, execution permission, and credential capability, ChatGPT may perform the repository work assigned to the AI maintainer, including canonical docs, source, tests, tooling, validation, and authorized Git mutation.
@@ -42,7 +44,7 @@ The exact implementation scope may still be narrowed by project governance or a 
 
 Human maintainers, CI, hardware validation, deployment systems, external services, and other non-AI actors can still participate under project governance. Their existence does not create additional AI project modes.
 
-The two-mode profile is an ergonomic selection layer over the lower-level authority mechanism in `REPOSITORY_EXECUTION.md` → `Repository Actor Topology / Maintenance Ownership`. That owner continues to enforce path/action authority, permissions, write-target locking, and safe fallback behavior.
+Other AI coding agents are not separate Playbook project modes. If a project intentionally substitutes another coding agent for Codex, that is a project-specific implementation detail under the `ChatGPT+Codex` collaboration profile only when current governance explicitly maps the Codex/coding-agent responsibility to that executor; it does not create a third mode.
 
 ## Initialization / persistence
 
