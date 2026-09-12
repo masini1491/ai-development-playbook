@@ -72,7 +72,7 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
 - 除錯、根因、重試、驗證、evidence lifecycle、後續 evidence 與歷史判斷／紀錄 reconciliation
   → `DEBUG_VALIDATION.md`；先用檔首 `Section Router`
 - 研究、新技術／協定、architecture、target/capability、state/lifecycle、ownership
-  → `RESEARCH_ARCHITECTURE.md`；只讀對應 section
+  → `RESEARCH_ARCHITECTURE.md`；先用檔首 `Section Router`
 - 嵌入式／硬體／板級／硬體驗證差異
   → `EMBEDDED_PROJECTS.md`
 - UI／UX／人機互動／i18n／design-system adaptation
