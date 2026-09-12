@@ -18,13 +18,21 @@
 
 若使用者日後明確變更本 repository 的維護 ownership，再依最新指示調整。
 
+### Maintainer-only pre-canonical surface routing
+
+`/maintainer/` 是本 repository 的 **maintainer-only、pre-canonical retrieval surface**，不屬於 ordinary Playbook bootstrap / capability discovery / gap review / implementation or validation routing。只有本次 intent 明確屬於 Playbook 自我維護時，才先讀 `/maintainer/README.md` 再進入必要子目錄，例如：Playbook self-review / self-correction、external governance or workflow comparison、Playbook evolution / productization research、suspected Playbook defect investigation、behavioral-evaluation candidate research、possible future-direction review 或 candidate persistence。
+
+普通 capability inventory、repository-level gap / absence review、adopter-project task、implementation routing 或 validation routing **不得為了找更多 evidence 自動進入 `/maintainer/`**。其中內容是 maintainer working material / pre-canonical evidence；被保存、被找到或被引用都不會因此變成 Playbook capability、policy、bug、task、validation result 或 execution authority。Promotion 仍必須回到正常 canonical / work-admission / eval governance。
+
+這是一個 **maintenance-only discovery pointer**，不是 normal canonical routing dependency；移除 `/maintainer/` 不得改變 ordinary Playbook behavior。
+
 ### 本 repository 的 minimal validator contract
 
 本手冊自身的 deterministic Markdown/routing check 使用 `/tools/playbook_check.py`，tests 使用 `/tests/test_playbook_check.py`。
 
 - Runtime：Python 3.11+。
 - Dependency：Python standard library only；不要為第一版 validator 建立 package manager、requirements 或額外 config framework。
-- 正式檢查：由已確認具備 Python 3.11+ runtime 的 ChatGPT session 執行 `python tools/playbook_check.py`。
+- 正式檢查：由已確認具備 Python 3.11+ runtime 的 ChatGPT session執行 `python tools/playbook_check.py`。
 - Unit tests：由已確認具備 Python 3.11+ runtime 的 ChatGPT session 執行 `python -m unittest tests/test_playbook_check.py`。
 - Adoption / Readability Doctor 使用 `/tools/adoption_doctor.py`，只對指定 project repository 做 read-only / report-only adoption 與 routing contract 檢查；不得修改 target project、不得自動修復，也不依賴 network／GitHub mutation。
 - Doctor unit tests：由已確認具備 Python 3.11+ runtime 的 ChatGPT session 執行 `python -m unittest tests/test_adoption_doctor.py`。
