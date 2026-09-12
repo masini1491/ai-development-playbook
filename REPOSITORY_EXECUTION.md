@@ -201,7 +201,7 @@ Canonical evidence 不取代 runtime/build/hardware validation。
 
 ### AI-assisted development transparency
 
-公開 repository 若明顯使用 ChatGPT、Codex 或其他 coding agent，可精簡說明 human-in-the-loop 分工；**實際角色必須依 repository 自己宣告的 actor topology 描述**。例如 human 可負責需求／產品方向／現實 evidence／最終核准；ChatGPT 可依 project authority負責 research、architecture/spec、coordination、implementation、validation或 repository maintenance；Codex／其他 coding agent也只在各自被授權的 responsibility內工作。不得把「ChatGPT只 planning、Codex必然 implementation」寫成所有 project 的固定分工。
+公開 repository 若明顯使用 ChatGPT、Codex 或其他 coding agent，可精簡說明 human-in-the-loop 分工；採用本 Playbook 的 project 對 AI workflow 應先依 `PROJECT_MODES.md` 宣告 `ChatGPT-Only` 或 `ChatGPT+Codex`，再依 repository 自己的 lower-level path/action authority 描述實際責任。Human maintainer、CI、hardware validation、external service 等非 AI actor 仍可依 project governance 參與，但不形成第三種 AI project mode。不得把「ChatGPT只 planning、Codex必然 implementation」寫成所有 project 的固定分工，也不得把 project-specific executor 細節宣稱成新的 Playbook AI mode。
 
 AI 產生 code/analysis、command success 或 build exit 0 不等於產品完成所有必要 validation；公開 wording 必須符合 evidence tier。提及 provider 不得暗示贊助、認證或背書。
 
@@ -225,7 +225,9 @@ README 或公開文件展示 LOC、行數、檔案數等 project-scale statistic
 
 ## Repository Actor Topology / Maintenance Ownership
 
-Playbook **不把任何單一 AI actor 分工寫成所有 repository 的 universal workflow**。每個 project 的 current governance 應依需要宣告：哪些 actor 對哪些 responsibility / mutation surface 具有 authority。Actor 可以是 ChatGPT、Codex／其他 coding agent、human maintainer或其他 project-defined executor；名稱本身不帶入預設權限。
+`PROJECT_MODES.md` 是採用本 Playbook 的 repository 對 **user-selectable AI project mode** 的 canonical owner；一般 project 只選 `ChatGPT-Only` 或 `ChatGPT+Codex`。本節保留的是被選 mode 之下的 **lower-level authority mechanism**：哪些已參與 actor 對哪些 responsibility／path／action 具有 authority，以及什麼情況必須 STOP。它不建立第三種 AI mode，也不提供一般 project 自由定義第三、第四種 AI topology 的介面。
+
+Human maintainer、CI、hardware validation、deployment system、external service 等非 AI actor仍可由 project governance 定義責任；它們不屬於 project AI mode enum。其他 coding agent 若被 project 明確拿來替代 Codex executor，只能作為 `ChatGPT+Codex` collaboration profile 內的 project-specific implementation executor mapping，不因此形成新的 Playbook AI mode。
 
 最低充分 responsibility 可包含：
 
@@ -237,42 +239,40 @@ Playbook **不把任何單一 AI actor 分工寫成所有 repository 的 univers
 - Git commit / push / branch operation；
 - release / deploy / external-service mutation。
 
-Project 不需要為形式建立固定 matrix；只要 current governance 足以讓 actor admission 判斷「這項工作誰能合法做」即可。若同一 actor對不同 path/action權限不同，可用既有 allowlist、stage contract或其他 repository-owned contract表示。
+Project 不需要為形式建立巨大 responsibility matrix；只要 current governance 在已選 mode 內足以讓 actor admission 判斷「這項工作誰能合法做」即可。若同一 actor對不同 path/action權限不同，可用既有 allowlist、stage contract或其他 repository-owned contract表示。Project-specific restriction可以縮窄 mode 內的 responsibility，但不得把縮窄／executor mapping重新包裝成第三種 Playbook AI mode。
 
-### Conservative fallback when topology is undeclared
+### Mode selection unresolved / conservative fallback
 
-若 project **沒有明確宣告更廣的 actor maintenance ownership**：
+若 project governance **尚未宣告 `ChatGPT-Only` 或 `ChatGPT+Codex`**，這代表 `mode selection unresolved`，不是第三種 mode。不得從 available tools、前一個 session、repository shape、是否安裝 Codex或上一個 actor推測 mode。
+
+在 mode 未選定期間：
 
 - ChatGPT direct-write維持下方 `Coordination Write Allowlist` 的保守 fallback；default仍只有 root `/TASKS.md`。
 - Production source、tests、tooling、canonical docs或其他非 allowlisted mutation **不得只因 ChatGPT技術上能寫就自動授權**。
-- Codex／coding agent也不因「通常負責 implementation」就自動取得 mutation authority；仍需 current Task/Stage + repository governance授權。
-- 若沒有任何 actor被授權完成所需 mutation，結果是 `STOP / authority gap`，不是自動挑一個可用工具補位。
+- Codex／coding agent也不得因「通常負責 implementation」就自動加入 repository workflow或取得 mutation authority。
+- read-only research／evidence工作若不依賴 mode choice且其他 authority成立，可維持最低風險範圍；任何需要用 mode決定 implementation actor、handoff或 broader mutation authority 的工作則 STOP，直到使用者或 project governance選定 mode。
+- 若選定 mode後仍沒有任何 actor被授權完成所需 mutation，結果仍是 `STOP / authority gap`，不是自動挑一個可用工具補位。
 
-### Explicit maintenance topology
+### Mode-conditioned actor authority
 
-Repository 可以明確宣告不同 topology，例如：
-
-- **Split topology**：ChatGPT 負責 planning / research / coordination，Codex／coding agent負責被授權的 implementation mutation；
-- **ChatGPT-maintained topology**：ChatGPT 同時是 planning與 repository implementation／maintenance actor，可在明確 scope內修改 canonical docs、source、tests、tooling並執行相應 validation；Codex可唯讀、可選或完全不在 workflow內；
-- 其他 human / AI 組合，只要 responsibility、authority與 completion boundary清楚即可。
-
-這些只是例子，不建立固定 enum。**Repository-specific declaration > Playbook fallback。** 一旦 project governance 已明確宣告 ChatGPT 可維護 implementation artifacts，就不應再用 coordination-only fallback把它錯誤降級成 read-only；反之，Codex未參與也不會單獨把 source authority轉移給 ChatGPT。
+- **`ChatGPT-Only`**：ChatGPT 是 repository 的 AI maintainer；Codex 不屬於該 repository workflow。ChatGPT可直接承擔哪些 canonical docs、source、tests、tooling、validation或Git mutation，仍由 current project governance／path-action contract + Task/Stage authorization + permission/capability交集決定。不得因 artifact 看起來像 implementation 就自行製造 Codex handoff。
+- **`ChatGPT+Codex`**：ChatGPT主要承擔 research／planning／architecture／coordination／review／reconciliation；Codex只承擔 project governance或 current authorized Stage 明確分派給 coding-agent responsibility 的 implementation mutation。Actor admission仍是 stage-local；research/read-only/review不因 repository曾用過Codex就慣性 handoff，ChatGPT也不得只因connector可寫就吸收原本明確分派給Codex的 mutation。
 
 Actor selection 仍依 `CHATGPT_WORKFLOW.md` 的 `Actor Admission / Handoff Gate`：
 
-`Current work → required responsibility / mutation → repository-declared actor authority → current capability / permission → lowest-sufficient authorized actor → execute | handoff | STOP`
+`Current work → selected Project AI mode → required responsibility / mutation → repository-declared path/action authority → current capability / permission → lowest-sufficient authorized actor → execute | handoff | STOP`
 
-**No handoff is required to an actor that is not part of the repository's current topology.** Capability不創造authority，repository actor declaration也不跳過Current Write Target、Task/Stage authorization、credential、validation或completion evidence gates。
+**No handoff is required to an actor that is not part of the selected Project AI mode.** Capability不創造authority，mode selection與repository actor declaration也都不跳過Current Write Target、Task/Stage authorization、credential、validation或completion evidence gates。
 
-核心原則：**Repository governance owns actor responsibility. The Playbook supplies a conservative fallback, not a universal ChatGPT→Codex handoff model.**
+核心原則：**Project AI mode selects the participating AI collaboration profile; repository governance owns the lower-level path/action authority. Mode selection is simple; authority remains explicit and bounded.**
 
 ## Coordination Write Allowlist
 
-本節是 **ChatGPT coordination-only 的 conservative fallback**，以及 project明確採 coordination surface時的 path contract；它不覆蓋 repository 已明確授予 ChatGPT 的 broader implementation／maintenance authority。
+本節是 **ChatGPT coordination-only 的 conservative fallback**，以及 project明確採 coordination surface時的 path contract；它不覆蓋 selected mode + repository governance 已明確授予 ChatGPT 的 broader implementation／maintenance authority。
 
 ### Default — Single-Surface Mode
 
-若 project governance 沒有明確宣告其他 ChatGPT actor ownership或 coordination mode，ChatGPT direct-write allowlist 只有：
+若 Project AI mode 尚未選定，或 selected mode／project governance沒有明確授予 ChatGPT更廣的 maintenance ownership或 coordination mode，ChatGPT direct-write allowlist 只有：
 
 - `/TASKS.md`
 
@@ -286,13 +286,13 @@ Project governance 可明確 opt-in 一個或多個額外 surface，例如：
 - `/tasks/active/*.md` 或 project-defined equivalent — Hot task dossier；
 - `/evidence/inbox/*.md` 或 project-defined equivalent — sanitized evidence staging。
 
-實際 path / glob 必須由 project governance 明確列入 `ChatGPT Coordination Write Allowlist` 或等價 contract；未列出的 path 一律 read-only，**除非另有更高層、明確的 ChatGPT maintenance ownership contract授權該 mutation**。
+實際 path / glob 必須由 project governance 明確列入 `ChatGPT Coordination Write Allowlist` 或等價 contract；未列出的 path 一律 read-only，**除非 selected mode + 更高層 project authority 已明確授予 ChatGPT 該 maintenance mutation**。
 
 Opt-in 不要求使用上述固定名稱；語意與 AI loading responsibility依 `AI_CONTEXT.md`，path 由 project決定。
 
 ### 不得自我擴權
 
-- ChatGPT **不得直接修改 project `AGENTS.md`／governance 來把新 path 或 responsibility 加進自己的 authority**，除非該 repository已明確授予 ChatGPT對該 governance surface的 maintenance authority，且本次變更本身已獲使用者／Task授權。
+- ChatGPT **不得直接修改 project `AGENTS.md`／governance 來把新 path 或 responsibility 加進自己的 authority**，除非 selected mode與該 repository現有 governance已明確授予 ChatGPT對該 governance surface的 maintenance authority，且本次變更本身已獲使用者／Task授權。
 - 啟用／擴大 allowlist或 actor responsibility必須是明確授權的 governance change，並由當時已具合法 governance mutation authority的 actor執行；不得靠「沒有Codex」、「connector可寫」或「目前session做得到」推導自我擴權。
 - 使用者說「記一下」、「這個先留著」可以授權在**既有 allowlist內**保存對應資訊；不會自動建立新的 path permission。
 - ChatGPT可寫入某 surface，不代表該 surface具有 execution authority；Hot/Cold/Evidence semantics依 `AI_CONTEXT.md`。
@@ -313,7 +313,7 @@ ChatGPT 對 allowlisted surface 的合法 mutation，不得因 derived bookkeepi
 
 1. **Audit current state**：先讀 current project governance、`TASKS.md`／現有 coordination content、retention/ignore policy，以及 project-scale／manifest／README/showcase等可能把 Markdown 或新 path納入 derived output 的規則。
 2. **Choose semantics before paths**：先確認真正需要的是 Cold Registry、Hot dossier、sanitized evidence staging或其他單一責任；不要為了「多層比較完整」一次啟用全部 surface。
-3. **User authorization does not equal immediate self-expansion**：使用者可明確授權「啟用 BACKLOG／讓 ChatGPT可維護某 surface」這項治理變更，但在 project governance實際由合法 maintainer actor更新並生效前，ChatGPT仍不得先建立／寫入新 path，除非現有 topology已授予它該 governance mutation authority。
+3. **User authorization does not equal immediate self-expansion**：使用者可明確授權「啟用 BACKLOG／讓 ChatGPT可維護某 surface」這項治理變更，但在 project governance實際由合法 maintainer actor更新並生效前，ChatGPT仍不得先建立／寫入新 path，除非現有 mode + lower-level authority已授予它該 governance mutation authority。
 4. **Governance first**：由當時具合法 mutation authority的 actor更新 `ChatGPT Coordination Write Allowlist`／等價 contract，並明確保留未列入 path為 read-only；必要時同步 routing、retention、security/sanitization與 actor responsibility。
 5. **Close derived dependencies**：若 project-scale、manifest、public README/showcase、generated index或其他 derived metadata會因新 operational surface而頻繁變動，先在同一 migration Stage調整 classification／write-closure；不要讓每筆 coordination mutation反向要求更新非 allowlisted文件。
 6. **Create only selected surfaces**：只建立已核准且有明確 owner/semantic的 path；Hot dossier/evidence staging不得因建立目錄就成為 every-task default load。
@@ -388,15 +388,16 @@ Hot item成功且完成必要 evidence後，從 active Hot surface移除／收�
 
 ### ChatGPT
 
-- 若 project governance 只採 conservative fallback，ChatGPT只可直接建立／更新 `Coordination Write Allowlist` 明確列出的 path；default只有 root `/TASKS.md`。
-- 若 repository明確宣告 ChatGPT具有更廣的 canonical docs／source／tests／tooling／workflow等 maintenance responsibility，ChatGPT可在**該 declaration + current Task/Stage + permission/capability**交集內直接修改，不需要先製造Codex handoff。
+- 若 Project AI mode尚未選定，或 selected mode／project governance只保留 conservative fallback，ChatGPT只可直接建立／更新 `Coordination Write Allowlist` 明確列出的 path；default只有 root `/TASKS.md`。
+- 在 `ChatGPT-Only` 中，ChatGPT可在**selected mode + repository lower-level path/action authority + current Task/Stage + permission/capability**交集內直接修改 canonical docs／source／tests／tooling／workflow等已授權 surface，不需要先製造Codex handoff。
+- 在 `ChatGPT+Codex` 中，ChatGPT仍只直接執行 current governance／Stage明確留給ChatGPT的 responsibility；不得只因connector可寫就吸收明確分派給Codex的 implementation mutation。
 - Evidence staging只能寫 repo-safe / sanitized內容；不得先把 secret/private raw material commit後再刪。
-- 對超出ChatGPT current authority的mutation，只做 analysis/planning／handoff；若沒有其他authorized actor則 STOP。
+- 對超出ChatGPT current authority的mutation，只做 analysis/planning／合法 handoff；若 selected mode內沒有其他authorized actor則 STOP。
 - 使用者直接要求某 mutation若同時明確、合法地改變 project actor-governance contract，仍必須先以 repository允許的治理方式使新authority生效；不能用一次 tool capability取代 durable governance。
 
 ### Codex／coding agent
 
-- 在使用者當次明確授權 Task/Stage scope內，依 repository actor topology與governance修改 allowed files。
+- 只有 `ChatGPT+Codex` 已被選定，且使用者當次 Task/Stage + repository lower-level authority明確把該 responsibility分派給Codex／coding-agent executor時，才修改 allowed files。
 - 可依 project governance維護當次 Stage相關的 Hot coordination status/evidence bookkeeping，但不得自行執行其他未授權 Hot item，也不得因讀到 Cold/Candidate item就開始工作。
 - Cold → Hot promotion、AI-originated candidate升格與新的 durable work admission原則上屬 planning/reconciliation decision；coding agent只能在 Stage明確要求時做對應 bookkeeping。
 
@@ -406,6 +407,6 @@ Hot item成功且完成必要 evidence後，從 active Hot surface移除／收�
 - Coordination surface不是 changelog，也不是第二份 canonical architecture/evidence truth；canonicalization後依 `AI_CONTEXT.md` 收斂成 pointer + current delta。
 - Hot/Cold/Evidence surface本身都不自動授權任何 actor execution，也不擴張其他 path的寫入權。
 
-### Playbook repository topology declaration（example）
+### Playbook repository maintenance declaration（dogfooding example）
 
-`masini1491/ai-development-playbook` 的 `AGENTS.md` 明確宣告 ChatGPT為主要AI maintainer、Codex預設唯讀；因此它是上方 **ChatGPT-maintained topology** 的一個project-specific instance，而不是通用規則的特殊權限來源。其他repository若要採等價或不同topology，必須由自己的current governance明確宣告。
+`masini1491/ai-development-playbook` 的 `AGENTS.md` 明確宣告 ChatGPT為主要AI maintainer、Codex預設唯讀。這是本 repository 自身的 maintainer contract，行為上與 `ChatGPT-Only` 的「Codex不介入 repository workflow」方向一致，但它不取代 adopter project 的 `Project AI mode` declaration，也不建立第三種 Playbook AI mode。一般採用本 Playbook 的 repository仍只選 `ChatGPT-Only` 或 `ChatGPT+Codex`，再由自己的 current governance縮窄實際 path/action authority。
