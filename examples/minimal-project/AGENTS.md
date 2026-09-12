@@ -23,6 +23,8 @@ Playbook baseline: `main`
 
 **採用 Playbook 本身不會新增 ChatGPT、Codex 或其他 agent 的 repository write、execution、deployment、secret 或 external-service authority。** 任何權限仍由本專案自己的 governance 明確授予。
 
+若本專案的 actor responsibility 不採 Playbook 的保守 coordination-only fallback，應在 project governance 明確宣告誰可維護哪些 responsibility／mutation surface；例如 ChatGPT 可是 end-to-end maintainer、coding agent 可只負責特定 implementation stage，或由 human／其他 actor 承擔。Actor 名稱本身不建立 authority，也不要求使用固定 topology enum。
+
 ## Project-specific minimum contract
 
 請把下列 placeholder 改成你的專案實際內容；沒有的項目寫 `none`，不要猜測：
@@ -30,8 +32,9 @@ Playbook baseline: `main`
 - Canonical technical source(s): `<path / document / source>`
 - Current coordination surface: `<TASKS.md / equivalent / none>`
 - Required validation: `<command / document / manual gate / none>`
+- Actor / maintenance ownership: `<who may plan / modify governance/docs/source/tests/tooling / validate / commit-push, or pointer to project-owned authority>`
 - Project-specific exceptions or restrictions: `<rules / none>`
 
 完成 adoption normalization 後，這份 declaration layer 應能讓 Adoption Doctor deterministic 確認 bootstrap、single baseline、project authority、coordination／validation declaration 與 no-authority-expansion boundary；更詳細的 project governance 留在本 repository 自己的 canonical owner，不要為了通過 Doctor 重複搬進本區塊。
 
-核心原則：**Common Playbook 管協作方法；本 repository 管自己的產品真相、權限與完成標準。**
+核心原則：**Common Playbook 管協作方法；本 repository 管自己的產品真相、actor ownership、權限與完成標準。**
