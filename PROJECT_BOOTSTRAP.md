@@ -1,45 +1,47 @@
-# Project Research Bootstrap Mode
+# Project Research Bootstrap Lifecycle
 
-> **Authority**：pre-implementation project bootstrap 階段的 ChatGPT research / synthesis direct-write boundary、mode activation / exit、以及與 implementation actor selection / handoff 的責任切換。
+> **Authority**：pre-implementation project bootstrap 階段的 ChatGPT research / synthesis direct-write boundary、lifecycle activation / exit、以及與 implementation actor selection / handoff 的責任切換。
 >
 > **Read when**：新 repository／新產品開案仍以 ChatGPT 蒐集 reference、比較方案、形成 requirements / architecture premise 為主，穩定 implementation actor / source mutation lifecycle 尚未接手，且只允許 `/TASKS.md` 會造成不必要的 handoff / bookkeeping 成本。
 >
-> 本檔不改變一般 implementation repository 的 source write boundary；未啟用本 mode 時，仍依 `REPOSITORY_EXECUTION.md` 的 `Repository Actor Topology / Maintenance Ownership` 與其他 repository mutation contract。
+> `research-bootstrap` 是 project lifecycle／temporary write profile，**不是第三種 Project AI mode**。Project AI mode 仍只由 `PROJECT_MODES.md` 的 `ChatGPT-Only | ChatGPT+Codex` 決定；本檔只在 selected mode 之下提供 pre-implementation research direct-write boundary。本檔也不改變一般 implementation repository 的 source write boundary。
 
 ## 啟用條件（Activation Gate）
 
-`research-bootstrap` 是 **project 明確 opt-in mode**，不是因 repository 很新、Codex 尚未出現、或 ChatGPT 已能寫 GitHub 就自動成立。
+`research-bootstrap` 是 **project 明確 opt-in lifecycle**，不是因 repository 很新、Codex 尚未出現、或 ChatGPT 已能寫 GitHub 就自動成立，也不取代 `Project AI mode` declaration。
 
 至少需要：
 
 1. 使用者明確指定唯一 `Current Write Target Repository`；
-2. 使用者明確表示目前處於 pre-implementation research / bootstrap 階段，或明確要求啟用等價模式；
-3. project governance 明確保存目前 mode 與 ChatGPT 可寫的 research paths；
-4. 若 repository 已存在更高權威 governance，必須與它相容，不得用本 mode 覆蓋既有禁止事項。
+2. project 已依 `PROJECT_MODES.md` 明確選定 `ChatGPT-Only` 或 `ChatGPT+Codex`；
+3. 使用者明確表示目前處於 pre-implementation research / bootstrap 階段，或明確要求啟用等價 lifecycle；
+4. project governance 明確保存 lifecycle state 與 ChatGPT 可寫的 research paths；
+5. 若 repository 已存在更高權威 governance，必須與它相容，不得用本 lifecycle 覆蓋既有禁止事項。
 
 推薦 declaration：
 
 ```text
-ChatGPT Project Mode: research-bootstrap
+Project AI mode: ChatGPT-Only
+Research bootstrap lifecycle: active
 ChatGPT Research Write Allowlist:
 - /TASKS.md
 - /research/**
 - /docs/architecture/**
 ```
 
-Path 只是示例；project 可選 `references/**`、`docs/research/**`、`PROJECT_BOOTSTRAP.md` 或其他等價 surface。**只有明確列出的 path 可直接寫。**
+`Project AI mode` 也可以是 `ChatGPT+Codex`；`research-bootstrap` 只控制 pre-implementation research write boundary，不改寫 mode actor profile。Path 只是示例；project 可選 `references/**`、`docs/research/**`、`PROJECT_BOOTSTRAP.md` 或其他等價 surface。**只有明確列出的 path 可因本 lifecycle 直接寫。**
 
 ## Bootstrap Governance Initialization Exception
 
-為避免「新 repo 尚未有 Codex，卻必須先叫 Codex 只為建立 allowlist」的循環，本手冊提供一個非常窄的初始化例外：
+為避免「新 repo 尚未有任何 durable governance，卻必須先有 maintainer 才能建立 bootstrap allowlist」的循環，本手冊提供一個非常窄的初始化例外：
 
 - repository 尚未存在 project governance，或只有不衝突的空／template governance；
-- 使用者當次明確要求 ChatGPT 初始化該 repository 的 `research-bootstrap` mode；
-- ChatGPT 只可建立／補入**最低充分 bootstrap governance**：Playbook baseline、`ChatGPT Project Mode: research-bootstrap`、明確 Research Write Allowlist、project-specific authority precedence、no self-expansion boundary；
-- 這個例外不授權 ChatGPT 建立 source implementation policy、CI policy、deployment policy、security credential policy 或其他與啟動 research mode 無關的治理內容；
+- 使用者當次明確選定 `Project AI mode: ChatGPT-Only | ChatGPT+Codex`，並明確要求 ChatGPT 初始化該 repository 的 `research-bootstrap` lifecycle；
+- ChatGPT 只可建立／補入**最低充分 bootstrap governance**：使用者已選定的 Playbook baseline、使用者已選定的 `Project AI mode`、`Research bootstrap lifecycle: active`、明確 Research Write Allowlist、project-specific authority precedence、no self-expansion boundary；
+- 這個例外不授權 ChatGPT 建立 source implementation policy、CI policy、deployment policy、security credential policy 或其他與啟動 research lifecycle 無關的治理內容；
 - repository 已有 material governance 時，不得用此例外重寫／取代它。需要改變 existing governance 時，回到該 repository 的既有 governance mutation contract。
 
-核心原則：**Bootstrap initializer 解決「誰先建立研究寫入邊界」；它不是一般 governance write permission。**
+核心原則：**Bootstrap initializer 解決「誰先建立研究寫入邊界」；它不建立第三種 Project AI mode，也不是一般 governance write permission。**
 
 ## Reuse-First Research Gate
 
@@ -78,18 +80,18 @@ Implementation invention boundary: <layers implementation actor must not rebuild
 
 推薦判斷：
 
-`Next work → classify responsibility / mutation need → re-read only the current actor-routing authority if stale or materially changed → choose lowest-sufficient authorized actor → execute / handoff`
+`Next work → selected Project AI mode → classify responsibility / mutation need → re-read only the current actor-routing authority if stale or materially changed → choose lowest-sufficient authorized actor → execute / handoff`
 
 一般原則：
 
 - 若下一步主要是官方／外部資料 retrieval、bounded research、fixture / corpus 蒐集、provenance、comparison、schema / edge-case synthesis、read-only validation analysis，且 ChatGPT 目前 tool/runtime 與 project authority足以完成，**預設由 ChatGPT 直接處理**；不要只因上一 Stage 用過 Codex 就先產生 Codex Prompt。
-- 若下一步需要 production/application/firmware source mutation、executable tests、build/dependency/tooling、CI/release/deploy 或其他 current project governance 明確屬 coding-agent maintainer 的 artifact，再 handoff coding agent；若 current topology 已授權 ChatGPT 維護該 artifact，則依同一 actor-admission gate直接處理，不為artifact類型額外製造handoff。
-- Actor 判斷以**目前工作的 responsibility、required mutation surface、execution capability 與 project authority**為準，不以「之前是誰做的」或「project已進 implementation phase」單獨決定。
-- 長時間 project chat 若 current Playbook / project governance 在 session 開始後可能已演進，而且下一步 actor choice會改變成本或 authority，先 bounded rehydrate **actor-routing relevant sections**；不全文重讀 Playbook，也不把舊 conversation 的 actor分工當永久 current truth。
+- 若下一步需要 production/application/firmware source mutation、executable tests、build/dependency/tooling、CI/release/deploy 或其他 implementation artifact，先依 selected `Project AI mode` 決定可參與的 AI profile，再套用 current project governance／Stage 的 lower-level authority：`ChatGPT+Codex` 只有明確分派給 coding-agent responsibility 時才 handoff；`ChatGPT-Only` 不製造 Codex handoff，改由 ChatGPT在實際已授權 scope內處理或因 authority/capability不足而 STOP。
+- Actor 判斷以**selected Project AI mode、目前工作的 responsibility、required mutation surface、execution capability 與 project authority**為準，不以「之前是誰做的」或「project已進 implementation phase」單獨決定。
+- 長時間 project chat 若 current Playbook / project governance 在 session 開始後可能已演進，而且下一步 actor choice會改變成本或 authority，先 bounded rehydrate **mode／actor-routing relevant sections**；不全文重讀 Playbook，也不把舊 conversation 的 actor分工當永久 current truth。
 - 若 current authority未改、task responsibility也沒有 material轉換，不為每個小步驟重跑完整 rehydration；這是 stage-transition gate，不是 per-message ceremony。
-- ChatGPT 能直接做某個 research/evidence工作，不代表取得 source implementation write authority；反之，某 coding agent 是 authorized implementation maintainer，也不代表所有 non-implementation工作都必須透過該 agent。
+- ChatGPT 能直接做某個 research/evidence工作，不代表取得 source implementation write authority；反之，在 `ChatGPT+Codex` 中某 coding agent 是 authorized implementation maintainer，也不代表所有 non-implementation工作都必須透過該 agent。
 
-核心原則：**Actor choice is stage-local, not inherited. Re-evaluate at responsibility transitions; use the lowest-sufficient authorized actor.**
+核心原則：**Actor choice is stage-local inside the selected Project AI mode, not inherited. Re-evaluate at responsibility transitions; use the lowest-sufficient authorized actor.**
 
 ## Post-Adoption Context Closure Gate
 
@@ -121,7 +123,7 @@ Thin contract 不要求建立固定檔名或額外 ceremony；可放在 project 
 
 ## Research Write Allowlist
 
-Mode 啟用後，ChatGPT 可在 project 明確 allowlist 內直接建立／更新 pre-implementation knowledge artifact，例如：
+Lifecycle 啟用後，ChatGPT 可在 project 明確 allowlist 內直接建立／更新 pre-implementation knowledge artifact，例如：
 
 - external reference / source dossier / provenance；
 - research synthesis、technology comparison、unknown / revisit trigger；
@@ -135,7 +137,7 @@ Mode 啟用後，ChatGPT 可在 project 明確 allowlist 內直接建立／更�
 
 ### 不允許的 direct-write
 
-即使在 `research-bootstrap` mode，下列項目預設仍不得由 ChatGPT直接修改，除非 project 有另一個更高層明確且合法的 maintenance topology / exception：
+即使在 `research-bootstrap` lifecycle，下列項目也**不會只因 research lifecycle 本身**取得 ChatGPT direct-write authority；若 selected Project AI mode + project lower-level governance／current Task/Stage 另有明確、更高的合法 maintenance authority，則依該 authority處理：
 
 - production / application / firmware source；
 - executable tests / test harness；
@@ -161,9 +163,9 @@ Research 階段允許 ChatGPT 直接形成 durable project knowledge，因此要
 
 ## Exit / Handoff Gate
 
-`research-bootstrap` 不是永久寬鬆模式。當第一個 implementation Stage 準備進入正式 source mutation lifecycle時，應做 bounded transition；是否 handoff 以及 handoff給誰，由 `REPOSITORY_EXECUTION.md` 的 current actor topology 與 `CHATGPT_WORKFLOW.md` 的 Actor Admission決定，而不是由本mode預設Codex：
+`research-bootstrap` 不是永久寬鬆 lifecycle。當第一個 implementation Stage 準備進入正式 source mutation lifecycle時，應做 bounded transition；是否 handoff 以及 handoff給誰，由 current `Project AI mode`、`REPOSITORY_EXECUTION.md` 的 lower-level actor/path-action authority與 `CHATGPT_WORKFLOW.md` 的 Actor Admission共同決定，而不是由 research lifecycle預設Codex：
 
-`research-bootstrap → reconcile current research / architecture → close material Reuse / Adapt / Gap decisions → freeze minimum implementation premise → admit Hot implementation work → switch to implementation boundary → select lowest-sufficient authorized implementation actor → execute / handoff`
+`research-bootstrap → reconcile current research / architecture → close material Reuse / Adapt / Gap decisions → freeze minimum implementation premise → admit Hot implementation work → close research-bootstrap write profile as appropriate → select lowest-sufficient authorized implementation actor inside current Project AI mode → execute / handoff`
 
 退出前至少確認：
 
@@ -172,22 +174,22 @@ Research 階段允許 ChatGPT 直接形成 durable project knowledge，因此要
 - unresolved research 有明確 status / trigger，不冒充已決定事項；
 - first implementation task 的 goal / completion / exclusions / evidence pointers 足夠，且明確指出 upstream reusable boundary 與 project-specific implementation gap；
 - 對預計採用的 material upstream，已決定 integration completion 後 thin local contract 的 owner / destination，讓 implementation 完成後可以收斂成 Post-Adoption Context Closure，而不是永久把 upstream internals 放在 default Context；
-- project governance 將 `ChatGPT Project Mode` 切回一般 implementation mode或等價 contract，並依current topology收斂或保留仍需要的 Research Write Allowlist；
-- 退出後任何 actor都不因曾在 bootstrap 期間擁有research write authority，就自行推導更廣的source/tests/docs authority；implementation authority仍來自current repository governance。
+- project governance 將 `Research bootstrap lifecycle` 標為 inactive／closed或等價狀態，並依仍需保留的 research責任收斂或保留 Research Write Allowlist；**退出 research-bootstrap 不會自行切換 `Project AI mode`**；
+- 退出後任何 actor都不因曾在 bootstrap 期間擁有research write authority，就自行推導更廣的source/tests/docs authority；implementation authority仍來自current Project AI mode + repository lower-level governance。
 
-若 implementation 已開始但後續又需要新研究，ChatGPT仍可 read/research；是否重新取得 research path direct-write 依 current project governance，不因歷史 mode 自動恢復。每個這類 responsibility transition 仍應依 `Stage-Transition Actor Revalidation Gate` 重新判斷最低充分 actor，不因 implementation mode 已啟用就把 research/evidence work 自動交給上一個implementation actor。
+若 implementation 已開始但後續又需要新研究，ChatGPT仍可 read/research；是否重新取得 research path direct-write 依 current project governance，不因歷史 lifecycle 自動恢復。每個這類 responsibility transition 仍應依 `Stage-Transition Actor Revalidation Gate` 重新判斷最低充分 actor，不因 implementation lifecycle 已啟用就把 research/evidence work 自動交給上一個implementation actor。
 
 ## Cost / Workflow Rationale
 
-本 mode 的目的不是偏好或排除某個 implementation actor，而是消除開案早期低價值的搬運：當 ChatGPT 本來就是 reference retrieval、analysis、synthesis 的主要 actor 時，不需要為了把同一份 research conclusion 寫進 repository，再額外建立不必要的 handoff、重載 Context、產生 commit-only 工作。
+本 lifecycle 的目的不是偏好或排除某個 implementation actor，而是消除開案早期低價值的搬運：當 ChatGPT 本來就是 reference retrieval、analysis、synthesis 的主要 actor 時，不需要為了把同一份 research conclusion 寫進 repository，再額外建立不必要的 handoff、重載 Context、產生 commit-only 工作。
 
 Reuse 的成本收益也不只看第一次少寫多少 code；若 adopted upstream 之後每個 implementation task 都被迫重讀大量 internals，長期 Context / reasoning cost 仍可能很高。完成 integration 後應把 ordinary work 收斂到 thin local contract + project-owned gap，只有 trigger 成立才展開 upstream internals。
 
 同樣地，actor inertia 也會增加成本：一個前一 Stage 使用某 actor 的長期 project chat，如果後續 research / fixture / evidence closure仍機械式 handoff給同一 actor，就會重複載入不必要的 implementation Context。Stage transition 時重新選最低充分actor，是 resource control的一部分。
 
-核心分工由 project governance 宣告，而不是由本mode固定：
+核心分工先由 `Project AI mode` 決定 participating AI profile，再由 project governance縮窄各 lifecycle 的實際 authority；research lifecycle本身不另建 actor topology：
 
-- **Research/bootstrap phase**：本mode只授予明確 allowlist內的 ChatGPT research / synthesis direct-write；
-- **Implementation phase**：依 repository-declared actor topology選擇 authorized implementation maintainer；可以是ChatGPT、Codex／其他coding agent、human或其他合法actor。
+- **Research/bootstrap phase**：本 lifecycle只授予明確 allowlist內的 ChatGPT research / synthesis direct-write；
+- **Implementation phase**：`ChatGPT-Only` 不引入Codex，由ChatGPT在project實際授權範圍內執行或STOP；`ChatGPT+Codex` 才可依current governance／Stage把指定implementation responsibility交給Codex／coding-agent executor。Human、CI與其他非AI actor仍依project governance參與，但不形成第三種Project AI mode。
 
-核心原則：**Write authority follows explicit project governance and current responsibility；研究階段減少無意義 handoff，實作階段依current actor topology維持清楚authority boundary；Reuse後再收斂default Context，且每次responsibility transition重新選最低充分actor，才真正降低end-to-end AI development cost。**
+核心原則：**Project AI mode只有 `ChatGPT-Only | ChatGPT+Codex`；`research-bootstrap` 只是可選 lifecycle/write profile。Write authority follows explicit project governance and current responsibility；研究階段減少無意義 handoff，實作階段在selected mode內維持清楚authority boundary；Reuse後再收斂default Context，且每次responsibility transition重新選最低充分actor，才真正降低end-to-end AI development cost。**
