@@ -1,0 +1,57 @@
+{
+  "record_type": "child_profile_metadata_observability_canary",
+  "record_version": 1,
+  "date": "2026-09-13",
+  "playbook_repository": "masini1491/ai-development-playbook",
+  "persistence_main_sha": "aed140f6cd5594a8cd0014ea568ee0b92ba29ed9",
+  "runtime": "Codex Desktop",
+  "execution_mode": "read-only metadata observability canary",
+  "child_delegation": {
+    "status": "USED",
+    "runtime_native_child_handle": "/root/profile_metadata_canary",
+    "task_result": "1",
+    "result_returned_through_runtime_agent_channel": true
+  },
+  "child_profile_routing": {
+    "status": "USED",
+    "requested_model": "gpt-5.6-luna",
+    "requested_reasoning": "low",
+    "override_request_accepted": true,
+    "effective_model_independently_observable": false,
+    "effective_reasoning_independently_observable": false,
+    "evidence_classification": "override request accepted / effective profile not independently observable"
+  },
+  "runtime_metadata_surfaces_inspected": [
+    {
+      "surface": "native child-spawn response",
+      "observed": "child handle only"
+    },
+    {
+      "surface": "agent registry/listing during execution",
+      "observed": "handle and running status"
+    },
+    {
+      "surface": "agent registry/listing after completion",
+      "observed": "handle, completion status, and result"
+    },
+    {
+      "surface": "native child completion delivery",
+      "observed": "returned value 1"
+    }
+  ],
+  "summary": {
+    "runtime_native_child_delegation_observed": true,
+    "child_profile_override_request_acceptance_observed": true,
+    "effective_model_verified": false,
+    "effective_reasoning_verified": false,
+    "current_exposed_runtime_metadata_supports_effective_profile_verification": false
+  },
+  "evidence_boundary": [
+    "This record persists the user's supplied Codex Desktop metadata-observability canary report; the persistence step does not independently re-execute the Codex session.",
+    "The canary establishes that the runtime accepted the requested gpt-5.6-luna / low child override, spawned the child, and delivered its result.",
+    "None of the inspected runtime-native metadata surfaces independently exposed the child's effective model or reasoning profile.",
+    "Child self-description, response quality, latency, token usage, or cost inference are not accepted as effective-profile evidence.",
+    "The supplied canary report did not independently establish the repository revision used by the Codex session; persistence_main_sha records only the repository main SHA at persistence time and must not be cited as the canary's runtime baseline.",
+    "This record is not a BEH-017 run and does not add a new normative policy."
+  ]
+}
