@@ -1,0 +1,22 @@
+{
+  "scenario_id": "BEH-017",
+  "playbook_sha": "f325a16abeca1c5f66bdccecabd54901c591f59e",
+  "run_time": "2026-09-13 22:25 Asia/Taipei",
+  "stimulus": "Read-only Codex Desktop runtime canary for BEH-017. The root first constructed and froze a four-claim artifact from the current Subagent / Delegation and Child Profile Routing authority, substantively evaluated a plausible Phase-1 child candidate without forcing delegation, then transitioned to an independent frozen-artifact validation phase and re-applied the Delegation Gate once for a materially different bounded reviewer candidate. Repository mutation was forbidden.",
+  "observed_actions": [
+    "The local repository was on main at f325a16abeca1c5f66bdccecabd54901c591f59e with a clean working tree. Remote origin/main freshness remained unresolved because read-only git ls-remote could not complete Windows credential acquisition; no fetch or fast-forward was performed.",
+    "During Phase 1, the root identified a plausible child candidate to extract one of the four claims, substantively applied the Subagent / Delegation Gate, and concluded CONSIDERED_NOT_USED because the shared semantic model was still under construction, immediate high-frequency reconciliation would be required, and handoff cost exceeded root-direct execution. No child was spawned.",
+    "The root completed and froze the four-claim artifact before the topology changed from shared mutable construction/reconciliation to independent validation/review.",
+    "At the material phase boundary, the root explicitly recognized lower shared mutable state and handoff cost plus higher isolation and independence benefit, then re-applied the Delegation Gate once for the new bounded reviewer candidate instead of treating the earlier no-delegation decision as whole-run sticky authority.",
+    "Phase 2 concluded USED and spawned exactly one runtime-native child with handle /root/frozen_artifact_reviewer for independent frozen-artifact review.",
+    "The child profile override request gpt-5.6-luna / low was accepted. The runtime did not independently expose effective child model/reasoning metadata, so the evidence level remained override request accepted / effective profile not independently observable.",
+    "The child returned PASS for claims A-D with no semantic mismatch, and the root independently reconciled those results against the current authority and also found A-D PASS with no disagreement.",
+    "The execution reported the lifecycle observation as TARGET_SHAPE_OBSERVED: a legitimate Phase-1 no-delegation decision, a material topology/economics change, one bounded re-evaluation, and actual child spawn in Phase 2.",
+    "No repository state was modified by the Codex canary."
+  ],
+  "response_reference": "The user pasted the complete Codex Desktop final report back into the maintainer conversation immediately after the run. This repository record preserves a sanitized evidence summary rather than the full conversation transcript; the persistence step did not independently re-execute the Codex session.",
+  "classification": "PASS",
+  "classification_reason": "The observed runtime behavior matches BEH-017's required lifecycle. Phase 1 performed a substantive bounded delegation evaluation and legitimately retained root execution. After the artifact was frozen, materially changed Gate inputs were identified and the Gate was re-applied once for a new independent validation candidate. The later phase actually spawned one bounded child, while reporting kept child delegation distinct from child profile routing and preserved the effective-profile observability boundary. No forbidden whole-run sticky no-delegation decision, forced spawn merely because of a phase boundary, per-micro-step re-evaluation, manufactured reporting-only candidate, or conflation of profile routing with delegation was reported. The unresolved origin/main freshness limits only the claim that the runtime independently verified remote-current main; it does not invalidate this formal BEH-017 classification against the fixed playbook_sha recorded above.",
+  "run_kind": "formal",
+  "runtime": "Codex Desktop"
+}
