@@ -6,11 +6,11 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 ## Section Router
 
-- root／child model profile、override authority、mixed-profile execution → `Root / Child Profile Routing`、`Subagent / Delegation Gate`、`Parallel Multi-Agent Gate`、`升級處理`
+- root／child model profile、override authority、mixed-profile execution → `Root / Child Profile Routing`、`Delegation Opportunity Scan`、`Subagent / Delegation Gate`、`Parallel Multi-Agent Gate`、`升級處理`
 - Codex user-facing language／timestamp／child-delegation／child-profile summary → `Codex 回報語言`、`Codex 回報時間戳`、`Child Profile Routing 回報`、`Reporting Pre-Send Gate`
 - repository execution／Git／permission preflight → `Prompt execution gates`、`REPOSITORY_EXECUTION.md`
 - model ladder／reasoning calibration／usage budget → `模型分工`、`推理強度校準`、`Usage window-aware execution budgeting`
-- Context expansion／subagent decision／routing observability／parallelization → `Progressive Context`、`Subagent / Delegation Gate`、`Routing Decision Observability`、`Parallel Multi-Agent Gate`
+- Context expansion／subagent decision／routing observability／parallelization → `Progressive Context`、`Delegation Opportunity Scan`、`Subagent / Delegation Gate`、`Routing Decision Observability`、`Parallel Multi-Agent Gate`
 - execution mode／scope escalation／source readability → `執行模式`、`Scope Expansion ≠ Model Escalation`、`Source readability boundary`
 - tools／batch scheduling／long-running output → `Tool／Skill Surface Discipline`、`Independent Tool Scheduling Discipline`、`Long-running tool output discipline`
 - corrupted／runaway generation → `Runaway / Corrupted Generation STOP Guard`
@@ -213,7 +213,7 @@ Repository 很大不是使用 Sol／Astra 或 High 的理由。
 Condition-triggered 原則：
 
 - 不把特定方案名稱、固定 window 數字、model credit rate 或 promotional pricing 寫成穩定 baseline；volatile product facts 以當下官方 Rate Card / Help Center / product UI 為準。
-- 若官方 authority 顯示同一 account / plan 的多個 supported agentic features 可能共享 included usage allowance、usage-credit balance 或其他 resource pool，評估 Codex usage／credits 消耗時先確認 **resource pool scope 與同帳號 concurrent / recent agentic workloads**；不得把 quota／balance 變化預設全部歸因於目前 Codex thread，也不得在 shared-consumption evidence 尚未排除前直接推論 Codex token efficiency、model multiplier 或 client regression。Supported feature set、共享方式與 account-specific applicability 以最新官方 authority / Usage UI 為準，不把功能清單寫死。
+- 若官方 authority 顯示同一 account / plan 的多個 supported agentic features 可能共享 included usage allowance、usage-credit balance 或其他 resource pool，評估 Codex usage／credits 消耗時先確認 **resource pool scope 與同帳號 concurrent / recent agentic workloads**；不得把 quota／balance 變化預設全部歸因於目前 Codex thread，也不得在 shared-consumption evidence 尚未排除前直接推論 Codex token efficiency、model multiplier 或 client regression。Supported feature set、共享方式與 account-specific applicability 以最新官方 authority / Usage UI為準，不把功能清單寫死。
 - 使用高成本／受限模型前，除了確認 account／plan 的 shared resource pool，也確認是否存在 **model-specific allowance／entitlement scope**；不得從「總 Work／Codex allowance 尚有剩餘」推定目前模型仍可使用相同比例的 included allowance。Model-specific eligibility、included usage 與追加 credits 條件屬 volatile product facts，以當下官方 authority／Usage UI為準，不把方案或固定數字寫死。
 - 對 reset、credit、quota restoration 等 usage-resource action，在建議使用或實際消耗前先確認 resource semantics：additive、replacement、banked、pay-as-you-go 或其他當下官方定義。不得把 reset 一律視為額外額度，也不得在 semantics 未確認時假設 unused allowance 會保留。
 - 若存在短期 window，大型工作避免把低價值 discovery、重複 repo-wide exploration、無效 retry、非必要 full regression、verbose tool output 與高成本 reasoning 全集中在同一 window。
@@ -266,6 +266,19 @@ Codex 無權自行換 **root** model／reasoning。達到 root escalation condit
 **Progressive Reading 只控制 task-specific Context expansion，不得用來跳過本檔 always-on reporting contract。** 若 project governance 已 routing 到本檔，Codex 每次 execution 都至少取得 reporting contract，再對其他章節維持最低充分讀取。
 
 不要預設最大 Context、1M context、Fast、Ultra、Max 或 Multi-Agent。
+
+## Delegation Opportunity Scan
+
+若 current user instruction、project governance 或 admitted Prompt 已授權 subagent／delegation，Codex 在**啟動 execution**與後續出現 material phase boundary 時，應做一次低成本、bounded 的 delegation-opportunity scan：主動查看目前已知工作中，是否存在可清楚切割、可獨立驗證，而且相較 root 直接完成可能具有 material cost、quality、specialization、isolation 或 independence benefit 的 child candidate。
+
+- **Root 能安全完成整體 Task／Stage，不構成跳過這個 scan 的充分理由。** `root can finish` 只回答 root capability，不回答 delegation economics／quality。
+- Scan 只辨識 plausible candidate；真正是否 spawn 仍必須逐一通過下方 `Subagent / Delegation Gate`。**Actively look ≠ must delegate.**
+- 常見值得掃描的 surface 包括 bounded source／evidence gathering、static audit、independent review、deterministic verifier／validation、已 freeze contract 的 mechanical implementation；但這些只是候選類型，不建立自動 delegation。
+- 若目前仍是 tightly-coupled root-cause construction、共享 mutable state、單一 transaction boundary 或需要高頻 reconciliation，可直接判斷目前沒有合理 candidate；不要為形式硬拆 child。
+- 同一 topology／economics 沒有 material 改變時，不在每個 command、poll、compile 或 micro-step 重複 scan；implementation → validation／independent review／completion reconciliation 等 material phase change 才重新看一次。
+- 不得為了降低單價、換 model、增加 token budget、滿足 reporting 欄位或「讓 Child Routing 看起來有用」而製造 artificial work。
+
+核心原則：**先主動看是否存在值得 delegate 的 bounded work，再用 Gate 決定是否真的 delegate；root 足夠強不等於 child 一定沒有價值。**
 
 ## Subagent / Delegation Gate
 
@@ -385,7 +398,7 @@ Behavior-preserving／mechanical Stage 的完整 readability baseline 以 `RESEA
 
 Output suppression 不得破壞 validation contract；required diagnostics / audit / failure reproduction / security-safety evidence / formal gate log 應保留在適當 artifact/file，並可 targeted read。
 
-Long-running operation 已由 `DEBUG_VALIDATION.md` 的 supervision gate 確認為 healthy / active 後，**內部 bounded polling／inspection 可以依 correctness 需要繼續，但 user-facing progress update 預設採 event-driven，而不是 timer-driven**：
+Long-running operation 已由 `DEBUG_VALIDATION.md` 的 supervision gate 確認為 healthy / active 後，**內部 bounded polling／inspection可以依 correctness需要繼續，但 user-facing progress update 預設採 event-driven，而不是 timer-driven**：
 
 - 優先在 material phase／stage transition、materially new progress evidence、stall suspicion／state reclassification、completion、new blocker／permission boundary，或使用者明確詢問時回報。
 - 單純 wall-clock 經過一段時間、poll 次數增加，或只取得與上一則 substantially 相同的 progress evidence，不足以要求再送一則近似進度訊息。
