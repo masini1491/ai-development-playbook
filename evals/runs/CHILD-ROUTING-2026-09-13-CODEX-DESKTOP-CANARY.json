@@ -1,0 +1,73 @@
+{
+  "record_type": "child_routing_runtime_canary",
+  "record_version": 1,
+  "date": "2026-09-13",
+  "playbook_repository": "masini1491/ai-development-playbook",
+  "playbook_revision": "f325a16abeca1c5f66bdccecabd54901c591f59e",
+  "runtime": "Codex Desktop",
+  "execution_mode": "read-only closing canary",
+  "root_profile": {
+    "recommended_model": "Terra",
+    "recommended_reasoning": "Medium",
+    "effective_profile_observable": false
+  },
+  "repository_freshness": {
+    "final_branch": "main",
+    "local_head": "f325a16abeca1c5f66bdccecabd54901c591f59e",
+    "origin_main": "f325a16abeca1c5f66bdccecabd54901c591f59e",
+    "local_head_equals_origin_main": true,
+    "working_tree_clean": true
+  },
+  "child_delegation": {
+    "status": "USED",
+    "runtime_native_child_handle": "/root/current_main_routing_index_inspector",
+    "bounded_role": "read-only routing-index inspector",
+    "result_status": "MATCHES_FOUND",
+    "result_returned_through_runtime_agent_channel": true
+  },
+  "child_profile_routing": {
+    "status": "USED",
+    "requested_model": "gpt-5.6-luna",
+    "requested_reasoning": "low",
+    "override_request_accepted": true,
+    "effective_profile_observable": false,
+    "evidence_classification": "override request accepted / effective profile not independently observable"
+  },
+  "routing_index_observation": [
+    {
+      "id": "handoff.prompt-child-profile-routing",
+      "owner": "CHATGPT_WORKFLOW.md",
+      "section": "Prompt-authorized Child Profile Routing",
+      "kind": "contract"
+    },
+    {
+      "id": "execution.codex-child-profile-routing",
+      "owner": "CODEX_EXECUTION.md",
+      "section": "Root / Child Profile Routing",
+      "kind": "contract"
+    }
+  ],
+  "authority_sections_observed": [
+    "Prompt-authorized Child Profile Routing",
+    "Root / Child Profile Routing",
+    "Subagent / Delegation Gate",
+    "Child Profile Routing 回報（Completion / Final）"
+  ],
+  "root_reconciliation": {
+    "performed": true,
+    "source": "current PLAYBOOK_INDEX.json",
+    "child_result_matched_root_readback": true
+  },
+  "summary": {
+    "runtime_native_child_delegation_observed": true,
+    "child_profile_override_request_acceptance_observed": true,
+    "effective_child_profile_verified": false,
+    "current_main_freshness_verified_in_report": true
+  },
+  "evidence_boundary": [
+    "This record persists the user's supplied Codex Desktop closing-canary report; the persistence step does not independently re-execute the Codex session.",
+    "The observed runtime path supports native child spawn, child result return through the runtime agent channel, accepted child profile override request, and root reconciliation against the current routing index.",
+    "The runtime did not independently expose effective child model or reasoning metadata, so this record must not be cited as proof that the child actually executed with gpt-5.6-luna / low.",
+    "This canary is not a BEH-017 run. BEH-017 specifically tests phase-boundary delegation re-evaluation after an earlier no-delegation decision."
+  ]
+}
