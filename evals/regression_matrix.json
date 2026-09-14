@@ -20,7 +20,9 @@
     "BEH-016",
     "BEH-017",
     "BEH-018",
-    "BEH-019"
+    "BEH-019",
+    "BEH-020",
+    "BEH-021"
   ],
   "change_classes": {
     "repository-authority": [
@@ -31,12 +33,15 @@
       "BEH-012",
       "BEH-013",
       "BEH-014",
-      "BEH-019"
+      "BEH-019",
+      "BEH-020"
     ],
     "coordination-admission": [
       "BEH-002",
       "BEH-003",
-      "BEH-013"
+      "BEH-013",
+      "BEH-020",
+      "BEH-021"
     ],
     "runtime-and-validation-placement": [
       "BEH-004",
@@ -57,7 +62,13 @@
     "actor-admission-and-handoff": [
       "BEH-010",
       "BEH-013",
-      "BEH-019"
+      "BEH-019",
+      "BEH-020",
+      "BEH-021"
+    ],
+    "prompt-delivery": [
+      "BEH-020",
+      "BEH-021"
     ],
     "delegation-and-child-routing": [
       "BEH-017"
@@ -74,7 +85,9 @@
       "BEH-013",
       "BEH-014",
       "BEH-015",
-      "BEH-019"
+      "BEH-019",
+      "BEH-020",
+      "BEH-021"
     ],
     "information-integrity": [
       "BEH-008",
@@ -96,7 +109,9 @@
       "BEH-012",
       "BEH-013",
       "BEH-014",
-      "BEH-019"
+      "BEH-019",
+      "BEH-020",
+      "BEH-021"
     ],
     "permission-recovery": [
       "BEH-004",
