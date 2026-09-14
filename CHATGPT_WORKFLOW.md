@@ -279,9 +279,9 @@ ChatGPT 不因「還能做更多」就自動建立一串 TASKS/BACKLOG。
 
 ### Proactive New-Session Handoff Gate
 
-Bounded compaction 與 fresh-session handoff 是不同強度的 conversation-state action。當同一聊天室的可觀察 session-health risk 已高到「繼續在原 session reasoning」比「建立最低充分 checkpoint 後重新 rehydrate」更容易誤用 stale premise、遺漏 constraint 或增加 recovery cost時，ChatGPT 應**主動建議從下一個適當 Stage／decision boundary 開新聊天室接續**；不要等到實際 context failure、明顯失憶或使用者主動抱怨才處理。
+Bounded compaction 與 fresh-session handoff 是不同強度的 conversation-state action。當同一聊天室的可觀察 session-health risk 已高到「繼續在原 session reasoning」比「建立最低充分 checkpoint 後重新 rehydrate」更容易誤用 stale premise、遺漏 constraint 或增加 recovery cost 時，ChatGPT 應**主動建議從下一個適當 Stage／decision boundary 開新聊天室接續**；不要等到實際 context failure、明顯失憶或使用者主動抱怨才處理。
 
-可支持主動 handoff 的 material signals包括：
+可支持主動 handoff 的 material signals 包括：
 
 - current answer 已反覆需要重新定位 current premise／decision／authority，才能避免被大量舊 branch 或 superseded state干擾；
 - 使用者需要糾正先前已明確成立的 material constraint／evidence／scope，且原因與長 session 的 stale-context confusion一致；
@@ -346,7 +346,7 @@ Compaction 是 conversation-level state management，**不自動產生任何 dur
 觸發規則：
 
 - **Explicit update signal**：使用者或 current project governance 明確指出 Playbook／project rules 已更新、要求 latest，或已有 concrete evidence 顯示目前 working identity 可能 stale 時，立即 probe。
-- **Material boundary trigger**：Stage 完成、task responsibility materially改變、準備 architecture freeze、repository mutation、completion acceptance、Codex handoff、deployment／external mutation或其他 material decision 前，若 Playbook currentness 可能影響本次 scope／actor／authority／validation／reporting／STOP 判斷，先做一次 declared floating ref 的 HEAD probe。
+- **Material boundary trigger**：Stage 完成、task responsibility materially 改變、準備 architecture freeze、repository mutation、completion acceptance、Codex handoff、deployment／external mutation或其他 material decision 前，若 Playbook currentness 可能影響本次 scope／actor／authority／validation／reporting／STOP 判斷，先做一次 declared floating ref 的 HEAD probe。
 - **Currentness-sensitive decision trigger**：即使沒有明確 Stage boundary，只要當前回答或 next action 的 correctness materially 依賴 current Playbook rule，而該 rule 自上次 identity 確認後可能已被新 evidence／revision改變，也應先 probe。
 - **Concrete stale evidence**：已知另一 session、maintainer action、commit notification、read-back mismatch 或其他可驗證訊號顯示 Playbook authority可能已前進時，立即 probe。
 - **Wall-clock age alone ≠ freshness trigger**：經過幾分鐘／幾小時、聊天室閒置多久或訊息數量本身，不足以要求重新查 HEAD；不建立固定分鐘數、background timer、scheduler 或 per-message polling。沒有 material freshness signal 時，沿用 last-confirmed identity直到出現上述 trigger。
@@ -433,13 +433,21 @@ ChatGPT 在 `Actor Admission / Handoff Gate` 已判定需要 Codex handoff 後�
 - `Child Routing Forecast: POSSIBLE`：已有 plausible candidate，但是否值得 delegation 仍取決於 runtime evidence／topology。
 - `Child Routing Forecast: RECOMMENDED`：目前已知工作中已有 bounded、可獨立驗證，且預期具 material cost／quality／specialization／isolation benefit 的 candidate；仍不形成 spawn 義務。
 
-Prompt 只帶最低充分 forecast：狀態 + 一句 planning rationale；只有會實質改善 execution planning 時才補 candidate responsibility／delegation trigger。不要在 planning 階段硬編 child 數量或 profile。
+Prompt 必須帶最低充分 forecast transport：狀態 + 一句 planning rationale + 一句 execution rule，明確寫出這只是 non-binding planning hint，Codex 仍需在 runtime 依 `Delegation Opportunity Scan`／`Subagent / Delegation Gate` 重新判斷。只有會實質改善 execution planning 時才補 candidate responsibility／delegation trigger；不要在 planning 階段硬編 child 數量或 profile。
+
+最低充分 copy-ready 語意可寫成：
+
+```text
+Child Routing Forecast: POSSIBLE
+Planning rationale: <one bounded reason>
+Execution rule: Non-binding planning hint; re-evaluate at runtime through Delegation Opportunity Scan / Subagent Delegation Gate.
+```
 
 Forecast 不授權 spawn、parallelization、child profile override、scope／write／permission／credential／deployment 擴張。Codex 仍必須依 `CODEX_EXECUTION.md` 的 `Delegation Opportunity Scan` 與 `Subagent / Delegation Gate` 在 execution time 自行判斷；`POSSIBLE`／`RECOMMENDED` ≠ must delegate，`NONE` 也不禁止 Codex 在 runtime 出現新 material evidence 時重新辨識合法 candidate。
 
 ChatGPT 在 Codex completion reconciliation 時可把 forecast 與既有 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 對照，作為後續 planning feedback；forecast／actual 不一致本身不是 failure，也不要求建立新的 trace store、schema 或 logging framework。
 
-TASKS Short-launch 仍保持 lean：若 Hot contract 已保存等價 planning cue，launch只引用；否則最多補一條 compact forecast，不複製整套 delegation policy。
+TASKS Short-launch 仍保持 lean：若 Hot contract 已保存等價 planning cue，launch只引用；否則最多補上述 compact forecast transport，不複製整套 delegation policy。
 
 核心原則：**ChatGPT may forecast delegation value during planning; Codex retains execution-time delegation authority. Forecast ≠ spawn instruction.**
 
@@ -456,7 +464,7 @@ TASKS Short-launch 仍保持 lean：若 Hot contract 已保存等價 planning cu
 
 ChatGPT 不需要在產 Prompt 時預先列舉所有可能 child 或硬編每個 profile。若 exact bounded subtask／profile 只有 runtime 才能判斷，可直接授權 Codex在上述 gate內自行選最低充分 child profile；若目前 evidence 已足以固定某個 child role／profile，則可在 Prompt 中明確 pin 該 override。
 
-TASKS Short-launch 也適用本預設，但保持 lean：若 project governance／Hot contract 尚未提供等價 authorization，只需補一條 bounded child-routing authorization pointer，不複製整段 execution policy。若 current task 明顯不適合 delegation、execution surface不支援 child profile override，或 higher authority禁止 subagent，則不啟用／明確關閉，不得假裝 mixed-profile execution可用。
+TASKS Short-launch 也適用本預設，但保持 lean：若 project governance／Hot contract 尚未提供等價 authorization，只需補一條 bounded child-routing authorization pointer，不複製整段 execution policy。若 current task 明顯不適合 delegation、execution surface不支援 child profile override，或 higher authority禁止 subagent，則不啟用／明確關閉，不得假裝 mixed-profile execution 可用。
 
 核心原則：**Root profile 是 launch choice；合法 child profile 是 runtime routing choice。Prompt 預設授權 bounded mixed-model／mixed-reasoning execution，但不把 profile switching 變成 delegation authority。**
 
