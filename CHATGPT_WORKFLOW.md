@@ -10,7 +10,7 @@
 - task contract／clarification／scope exclusion → `Task Contract：Goal / Context / Exclusions`
 - durable work／Hot-Cold admission／follow-up → `Persistence／Coordination Admission`、`AI-originated Durable Work Admission Gate`、`Task Identity / Revision Gate`、`Follow-up / New Work Gate`
 - 長 session compaction／freshness／handoff → `Session Compaction / Rehydration Contract`
-- actor 選擇／Codex handoff／Prompt mode → `Actor Admission / Handoff Gate`、`Codex Prompt 模式選擇`、`Prompt 建議設定與固定資訊`、`Prompt-authorized Child Profile Routing`
+- actor 選擇／Codex handoff／Prompt mode → `Actor Admission / Handoff Gate`、`Codex Prompt 模式選擇`、`Prompt 建議設定與固定資訊`、`Child Routing Forecast`、`Prompt-authorized Child Profile Routing`
 - copy-ready Prompt／Prompt slimming → `可直接複製的 Codex Prompt`、`Prompt lean／長度診斷`
 - ChatGPT sandbox／deterministic runtime → `ChatGPT-side Runtime Execution`
 - Codex completion reconciliation → `Codex 結果 reconciliation`
@@ -281,7 +281,7 @@ ChatGPT 不因「還能做更多」就自動建立一串 TASKS/BACKLOG。
 
 Bounded compaction 與 fresh-session handoff 是不同強度的 conversation-state action。當同一聊天室的可觀察 session-health risk 已高到「繼續在原 session reasoning」比「建立最低充分 checkpoint 後重新 rehydrate」更容易誤用 stale premise、遺漏 constraint 或增加 recovery cost時，ChatGPT 應**主動建議從下一個適當 Stage／decision boundary 開新聊天室接續**；不要等到實際 context failure、明顯失憶或使用者主動抱怨才處理。
 
-可支持主動 handoff 的 material signals 包括：
+可支持主動 handoff 的 material signals包括：
 
 - current answer 已反覆需要重新定位 current premise／decision／authority，才能避免被大量舊 branch 或 superseded state干擾；
 - 使用者需要糾正先前已明確成立的 material constraint／evidence／scope，且原因與長 session 的 stale-context confusion一致；
@@ -422,6 +422,26 @@ Codex model / reasoning / Context / Agent / execution-mode成本規則由 `CODEX
 Direct Short Prompt / Standalone Full Prompt前段至少包含 target repo/branch、推薦 root model、root reasoning、1–3句理由、是否值得便宜模型前置蒐證；必要時補 Context / execution mode。這裡的 model/reasoning 是**使用者要在 Codex UI／launch surface 選的 root profile**，不是宣告整個 Prompt 執行期間所有合法 child 都必須沿用同一 profile。
 
 TASKS Short-launch若 referenced Hot Stage已保存設定，不重複展開；可在可複製 Prompt外用一行顯示 root UI 建議。
+
+### Child Routing Forecast
+
+ChatGPT 在 `Actor Admission / Handoff Gate` 已判定需要 Codex handoff 後、產生 copy-ready Prompt 前，對 current Task／Stage 做一次低成本 **pre-execution forecast**，判斷目前 evidence 是否已顯示值得 Codex 在 runtime 進一步評估的 bounded child candidate。這是 planning hint，不是 execution decision。
+
+最低充分狀態：
+
+- `Child Routing Forecast: NONE`：目前沒有 materially plausible child candidate；不要為了形式創造一個。
+- `Child Routing Forecast: POSSIBLE`：已有 plausible candidate，但是否值得 delegation 仍取決於 runtime evidence／topology。
+- `Child Routing Forecast: RECOMMENDED`：目前已知工作中已有 bounded、可獨立驗證，且預期具 material cost／quality／specialization／isolation benefit 的 candidate；仍不形成 spawn 義務。
+
+Prompt 只帶最低充分 forecast：狀態 + 一句 planning rationale；只有會實質改善 execution planning 時才補 candidate responsibility／delegation trigger。不要在 planning 階段硬編 child 數量或 profile。
+
+Forecast 不授權 spawn、parallelization、child profile override、scope／write／permission／credential／deployment 擴張。Codex 仍必須依 `CODEX_EXECUTION.md` 的 `Delegation Opportunity Scan` 與 `Subagent / Delegation Gate` 在 execution time 自行判斷；`POSSIBLE`／`RECOMMENDED` ≠ must delegate，`NONE` 也不禁止 Codex 在 runtime 出現新 material evidence 時重新辨識合法 candidate。
+
+ChatGPT 在 Codex completion reconciliation 時可把 forecast 與既有 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 對照，作為後續 planning feedback；forecast／actual 不一致本身不是 failure，也不要求建立新的 trace store、schema 或 logging framework。
+
+TASKS Short-launch 仍保持 lean：若 Hot contract 已保存等價 planning cue，launch只引用；否則最多補一條 compact forecast，不複製整套 delegation policy。
+
+核心原則：**ChatGPT may forecast delegation value during planning; Codex retains execution-time delegation authority. Forecast ≠ spawn instruction.**
 
 ### Prompt-authorized Child Profile Routing
 
