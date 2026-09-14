@@ -18,6 +18,7 @@ BASELINE_ASSIGN_RE = re.compile(
 VERSION_TOKEN_RE = re.compile(r"`?(v\d+\.\d+\.\d+)`?")
 PROJECT_AI_MODE_RE = re.compile(r"(?im)^\s*(?:[-*]\s*)?Project AI mode\s*[:：]\s*(.+?)\s*$")
 LEGACY_CHATGPT_PROJECT_MODE_RE = re.compile(r"(?im)^\s*(?:[-*]\s*)?ChatGPT Project Mode\s*[:：]\s*(.+?)\s*$")
+MARKDOWN_FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})")
 FIELD_RE_TEMPLATE = r"(?im)^\s*[-*]\s*{label}\s*:\s*(.+?)\s*$"
 PLACEHOLDER_MARKERS = (
     "<ChatGPT-Only | ChatGPT+Codex>",
@@ -61,6 +62,29 @@ def _is_placeholder(value: str) -> bool:
     return any(marker in value for marker in PLACEHOLDER_MARKERS) or value.startswith("<")
 
 
+def _without_fenced_markdown(text: str) -> str:
+    """Preserve line structure while blanking fenced Markdown blocks."""
+    rendered: list[str] = []
+    active_fence: tuple[str, int] | None = None
+    for line in text.splitlines(keepends=True):
+        if active_fence is None:
+            match = MARKDOWN_FENCE_RE.match(line)
+            if match:
+                token = match.group(1)
+                active_fence = (token[0], len(token))
+                rendered.append("\n" if line.endswith("\n") else "")
+            else:
+                rendered.append(line)
+            continue
+
+        char, minimum_length = active_fence
+        closing = re.match(rf"^\s*{re.escape(char)}{{{minimum_length},}}\s*$", line.rstrip("\r\n"))
+        if closing:
+            active_fence = None
+        rendered.append("\n" if line.endswith("\n") else "")
+    return "".join(rendered)
+
+
 def _baseline_findings(text: str) -> list[Finding]:
     explicit = BASELINE_ASSIGN_RE.findall(text)
     if len(explicit) == 1:
@@ -79,8 +103,9 @@ def _baseline_findings(text: str) -> list[Finding]:
 
 
 def _project_ai_mode_findings(text: str) -> list[Finding]:
-    modes = [_strip_inline_code(value) for value in PROJECT_AI_MODE_RE.findall(text)]
-    legacy_modes = [_strip_inline_code(value) for value in LEGACY_CHATGPT_PROJECT_MODE_RE.findall(text)]
+    active_text = _without_fenced_markdown(text)
+    modes = [_strip_inline_code(value) for value in PROJECT_AI_MODE_RE.findall(active_text)]
+    legacy_modes = [_strip_inline_code(value) for value in LEGACY_CHATGPT_PROJECT_MODE_RE.findall(active_text)]
 
     if not modes:
         if legacy_modes:
