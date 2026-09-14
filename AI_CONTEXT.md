@@ -282,7 +282,7 @@ Repository 已有反覆 retrieval pain、高頻 AI 使用、machine routing meta
 - Checker 驗證 structure／routing invariant，不複製 canonical policy／status／工程結論成第二份 authority。
 - 新增 checker 本身也必須通過 maintenance-value／retrieval-cost 判斷；小型 direct-routing repository 若 bounded manual check 更便宜，就不要為形式自動化。
 - Hot-path guard 不要求一次清理全部 legacy；主要形成 **forward ratchet**，防止新的 AI-facing mutation 在沒有 concrete retrieval／correctness benefit 時持續惡化 common path。
-- 若 warning 長期沒有 decision value、false-positive noise 過高或 checker maintenance cost 超過捕捉到的 regression value，應縮減／移除，而不是因存在就永久保留。
+- 若 warning 長期沒有 decision value、false-positive noise 過高或 checker maintenance cost超過捕捉到的 regression value，應縮減／移除，而不是因存在就永久保留。
 
 核心原則：**Deterministically fail broken routing; review growth as a signal. Guard the hot path without turning local heuristics into universal correctness law.**
 
@@ -399,7 +399,7 @@ Historical、superseded、archived material 應清楚標示並預設不進 curre
 
 Normal task 取得 historical snippet 時，先辨識其 authority / freshness，不得因 wording 命中就與 current canonical evidence 等權。
 
-詳細 completed execution history 優先依 Git history保存；active docs 不維護冗長 Prompt-era changelog。
+詳細 completed execution history 優先依 Git history 保存；active docs 不維護冗長 Prompt-era changelog。
 
 ## Current Snapshot Freshness
 
