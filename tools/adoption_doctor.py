@@ -11,12 +11,16 @@ import sys
 
 MIN_PYTHON = (3, 11)
 PLAYBOOK_REPO = "masini1491/ai-development-playbook"
+ALLOWED_PROJECT_AI_MODES = ("ChatGPT-Only", "ChatGPT+Codex")
 BASELINE_ASSIGN_RE = re.compile(
     r"(?im)^\s*(?:[-*]\s*)?playbook\s+baseline\s*[:：]\s*`?(main|v\d+\.\d+\.\d+)`?\s*[。.]?\s*$"
 )
 VERSION_TOKEN_RE = re.compile(r"`?(v\d+\.\d+\.\d+)`?")
+PROJECT_AI_MODE_RE = re.compile(r"(?im)^\s*(?:[-*]\s*)?Project AI mode\s*[:：]\s*(.+?)\s*$")
+LEGACY_CHATGPT_PROJECT_MODE_RE = re.compile(r"(?im)^\s*(?:[-*]\s*)?ChatGPT Project Mode\s*[:：]\s*(.+?)\s*$")
 FIELD_RE_TEMPLATE = r"(?im)^\s*[-*]\s*{label}\s*:\s*(.+?)\s*$"
 PLACEHOLDER_MARKERS = (
+    "<ChatGPT-Only | ChatGPT+Codex>",
     "<path / document / source>",
     "<TASKS.md / equivalent / none>",
     "<command / document / manual gate / none>",
@@ -72,6 +76,60 @@ def _baseline_findings(text: str) -> list[Finding]:
     if mentions:
         return [_finding("WARN", "BASELINE_NOT_EXPLICIT", f"Playbook baseline is mentioned but not declared as one explicit `Playbook baseline:` value: {', '.join(sorted(mentions))}")]
     return [_finding("WARN", "BASELINE_MISSING", "No recognizable `Playbook baseline:` declaration found.")]
+
+
+def _project_ai_mode_findings(text: str) -> list[Finding]:
+    modes = [_strip_inline_code(value) for value in PROJECT_AI_MODE_RE.findall(text)]
+    legacy_modes = [_strip_inline_code(value) for value in LEGACY_CHATGPT_PROJECT_MODE_RE.findall(text)]
+
+    if not modes:
+        if legacy_modes:
+            rendered = ", ".join(legacy_modes)
+            return [_finding(
+                "WARN",
+                "PROJECT_AI_MODE_LEGACY_ONLY",
+                "Legacy `ChatGPT Project Mode:` declaration found without current `Project AI mode:`; "
+                f"migrate to one of {', '.join(ALLOWED_PROJECT_AI_MODES)} and keep project phase as a separate concept. "
+                f"Legacy value(s): {rendered}",
+            )]
+        return [_finding(
+            "WARN",
+            "PROJECT_AI_MODE_UNDECLARED",
+            "No `Project AI mode:` declaration found; select ChatGPT-Only or ChatGPT+Codex instead of inferring actor topology.",
+        )]
+
+    findings: list[Finding] = []
+    if len(modes) > 1:
+        findings.append(_finding(
+            "FAIL",
+            "PROJECT_AI_MODE_AMBIGUOUS",
+            f"Multiple `Project AI mode:` declarations found: {', '.join(modes)}",
+        ))
+    else:
+        mode = modes[0]
+        if _is_placeholder(mode):
+            findings.append(_finding(
+                "WARN",
+                "PROJECT_AI_MODE_PLACEHOLDER",
+                f"Project AI mode still contains a placeholder: {mode}",
+            ))
+        elif mode not in ALLOWED_PROJECT_AI_MODES:
+            findings.append(_finding(
+                "FAIL",
+                "PROJECT_AI_MODE_INVALID",
+                f"Unsupported Project AI mode: {mode}; allowed values are {', '.join(ALLOWED_PROJECT_AI_MODES)}.",
+            ))
+        else:
+            findings.append(_finding("PASS", "PROJECT_AI_MODE_DECLARED", f"Project AI mode is declared: {mode}"))
+
+    if legacy_modes:
+        findings.append(_finding(
+            "WARN",
+            "PROJECT_AI_MODE_LEGACY_COEXISTS",
+            "Legacy `ChatGPT Project Mode:` coexists with `Project AI mode:`; rename/remove the legacy field so project phase and AI collaboration mode cannot be confused.",
+        ))
+
+    return findings
 
 
 def _declaration_findings(text: str, label: str, code_prefix: str) -> list[Finding]:
@@ -139,11 +197,12 @@ def check_project(root: Path) -> list[Finding]:
         findings.append(_finding("FAIL", "PLAYBOOK_DECLARATION_MISSING", f"AGENTS.md does not reference {PLAYBOOK_REPO}."))
 
     if "CHAT_INIT.md" in text:
-        findings.append(_finding("PASS", "BOOTSTRAP_ROUTED", "AGENTS.md routes new sessions to CHAT_INIT.md."))
+        findings.append(_finding("PASS", "BOOTSTRAP_ROUTED", "AGENTS.md routes Playbook adoption through CHAT_INIT.md."))
     else:
         findings.append(_finding("FAIL", "BOOTSTRAP_ROUTING_MISSING", "AGENTS.md does not route Playbook adoption through CHAT_INIT.md."))
 
     findings.extend(_baseline_findings(text))
+    findings.extend(_project_ai_mode_findings(text))
 
     present = sorted(marker for marker in PLACEHOLDER_MARKERS if marker in text)
     if present:
@@ -168,6 +227,7 @@ def check_project(root: Path) -> list[Finding]:
         "adoption does not grant",
         "does not grant",
         "不代表取得額外",
+        "不會跳過 Current Write Target",
     )
     if any(marker.lower() in text.lower() for marker in markers):
         findings.append(_finding("PASS", "NO_AUTHORITY_EXPANSION_MARKER", "Playbook adoption includes a no-authority-expansion marker."))
