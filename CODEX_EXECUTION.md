@@ -6,11 +6,11 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 ## Section Router
 
-- root／child model profile、override authority、mixed-profile execution → `Root / Child Profile Routing`、`Delegation Opportunity Scan`、`Subagent / Delegation Gate`、`Parallel Multi-Agent Gate`、`升級處理`
+- root／child model profile、override authority、mixed-profile execution → `Root / Child Profile Routing`、`Delegation Opportunity Scan`、`Subagent / Delegation Gate`、`Nested Routing / Recursive Orchestration Guard`、`Parallel Multi-Agent Gate`、`升級處理`
 - Codex user-facing language／timestamp／child-delegation／child-profile summary → `Codex 回報語言`、`Codex 回報時間戳`、`Child Profile Routing 回報`、`Reporting Pre-Send Gate`
 - repository execution／Git／permission preflight → `Prompt execution gates`、`REPOSITORY_EXECUTION.md`
 - model ladder／reasoning calibration／usage budget → `模型分工`、`推理強度校準`、`Usage window-aware execution budgeting`
-- Context expansion／subagent decision／routing observability／parallelization → `Progressive Context`、`Delegation Opportunity Scan`、`Subagent / Delegation Gate`、`Routing Decision Observability`、`Parallel Multi-Agent Gate`
+- Context expansion／subagent decision／routing observability／parallelization → `Progressive Context`、`Delegation Opportunity Scan`、`Subagent / Delegation Gate`、`Nested Routing / Recursive Orchestration Guard`、`Routing Decision Observability`、`Parallel Multi-Agent Gate`
 - execution mode／scope escalation／source readability → `執行模式`、`Scope Expansion ≠ Model Escalation`、`Source readability boundary`
 - tools／batch scheduling／long-running output → `Tool／Skill Surface Discipline`、`Independent Tool Scheduling Discipline`、`Long-running tool output discipline`
 - corrupted／runaway generation → `Runaway / Corrupted Generation STOP Guard`
@@ -302,6 +302,19 @@ Delegation 成立後，才依 `Root / Child Profile Routing` 判斷 child 繼承
 - 不為了 final reporting 人為創造 child candidate。只有真的存在 plausible candidate 並做 substantive Gate 判斷時，才形成 `CONSIDERED_NOT_USED` observability。
 
 不得把加 agent 當 retry 方法。
+
+## Nested Routing / Recursive Orchestration Guard
+
+一次 parent → child delegation 只授權**該次 bounded responsibility**；它不會自動授權 child 把工作再次展開成任意深度的 skill／agent／grandchild orchestration tree。**Delegation authority is not transitive by default.**
+
+- Child-side skill／agent trigger 命中、角色名稱相似、prompt 出現 `review`／`test`／`investigate` 等字樣，或某個 workflow 平常會再 fan out，都不能單獨成立新的 nested delegation authority。
+- 若 child 執行中真的出現一個 materially new nested candidate，必須以當下 responsibility、shared state、handoff／reconciliation cost、authority／permission 與 end-to-end benefit **重新通過 `Subagent / Delegation Gate`**；不得沿用 parent 原本的 `USED` 判定作為 sticky approval。
+- Bounded outside-voice／independent-review／validator child 的預設責任是完成被交付的 I/O 或 review question，而不是重新啟動 parent-equivalent full workflow。僅因 delegated prompt 看起來像某個 installed skill 的 trigger 而重建整套上層 orchestration，視為 recursion risk，不是有效 decomposition evidence。
+- 若 execution surface 支援 capability／skill filtering，對 bounded child 優先只暴露其責任真正需要的能力，並抑制不必要的 parent-equivalent orchestration skills／cross-model fanout；仍需保留的 nested capability則維持最小 surface。
+- 若 surface 無法可靠限制 child capability，不為符合本規則另建高複雜度 scheduler／wrapper；改以明確 bounded child contract、可觀察 routing evidence 與必要 STOP 條件控制風險。
+- 使用者／project governance 可明確授權 multi-level orchestration，但每一層仍受 current Task／Stage、write、permission、credential、deployment、cost 與 validation boundary約束；explicit recursive capability ≠ unbounded authority。
+
+核心原則：**Delegate bounded responsibility, not a self-replicating workflow. Parent → child approval does not automatically authorize child → grandchild routing.**
 
 ## Routing Decision Observability
 
