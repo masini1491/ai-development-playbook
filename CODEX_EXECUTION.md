@@ -213,7 +213,7 @@ Repository 很大不是使用 Sol／Astra 或 High 的理由。
 Condition-triggered 原則：
 
 - 不把特定方案名稱、固定 window 數字、model credit rate 或 promotional pricing 寫成穩定 baseline；volatile product facts 以當下官方 Rate Card / Help Center / product UI 為準。
-- 若官方 authority 顯示同一 account / plan 的多個 supported agentic features 可能共享 included usage allowance、usage-credit balance 或其他 resource pool，評估 Codex usage／credits 消耗時先確認 **resource pool scope 與同帳號 concurrent / recent agentic workloads**；不得把 quota／balance 變化預設全部歸因於目前 Codex thread，也不得在 shared-consumption evidence 尚未排除前直接推論 Codex token efficiency、model multiplier 或 client regression。Supported feature set、共享方式與 account-specific applicability 以最新官方 authority / Usage UI為準，不把功能清單寫死。
+- 若官方 authority 顯示同一 account / plan 的多個 supported agentic features 可能共享 included usage allowance、usage-credit balance 或其他 resource pool，評估 Codex usage／credits 消耗時先確認 **resource pool scope 與同帳號 concurrent / recent agentic workloads**；不得把 quota／balance 變化預設全部歸因於目前 Codex thread，也不得在 shared-consumption evidence 尚未排除前直接推論 Codex token efficiency、model multiplier 或 client regression。Supported feature set、共享方式與 account-specific applicability 以最新官方 authority / Usage UI 為準，不把功能清單寫死。
 - 使用高成本／受限模型前，除了確認 account／plan 的 shared resource pool，也確認是否存在 **model-specific allowance／entitlement scope**；不得從「總 Work／Codex allowance 尚有剩餘」推定目前模型仍可使用相同比例的 included allowance。Model-specific eligibility、included usage 與追加 credits 條件屬 volatile product facts，以當下官方 authority／Usage UI為準，不把方案或固定數字寫死。
 - 對 reset、credit、quota restoration 等 usage-resource action，在建議使用或實際消耗前先確認 resource semantics：additive、replacement、banked、pay-as-you-go 或其他當下官方定義。不得把 reset 一律視為額外額度，也不得在 semantics 未確認時假設 unused allowance 會保留。
 - 若存在短期 window，大型工作避免把低價值 discovery、重複 repo-wide exploration、無效 retry、非必要 full regression、verbose tool output 與高成本 reasoning 全集中在同一 window。
@@ -398,7 +398,7 @@ Behavior-preserving／mechanical Stage 的完整 readability baseline 以 `RESEA
 
 Output suppression 不得破壞 validation contract；required diagnostics / audit / failure reproduction / security-safety evidence / formal gate log 應保留在適當 artifact/file，並可 targeted read。
 
-Long-running operation 已由 `DEBUG_VALIDATION.md` 的 supervision gate 確認為 healthy / active 後，**內部 bounded polling／inspection可以依 correctness需要繼續，但 user-facing progress update 預設採 event-driven，而不是 timer-driven**：
+Long-running operation 已由 `DEBUG_VALIDATION.md` 的 supervision gate 確認為 healthy / active 後，**內部 bounded polling／inspection 可以依 correctness 需要繼續，但 user-facing progress update 預設採 event-driven，而不是 timer-driven**：
 
 - 優先在 material phase／stage transition、materially new progress evidence、stall suspicion／state reclassification、completion、new blocker／permission boundary，或使用者明確詢問時回報。
 - 單純 wall-clock 經過一段時間、poll 次數增加，或只取得與上一則 substantially 相同的 progress evidence，不足以要求再送一則近似進度訊息。
