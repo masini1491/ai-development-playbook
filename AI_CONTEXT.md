@@ -286,6 +286,19 @@ Repository 已有反覆 retrieval pain、高頻 AI 使用、machine routing meta
 
 核心原則：**Deterministically fail broken routing; review growth as a signal. Guard the hot path without turning local heuristics into universal correctness law.**
 
+### Optional Context Budget Regression Gate
+
+若 repository 的 high-frequency／always-on AI-facing surface 已能由實際 runtime／scanner semantics **deterministically enumerate**，且 recurring workload 顯示 Context growth 值得 machine-assisted regression control，可以建立 repository-specific Context budget；這是 opt-in guard，不是 Playbook-wide mandatory framework。
+
+- Budget 可以使用穩定且可重現的 local proxy，例如 bytes、token-equivalent estimate、entry／frontmatter size 或其他與實際載入集合有直接關係的 metric；**不要求 exact tokenizer**，但應說明 metric／估算來源與已知 error boundary，不把 approximate accounting 冒充 exact token truth。
+- 不建立跨 repository universal token／byte ceiling。Threshold 只代表該 repository 已量測 workload 的 regression budget；dynamic／無法可靠枚舉的 Context surface 繼續使用本檔 semantic gates，不為了量化製造假的精度。
+- Legitimate feature／governance growth 若確實需要提高 budget，應在**同一 change evidence**中同時更新 baseline／ceiling與理由，使 budget growth 成為可 review 的顯式 decision，而不是靜默漂移。
+- Context reduction 已落地並有 representative evidence 時，可將 ceiling **ratchet down** 鎖住改善；不要只因單次較小 measurement 就自動收緊，避免把 noise 變成 future false positive。
+- Budget regression 預設屬 growth／cost signal；除非 repository 已明確把某 deterministic limit 定義為 correctness contract，超標不應自動等同功能錯誤。
+- 若 metric 與實際 retrieval cost 的關聯失真、runtime loading semantics 已改變、false-positive noise 高，或維護 checker 的成本超過保護 common path 的價值，應重新校準、縮減或移除。
+
+核心原則：**Measure only enumerable high-frequency Context; use project-local ceilings as a forward ratchet, not a universal correctness law.**
+
 ## Generated Routing Metadata／Drift Check
 
 若 routing metadata 可以由 canonical structure 可靠推導，而且 workload 證明值得維護，優先 deterministic generation / check，避免人工維護第二份 inventory。
