@@ -197,7 +197,7 @@ def check_project(root: Path) -> list[Finding]:
         findings.append(_finding("FAIL", "PLAYBOOK_DECLARATION_MISSING", f"AGENTS.md does not reference {PLAYBOOK_REPO}."))
 
     if "CHAT_INIT.md" in text:
-        findings.append(_finding("PASS", "BOOTSTRAP_ROUTED", "AGENTS.md routes Playbook adoption through CHAT_INIT.md."))
+        findings.append(_finding("PASS", "BOOTSTRAP_ROUTED", "AGENTS.md routes new sessions to CHAT_INIT.md."))
     else:
         findings.append(_finding("FAIL", "BOOTSTRAP_ROUTING_MISSING", "AGENTS.md does not route Playbook adoption through CHAT_INIT.md."))
 
