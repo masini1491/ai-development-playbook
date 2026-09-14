@@ -147,6 +147,25 @@ project-specific authority 與 common Playbook 衝突，以 project-specific aut
         self.assertIn("PROJECT_AI_MODE_DECLARED", codes)
         self.assertIn("PROJECT_AI_MODE_LEGACY_COEXISTS", codes)
 
+    def test_fenced_legacy_project_mode_example_is_ignored(self) -> None:
+        text = self.healthy_agents() + "\nHistorical example:\n\n```text\nChatGPT Project Mode: `implementation`\n```\n"
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("PROJECT_AI_MODE_DECLARED", codes)
+        self.assertNotIn("PROJECT_AI_MODE_LEGACY_COEXISTS", codes)
+
+    def test_fenced_alternate_project_mode_examples_are_ignored(self) -> None:
+        text = self.healthy_agents() + (
+            "\nExamples:\n\n```text\n"
+            "Project AI mode: `ChatGPT-Only`\n"
+            "Project AI mode: `ChatGPT+Codex`\n"
+            "```\n"
+        )
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("PROJECT_AI_MODE_DECLARED", codes)
+        self.assertNotIn("PROJECT_AI_MODE_AMBIGUOUS", codes)
+
     def test_invalid_project_ai_mode_fails(self) -> None:
         text = self.healthy_agents().replace("ChatGPT+Codex", "implementation")
         root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
