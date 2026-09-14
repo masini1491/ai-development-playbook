@@ -25,6 +25,7 @@ class AdoptionDoctorTests(unittest.TestCase):
 
 本專案採用 `masini1491/ai-development-playbook` 作為共通 AI 開發基準。
 Playbook baseline: `main`
+Project AI mode: `ChatGPT+Codex`
 
 新 session 讀取 `CHAT_INIT.md`。
 
@@ -55,6 +56,7 @@ project-specific authority 與 common Playbook 衝突，以 project-specific aut
         template_path = Path(__file__).resolve().parents[1] / "examples" / "minimal-project" / "AGENTS.md"
         text = template_path.read_text(encoding="utf-8")
         replacements = {
+            "<ChatGPT-Only | ChatGPT+Codex>": "ChatGPT+Codex",
             "<path / document / source>": "docs/ARCHITECTURE.md",
             "<TASKS.md / equivalent / none>": "TASKS.md",
             "<command / document / manual gate / none>": "python -m unittest",
@@ -115,10 +117,62 @@ project-specific authority 與 common Playbook 衝突，以 project-specific aut
         self.assertIn("BASELINE_NOT_EXPLICIT", codes)
         self.assertNotIn("BASELINE_EXPLICIT", codes)
 
+    def test_project_ai_mode_chatgpt_only_is_valid(self) -> None:
+        text = self.healthy_agents().replace("ChatGPT+Codex", "ChatGPT-Only")
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("PROJECT_AI_MODE_DECLARED", codes)
+        self.assertNotIn("PROJECT_AI_MODE_INVALID", codes)
+
+    def test_missing_project_ai_mode_warns(self) -> None:
+        text = self.healthy_agents().replace("Project AI mode: `ChatGPT+Codex`\n", "")
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("PROJECT_AI_MODE_UNDECLARED", codes)
+
+    def test_legacy_project_mode_without_current_mode_warns_migration(self) -> None:
+        text = self.healthy_agents().replace("Project AI mode: `ChatGPT+Codex`", "ChatGPT Project Mode: `implementation`")
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("PROJECT_AI_MODE_LEGACY_ONLY", codes)
+        self.assertNotIn("PROJECT_AI_MODE_UNDECLARED", codes)
+
+    def test_legacy_project_mode_coexisting_with_current_mode_warns(self) -> None:
+        text = self.healthy_agents().replace(
+            "Project AI mode: `ChatGPT+Codex`",
+            "Project AI mode: `ChatGPT+Codex`\nChatGPT Project Mode: `implementation`",
+        )
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("PROJECT_AI_MODE_DECLARED", codes)
+        self.assertIn("PROJECT_AI_MODE_LEGACY_COEXISTS", codes)
+
+    def test_invalid_project_ai_mode_fails(self) -> None:
+        text = self.healthy_agents().replace("ChatGPT+Codex", "implementation")
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("PROJECT_AI_MODE_INVALID", codes)
+
+    def test_duplicate_project_ai_mode_declarations_fail(self) -> None:
+        text = self.healthy_agents().replace(
+            "Project AI mode: `ChatGPT+Codex`",
+            "Project AI mode: `ChatGPT+Codex`\nProject AI mode: `ChatGPT-Only`",
+        )
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("PROJECT_AI_MODE_AMBIGUOUS", codes)
+
     def test_known_placeholders_warn(self) -> None:
         text = self.healthy_agents().replace("`docs/ARCHITECTURE.md`", "<path / document / source>")
         root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
         codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("PLACEHOLDERS_PRESENT", codes)
+
+    def test_project_ai_mode_placeholder_warns(self) -> None:
+        text = self.healthy_agents().replace("`ChatGPT+Codex`", "`<ChatGPT-Only | ChatGPT+Codex>`")
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("PROJECT_AI_MODE_PLACEHOLDER", codes)
         self.assertIn("PLACEHOLDERS_PRESENT", codes)
 
     def test_missing_minimum_contract_declarations_warn(self) -> None:
