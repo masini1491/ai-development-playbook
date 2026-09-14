@@ -11,7 +11,7 @@
 - durable work／Hot-Cold admission／follow-up → `Persistence／Coordination Admission`、`AI-originated Durable Work Admission Gate`、`Task Identity / Revision Gate`、`Follow-up / New Work Gate`
 - 長 session compaction／freshness／handoff → `Session Compaction / Rehydration Contract`
 - actor 選擇／Codex handoff／Prompt mode → `Actor Admission / Handoff Gate`、`Codex Prompt 模式選擇`、`Prompt 建議設定與固定資訊`、`Child Routing Forecast`、`Prompt-authorized Child Profile Routing`
-- copy-ready Prompt／Prompt slimming → `可直接複製的 Codex Prompt`、`Prompt lean／長度診斷`
+- copy-ready Prompt／Prompt slimming／last-mile enforcement → `可直接複製的 Codex Prompt`、`Codex Prompt Pre-Send Gate`、`Prompt lean／長度診斷`
 - ChatGPT sandbox／deterministic runtime → `ChatGPT-side Runtime Execution`
 - Codex completion reconciliation → `Codex 結果 reconciliation`
 - repository write／permission／Git boundary → `REPOSITORY_EXECUTION.md`
@@ -21,7 +21,7 @@
 
 一般專案聊天室優先遵循：
 
-`Current repository / authority → Lowest-sufficient evidence → Persistence / coordination admission decision → Actor admission → Prompt mode only if handoff is needed → Execution / handoff → Canonical result reconciliation → Next decision`
+`Current repository / authority → Lowest-sufficient evidence → Persistence / coordination admission decision → Actor admission → Prompt mode only if handoff is needed → Draft Prompt → Prompt Pre-Send Gate → Execution / handoff → Canonical result reconciliation → Next decision`
 
 ChatGPT 的角色是建立正確 task contract、選擇最低充分 authorized actor / execution handoff、維護 current coordination scope，並用 canonical evidence 接受或拒絕 completion claim；不是把既有 repository authority 重新抄成第二份 specification，也不是把每個「看起來有道理」的改善建議自動變成專案義務。
 
@@ -346,7 +346,7 @@ Compaction 是 conversation-level state management，**不自動產生任何 dur
 觸發規則：
 
 - **Explicit update signal**：使用者或 current project governance 明確指出 Playbook／project rules 已更新、要求 latest，或已有 concrete evidence 顯示目前 working identity 可能 stale 時，立即 probe。
-- **Material boundary trigger**：Stage 完成、task responsibility materially 改變、準備 architecture freeze、repository mutation、completion acceptance、Codex handoff、deployment／external mutation或其他 material decision 前，若 Playbook currentness 可能影響本次 scope／actor／authority／validation／reporting／STOP 判斷，先做一次 declared floating ref 的 HEAD probe。
+- **Material boundary trigger**：Stage 完成、task responsibility materially改變、準備 architecture freeze、repository mutation、completion acceptance、Codex handoff、deployment／external mutation或其他 material decision 前，若 Playbook currentness 可能影響本次 scope／actor／authority／validation／reporting／STOP 判斷，先做一次 declared floating ref 的 HEAD probe。
 - **Currentness-sensitive decision trigger**：即使沒有明確 Stage boundary，只要當前回答或 next action 的 correctness materially 依賴 current Playbook rule，而該 rule 自上次 identity 確認後可能已被新 evidence／revision改變，也應先 probe。
 - **Concrete stale evidence**：已知另一 session、maintainer action、commit notification、read-back mismatch 或其他可驗證訊號顯示 Playbook authority可能已前進時，立即 probe。
 - **Wall-clock age alone ≠ freshness trigger**：經過幾分鐘／幾小時、聊天室閒置多久或訊息數量本身，不足以要求重新查 HEAD；不建立固定分鐘數、background timer、scheduler 或 per-message polling。沒有 material freshness signal 時，沿用 last-confirmed identity直到出現上述 trigger。
@@ -458,7 +458,7 @@ TASKS Short-launch 仍保持 lean：若 Hot contract 已保存等價 planning cu
 最低充分語義必須保留：
 
 - 只有原本就符合 `CODEX_EXECUTION.md` 的 `Subagent / Delegation Gate` 的 bounded subtask 才可 spawn child；
-- 對已合法 delegation 的 child，Codex 可依 `CODEX_EXECUTION.md` 的最低充分 end-to-end cost／quality 原則，在 runtime **向上或向下** override child model／reasoning；可包含不同模型或同模型不同 reasoning；
+- 對已合法 delegation 的 child，Codex 可依 `CODEX_EXECUTION.md` 的最低充分 end-to-end cost／quality原則，在 runtime **向上或向下** override child model／reasoning；可包含不同模型或同模型不同 reasoning；
 - **不得為了換 model／reasoning、少一次 root UI 操作、降低單價或 retry 而創造 child**；root profile仍由使用者決定，main critical path若需要 root escalation則走既有 STOP／relaunch gate；
 - completion／final report仍依 `CODEX_EXECUTION.md` 的 `Child profile routing: NONE | USED` 與 observability boundary 回報。
 
@@ -496,6 +496,23 @@ ChatGPT後續 Prompt不再列整套 Playbook文件或複製 common policy全文�
 全部 Codex-required instructions集中在一個 fenced code block。Prompt外可放 UI/model建議，但 Codex必須收到的內容不能散落。Alternative Prompts各自完整獨立，不把單一 Prompt拆成多個 block。
 
 Copy-ready是 delivery contract，不是增加 Prompt長度的理由。
+
+## Codex Prompt Pre-Send Gate
+
+讀懂 Prompt policy、正確解釋 Hot／Cold 或先前已選對 Prompt mode，**都不足以證明最後送出的 Codex Prompt artifact 合規**。每一次 copy-ready Codex Prompt 在交付前，都必須對**最終草稿本身**做一次 bounded pre-send check；這是 last-mile execution control，不是新的 Prompt mode 或 persistence framework。
+
+送出前依序確認：
+
+1. **Actor check**：current responsibility／authority仍需要 Codex handoff。若 premise 已改變，回到 `Actor Admission / Handoff Gate`；不得因 Prompt已寫好就照送。
+2. **Persistence closure**：若 current work 依本檔 admission rules 屬 durable／tracked Stage，且 ChatGPT 具有 current coordination write authority，先完成必要 Hot admission／revision與 canonical read-back；**不得把 Prompt 當 Stage persistence surface**。反之，一次性、低風險、低 tracking value work 不得為了本 gate 被強迫建立 Hot task。
+3. **Prompt-mode check**：若 current Hot coordination已有可執行 Stage且 Codex能取得該 Stage／authority，最終草稿必須是 `TASKS Short-launch`；沒有 Hot Stage且符合一次性 bounded條件時才使用 `Direct Short Prompt`；`Standalone Full Prompt` 必須能指出本檔已列出的至少一個 explicit exception。
+4. **Reference / duplication check**：逐段檢查 final draft 是否重複 Codex 可由 current repository取得的 TASKS／dossier／AGENTS／spec／validation owner／protocol detail／hardware evidence／root-cause history／長 exclusions 或其他 canonical content。能由 pointer可靠取得的內容刪除重複正文，只保留 launch-time material delta。
+5. **Full-Prompt exception check**：若 draft 是 Standalone Full，明確確認「為什麼 reference不足」；只有 self-contained／比較保險／資訊很重要／前面研究很多，都不是 exception。
+6. **Fail-closed repair**：任一檢查不合格時，先修正 persistence、重新選 mode 或縮減／重生 Prompt，然後重新檢查。**技術內容正確不能豁免 delivery contract；未通過本 gate 的 Prompt 不得送出。**
+
+這個 gate 檢查的是 Prompt artifact 是否符合已成立的 workflow state，不取代前面的 admission／authority／freshness decision，也不要求建立字數、token 或 keyword hard limit。若未來 execution surface提供可靠 structured-output validator，可用它檢查可機械判定的部分；semantic duplication／mode適用性仍依本 contract判斷，不假裝簡單長度 heuristic等價於 compliance。
+
+核心原則：**A correct planning decision is not sufficient; the final Codex Prompt must independently satisfy the current Prompt Mode and duplication contract before delivery.**
 
 ## Prompt lean／長度診斷
 
