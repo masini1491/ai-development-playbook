@@ -55,6 +55,24 @@ Git／permission、Conversation-scoped Repository Write Lock、ChatGPT 實際可
 
 低頻規則應 condition-triggered routing 到 topic owner；不要只因「這條很重要」就自動放進 every-task baseline。
 
+## Instruction Applicability Lifecycle／Model-Upgrade Audit
+
+`AGENTS.md`、Skills、bootstrap instructions 與其他高頻 instruction surfaces 不只佔用字數，也會改變 routing、pause／confirmation、testing、delegation 與 retry 行為；因此 **instruction surface 本身屬於 Context budget**。
+
+當 model、agent runtime、orchestration 或 instruction-following behavior 發生 **material upgrade／material behavior change**，或已有 concrete evidence 顯示既有 instruction 造成過度 trigger、衝突、無效補丁、額外 pause／testing／delegation／retry 時，應做一次 bounded applicability audit：
+
+- 保留仍具 stable authority、correctness、safety、user preference 或高頻 routing 價值的 instructions；
+- 移除、縮窄 trigger、降為 condition-triggered routing，或移出 always-on surface 的規則，前提是它只為舊模型／舊 runtime 的具體缺陷存在，且 current behavior 已不再需要；
+- 檢查互相衝突、重複、trigger 過廣，或會使小型 task 被迫載入／執行不必要 capability、validation、confirmation、delegation 的 instructions；
+- 若新 runtime 已原生提供同等且可驗證的 capability，不保留一份會造成雙重 routing／雙重 ceremony 的舊補丁，除非它仍承擔獨立 authority；
+- audit 只處理已能指出的 material change／behavior evidence；**不得因版本號更新、模型名稱改變或「可能更聰明」就做 repo-wide instruction rewrite。**
+
+一條規則「最初為舊模型補缺陷而寫」本身也不是刪除理由。若它後來已成為穩定 governance、safety boundary、使用者偏好、authority declaration 或跨模型仍有價值的 operating contract，就繼續保留。
+
+同樣地，audit 目標不是把 `AGENTS.md`／Skills 壓成最短文字；應最佳化 **minimum-sufficient, applicable, non-conflicting instruction set**。刪掉必要 authority 使模型必須重猜、重搜、重試，可能比多保留少量高價值 instruction 更昂貴。
+
+核心原則：**Model/runtime evolution can invalidate workaround instructions, but not authority by default. Re-audit applicability only on material triggers; save wasted Context and agent work, not necessary reasoning.**
+
 ## Information Surface Responsibility
 
 一個 AI-facing surface / field 應有一個主要語意角色。
@@ -381,7 +399,7 @@ Historical、superseded、archived material 應清楚標示並預設不進 curre
 
 Normal task 取得 historical snippet 時，先辨識其 authority / freshness，不得因 wording 命中就與 current canonical evidence 等權。
 
-詳細 completed execution history 優先依 Git history 保存；active docs 不維護冗長 Prompt-era changelog。
+詳細 completed execution history 優先依 Git history保存；active docs 不維護冗長 Prompt-era changelog。
 
 ## Current Snapshot Freshness
 
