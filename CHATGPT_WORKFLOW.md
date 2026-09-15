@@ -177,7 +177,6 @@ AI-facing Hot/Cold/Evidence/Historical responsibility、default-load、task doss
 Cold item **不可直接 TASKS Short-launch**。Trigger成立或使用者選中後，先重讀 current authority/evidence、reconcile，再 promote到 Hot。
 
 ### Hot admission
-
 適合：
 
 - current executable / critical-path work；
@@ -267,7 +266,6 @@ ChatGPT 不因「還能做更多」就自動建立一串 TASKS/BACKLOG。
 ## Session Compaction / Rehydration Contract
 
 長時間 ChatGPT engineering conversation 可能累積大量 search result、tool output、debug branch、舊假說與已被 supersede 的中間結論。當這些內容開始提高 retrieval cost、誤用 stale premise 或 handoff/recovery 風險時，ChatGPT 應做 **bounded session compaction**；不要等到 Context 已失控才把整段聊天摘要成另一份不可靠 authority。
-
 適合觸發 compaction 的情況包括：
 
 - 同一 task 已跨多個 Stage／大量 tool calls，且 current decision 只依賴其中一小部分 evidence；
@@ -537,7 +535,6 @@ Implementation session不同時負責大範圍 discovery、修改與 completenes
 ## ChatGPT-side Runtime Execution
 
 ChatGPT 不只可讀取 repository 後 reasoning；當 existing project 有適合的 deterministic workload，而且目前 task / governance 允許時，也可把 sandbox 當成**受控的 ephemeral execution surface**。這個 surface只提供暫時計算能力，不取得 repository persistence/write authority，也不成為新的 source of truth。
-
 推薦流程：
 
 `Candidate deterministic workload → Execution Opportunity Scan → current session capability probe → current repository authority → exact workspace/commit/tree → required materialization → identity/freshness check → ChatGPT-side execution → result classification → canonical reconciliation`
@@ -577,6 +574,23 @@ ChatGPT 能產生某種語言、command 或 toolchain 的內容，**不等於目
 - 只有任務真的需要時，才確認 Git、network、external service、credential 或 hardware access。
 
 Python、Node.js、Shell/Bash、Java、Go、Rust、C/C++ compiler、Git、SQLite 或其他工具都只是可能的 execution capability；**不得把「ChatGPT 可寫這種程式」當成 runtime 已安裝的證據，也不得把某個訂閱方案名稱當成 runtime availability contract。** 若必要 capability 不存在，標記 execution unavailable／依 `DEBUG_VALIDATION.md` 分類真正 failure/gate，不猜測 PASS。
+
+### Artifact Handoff / Materialization Gate
+
+當 ChatGPT-side execution 需要把 connector、repository API、browser、uploaded artifact 或其他 acquisition surface 取得的 canonical source 帶進另一個 execution surface 時，必須把下列層級分開成立：
+
+`Source acquisition → payload transport / handoff → byte materialization → identity / integrity verification → execution → result evidence`
+
+- **Readable source ≠ transferable payload ≠ materialized artifact ≠ verified executable runtime.** 上一層 PASS 不得推導下一層 PASS。
+- 模型能看到 connector 回傳的文字、base64 或其他表示，只證明 source acquisition / model-visible content；**不等於已存在可證明無損的 tool-to-tool payload handoff primitive**。
+- 若 execution surface 缺少適當 handoff primitive，不得用模型重寫、節錄、重新編碼、手工重建或其他 model-mediated reconstruction 冒充 canonical byte-for-byte materialization。需要 exact artifact 時，materialization / integrity 保持未建立，execution 不得宣稱 canonical runtime PASS。
+- 若存在另一條合法 canonical acquisition path，可切換 route 並從該 path重新取得／materialize；但必須明確記成**新的 acquisition route**，不得把 alternate path 的成功回填成原本 connector → runtime bridge 已成功。
+- Capability evidence 必須綁定實際 runtime / execution surface / session。某一 surface 的 handoff gap 只能支持該 scope 的 capability conclusion；不得升格成所有 ChatGPT plan、model、session 或未來 runtime 的 universal product capability claim。
+- Reporting 應保留逐層 evidence，例如：`Acquisition: PASS`、`Payload handoff: UNAVAILABLE`、`Materialization: NOT ESTABLISHED`、`Integrity: NOT ESTABLISHED`、`Execution: NOT RUN`。Project有既定 status taxonomy 時沿用其等價語意，不另建全域 framework。
+
+本 gate 不要求所有 connector workflow 都經過 Python，也不建立固定 byte/token/file-size threshold；只有 current execution correctness 真的依賴跨 surface artifact handoff / materialization 時才啟用。
+
+核心原則：**Visibility is not transport; transport is not materialization; materialization is not verified execution. Preserve each evidence boundary independently and report runtime-specific capability truth.**
 
 ### Runtime Asset Reuse Fast Path
 
@@ -627,5 +641,4 @@ Codex report是 claim，不是 GitHub authority；local-only change不能被 rem
 Analysis/review/Codex result發現 out-of-scope問題時，先依本檔 **AI-originated Durable Work Admission Gate / Follow-up Gate** 與 `REPOSITORY_EXECUTION.md` coordination lifecycle判斷：只留 observation、Cold Candidate/Committed，或真正 Hot admission；不得因「順便看到」就擴張目前 Stage或製造新的 durable obligation。
 
 發現另一 repository也需要同步時，只做 read-only analysis/handoff；write-target switch仍依 `REPOSITORY_EXECUTION.md`。
-
 核心原則：**ChatGPT 負責把真正值得持久化的問題變成最低充分、可追蹤、可執行的工作，並在每個 responsibility transition重新選最低充分 authorized actor；Codex只負責需要其 implementation authority的 Stage。GitHub／canonical evidence 負責證明結果。**
