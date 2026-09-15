@@ -1,89 +1,85 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080">
   <defs>
     <style>
-      .bg{fill:#fbfdff}.title{font:700 46px "Noto Sans CJK TC",Arial,sans-serif;fill:#0f2a5f}.subtitle{font:700 26px "Noto Sans CJK TC",Arial,sans-serif;fill:#1976d2}.lead{font:22px "Noto Sans CJK TC",Arial,sans-serif;fill:#16325c}
-      .boxTitle{font:700 22px "Noto Sans CJK TC",Arial,sans-serif;fill:#102a56}.body{font:18px "Noto Sans CJK TC",Arial,sans-serif;fill:#17345d}.small{font:16px "Noto Sans CJK TC",Arial,sans-serif;fill:#26466f}.tiny{font:15px "Noto Sans CJK TC",Arial,sans-serif;fill:#526b8c}
-      .num{font:700 26px "Noto Sans CJK TC",Arial,sans-serif;fill:#fff;text-anchor:middle;dominant-baseline:middle}.ruleNum{font:700 23px "Noto Sans CJK TC",Arial,sans-serif;fill:#fff;text-anchor:middle;dominant-baseline:middle}
-      .arrow{fill:none;stroke:#355a89;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.arrowG{fill:none;stroke:#0b8f63;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.arrowR{fill:none;stroke:#e73568;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+      .bg{fill:#fbfdff}.title{font:700 46px "Noto Sans CJK TC",Arial,sans-serif;fill:#0f2a5f}.subtitle{font:700 26px "Noto Sans CJK TC",Arial,sans-serif;fill:#1976d2}.lead{font:22px "Noto Sans CJK TC",Arial,sans-serif;fill:#16325c}.boxTitle{font:700 21px "Noto Sans CJK TC",Arial,sans-serif;fill:#102a56}.body{font:18px "Noto Sans CJK TC",Arial,sans-serif;fill:#17345d}.small{font:16px "Noto Sans CJK TC",Arial,sans-serif;fill:#26466f}.tiny{font:15px "Noto Sans CJK TC",Arial,sans-serif;fill:#526b8c}.rule{font:700 17px "Noto Sans CJK TC",Arial,sans-serif;fill:#20466f}.num{font:700 25px "Noto Sans CJK TC",Arial,sans-serif;fill:#fff;text-anchor:middle;dominant-baseline:middle}.arrow{fill:none;stroke:#355a89;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.arrowG{fill:none;stroke:#0b8f63;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.arrowR{fill:none;stroke:#d94d68;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
     </style>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#355a89"/></marker>
     <marker id="arrowG" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#0b8f63"/></marker>
-    <marker id="arrowR" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#e73568"/></marker>
+    <marker id="arrowR" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#d94d68"/></marker>
   </defs>
 
   <rect class="bg" width="1600" height="1080"/>
-  <text x="800" y="58" class="title" text-anchor="middle">How to Use This Repo / 如何使用這個 Repo</text>
-  <text x="800" y="96" class="subtitle" text-anchor="middle">README Edition — Quick Workflow / README 版快速流程</text>
-  <rect x="170" y="116" width="1260" height="74" rx="18" fill="#e8f3ff"/>
-  <text x="800" y="145" class="lead" text-anchor="middle">Find existing references. Resolve authority. Choose the lowest-sufficient authorized actor.</text>
-  <text x="800" y="174" class="lead" text-anchor="middle">先找現有參考、確認權威，再選擇最低充分且已獲授權的執行角色。</text>
+  <text x="800" y="58" class="title" text-anchor="middle">AI Development Playbook — Quick Workflow</text>
+  <text x="800" y="96" class="subtitle" text-anchor="middle">Current human-facing flow / 目前人類閱讀版流程</text>
+  <rect x="190" y="118" width="1220" height="68" rx="18" fill="#e8f3ff"/>
+  <text x="800" y="147" class="lead" text-anchor="middle">Activate shared governance only when the project route says it is needed.</text>
+  <text x="800" y="174" class="lead" text-anchor="middle">只有 project route 判定需要時，才啟用 shared Playbook governance。</text>
 
-  <rect x="35" y="220" width="330" height="285" rx="18" fill="#eef7ff" stroke="#2f8de4" stroke-width="2"/>
-  <circle cx="78" cy="260" r="28" fill="#2185df"/><text x="78" y="260" class="num">1</text>
-  <text x="120" y="270" class="boxTitle">Bootstrap / 啟動</text>
-  <text x="60" y="318" class="body"><tspan x="60" dy="0">Project AGENTS.md declares</tspan><tspan x="60" dy="25">the Playbook baseline</tspan></text>
-  <text x="60" y="382" class="body"><tspan x="60" dy="0">在專案 AGENTS.md 宣告</tspan><tspan x="60" dy="25">Playbook 基準版本</tspan></text>
-  <rect x="55" y="425" width="290" height="60" rx="12" fill="#dceeff"/>
-  <text x="70" y="448" class="small"><tspan x="70" dy="0">Project AGENTS.md → baseline</tspan><tspan x="70" dy="23">→ CHAT_INIT.md</tspan></text>
+  <rect x="70" y="225" width="310" height="145" rx="18" fill="#eef7ff" stroke="#2f8de4" stroke-width="2"/>
+  <circle cx="112" cy="266" r="27" fill="#2185df"/><text x="112" y="266" class="num">1</text>
+  <text x="155" y="260" class="boxTitle">Project identity / bootstrap</text>
+  <text x="155" y="289" class="small">確認專案身分與目前 bootstrap</text>
+  <text x="95" y="332" class="small">Current project governance stays higher authority.</text>
+  <text x="95" y="356" class="small">專案自己的 governance 仍較高權威。</text>
 
-  <rect x="385" y="220" width="500" height="285" rx="18" fill="#fff8e7" stroke="#e5a31b" stroke-width="2"/>
-  <circle cx="428" cy="260" r="28" fill="#f3aa1a"/><text x="428" y="260" class="num">2</text>
-  <text x="470" y="255" class="boxTitle"><tspan x="470" dy="0">Find Existing References First /</tspan><tspan x="470" dy="27">先找現有參考</tspan></text>
-  <text x="415" y="330" class="body"><tspan x="415" dy="0">Read only the minimum current sources you need</tspan><tspan x="415" dy="25">只讀目前需要的最低必要來源</tspan></text>
-  <rect x="720" y="312" width="145" height="66" rx="14" fill="#f47a24"/><text x="792" y="339" font-family="Noto Sans CJK TC,Arial,sans-serif" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">Reuse first</text><text x="792" y="365" font-family="Noto Sans CJK TC,Arial,sans-serif" font-size="19" font-weight="700" fill="#fff" text-anchor="middle">先重用</text>
-  <rect x="410" y="385" width="450" height="98" rx="12" fill="#fff0cc"/>
-  <text x="430" y="412" class="small"><tspan x="430" dy="0">• README • AGENTS.md • canonical docs</tspan><tspan x="430" dy="24">• current TASKS / Hot items</tspan><tspan x="430" dy="24">• existing research / evals • release tag or main</tspan></text>
+  <rect x="475" y="225" width="360" height="145" rx="18" fill="#f3efff" stroke="#7859e6" stroke-width="2"/>
+  <circle cx="517" cy="266" r="27" fill="#6a53d8"/><text x="517" y="266" class="num">2</text>
+  <text x="560" y="260" class="boxTitle">Activation gate</text>
+  <text x="560" y="289" class="small">是否需要 shared Playbook governance？</text>
+  <text x="500" y="332" class="small">Use project-native classifier only when explicitly declared.</text>
+  <text x="500" y="356" class="small">只有明確宣告的 gate 才能判定。</text>
 
-  <rect x="905" y="220" width="405" height="285" rx="18" fill="#ebfbf3" stroke="#16a66d" stroke-width="2"/>
-  <circle cx="948" cy="260" r="28" fill="#109966"/><text x="948" y="260" class="num">3</text>
-  <text x="990" y="260" class="boxTitle"><tspan x="990" dy="0">Resolve Actor &amp; Authority /</tspan><tspan x="990" dy="28">確認角色與權限</tspan></text>
-  <text x="935" y="336" class="small"><tspan x="935" dy="0">• current responsibility / 目前責任</tspan><tspan x="935" dy="27">• repository actor topology / 角色拓撲</tspan><tspan x="935" dy="27">• task authority / 任務授權</tspan><tspan x="935" dy="27">• capability &amp; permission / 能力與權限</tspan><tspan x="935" dy="27">• execute / handoff / STOP / 執行、交接或停止</tspan></text>
+  <rect x="920" y="215" width="290" height="165" rx="18" fill="#ebfbf3" stroke="#16a66d" stroke-width="2"/>
+  <text x="1065" y="252" class="boxTitle" text-anchor="middle">NO / 不需要</text>
+  <text x="1065" y="290" class="body" text-anchor="middle">Stay project-native</text>
+  <text x="1065" y="318" class="body" text-anchor="middle">留在低成本 hot path</text>
+  <text x="1065" y="350" class="small" text-anchor="middle">Do not load Playbook for ceremony.</text>
 
-  <rect x="1330" y="220" width="235" height="285" rx="18" fill="#f6f9fd" stroke="#8ab7e8" stroke-width="2"/>
-  <text x="1448" y="267" class="boxTitle" text-anchor="middle">Key Rules / 核心規則</text>
-  <line x1="1350" y1="286" x2="1545" y2="286" stroke="#c8d9ec"/>
-  <circle cx="1374" cy="330" r="23" fill="#5aa7e8"/><text x="1374" y="330" class="ruleNum">1</text>
-  <text x="1412" y="326" class="body">Reuse first</text><text x="1412" y="348" class="small">先重用</text>
-  <circle cx="1374" cy="400" r="23" fill="#5aa7e8"/><text x="1374" y="400" class="ruleNum">2</text>
-  <text x="1412" y="396" class="body">Capability ≠ authority</text><text x="1412" y="418" class="small">能力 ≠ 權限</text>
-  <circle cx="1374" cy="470" r="23" fill="#5aa7e8"/><text x="1374" y="470" class="ruleNum">3</text>
-  <text x="1412" y="466" class="body">PASS ≠ Done</text><text x="1412" y="488" class="small">PASS ≠ 已完成</text>
+  <rect x="1245" y="215" width="290" height="165" rx="18" fill="#fff6e7" stroke="#e5a31b" stroke-width="2"/>
+  <text x="1390" y="252" class="boxTitle" text-anchor="middle">YES / 需要</text>
+  <text x="1390" y="288" class="body" text-anchor="middle">Resolve adoption state</text>
+  <text x="1390" y="316" class="body" text-anchor="middle">baseline + AI mode</text>
+  <text x="1390" y="348" class="small" text-anchor="middle">floating ref → exact revision when needed</text>
 
-  <path d="M365 360 H385" class="arrow" marker-end="url(#arrow)"/>
-  <path d="M885 360 H905" class="arrowG" marker-end="url(#arrowG)"/>
-  <path d="M1105 505 V535 H800" class="arrow" marker-end="url(#arrow)"/>
+  <path d="M380 298 H475" class="arrow" marker-end="url(#arrow)"/>
+  <path d="M835 270 H920" class="arrowG" marker-end="url(#arrowG)"/>
+  <path d="M835 326 H1245" class="arrowR" marker-end="url(#arrowR)"/>
+  <text x="872" y="252" class="small" fill="#087c55">NO</text>
+  <text x="1138" y="347" class="small" fill="#c2435d">YES</text>
 
-  <polygon points="800,520 935,585 800,650 665,585" fill="#f3efff" stroke="#7859e6" stroke-width="2"/>
-  <text x="800" y="565" text-anchor="middle" font-family="Noto Sans CJK TC,Arial,sans-serif" font-size="38" font-weight="700" fill="#352778">?</text>
-  <text x="800" y="596" class="body" text-anchor="middle">Gap remaining? /</text><text x="800" y="622" class="body" text-anchor="middle">還有缺口嗎？</text>
-  <rect x="535" y="535" width="100" height="36" rx="10" fill="#dbf8e9"/><text x="585" y="560" font-family="Noto Sans CJK TC,Arial,sans-serif" font-size="20" font-weight="700" fill="#087c55" text-anchor="middle">No / 否</text>
-  <rect x="965" y="535" width="100" height="36" rx="10" fill="#ffe1ea"/><text x="1015" y="560" font-family="Noto Sans CJK TC,Arial,sans-serif" font-size="20" font-weight="700" fill="#d82b5a" text-anchor="middle">Yes / 是</text>
+  <rect x="1040" y="430" width="350" height="150" rx="18" fill="#eef7ff" stroke="#2f8de4" stroke-width="2"/>
+  <circle cx="1083" cy="471" r="27" fill="#2185df"/><text x="1083" y="471" class="num">3</text>
+  <text x="1126" y="465" class="boxTitle">Playbook CHAT_INIT</text>
+  <text x="1126" y="494" class="small">activation 後才進 shared router</text>
+  <text x="1068" y="538" class="small">Load only minimum-sufficient canonical owner(s).</text>
+  <text x="1068" y="562" class="small">只讀本題最低充分 canonical owner。</text>
+  <path d="M1390 380 V405 H1215 V430" class="arrow" marker-end="url(#arrow)"/>
 
-  <path d="M665 585 H270 V690" class="arrowG" marker-end="url(#arrowG)"/>
-  <rect x="55" y="690" width="390" height="190" rx="18" fill="#ebfbf3" stroke="#16a66d" stroke-width="2"/>
-  <circle cx="100" cy="732" r="28" fill="#109966"/><text x="100" y="732" class="num">4A</text>
-  <text x="145" y="728" class="boxTitle"><tspan x="145" dy="0">Return / Finish /</tspan><tspan x="145" dy="27">回傳／完成</tspan></text>
-  <text x="90" y="807" class="body"><tspan x="90" dy="0">Return result, summary, or recommendation</tspan><tspan x="90" dy="28">回傳結果、摘要或建議</tspan></text>
+  <rect x="475" y="625" width="650" height="145" rx="18" fill="#f6f9fd" stroke="#8ab7e8" stroke-width="2"/>
+  <circle cx="518" cy="666" r="27" fill="#5aa7e8"/><text x="518" y="666" class="num">4</text>
+  <text x="560" y="660" class="boxTitle">Current task / authority / evidence</text>
+  <text x="560" y="689" class="small">確認目前 task、scope、evidence、permission 與 repository truth</text>
+  <text x="500" y="733" class="small">Choose the lowest-sufficient authorized actor; execute or hand off only inside current authority.</text>
+  <text x="500" y="757" class="small">選最低充分且已授權 actor，只在 current authority 內執行／交接。</text>
 
-  <path d="M935 585 H1195 V690" class="arrowR" marker-end="url(#arrowR)"/>
-  <rect x="500" y="690" width="390" height="190" rx="18" fill="#fff0f5" stroke="#ec4b77" stroke-width="2"/>
-  <circle cx="545" cy="732" r="28" fill="#e83f70"/><text x="545" y="732" class="num">4B</text>
-  <text x="590" y="739" class="boxTitle">Confirm Scope / 確認範圍</text>
-  <text x="540" y="786" class="body"><tspan x="540" dy="0">Confirm exact task, repo,</tspan><tspan x="540" dy="26">and boundaries first</tspan><tspan x="540" dy="26">先確認精確任務、儲存庫與邊界</tspan></text>
-  <path d="M890 785 H925" class="arrowR" marker-end="url(#arrowR)"/>
-  <rect x="925" y="690" width="575" height="190" rx="18" fill="#f2efff" stroke="#7658e9" stroke-width="2"/>
-  <circle cx="970" cy="732" r="28" fill="#6850dc"/><text x="970" y="732" class="num">5</text>
-  <text x="1015" y="730" class="boxTitle"><tspan x="1015" dy="0">Authorized Actor Executes /</tspan><tspan x="1015" dy="28">由獲授權角色執行</tspan></text>
-  <text x="1010" y="804" class="small"><tspan x="1010" dy="0">• code/docs/tests / 程式、文件、測試</tspan><tspan x="1010" dy="27">• build/tooling/other mutation / 建置、工具與其他修改</tspan><tspan x="1010" dy="27">• report evidence back / 回報證據與結果</tspan></text>
+  <path d="M1065 380 V600 H800 V625" class="arrowG" marker-end="url(#arrowG)"/>
+  <path d="M1215 580 V600 H800 V625" class="arrow" marker-end="url(#arrow)"/>
 
-  <path d="M250 880 V918 H800" class="arrowG"/>
-  <path d="M1210 880 V918 H800" class="arrow"/>
-  <path d="M800 918 V935" class="arrow" marker-end="url(#arrow)"/>
-  <rect x="350" y="925" width="900" height="112" rx="18" fill="#eaf4ff" stroke="#2b85dc" stroke-width="2"/>
-  <circle cx="397" cy="981" r="28" fill="#2185df"/><text x="397" y="981" class="num">6</text>
-  <text x="445" y="963" class="boxTitle">Canonical Reconcile / 權威回讀核對</text>
-  <text x="445" y="992" class="small">Read back current state, reconcile evidence, decide done / next stage / handoff</text>
-  <text x="445" y="1018" class="small">回讀目前狀態、核對證據，再決定完成／下一階段／交接</text>
+  <rect x="540" y="820" width="520" height="125" rx="18" fill="#eaf4ff" stroke="#2b85dc" stroke-width="2"/>
+  <circle cx="583" cy="861" r="27" fill="#2185df"/><text x="583" y="861" class="num">5</text>
+  <text x="626" y="855" class="boxTitle">Canonical read-back / reconciliation</text>
+  <text x="626" y="884" class="small">回讀 current state、核對 evidence</text>
+  <text x="626" y="916" class="small">→ Done / next Stage / handoff / STOP</text>
+  <path d="M800 770 V820" class="arrow" marker-end="url(#arrow)"/>
 
-  <text x="800" y="1062" class="tiny" text-anchor="middle">Illustrative workflow only. Canonical rules remain in the linked Playbook owner documents. / 本圖僅供流程概覽；正式規則仍以對應 Playbook 權威主責文件為準。</text>
+  <rect x="65" y="430" width="780" height="150" rx="18" fill="#fff" stroke="#c9d9ea" stroke-width="2"/>
+  <text x="95" y="468" class="boxTitle">Stable invariants / 穩定不變的判斷</text>
+  <text x="105" y="508" class="rule">Adoption ≠ activation</text>
+  <text x="365" y="508" class="rule">Capability ≠ authority</text>
+  <text x="625" y="508" class="rule">PASS ≠ done</text>
+  <text x="105" y="548" class="rule">Historical memory ≠ current authority</text>
+  <text x="465" y="548" class="rule">Persistence ≠ default loading</text>
+
+  <text x="800" y="1006" class="tiny" text-anchor="middle">Illustrative workflow only; canonical rules remain in the linked owner documents.</text>
+  <text x="800" y="1032" class="tiny" text-anchor="middle">本圖只提供人類閱讀的穩定流程概覽；正式規則仍以對應 canonical owner 為準。</text>
 </svg>
