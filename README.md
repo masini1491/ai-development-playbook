@@ -74,6 +74,50 @@ Playbook 的核心刻意把幾個概念分開：
 - **Adoption ≠ unconditional activation**：只有 project route 判定需要時才載入 shared governance。
 - **優先最低充分路徑**：Evidence、Context、model/reasoning、actor、runtime capability 與 validation 都只有在目前層級不足時才擴張。
 
+## Quick workflow / 快速流程
+
+**English**
+
+A typical project flow is:
+
+```text
+Current project identity / bootstrap
+→ project-native activation gate when explicitly declared
+→ shared Playbook activation only if needed
+→ declared baseline + Project AI mode
+→ minimum-sufficient canonical owner
+→ current task / authority / evidence
+→ lowest-sufficient authorized actor
+→ execution or handoff
+→ canonical read-back / reconciliation
+→ done, next Stage, or STOP
+```
+
+`ChatGPT-Only` keeps Codex out of the repository AI workflow and aims to keep unnecessary ChatGPT capability requirements low. `ChatGPT+Codex` admits Codex only where current project governance/Stage actually assigns implementation work to it.
+
+**繁體中文**
+
+一般 project flow：
+
+```text
+目前 project identity / bootstrap
+→ 若有明確宣告先走 project-native activation gate
+→ 只有需要時才 activate shared Playbook
+→ declared baseline + Project AI mode
+→ 最低充分 canonical owner
+→ current task / authority / evidence
+→ 最低充分且已授權 actor
+→ 執行或 handoff
+→ canonical read-back / reconciliation
+→ 完成、下一 Stage 或 STOP
+```
+
+`ChatGPT-Only` 不讓 Codex 進入 repository AI workflow，並盡量壓低不必要的 ChatGPT capability requirement；`ChatGPT+Codex` 也只有 current project governance／Stage 真正把 implementation 工作分派給 Codex 時才 handoff。
+
+![AI Development Playbook quick workflow](assets/readme-workflow.svg)
+
+> **Illustrative workflow / 流程概覽**：The diagram summarizes the stable human-facing flow only. Canonical rules remain in the linked owner documents, and product UI/version details are intentionally excluded.／本圖只摘要穩定的人類閱讀流程；正式規則仍以對應 canonical owner 為準，並刻意不放產品 UI／版本細節。
+
 ## 5-minute adoption / 5 分鐘導入
 
 **English**
@@ -176,50 +220,6 @@ Persistent host instruction 是**可選 activation adapter**，不是核心 adop
 - [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) 擁有目前的 activation、loading、health-check 與 product-surface caveat。
 
 產品 UI 名稱、欄位限制與可用 persistent-instruction surface 都可能獨立於 Playbook policy 改變。不要把 README 舊文字或舊截圖當成產品權威；host adapter 被安裝也不代表某 project 已 adoption，更不會授予 repository mutation authority。
-
-## Quick workflow / 快速流程
-
-**English**
-
-A typical project flow is:
-
-```text
-Current project identity / bootstrap
-→ project-native activation gate when explicitly declared
-→ shared Playbook activation only if needed
-→ declared baseline + Project AI mode
-→ minimum-sufficient canonical owner
-→ current task / authority / evidence
-→ lowest-sufficient authorized actor
-→ execution or handoff
-→ canonical read-back / reconciliation
-→ done, next Stage, or STOP
-```
-
-`ChatGPT-Only` keeps Codex out of the repository AI workflow and aims to keep unnecessary ChatGPT capability requirements low. `ChatGPT+Codex` admits Codex only where current project governance/Stage actually assigns implementation work to it.
-
-**繁體中文**
-
-一般 project flow：
-
-```text
-目前 project identity / bootstrap
-→ 若有明確宣告先走 project-native activation gate
-→ 只有需要時才 activate shared Playbook
-→ declared baseline + Project AI mode
-→ 最低充分 canonical owner
-→ current task / authority / evidence
-→ 最低充分且已授權 actor
-→ 執行或 handoff
-→ canonical read-back / reconciliation
-→ 完成、下一 Stage 或 STOP
-```
-
-`ChatGPT-Only` 不讓 Codex 進入 repository AI workflow，並盡量壓低不必要的 ChatGPT capability requirement；`ChatGPT+Codex` 也只有 current project governance／Stage 真正把 implementation 工作分派給 Codex 時才 handoff。
-
-![AI Development Playbook quick workflow](assets/readme-workflow.svg)
-
-> **Illustrative workflow / 流程概覽**：The diagram summarizes the stable human-facing flow only. Canonical rules remain in the linked owner documents, and product UI/version details are intentionally excluded.／本圖只摘要穩定的人類閱讀流程；正式規則仍以對應 canonical owner 為準，並刻意不放產品 UI／版本細節。
 
 ## What it covers / 主要涵蓋範圍
 
