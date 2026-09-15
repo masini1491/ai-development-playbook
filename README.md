@@ -217,6 +217,10 @@ Current project identity / bootstrap
 
 `ChatGPT-Only` 不讓 Codex 進入 repository AI workflow，並盡量壓低不必要的 ChatGPT capability requirement；`ChatGPT+Codex` 也只有 current project governance／Stage 真正把 implementation 工作分派給 Codex 時才 handoff。
 
+![AI Development Playbook quick workflow](assets/readme-workflow.svg)
+
+> **Illustrative workflow / 流程概覽**：The diagram summarizes the stable human-facing flow only. Canonical rules remain in the linked owner documents, and product UI/version details are intentionally excluded.／本圖只摘要穩定的人類閱讀流程；正式規則仍以對應 canonical owner 為準，並刻意不放產品 UI／版本細節。
+
 ## What it covers / 主要涵蓋範圍
 
 **English**
