@@ -118,6 +118,32 @@ Current project identity / bootstrap
 
 > **Illustrative workflow / 流程概覽**：The diagram summarizes the stable human-facing flow only. Canonical rules remain in the linked owner documents, and product UI/version details are intentionally excluded.／本圖只摘要穩定的人類閱讀流程；正式規則仍以對應 canonical owner 為準，並刻意不放產品 UI／版本細節。
 
+## What it covers / 主要涵蓋範圍
+
+**English**
+
+- **Project AI mode and actor admission** — choose `ChatGPT-Only` or `ChatGPT+Codex`, then apply lower-level repository authority.
+- **Conditional activation** — adopted projects can keep low-cost project-native hot paths for tasks that do not need shared governance.
+- **Context architecture** — Always-on / Hot / Cold / Evidence / Current / Historical responsibilities and progressive routing.
+- **Repository and authority integrity** — current identity, path/action authority, permission boundaries, read-back, and source-vs-derived distinctions.
+- **Task admission and coordination** — observation/recommendation/admitted-work separation, task identity, Stage boundaries, follow-up/new-work control.
+- **Validation and evidence** — deterministic checks, behavioral evaluation, hardware/runtime/production evidence, completion reconciliation.
+- **Runtime execution** — bounded ChatGPT-side deterministic execution when the current session actually has the required runtime/capabilities.
+- **Interoperability** — external specs, skills, memory systems, and governance frameworks can coexist without inheriting authority merely by being connected.
+- **Cost-aware execution** — use minimum-sufficient evidence, Context, model/reasoning, actor, and validation before escalating.
+
+**繁體中文**
+
+- **Project AI mode 與 actor admission**：先選 `ChatGPT-Only`／`ChatGPT+Codex`，再套用 lower-level repository authority。
+- **Conditional activation**：已 adoption 的 project 可以讓不需要 shared governance 的 task 維持低成本 project-native hot path。
+- **Context 架構**：Always-on／Hot／Cold／Evidence／Current／Historical responsibility 與 progressive routing。
+- **Repository／authority integrity**：current identity、path/action authority、permission boundary、read-back、source-vs-derived 分離。
+- **Task admission／coordination**：observation／recommendation／admitted-work 分離、task identity、Stage boundary、follow-up/new-work 控制。
+- **Validation／evidence**：deterministic checks、behavioral eval、hardware/runtime/production evidence、completion reconciliation。
+- **Runtime execution**：只有 current ChatGPT session 實際具備所需 runtime/capability 時，才做 bounded deterministic execution。
+- **Interoperability**：external spec、skills、memory system、governance framework 可以共存，但不會只因被連接就繼承 authority。
+- **成本感知執行**：Evidence、Context、model/reasoning、actor、validation 都先用最低充分層級，不足才升級。
+
 ## 5-minute adoption / 5 分鐘導入
 
 **English**
@@ -220,32 +246,6 @@ Persistent host instruction 是**可選 activation adapter**，不是核心 adop
 - [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) 擁有目前的 activation、loading、health-check 與 product-surface caveat。
 
 產品 UI 名稱、欄位限制與可用 persistent-instruction surface 都可能獨立於 Playbook policy 改變。不要把 README 舊文字或舊截圖當成產品權威；host adapter 被安裝也不代表某 project 已 adoption，更不會授予 repository mutation authority。
-
-## What it covers / 主要涵蓋範圍
-
-**English**
-
-- **Project AI mode and actor admission** — choose `ChatGPT-Only` or `ChatGPT+Codex`, then apply lower-level repository authority.
-- **Conditional activation** — adopted projects can keep low-cost project-native hot paths for tasks that do not need shared governance.
-- **Context architecture** — Always-on / Hot / Cold / Evidence / Current / Historical responsibilities and progressive routing.
-- **Repository and authority integrity** — current identity, path/action authority, permission boundaries, read-back, and source-vs-derived distinctions.
-- **Task admission and coordination** — observation/recommendation/admitted-work separation, task identity, Stage boundaries, follow-up/new-work control.
-- **Validation and evidence** — deterministic checks, behavioral evaluation, hardware/runtime/production evidence, completion reconciliation.
-- **Runtime execution** — bounded ChatGPT-side deterministic execution when the current session actually has the required runtime/capabilities.
-- **Interoperability** — external specs, skills, memory systems, and governance frameworks can coexist without inheriting authority merely by being connected.
-- **Cost-aware execution** — use minimum-sufficient evidence, Context, model/reasoning, actor, and validation before escalating.
-
-**繁體中文**
-
-- **Project AI mode 與 actor admission**：先選 `ChatGPT-Only`／`ChatGPT+Codex`，再套用 lower-level repository authority。
-- **Conditional activation**：已 adoption 的 project 可以讓不需要 shared governance 的 task 維持低成本 project-native hot path。
-- **Context 架構**：Always-on／Hot／Cold／Evidence／Current／Historical responsibility 與 progressive routing。
-- **Repository／authority integrity**：current identity、path/action authority、permission boundary、read-back、source-vs-derived 分離。
-- **Task admission／coordination**：observation／recommendation／admitted-work 分離、task identity、Stage boundary、follow-up/new-work 控制。
-- **Validation／evidence**：deterministic checks、behavioral eval、hardware/runtime/production evidence、completion reconciliation。
-- **Runtime execution**：只有 current ChatGPT session 實際具備所需 runtime/capability 時，才做 bounded deterministic execution。
-- **Interoperability**：external spec、skills、memory system、governance framework 可以共存，但不會只因被連接就繼承 authority。
-- **成本感知執行**：Evidence、Context、model/reasoning、actor、validation 都先用最低充分層級，不足才升級。
 
 ## Evidence and behavioral evaluation / 證據與行為迴歸
 
