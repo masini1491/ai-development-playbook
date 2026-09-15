@@ -50,6 +50,24 @@ Recommended design pressure:
 - When the task materially requires a capability the current ChatGPT session does not have and no admitted equivalent path exists, report the scoped capability gap or STOP. `ChatGPT-Only` does not require pretending every ChatGPT session can complete every task.
 - Capabilities that are optional acceleration/convenience should remain optional; capabilities that are materially required for correctness should be declared and gated explicitly.
 
+#### Free ChatGPT cold-start target profile
+
+For ChatGPT-facing project design and regression, the preferred **cold-start compatibility target** is:
+
+`Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition`
+
+The target means:
+
+- start without relying on prior conversation state, preloaded project context, warmed runtime cache, or previously materialized repository artifacts;
+- establish current repository authority through GitHub Connect / the repository-native GitHub connector path, without requiring public GitHub HTML/raw URLs, Web search, shell Git/clone, Python HTTP, stale memory, or another repository-acquisition mechanism as a prerequisite;
+- after canonical repository authority is established, use only the additional ChatGPT-native capabilities that are actually available and materially required for the task, while preserving the same execution, identity, integrity, and validation gates;
+- keep richer paid-plan surfaces, Codex, warmed caches, broader connectors, larger context, or more convenient runtime paths as optional acceleration/fallback unless the project explicitly proves they are materially required;
+- treat a successful run under this profile as concrete compatibility evidence for that tested repository revision/scenario, not as a universal claim that every Free ChatGPT product version or account will always expose identical capabilities.
+
+If a core ChatGPT-only workflow cannot cold-start under this target, first determine whether the blocker is an avoidable workflow dependency, an unavailable-but-equivalent transport/materialization path, or a genuinely material capability requirement. Do not immediately promote a convenience dependency into the project baseline. If no admitted equivalent path preserves the required semantics, report the scoped capability gap honestly.
+
+This target profile constrains **repository authority acquisition** to GitHub Connect; it does not prohibit task-required ChatGPT-native execution/runtime capabilities that the tested Free ChatGPT surface actually provides. Repository acquisition, artifact transport/materialization, runtime execution, and result evidence remain separate capability layers.
+
 This is a **minimum capability design objective**, not a promise that every ChatGPT product configuration can run every repository workflow. Project-specific evidence decides whether a concrete low-capability path is proven usable.
 
 `ChatGPT-Only` does **not** mean unlimited ChatGPT authority. It does not bypass project-specific restrictions, human approval, validation gates, deployment/release permission, secrets boundaries, or any other higher-authority contract.
@@ -88,4 +106,4 @@ A fresh session must not rely on old chat memory instead of current repository g
 
 Changing an existing project's mode is a governance change. Do not infer a mode switch from a one-off handoff, temporary tool outage, generic continuation such as「好／繼續」, or the fact that one actor completed the previous Stage.
 
-核心原則：**User chooses one of two AI project modes; mode is actor topology rather than product tier; ChatGPT-Only should minimize unnecessary capability requirements without weakening correctness or evidence; durable persistence still requires ordinary governance-write authority; lower-level authority gates decide what the selected actors may actually do.**
+核心原則：**User chooses one of two AI project modes; mode is actor topology rather than product tier; ChatGPT-Only should minimize unnecessary capability requirements and target Free ChatGPT cold-start compatibility without weakening correctness or evidence; durable persistence still requires ordinary governance-write authority; lower-level authority gates decide what the selected actors may actually do.**
