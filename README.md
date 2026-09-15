@@ -10,39 +10,83 @@
 
 AI Development Playbook is a reusable **GitHub-native governance and information-integrity layer** for ChatGPT, Codex, and other AI engineering workflows.
 
-It treats GitHub as durable project memory and the source of truth. An adopting repository chooses one of two project AI modes—`ChatGPT-Only` or `ChatGPT+Codex`—and then uses its own governance to narrow the actual path/action authority inside that profile. These modes describe **AI actor topology, not a ChatGPT subscription plan, model tier, usage quota, or universal capability level**. Human maintainers, CI, hardware validation, and external services can still participate without becoming additional AI modes. The goal is not to add more prompts or process overhead. The goal is to keep **context, authority, evidence, execution, validation, and cost** distinguishable as a project evolves across sessions and agents.
+It helps long-lived repositories keep **current authority, durable memory, task admission, execution, validation, evidence, and context cost** separate instead of letting old chats, tool availability, or convenient summaries silently become project truth.
 
-You do **not** need to load the entire repository into context or read it end to end. Adoption does not imply unconditional Playbook activation: a project may keep ordinary tasks on a project-native bootstrap / task-router path and activate the shared Playbook only when the current task actually needs shared workflow governance. When activation is required, resolve the project-declared Playbook baseline, enter [`CHAT_INIT.md`](CHAT_INIT.md), and read only the minimum canonical sections required by the current task.
+An adopting repository chooses one of two Project AI modes:
 
-For `ChatGPT-Only`, the preferred ChatGPT-facing cold-start compatibility target is **Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition**. This is a regression/design target, not a promise that every Free account or product version exposes identical capabilities. Richer paid-plan surfaces, warmed caches, broader connectors, or more convenient runtime paths should stay optional unless project evidence shows they are materially required.
+- `ChatGPT-Only`
+- `ChatGPT+Codex`
+
+These modes describe **AI actor topology**. They are not ChatGPT subscription tiers, model tiers, quotas, or fixed capability levels. Project governance still decides the actual path/action authority inside the selected mode.
+
+Adoption also does **not** mean every task must load the shared Playbook. A project may keep ordinary tasks on its own project-native bootstrap/task-router path and activate the shared Playbook only when the current task actually needs common workflow governance.
+
+For `ChatGPT-Only`, the preferred cold-start compatibility target is:
+
+`Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition`
+
+This is a **design/regression target**, not a promise that every Free account or product surface exposes the same tools. Richer surfaces should remain optional accelerators unless project evidence proves they are materially required.
 
 **繁體中文**
 
 AI Development Playbook 是一套可重用、**以 GitHub 為原生基礎的 AI 工程治理與資訊完整性層**，適用於 ChatGPT、Codex 與其他 AI 工程工作流程。
 
-它把 GitHub 當成持久化專案記憶與單一事實來源。採用本手冊的 repository 只需選擇兩種 project AI mode 之一：`ChatGPT-Only` 或 `ChatGPT+Codex`；再由專案自己的 governance 在該 profile 內縮窄實際 path／action authority。這兩種 mode 描述的是 **AI actor topology，不是 ChatGPT 訂閱方案、模型等級、使用額度或固定能力層級**。Human maintainer、CI、硬體驗證與 external service 仍可參與，但不會因此形成第三種 AI mode。目標不是增加更多提示詞或流程，而是讓專案跨聊天室、跨代理長期演進時，**上下文、權威、證據、執行、驗證與成本**仍然彼此可分辨。
+它的目的，是讓長期演進的 repository 能持續把**目前權威、持久記憶、工作准入、執行、驗證、證據與 Context 成本**分清楚，避免舊聊天室、工具可用性或方便閱讀的摘要默默變成 project truth。
 
-你**不需要**完整載入或從頭讀完整個儲存庫。正式採用 Playbook 不代表每個任務都要無條件 activate Playbook：專案可以讓一般任務維持 project-native bootstrap／task-router hot path，只有本次任務真正需要共通 workflow governance 時才啟用 Playbook。需要 activation 時，再解析專案宣告的 Playbook baseline、進入 [`CHAT_INIT.md`](CHAT_INIT.md)，並只讀本次任務最低必要的權威章節。
+採用本手冊的 repository 只選兩種 Project AI mode 之一：
 
-對 `ChatGPT-Only`，目前偏好的 ChatGPT cold-start 相容性目標是 **Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition**。這是一個 regression／design target，不是宣稱所有 Free 帳號或產品版本都一定具有完全相同能力。較強的付費方案介面、warmed cache、更廣 connector 或更方便的 runtime path 應維持為 optional，除非 project evidence 證明它們是實質必要條件。
+- `ChatGPT-Only`
+- `ChatGPT+Codex`
 
-> **Human-facing language / 人類閱讀語言**：This README follows the canonical bilingual human-surface contract in [`AGENTS.md`](AGENTS.md): English first with a high-quality Traditional Chinese counterpart at section level. `AGENTS.md` owns the normative layout / parity / split criteria; this README only follows that contract.／本 README 依 [`AGENTS.md`](AGENTS.md) 的權威雙語人類閱讀介面契約呈現：主要主題先以英文說明，再緊接高品質繁體中文對應內容。排版、語意一致性與拆分條件的規範權威在 `AGENTS.md`；README 本身只遵循，不自行治理。
+這兩種 mode 描述的是 **AI actor topology**，不是 ChatGPT 訂閱方案、模型等級、使用額度或固定能力層級；實際 path／action authority 仍由 project governance 決定。
 
-> **Dogfooding note / 自我實作說明**：This repository is primarily maintained by ChatGPT under the explicit maintainer contract in [`AGENTS.md`](AGENTS.md). This is a governed maintainer workflow, **not** a claim of fully autonomous repository maintenance.／本儲存庫主要由 ChatGPT 依 [`AGENTS.md`](AGENTS.md) 的明確維護者契約進行維護；這是一套受治理的維護流程，**不是**「完全自主維護儲存庫」的宣稱。
+正式 adoption 也**不代表每個 task 都要載入 shared Playbook**。專案可以讓一般任務維持自己的 project-native bootstrap／task-router hot path，只有本次工作真正需要共通 workflow governance 時才 activate Playbook。
 
-## 5-minute quick start / 5 分鐘開始使用
+對 `ChatGPT-Only`，目前偏好的 cold-start 相容性目標是：
+
+`Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition`
+
+這是**設計／迴歸測試目標**，不是宣稱所有 Free 帳號或產品 surface 都一定具備相同工具。較強 surface 應維持 optional accelerator，除非 project evidence 證明它們是實質必要條件。
+
+> **Human-facing contract / 人類閱讀契約**：This README is the repository's primary human-facing surface. Normative rules remain in the linked canonical owners.／本 README 是此 repository 的主要人類閱讀介面；正式規則仍由下方連結的 canonical owners 擁有。
+
+## Core mental model / 核心心智模型
 
 **English**
 
-If you already have a GitHub project:
+The Playbook is built around a few deliberately separate ideas:
 
-1. Add a small Playbook declaration to the project-root `AGENTS.md` or equivalent project governance.
-2. Choose one active Playbook baseline, such as `main` or a pinned release tag.
-3. Choose exactly one project AI mode: `ChatGPT-Only` or `ChatGPT+Codex`. The mode selects actor topology, not a subscription or capability tier.
-4. Keep the project's current bootstrap / task router authoritative. If it explicitly decides that the current task does not need shared Playbook governance, stay on the project-native route.
-5. When Playbook activation is required, resolve the declared baseline and enter that revision's [`CHAT_INIT.md`](CHAT_INIT.md), then load only the minimum canonical sections needed for the task.
+- **Persistence ≠ loading ≠ write ≠ execution authority.** Stored or visible information does not automatically belong in every task and does not grant mutation authority.
+- **Current canonical state outranks historical memory.** Old chat, summaries, caches, handoffs, and external memory are evidence until reconciled with current authority.
+- **Capability ≠ authority.** A tool being callable does not mean the current task is authorized to use it for mutation or scope expansion.
+- **PASS ≠ done.** A passing test, workflow, or sub-check proves only its own scope; hardware, production, repository read-back, release, or deployment gates may remain separate.
+- **Adoption ≠ unconditional activation.** Shared governance should be loaded only when the current project route says it is needed.
+- **Use the lowest sufficient path.** Evidence, Context, model/reasoning, actor, runtime capability, and validation should expand only when the current level is insufficient.
 
-Minimal bootstrap:
+**繁體中文**
+
+Playbook 的核心刻意把幾個概念分開：
+
+- **持久化 ≠ 載入 ≠ 寫入 ≠ 執行權限**：資訊被保存、看得到，不代表每個 task 都要讀，也不代表取得 mutation authority。
+- **目前 canonical state 高於 historical memory**：舊聊天、摘要、cache、handoff、外部 memory 都只是 evidence，必須與 current authority reconciliation。
+- **Capability ≠ authority**：工具能呼叫，不代表本次 task 有權因此擴張 mutation 或 scope。
+- **PASS ≠ done**：test／workflow／子檢查 PASS 只證明自己的 scope；硬體、production、repository read-back、release、deployment 等 gate 仍可能獨立存在。
+- **Adoption ≠ unconditional activation**：只有 project route 判定需要時才載入 shared governance。
+- **優先最低充分路徑**：Evidence、Context、model/reasoning、actor、runtime capability 與 validation 都只有在目前層級不足時才擴張。
+
+## 5-minute adoption / 5 分鐘導入
+
+**English**
+
+For an existing GitHub project:
+
+1. Add a thin Playbook declaration to the project's current governance surface, commonly root `AGENTS.md`.
+2. Choose one declared Playbook baseline, such as `main` or a pinned release/tag.
+3. Choose exactly one Project AI mode: `ChatGPT-Only` or `ChatGPT+Codex`.
+4. Keep the project's own bootstrap/task router authoritative. If it explicitly decides shared Playbook governance is not needed for a task, stay project-native.
+5. When activation is required, resolve the declared baseline (including an exact revision when a floating ref matters), enter that revision's [`CHAT_INIT.md`](CHAT_INIT.md), and load only the minimum canonical owner(s) needed for the task.
+
+Minimal adoption block:
 
 ```markdown
 ## Common AI Development Playbook
@@ -57,343 +101,179 @@ follow that gate first. When Playbook activation is required, resolve the declar
 and enter that revision's `CHAT_INIT.md`, then load only the minimum canonical sections
 required by the current task.
 
-This project's own `AGENTS.md`, technical source of truth, and project-specific governance
-remain higher authority. Do not load the whole Playbook into Context by default.
+This project's own governance and technical source of truth remain higher authority.
+Do not load the whole Playbook into Context by default.
 ```
 
-Change the mode line to `Project AI mode: ChatGPT+Codex` when you want the collaboration profile that can admit Codex for project-governance-authorized implementation work. If the mode line is missing, mode selection is unresolved—not a third mode—and AI must not guess which profile you intended. Neither mode maps to Free / Go / Plus / Pro or to a fixed model/capability tier.
-
-Preferred activation shape:
-
-`Project identity → project-native activation gate when explicitly declared → project governance/adoption state when required → declared Playbook baseline → exact floating-ref revision when needed → Playbook CHAT_INIT.md only after activation → minimum-sufficient canonical owner`
-
-For `ChatGPT-Only`, prefer designs that can cold-start under `Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition` when the tested Free surface exposes GitHub Connect. This target constrains repository-authority acquisition; task-required ChatGPT-native runtime/execution capabilities may still be used when they are actually available and materially required.
-
-Use `Playbook baseline: main` when you intentionally want current rules. Use a released tag when reproducibility matters.
-
-The snippet above is the smallest bootstrap, not the full deterministic adoption contract. For a ready-to-adapt example that can be checked by Adoption Doctor, use [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md).
+Use [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) when you want a fuller ready-to-adapt example.
 
 **繁體中文**
 
-如果你已經有 GitHub 專案：
+對既有 GitHub 專案：
 
-1. 在專案根目錄的 `AGENTS.md` 或等價 project governance 放入一小段 Playbook 導入宣告。
-2. 只選一個目前有效的 Playbook 基準版本，例如 `main` 或固定的發行標籤（release tag）。
-3. Project AI mode 只選一種：`ChatGPT-Only` 或 `ChatGPT+Codex`。Mode 選的是 actor topology，不是訂閱或能力等級。
-4. 保持專案目前的 bootstrap／task router 為權威；若它明確判定本次任務不需要 shared Playbook governance，就留在 project-native route。
-5. 只有需要 Playbook activation 時，才解析 declared baseline、進入該 revision 的 [`CHAT_INIT.md`](CHAT_INIT.md)，再載入本次任務最低必要的權威章節。
+1. 在專案目前的 governance surface（常見是 root `AGENTS.md`）放入薄型 Playbook adoption 宣告。
+2. 宣告一個 Playbook baseline，例如 `main` 或固定 release/tag。
+3. Project AI mode 只選一種：`ChatGPT-Only` 或 `ChatGPT+Codex`。
+4. 專案自己的 bootstrap／task router 維持權威；若它明確判定某 task 不需要 shared Playbook governance，就留在 project-native route。
+5. 只有需要 activation 時，才解析 declared baseline（floating ref 在必要時解析 exact revision）、進入該 revision 的 [`CHAT_INIT.md`](CHAT_INIT.md)，再載入本題最低充分 canonical owner。
 
-上面的英文啟動宣告可以直接使用；若要讓 Codex 可依 project governance 被准入 implementation 工作，把 mode 那一行改成 `Project AI mode: ChatGPT+Codex`。若沒有宣告 mode，代表 mode selection unresolved，不是第三種 mode，AI 不得自行猜測。兩種 mode 都不對應 Free／Go／Plus／Pro，也不是固定模型／能力等級。
+若需要較完整、可直接調整的 adoption example，請使用 [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md)。
 
-偏好的 activation shape：
-
-`專案身分 → 若有明確宣告則先走 project-native activation gate → 需要時才讀 project governance／adoption state → declared Playbook baseline → 必要時把 floating ref resolve 成 exact revision → 只有 activation 後才進 Playbook CHAT_INIT.md → 最低充分權威主責文件`
-
-對 `ChatGPT-Only`，當受測 Free surface 確實提供 GitHub Connect 時，優先設計成可在 `Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition` 下 cold-start。這個 target 限定的是 repository authority acquisition；若本題實質需要而該 Free ChatGPT surface 也確實提供其他 ChatGPT-native runtime／execution capability，仍可依 capability gate 使用。
-
-想持續取得最新規則時使用 `Playbook baseline: main`；需要可重現時改用已發布的標籤。
-
-上面只是最小啟動宣告，不是完整的確定性導入契約。若要使用可由 Adoption Doctor 檢查、可直接調整的範例，請從 [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) 開始。
-
-## One-message ChatGPT bootstrap / 一句話讓 ChatGPT 開始使用
+## ChatGPT cold start / ChatGPT 冷啟動
 
 **English**
 
-If you want to try the Playbook in ChatGPT without changing persistent settings first, start a fresh chat and send:
+The primary ChatGPT compatibility target does **not** depend on persistent Custom Instructions, warmed cache, a previous chat, Codex, public GitHub pages, shell Git, or Python HTTP for repository authority acquisition.
+
+Preferred regression profile:
 
 ```text
-Use GitHub Connect / the GitHub Connector to establish the current repository identity and project bootstrap/governance.
-
-If the project exposes a current project-native task router that explicitly decides whether shared Playbook activation is needed, follow that gate first. Adoption alone does not require Playbook activation for every task.
-
-When the project requires shared Playbook activation, read its declared Playbook baseline and Project AI mode (`ChatGPT-Only` or `ChatGPT+Codex`). Treat the mode as actor topology, not a subscription/capability tier. Resolve a floating baseline to an exact revision when needed, enter that revision's `CHAT_INIT.md`, and read only the minimum-sufficient canonical owners required for the current task.
-
-Do not scan the whole Playbook or substitute stale memory for current GitHub state.
+Free ChatGPT
++ fresh chat
++ empty cache
++ GitHub Connect-only repository authority acquisition
 ```
 
-If the GitHub Connector is unavailable for a repository read that is materially required, ChatGPT should say so explicitly rather than silently relying on model memory or incomplete repository content.
+After current repository authority is established, the session may use additional ChatGPT-native capabilities that are actually available and materially required, while preserving the same identity, integrity, execution, and validation gates.
 
-For repeated use, see the persistent ChatGPT Custom Instructions setup below.
+If the core workflow fails under this profile, first ask whether the blocker is an avoidable convenience dependency, an alternate verifiable transport/materialization path, or a genuinely required capability. Do not silently promote a convenience dependency into the baseline.
 
 **繁體中文**
 
-如果只是想先在 ChatGPT 快速試用 Playbook，不需要先修改永久設定。開一個新的 ChatGPT 聊天室並貼上：
+主要 ChatGPT 相容性目標**不依賴** persistent Custom Instructions、warmed cache、舊聊天室、Codex、public GitHub page、shell Git 或 Python HTTP 來取得 repository authority。
+
+偏好的 regression profile：
 
 ```text
-請透過 GitHub Connect／GitHub Connector 建立目前 repository identity 與 project bootstrap／governance。
-
-若專案有 current project-native task router，且它明確負責判定是否需要 shared Playbook activation，先遵守該 gate。正式 adoption 不代表每個任務都要 activate Playbook。
-
-當專案判定需要 shared Playbook activation 時，再讀取它宣告的 Playbook baseline 與 Project AI mode（`ChatGPT-Only` 或 `ChatGPT+Codex`）。Mode 是 actor topology，不是訂閱／能力等級。必要時將 floating baseline resolve 成 exact revision，再進入該 revision 的 `CHAT_INIT.md`，並只讀本次任務最低充分的 canonical owners。
-
-不要完整掃描 Playbook，也不要以舊記憶代替 current GitHub state。
+Free ChatGPT
++ fresh chat
++ empty cache
++ GitHub Connect-only repository authority acquisition
 ```
 
-如果 materially required 的 repository read 無法使用 GitHub Connector，ChatGPT 應明確回報，而不是默默改用模型記憶或不完整的儲存庫內容繼續。
+建立 current repository authority 後，可以再使用該 ChatGPT surface 實際提供、而且本題實質需要的 ChatGPT-native capability，但仍必須維持相同 identity、integrity、execution 與 validation gate。
 
-如果準備長期使用，再依下方的 ChatGPT Custom Instructions 設定進行持久化安裝。
+若核心 workflow 在這個 profile 下失敗，應先區分：是可以消除的 convenience dependency、仍有等價可驗證的 transport/materialization path，還是真的缺少 materially required capability；不要直接把方便路徑升格成 baseline prerequisite。
 
-## ChatGPT Custom Instructions setup and recovery / ChatGPT 自訂指令設定與復原
-
-**English**
-
-ChatGPT Custom Instructions are a **persistent user-level host setting**, not project governance and not proof that every project adopts this Playbook. For the current manually installed thin-activation setup:
-
-1. Open ChatGPT Settings → Personalization → Custom Instructions (wording may vary by product version).
-2. Open [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt), select all, and replace the Custom Instructions field with the complete file. Do not merge partial revisions.
-3. Start a **fresh ChatGPT chat** for validation; do not use an already-contextualized conversation as proof that the new host instruction is active.
-4. For repository/project work, follow the current project bootstrap/governance. If the project exposes an explicit project-native activation gate, let it decide whether shared Playbook activation is needed before loading Playbook state. The project itself decides whether it adopts this Playbook and which baseline it declares; adoption alone must not default to activation or to current Playbook `main`.
-
-The copy-ready artifact is intentionally kept within **5,000 characters**, matching the field limit observed during this adapter's manual validation. Treat that number as a product-version-specific installation constraint, not a Playbook policy rule.
-
-If fresh chats materially skip repository identity/governance, assume an undeclared Playbook baseline, ignore an explicit project-native activation gate, broaden a generic continuation into new work, or treat capability as authority, use the bounded **ChatGPT Host Instruction Health Check** in [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md). If the setting is missing, stale, or mixed, replace the whole field with the current [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt), then rerun a minimal fresh-chat regression.
-
-**繁體中文**
-
-ChatGPT 自訂指令屬於**使用者層級的持久 host setting**，不是專案 governance，也不代表所有專案會因為這個設定就自動採用本 Playbook。以目前需要手動安裝的薄型啟動方式：
-
-1. 開啟 ChatGPT 的 Settings／Personalization／Custom Instructions（不同產品版本介面文字可能略有差異）。
-2. 開啟 [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt)，全選整份內容並完整取代 Custom Instructions 欄位；不要把不同版本以增量方式混在一起。
-3. 用**全新 ChatGPT 聊天室**驗證；不要拿已累積舊 context 的既有聊天室當成新 host instruction 已生效的證據。
-4. 進入 repository／project 工作後，先遵守 current project bootstrap／governance。若專案有明確的 project-native activation gate，由該 gate 先決定是否需要 shared Playbook activation，再載入 Playbook state。是否採用 Playbook、採用哪個 baseline 都由專案自己宣告；不能只因「採用 Playbook」就無條件 activate，也不能預設使用 Playbook current `main`。
-
-這份 copy-ready artifact 目前刻意維持在 **5,000 字元以內**，對應本 adapter 目前人工驗證時觀察到的 ChatGPT 欄位限制。這個數字是產品版本相關的安裝限制，不是 Playbook policy。
-
-若 fresh chat 出現未確認 repository identity／governance、擅自假設 undeclared Playbook baseline、忽略明確的 project-native activation gate、把「好，繼續」之類 continuation 擴張成新工作，或把 capability 誤當 authority，可依 [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) 的 **ChatGPT Host Instruction Health Check** 做有界診斷。若設定缺失、過期或混合多版，請用目前完整的 [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) 整段覆蓋，再跑最小 fresh-chat regression。
-
-## Codex Desktop setup and recovery / Codex Desktop 設定與復原
+## Optional host adapters / 可選 host adapters
 
 **English**
 
-Codex personal instructions are a **persistent user/app-level setting**, not a repository file or an ordinary one-chat prompt. For the current manually installed thin-activation setup:
+Persistent host instructions are **optional activation adapters**, not the core adoption mechanism and not project authority.
 
-1. Open Codex Settings → Personalization → Codex Instructions (wording may vary by product version).
-2. Open [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt), select all, and copy the complete file into Codex Instructions.
-3. Replace the entire field; do not merge partial revisions.
-4. Open the intended project repository/workspace, then start a fresh Codex chat.
-5. If a required read-only bootstrap probe is blocked by sandbox or network permissions, Codex may ask for the minimum permission required for that exact operation; approval does not grant broader mutation authority.
+- [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) is a copy-ready ChatGPT host adapter for product surfaces where the current instruction field can accept it.
+- [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) is the corresponding Codex host adapter where that product/runtime exposes a compatible persistent-instruction surface.
+- [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) owns the current activation, loading, health-check, and product-surface caveats.
 
-This setup currently requires a one-time manual installation. A normal ChatGPT/Codex prompt does not by itself establish that the persistent Codex Instructions field has been changed, and ChatGPT must not claim it can inspect or modify that setting unless the product exposes an actual settings capability.
-
-If Codex later reports behavior that materially conflicts with the expected activation flow, ChatGPT should first reconcile the current project state with canonical evidence, then use the bounded **Codex Host Instruction Health Check** in [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md). Typical signals include wrong repository/workspace identity, missing Playbook adoption despite a current project declaration, skipped floating-ref exact revision resolution, failure to request available minimum read permission, unexpected broad bootstrap reading, or treating host instructions/capabilities as mutation authority. A timestamp-only error or ordinary source/test failure is not enough by itself.
-
-If the health check finds missing, stale, or mixed instructions, replace the whole Codex Instructions field with the current complete [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt), then verify with a minimal fresh-chat regression.
+Product UI names, field limits, and available persistent-instruction surfaces can change independently of Playbook policy. Do not treat README wording or an older screenshot as product authority. A host adapter being installed also does not prove that a project adopts the Playbook or grant repository mutation authority.
 
 **繁體中文**
 
-Codex 個人化指示屬於**使用者／App 層級的持久設定**，不是儲存庫檔案，也不是只對單一聊天室生效的普通提示。以目前需要手動安裝的薄型啟動方式：
+Persistent host instruction 是**可選 activation adapter**，不是核心 adoption mechanism，也不是 project authority。
 
-1. 開啟 Codex 的 Settings／Personalization → Codex Instructions（不同產品版本的介面文字可能略有差異）。
-2. 開啟 [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt)，全選整份內容，並複製到 Codex Instructions。
-3. 將整個設定欄位完整取代，不要把不同版本以增量方式混在一起。
-4. 開啟正確的專案儲存庫／工作區，再建立全新的 Codex 聊天。
-5. 若啟動階段必要的唯讀查詢被 sandbox／network 權限限制擋住，Codex 可能會要求執行該操作所需的最低權限；核准只解除這個操作的能力限制，不代表取得更廣的修改權限。
+- [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) 是給目前產品 surface 能容納該 payload 時使用的 ChatGPT copy-ready host adapter。
+- [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) 是對應的 Codex host adapter，只有在該 product/runtime 提供相容 persistent-instruction surface 時才使用。
+- [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) 擁有目前的 activation、loading、health-check 與 product-surface caveat。
 
-目前這個設定仍需要使用者手動安裝一次。一般 ChatGPT／Codex 提示本身不能證明 Codex 個人化指示已被永久寫入；除非產品真的提供設定讀寫能力，ChatGPT 也不得宣稱自己能直接查看或修改該設定。
-
-若日後 Codex 的回報與預期啟動行為有實質不一致，ChatGPT 應先核對專案目前狀態與權威證據，再依 [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) 的 **Codex 個人化指示健康檢查（Host Instruction Health Check）** 做有界診斷。典型訊號包括：儲存庫／工作區身分錯誤、專案已宣告採用 Playbook 但 Codex 說未採用、浮動基準未解析成確切不可變版本、明明可以要求最低唯讀權限卻直接宣告 unavailable、啟動時出現不必要的大範圍讀取，或把個人化指示／工具能力誤當成修改權限。單純時間戳錯誤或一般原始碼／測試失敗，不足以單獨觸發這個診斷。
-
-若健康檢查確認設定缺失、過期或混合多版，請用目前完整的 [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) 整段覆蓋 Codex Instructions，再用最小的全新聊天室迴歸測試驗證。
+產品 UI 名稱、欄位限制與可用 persistent-instruction surface 都可能獨立於 Playbook policy 改變。不要把 README 舊文字或舊截圖當成產品權威；host adapter 被安裝也不代表某 project 已 adoption，更不會授予 repository mutation authority。
 
 ## Quick workflow / 快速流程
 
 **English**
 
-Start from current project identity and bootstrap/governance. If the project declares a project-native activation gate, let that gate decide whether shared Playbook governance is needed for the current task. When Playbook activation is required, resolve the declared baseline and project AI mode: `ChatGPT-Only` or `ChatGPT+Codex`. The mode selects actor topology, not a subscription/capability tier. Inside that profile, resolve the responsibility and mutation surface and choose the **lowest-sufficient authorized actor** from the repository's lower-level authority contract. `ChatGPT-Only` keeps Codex out of the repository workflow and aims to keep unnecessary ChatGPT capability requirements low; `ChatGPT+Codex` admits Codex only for implementation work that current project governance / Stage actually assigns to it. After execution or handoff, read back the current canonical state and reconcile the evidence before deciding whether the work is done or another Stage is needed.
+A typical project flow is:
 
-For ChatGPT-facing regression, the preferred `ChatGPT-Only` cold-start target is `Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition`. Stronger surfaces are accelerators unless the task actually requires them.
+```text
+Current project identity / bootstrap
+→ project-native activation gate when explicitly declared
+→ shared Playbook activation only if needed
+→ declared baseline + Project AI mode
+→ minimum-sufficient canonical owner
+→ current task / authority / evidence
+→ lowest-sufficient authorized actor
+→ execution or handoff
+→ canonical read-back / reconciliation
+→ done, next Stage, or STOP
+```
+
+`ChatGPT-Only` keeps Codex out of the repository AI workflow and aims to keep unnecessary ChatGPT capability requirements low. `ChatGPT+Codex` admits Codex only where current project governance/Stage actually assigns implementation work to it.
 
 **繁體中文**
 
-從目前 project identity 與 bootstrap／governance 開始。若專案宣告 project-native activation gate，先由該 gate 判斷本次任務是否需要 shared Playbook governance。需要 Playbook activation 時，再解析 declared baseline 與專案 AI mode：`ChatGPT-Only` 或 `ChatGPT+Codex`。Mode 選的是 actor topology，不是訂閱／能力等級。接著在該 profile 內確認這一步真正需要的責任與修改範圍，依 repository 的 lower-level authority contract 選擇**最低充分且已獲授權的執行角色**。`ChatGPT-Only` 不讓 Codex 進入該 repository workflow，並盡量壓低不必要的 ChatGPT capability requirement；`ChatGPT+Codex` 也只有在 current project governance／Stage 真正把 implementation 工作分派給 Codex 時才 handoff。執行或交接完成後，再回讀目前 canonical state、核對證據，最後判斷是否完成或需要下一個 Stage。
+一般 project flow：
 
-對 ChatGPT-facing regression，偏好的 `ChatGPT-Only` cold-start target 是 `Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition`。更強的 surface 預設只是加速器，除非本題真的需要。
+```text
+目前 project identity / bootstrap
+→ 若有明確宣告先走 project-native activation gate
+→ 只有需要時才 activate shared Playbook
+→ declared baseline + Project AI mode
+→ 最低充分 canonical owner
+→ current task / authority / evidence
+→ 最低充分且已授權 actor
+→ 執行或 handoff
+→ canonical read-back / reconciliation
+→ 完成、下一 Stage 或 STOP
+```
 
-![AI Development Playbook quick workflow](assets/readme-workflow.svg)
+`ChatGPT-Only` 不讓 Codex 進入 repository AI workflow，並盡量壓低不必要的 ChatGPT capability requirement；`ChatGPT+Codex` 也只有 current project governance／Stage 真正把 implementation 工作分派給 Codex 時才 handoff。
 
-> **Illustrative workflow / 流程概覽**：The diagram is a human-facing summary, not a second normative authority. Canonical rules remain in the linked Playbook owner documents.／本圖是人類閱讀用的流程摘要，不是第二份規範權威；正式規則仍以 Playbook 對應的權威主責文件為準。
-
-## Why this exists / 為什麼需要它
+## What it covers / 主要涵蓋範圍
 
 **English**
 
-AI-assisted development often fails in ways that are not really coding failures:
-
-- a useful idea silently becomes unauthorized work;
-- a test passes and gets reported as if the real system is done;
-- an old chat or cached summary overrides the current repository truth;
-- an agent can technically call a tool, so capability is mistaken for authority;
-- every task loads too much repository history, increasing cost and stale-context risk;
-- multiple agents or workflows each carry a different idea of what is current.
-
-The Playbook gives these failure modes explicit boundaries and routing instead of trying to solve them with a larger prompt.
-
-**繁體中文**
-
-AI 輔助開發很多失敗其實不是「程式寫不好」：
-
-- AI 覺得某個改善很有價值，就默默把它變成未授權工作；
-- 測試 PASS 被直接講成真實系統已完成；
-- 舊聊天室或快取摘要覆蓋儲存庫目前的權威事實；
-- 代理技術上能呼叫工具，就把技術能力誤當成權限；
-- 每個任務都載入過多儲存庫歷史，增加成本與過時上下文風險；
-- 不同代理／工作流程各自保留不同版本的「目前狀態」。
-
-Playbook 的做法不是塞入更大的提示詞，而是把這些失敗模式變成清楚的權威、路由、證據與生命週期邊界。
-
-## Before / After showcase / 前後對照案例
-
-> **Illustrative, non-normative evidence layer / 說明性、非規範性證據層**：These cases summarize real Playbook behavioral regression fixtures and formal fresh-session results. They provide inspectable evidence of the behavior under test, **not third-party testimonials and not a replacement for policy**. Canonical rules remain in the linked owner documents.／以下案例整理 Playbook 已實際執行的行為迴歸測試情境與正式全新工作階段結果；它們是可檢查的行為證據，**不是第三方推薦，也不取代權威規則**。規範性規則仍由所連結的主責文件管理。
-
-### 1. Useful Idea ≠ Authorized Work / 有價值的想法 ≠ 已授權工作
-
-**Before**
-
-An AI notices that a dependency-freshness scanner would be useful. The user replies, “OK, note it down.” A naive workflow can silently turn that suggestion into an authorized task, add it to the active queue, or even begin implementation.
-
-**After**
-
-The Playbook separates **observation → recommendation → admitted work**. In the formal `BEH-002` fresh-session run, the optional scanner stayed a low-commitment Cold candidate; persistence did not grant implementation authority, no write target was guessed, and promotion required a future trigger and reconciliation.
-
-Evidence: [`BEH-002 formal run`](evals/runs/BEH-002-2026-09-07-formal-002.json) · Canonical owner: [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md)
+- **Project AI mode and actor admission** — choose `ChatGPT-Only` or `ChatGPT+Codex`, then apply lower-level repository authority.
+- **Conditional activation** — adopted projects can keep low-cost project-native hot paths for tasks that do not need shared governance.
+- **Context architecture** — Always-on / Hot / Cold / Evidence / Current / Historical responsibilities and progressive routing.
+- **Repository and authority integrity** — current identity, path/action authority, permission boundaries, read-back, and source-vs-derived distinctions.
+- **Task admission and coordination** — observation/recommendation/admitted-work separation, task identity, Stage boundaries, follow-up/new-work control.
+- **Validation and evidence** — deterministic checks, behavioral evaluation, hardware/runtime/production evidence, completion reconciliation.
+- **Runtime execution** — bounded ChatGPT-side deterministic execution when the current session actually has the required runtime/capabilities.
+- **Interoperability** — external specs, skills, memory systems, and governance frameworks can coexist without inheriting authority merely by being connected.
+- **Cost-aware execution** — use minimum-sufficient evidence, Context, model/reasoning, actor, and validation before escalating.
 
 **繁體中文**
 
-AI 自己發現「相依套件版本更新檢查器（dependency freshness scanner）」看起來很有價值，使用者只說「好，先記著」。如果沒有工作准入邊界，這句話很容易被 AI 擴張成已承諾任務、加入 Hot 工作佇列，甚至直接開始實作。
+- **Project AI mode 與 actor admission**：先選 `ChatGPT-Only`／`ChatGPT+Codex`，再套用 lower-level repository authority。
+- **Conditional activation**：已 adoption 的 project 可以讓不需要 shared governance 的 task 維持低成本 project-native hot path。
+- **Context 架構**：Always-on／Hot／Cold／Evidence／Current／Historical responsibility 與 progressive routing。
+- **Repository／authority integrity**：current identity、path/action authority、permission boundary、read-back、source-vs-derived 分離。
+- **Task admission／coordination**：observation／recommendation／admitted-work 分離、task identity、Stage boundary、follow-up/new-work 控制。
+- **Validation／evidence**：deterministic checks、behavioral eval、hardware/runtime/production evidence、completion reconciliation。
+- **Runtime execution**：只有 current ChatGPT session 實際具備所需 runtime/capability 時，才做 bounded deterministic execution。
+- **Interoperability**：external spec、skills、memory system、governance framework 可以共存，但不會只因被連接就繼承 authority。
+- **成本感知執行**：Evidence、Context、model/reasoning、actor、validation 都先用最低充分層級，不足才升級。
 
-Playbook 會把 **觀察 → 建議 → 准入工作** 分開。正式 `BEH-002` 全新工作階段實測中，這個可選檢查器只保持為低承諾的 Cold 候選項目；「被記錄」沒有變成實作權限，也沒有猜測寫入目標，未來要升級成 Hot 仍需真實觸發條件與一致性核對。
-
-證據：[`BEH-002 正式測試`](evals/runs/BEH-002-2026-09-07-formal-002.json) · 權威主責：[`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md)
-
-### 2. Test Passed ≠ Done / 測試通過 ≠ 真實世界已完成
-
-**Before**
-
-An external workflow reports `Converged` and `PASS`. It is tempting to call the feature fully done and deploy it immediately, even though hardware validation, canonical GitHub read-back, production smoke, or deployment permission may still be separate gates.
-
-**After**
-
-The Playbook keeps every positive status scoped to what it actually proves. In the formal `BEH-014` run, the model preserved pending hardware/device validation, production and repository-completion gates, and explicit deployment permission; it refused to promote the green workflow status into universal completion or deployment authority.
-
-Evidence: [`BEH-014 formal run`](evals/runs/BEH-014-2026-09-07-formal-001.json) · Canonical owner: [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md)
-
-**繁體中文**
-
-外部工作流程顯示 `Converged`、`PASS`，很容易被直接講成「整個功能已完成，可以部署」，即使硬體驗證、GitHub 權威內容回讀、正式環境冒煙測試或部署權限其實仍是獨立關卡。
-
-Playbook 要求每個 PASS 只證明它真正涵蓋的範圍。正式 `BEH-014` 實測中，模型保留待完成的硬體／裝置驗證、正式環境與儲存庫完成關卡，以及明確的部署權限；沒有把工作流程的綠燈升格成全域完成狀態或部署權限。
-
-證據：[`BEH-014 正式測試`](evals/runs/BEH-014-2026-09-07-formal-001.json) · 權威主責：[`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md)
-
-### 3. Who Actually Has Authority? / 現在到底該由誰做？
-
-**Before**
-
-A project can accidentally fall back to an old generic “ChatGPT plans, Codex implements” habit, or a previous Codex Stage can create handoff inertia. That can force Codex into work even when the selected project mode is `ChatGPT-Only`, or when the next Stage is read-only research that does not need Codex.
-
-**After**
-
-The Playbook first resolves the **selected Project AI mode**, then applies the repository's lower-level path/action authority and current Stage. `BEH-010` protects against handoff inertia across Stages; `BEH-019` protects the complementary `ChatGPT-Only` case where ChatGPT is already the authorized AI implementation / maintenance actor and no Codex handoff should be invented.
-
-Evidence: [`BEH-010 formal run`](evals/runs/BEH-010-2026-09-07-formal-002.json) · [`BEH-019 scenario`](evals/BEH_019_SUPPLEMENTAL.md) · Canonical owners: [`PROJECT_MODES.md`](PROJECT_MODES.md), [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md), [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md)
-
-**繁體中文**
-
-專案很容易不小心退回舊式「ChatGPT 規劃、Codex 實作」慣性，或因上一個 Stage 用過 Codex 而產生 handoff inertia。這可能讓已選 `ChatGPT-Only` 的 repository 仍被錯誤塞入 Codex，也可能讓下一步明明只是 read-only research，卻因前一階段習慣再次交給 Codex。
-
-Playbook 現在會先解析**已選 Project AI mode**，再套用 repository 的 lower-level path／action authority 與 current Stage。`BEH-010` 防止跨 Stage 的 handoff inertia；`BEH-019` 則保護互補的 `ChatGPT-Only` 情境：ChatGPT 本來就是已授權的 AI implementation／maintenance actor 時，不應虛構 Codex handoff。
-
-證據：[`BEH-010 正式測試`](evals/runs/BEH-010-2026-09-07-formal-002.json) · [`BEH-019 情境`](evals/BEH_019_SUPPLEMENTAL.md) · 權威主責：[`PROJECT_MODES.md`](PROJECT_MODES.md)、[`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md)、[`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md)
-
-These three cases are intentionally compact. The Showcase is a proof surface, not a second documentation system. More scenarios live under [`evals/`](evals/), while normative behavior stays with each canonical owner.
-
-以上三個案例刻意保持小型。Showcase 是證據展示層，不是第二套文件系統；更多測試情境留在 [`evals/`](evals/)，規範性行為仍由各權威主責文件管理。
-
-## What it controls / 它控制哪些問題
+## Evidence and behavioral evaluation / 證據與行為迴歸
 
 **English**
 
-- **Context engineering** — Always-on / Hot / Cold / Evidence / Historical responsibilities keep each task from paying the context cost of the entire repository history.
-- **Agent governance** — Persistence, default loading, write authority, and execution authority are separate concepts.
-- **Two project AI modes + lower-level authority** — A project chooses `ChatGPT-Only` or `ChatGPT+Codex`; these are actor-topology profiles rather than subscription/capability tiers. Repository governance then narrows responsibility, path/action authority, validation, Git, release, deployment, and other boundaries inside that profile. Undeclared mode means unresolved, not a third topology.
-- **Conditional Playbook activation** — Adoption alone does not force every task through the shared Playbook. An explicit project-native activation gate may keep ordinary work on the project-native route; Playbook `CHAT_INIT.md` becomes the shared workflow router only after activation.
-- **Repository memory** — Current canonical GitHub state outranks old chat state or model memory.
-- **Task routing** — Once Playbook activation is required, `CHAT_INIT.md` routes a task to the minimum canonical owner instead of encouraging whole-repository reading.
-- **ChatGPT cold-start compatibility** — `ChatGPT-Only` design aims to keep the core ChatGPT path compatible with `Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition` where that Free surface exposes GitHub Connect, without weakening evidence or pretending unavailable capabilities exist.
-- **Workflow interoperability** — External spec, skills, or governance systems can coexist without losing Playbook authority / loading / evidence boundaries.
-- **Validation and evidence** — Deterministic checks, behavioral evaluation, runtime / hardware / production evidence, and completion read-back remain distinct.
-- **Cost-aware execution** — The Evidence → Context → Model → Reasoning → Agent → Validation chain expands only when evidence shows the cheaper level is insufficient.
-- **Mixed-profile Codex execution** — The user still chooses the root model/reasoning, while a Prompt can authorize already-valid bounded child work to use a lower or higher model/reasoning profile when that improves end-to-end cost or quality; profile switching alone never creates delegation authority.
-- **Ephemeral compute** — ChatGPT may run bounded deterministic workloads in a suitable sandbox without gaining repository write authority from that capability alone.
+The repository includes deterministic validators and behavioral-evaluation fixtures. Their purpose is to keep claims scoped to what was actually tested; they are not a second policy system.
+
+Start here:
+
+- [`evals/README.md`](evals/README.md) — behavioral evaluation structure and current evidence index.
+- [`evals/`](evals/) — scenarios, supplemental cases, cold-start fixtures, regression matrix, and run records.
+- [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) — canonical validation/evidence/completion contract.
+
+Human-facing README examples should stay illustrative rather than duplicate a growing list of dated run snapshots.
 
 **繁體中文**
 
-- **上下文工程（Context engineering）**：Always-on／Hot／Cold／Evidence／Historical 各有不同責任，不讓每個任務都付出整份儲存庫記憶的上下文成本。
-- **代理治理（Agent governance）**：持久化（Persistence）、預設載入、寫入權限與執行權限分開判斷。
-- **兩種 Project AI mode + lower-level authority**：專案只選 `ChatGPT-Only` 或 `ChatGPT+Codex`；兩者是 actor-topology profile，不是訂閱／能力等級。再由 repository governance 在該 profile 內縮窄責任、path／action authority、validation、Git、release、deployment 等邊界。未宣告 mode 代表 unresolved，不是第三種 topology。
-- **Playbook 條件式啟用（Conditional Playbook activation）**：正式 adoption 不代表每個任務都必須經過 shared Playbook。若專案明確宣告 project-native activation gate，一般工作可以留在 project-native route；只有 activation 後才由 Playbook `CHAT_INIT.md` 接手 shared workflow routing。
-- **儲存庫記憶（Repository memory）**：GitHub 目前的權威狀態高於舊聊天室或模型記憶。
-- **任務路由（Task routing）**：只有 Playbook activation 已成立時，才從 `CHAT_INIT.md` 依任務直達最低必要的權威主責文件，而不是鼓勵全文掃描整個儲存庫。
-- **ChatGPT cold-start 相容性**：`ChatGPT-Only` 設計在受測 Free surface 提供 GitHub Connect 的前提下，盡量讓核心 ChatGPT path 相容於 `Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition`，同時不降低證據標準，也不假裝不存在的 capability 已存在。
-- **工作流程互通（Workflow interoperability）**：外部規格、技能與治理框架可以共存，同時保留 Playbook 的權威、載入與證據邊界。
-- **驗證與證據（Validation and evidence）**：確定性檢查、行為評估、執行環境／硬體／正式環境證據與完成後回讀彼此分開，不互相冒充。
-- **成本感知執行（Cost-aware execution）**：Evidence → Context → Model → Reasoning → Agent → Validation 這條鏈只有在證據顯示較低成本層級不足時才逐級擴張。
-- **Codex 混合 profile 執行（Mixed-profile Codex execution）**：root model／reasoning 仍由使用者選擇；同一份 Prompt 可授權原本就合法、可獨立 delegation 的 bounded child，依端到端成本／品質向較低或較高 model／reasoning profile 路由；但「想換 profile」本身不會產生 delegation authority。
-- **暫態運算（Ephemeral compute）**：ChatGPT 可在合適的沙箱環境執行有界確定性工作負載，但不會只因「能執行」就取得儲存庫寫入權限。
+Repository 內含 deterministic validator 與 behavioral-evaluation fixtures；它們的目的，是讓每個 claim 只涵蓋真正測到的範圍，不是第二套 policy system。
 
-## Core differentiators / 核心差異
+從這裡開始：
 
-**English**
+- [`evals/README.md`](evals/README.md)：behavioral evaluation 結構與目前 evidence index。
+- [`evals/`](evals/)：scenario、supplemental case、cold-start fixture、regression matrix 與 run records。
+- [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md)：canonical validation／evidence／completion contract。
 
-The Playbook does not try to replace an agent runtime, skills package, spec framework, or enterprise compliance suite. Its job is to make long-running AI work on real repositories **reconstructable, bounded, and evidence-driven**.
-
-Its five main differentiators are:
-
-1. **Repository Information Architecture for AI** — Repository surfaces are organized around responsibility, retrieval intent, current authority, coordination, evidence, and history—not just file storage.
-2. **Context has a lifecycle** — Information can be durable without being default-loaded into every task.
-3. **Persistence ≠ loading ≠ write ≠ execution** — Being visible, remembered, or technically callable does not grant authority.
-4. **Real-world evidence is first-class** — Software PASS does not automatically replace hardware, bench, production, or user-observed evidence.
-5. **Minimum-sufficient cost is a shared optimization objective** — Use the cheapest sufficient evidence, context, model, reasoning, agent, and validation scope before escalating.
-
-The common goal is **governance without bureaucracy**: enough structure to keep long-lived AI engineering coherent, without turning every small task into a heavyweight ceremony.
-
-**繁體中文**
-
-Playbook 不試圖取代代理執行環境（agent runtime）、技能套件、規格框架或企業合規套件。它的工作是讓 AI 長期操作真實儲存庫時，專案狀態仍然**可重建、有邊界、以證據驅動**。
-
-五個主要差異：
-
-1. **面向 AI 的儲存庫資訊架構（Repository Information Architecture for AI）**：GitHub 不只是檔案儲存，而是依資訊介面責任、檢索目的、目前權威、協作、證據與歷史來設計。
-2. **上下文有生命週期**：資訊可以被持久保存，但不代表每個任務都要預設載入。
-3. **持久化 ≠ 載入 ≠ 寫入 ≠ 執行**：看得到、記得住、技術上能呼叫，都不等於取得權限。
-4. **真實世界證據是一級公民**：軟體 PASS 不會自動覆蓋硬體、工作台、正式環境或使用者實際觀察到的證據。
-5. **最低充分成本是共同最佳化目標**：先使用最低充分的證據、上下文、模型、推理、代理與驗證範圍，不足才升級。
-
-共同目標是**不增加官僚負擔的治理**：提供足夠結構讓長期 AI 工程保持一致，但不把每個小任務都變成重型流程。
-
-## Core operating principles / 核心操作原則
-
-**English**
-
-> Get the minimum sufficient evidence first. Then use the minimum sufficient Context, Model, Reasoning, Agent, and Validation scope. Escalate only when evidence shows the current level is insufficient.
-
-> The common Playbook defines **how to develop**. Each real project repository defines **what the system is**.
-
-> A repository should let AI reach one sufficient current source of authority at minimum retrieval cost. Files, indexes, registries, summaries, metadata, and manifests are means, not goals.
-
-**繁體中文**
-
-> 先取得最低充分證據，再使用最低充分的上下文、模型、推理、代理與驗證範圍；只有證據顯示目前層級不足時才逐級擴張。
-
-> 共通 Playbook 管**怎麼開發**；各實際專案儲存庫管**系統是什麼**。
-
-> 儲存庫應讓 AI 以最低充分檢索成本命中唯一且足夠的目前權威來源；拆檔、索引、登錄表、摘要、中繼資料與清單（manifest）都只是手段，不是目標。
+README 只保留人類容易理解的概覽，不再複製會快速變舊的一長串 dated run snapshot。
 
 ## Adoption Doctor / 導入檢查器
 
 **English**
 
-Adoption Doctor is a deterministic, read-only, report-only check of a target project's Playbook adoption and routing contract. It does not replace project-specific semantic review, and running it does not grant write authority to the target repository.
+Adoption Doctor is a deterministic, read-only, report-only check of a target project's Playbook adoption and routing contract.
 
 Local Path Mode:
 
@@ -401,79 +281,55 @@ Local Path Mode:
 python tools/adoption_doctor.py <project-root>
 ```
 
-ChatGPT GitHub Snapshot Mode:
+ChatGPT Snapshot Mode is also supported when the current ChatGPT session can acquire the exact minimum files, materialize a trustworthy temporary snapshot, and satisfy the runtime contract. Snapshot acquisition is separate from Doctor execution and does not create repository authority.
 
-`GitHub canonical → ChatGPT minimum-sufficient snapshot → adoption_doctor.py → PASS / WARN / FAIL report`
-
-A ChatGPT session with repository-read capability may retrieve only the files required by the Doctor's active checks, materialize a temporary snapshot, and run the same deterministic engine when its runtime contract is satisfied. The snapshot is only an execution input; it is not a new source of truth.
+If exact materialization cannot be verified, report the acquisition/materialization gap rather than claiming deterministic validation passed.
 
 **繁體中文**
 
-Adoption Doctor 是唯讀／僅報告的確定性檢查，用來檢查目標專案的 Playbook 導入與路由契約。它不取代專案專屬的語意審查，也不會只因執行檢查就取得目標儲存庫的寫入權限。
+Adoption Doctor 是 deterministic、read-only、report-only 的 adoption／routing contract 檢查器。
 
-本機路徑模式（Local Path Mode）：
+本機模式：
 
 ```text
 python tools/adoption_doctor.py <project-root>
 ```
 
-ChatGPT GitHub 快照模式（Snapshot Mode）：
+若 current ChatGPT session 能取得必要 exact files、建立可信 temporary snapshot 並滿足 runtime contract，也可使用 ChatGPT Snapshot Mode。Snapshot acquisition 與 Doctor execution 是不同層級，也不會建立 repository authority。
 
-`GitHub canonical → ChatGPT minimum-sufficient snapshot → adoption_doctor.py → PASS / WARN / FAIL report`
-
-具備儲存庫讀取能力的 ChatGPT 工作階段，可以只取得 Doctor 目前檢查所需的最低充分檔案，建立暫時快照，並在執行環境契約成立時執行同一套確定性檢查引擎。這份快照只作為執行輸入，不是新的事實來源。
+如果 exact materialization 無法驗證，就應回報 acquisition／materialization gap，不得宣稱 deterministic validation 已 PASS。
 
 ## Repository map / 文件地圖
 
 **English**
 
-Humans normally do not need to read these files in order. This map explains where AI routes for specific responsibilities.
+Humans normally do not need to read these files in order. This map shows the main canonical owners and adapters.
 
-| File | Responsibility |
+| File | Primary responsibility |
 |---|---|
-| [`AGENTS.md`](AGENTS.md) | Maintainer authority for this Playbook repository: ChatGPT / Codex ownership, audience / surface contract, direct-write and execution exceptions, validator contract, mutation integrity |
-| [`CHAT_INIT.md`](CHAT_INIT.md) | Minimum Playbook bootstrap / task router after Playbook activation, plus repository-read recovery |
-| [`PROJECT_MODES.md`](PROJECT_MODES.md) | Canonical two-value project AI mode selection: `ChatGPT-Only` or `ChatGPT+Codex`; mode-is-not-tier semantics; minimum-sufficient ChatGPT capability floor; Free ChatGPT cold-start target |
-| [`PROJECT_BOOTSTRAP.md`](PROJECT_BOOTSTRAP.md) | Research bootstrap, reuse-first research, stage-transition actor revalidation, research write allowlist, post-adoption context closure, implementation actor transition / handoff |
-| [`CAPABILITY_INDEX.md`](CAPABILITY_INDEX.md) | Thin whole-repository capability-discovery index for capability / gap / absence review |
-| [`PLAYBOOK_INDEX.json`](PLAYBOOK_INDEX.json) | Routing-only machine manifest: stable capability IDs, owners, sections, implementation and adapter pointers |
-| [`INTEROPERABILITY.md`](INTEROPERABILITY.md) | Playbook-side authority / loading / evidence mapping for external spec, skills, and governance systems |
-| [`AI_CONTEXT.md`](AI_CONTEXT.md) | AI-readable repository information architecture, progressive routing, retrieval cost, routing metadata, write closure |
-| [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | Semantic identity, durable fact ownership, provenance, snapshot / search-hit authority guards |
-| [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT planning / coordination authority, task contract, durable-work admission, actor admission / optional Codex handoff, runtime execution, session compaction / rehydration, response contract |
-| [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) | Codex / coding-agent execution authority, model / reasoning / context / cost / tool scheduling / reporting when that actor is selected |
-| [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) | Repository identity, lower-level actor / path-action authority, permission, write boundaries, remote write / read-back, repository-facing documentation integrity |
-| [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) | Debug, root cause, retry, validation, evidence lifecycle, completion read-back, behavioral evaluation |
-| [`RESEARCH_ARCHITECTURE.md`](RESEARCH_ARCHITECTURE.md) | Research, target / capability, architecture, state / lifecycle, ownership |
-| [`EMBEDDED_PROJECTS.md`](EMBEDDED_PROJECTS.md) | Embedded / hardware / board-specific workflow |
-| [`UI_UX.md`](UI_UX.md) | UI / UX / i18n / design-system adaptation |
-| [`TOOLCHAIN.md`](TOOLCHAIN.md) | Local toolchain / runtime / PowerShell contract |
-| [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) | Minimal project-adoption example |
+| [`AGENTS.md`](AGENTS.md) | Maintainer authority for this Playbook repository; human-surface contract; self-maintenance/write/execution boundaries |
+| [`CHAT_INIT.md`](CHAT_INIT.md) | Minimum Playbook bootstrap/task router after activation; repository-read recovery |
+| [`PROJECT_MODES.md`](PROJECT_MODES.md) | `ChatGPT-Only` / `ChatGPT+Codex`; mode-is-not-tier semantics; minimum ChatGPT capability floor; Free cold-start target |
+| [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) | Thin host/runtime activation adapters, conditional activation, loading contract, health checks |
+| [`AI_CONTEXT.md`](AI_CONTEXT.md) | Context/information architecture, progressive routing, retrieval cost, Always-on/Hot/Cold/Evidence/Historical lifecycle |
+| [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | Identity, provenance, source-vs-derived authority, snapshot/search-hit/evidence guards |
+| [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT planning/coordination, work admission, actor admission, runtime execution, session compaction/rehydration, result reconciliation |
+| [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) | Codex execution profile, reasoning/context/tool scheduling/reporting after Codex is actually selected |
+| [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) | Repository identity, lower-level actor/path-action authority, permissions, write/read-back boundaries |
+| [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) | Debugging, retry, validation, evidence lifecycle, completion, behavioral evaluation |
+| [`PROJECT_BOOTSTRAP.md`](PROJECT_BOOTSTRAP.md) | Research/bootstrap lifecycle and bounded research-write/actor-transition contracts |
+| [`RESEARCH_ARCHITECTURE.md`](RESEARCH_ARCHITECTURE.md) | Research, requirements, architecture, lifecycle, ownership |
+| [`INTEROPERABILITY.md`](INTEROPERABILITY.md) | External systems/spec/skills/governance interoperability and authority mapping |
+| [`CAPABILITY_INDEX.md`](CAPABILITY_INDEX.md) | Thin whole-repository capability/gap/absence discovery index |
+| [`PLAYBOOK_INDEX.json`](PLAYBOOK_INDEX.json) | Machine-readable routing manifest; not policy/current-state authority |
+| [`EMBEDDED_PROJECTS.md`](EMBEDDED_PROJECTS.md) | Embedded/hardware-specific workflow |
+| [`UI_UX.md`](UI_UX.md) | UI/UX/i18n/design-system adaptation |
+| [`TOOLCHAIN.md`](TOOLCHAIN.md) | Local runtime/toolchain/PowerShell contract |
+| [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) | Minimal adoption example |
 
 **繁體中文**
 
-一般人類使用者不需要依序閱讀這些文件；這張表說明 AI 在不同責任下會路由到哪裡。
-
-| 文件 | 責任 |
-|---|---|
-| [`AGENTS.md`](AGENTS.md) | 本 Playbook 儲存庫的維護權威：ChatGPT／Codex 維護責任、讀者／介面契約、直接寫入與執行例外、驗證器契約、修改完整性 |
-| [`CHAT_INIT.md`](CHAT_INIT.md) | Playbook activation 後的最小啟動／任務路由器，以及儲存庫讀取復原 |
-| [`PROJECT_MODES.md`](PROJECT_MODES.md) | `ChatGPT-Only`／`ChatGPT+Codex` 兩值 project AI mode 權威、mode 不是能力／訂閱等級的語意、最低充分 ChatGPT capability floor、Free ChatGPT cold-start target |
-| [`PROJECT_BOOTSTRAP.md`](PROJECT_BOOTSTRAP.md) | 研究啟動、優先重用既有研究、階段轉換時重新驗證執行角色、研究寫入白名單、導入後上下文收斂、implementation actor轉換／交接 |
-| [`CAPABILITY_INDEX.md`](CAPABILITY_INDEX.md) | 整個儲存庫的薄型能力探索索引，用於能力／缺口／不存在判斷 |
-| [`PLAYBOOK_INDEX.json`](PLAYBOOK_INDEX.json) | 僅供路由的機器清單：穩定能力 ID、主責文件、章節、實作與介接器指標 |
-| [`INTEROPERABILITY.md`](INTEROPERABILITY.md) | 外部規格、技能與治理系統的 Playbook 端權威／載入／證據對應 |
-| [`AI_CONTEXT.md`](AI_CONTEXT.md) | AI 可讀的儲存庫資訊架構、漸進式路由、檢索成本、路由中繼資料、寫入收斂 |
-| [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | 語意身分、持久事實歸屬、來源溯源、快照／搜尋命中的權威防護 |
-| [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT 規劃／協作權威、任務契約、持久工作准入、actor admission／條件式Codex交接、執行環境操作、工作階段壓縮／重新載入、回覆契約 |
-| [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) | Codex／程式代理被選中時的執行權威、模型／推理／上下文／成本、工具排程與輸出、回報 |
-| [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) | 儲存庫身分、lower-level actor／path-action authority、權限、寫入邊界、遠端寫入／回讀、面向儲存庫的文件完整性 |
-| [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) | 除錯、根因、重試、驗證、證據生命週期、完成後回讀、行為評估 |
-| [`RESEARCH_ARCHITECTURE.md`](RESEARCH_ARCHITECTURE.md) | 研究、目標／能力、架構、狀態／生命週期、責任歸屬 |
-| [`EMBEDDED_PROJECTS.md`](EMBEDDED_PROJECTS.md) | 嵌入式／硬體／開發板專屬工作流程 |
-| [`UI_UX.md`](UI_UX.md) | UI／UX／國際化（i18n）／設計系統調整 |
-| [`TOOLCHAIN.md`](TOOLCHAIN.md) | 本機工具鏈／執行環境／PowerShell 契約 |
-| [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) | 最小專案導入範例 |
+一般人類使用者不需要依序讀完這些檔案；這張表只說明主要 canonical owner／adapter 在哪裡。上表檔名與責任本身就是雙語共用的技術路由資訊；正式內容請依 task 只讀必要 owner。
 
 ## Human and AI reading paths / 人類與 AI 的讀取路徑
 
@@ -481,67 +337,51 @@ Humans normally do not need to read these files in order. This map explains wher
 
 Human path:
 
-`README → understand value and adoption → choose Playbook baseline + Project AI mode → add thin adoption / activation declaration to project governance → hand the task to AI / agent`
+`README → understand value/adoption → choose baseline + Project AI mode → add thin project declaration → hand task to AI`
 
-AI / agent path for a real project:
+AI path for an adopter project:
 
-`Project identity → project-native activation gate when explicitly declared → project governance/adoption state when required → declared Playbook baseline + Project AI mode → Playbook CHAT_INIT.md only after activation → minimum-sufficient canonical owner`
+`Project identity/bootstrap → project-native activation gate when declared → project governance/adoption state when required → declared baseline + Project AI mode → Playbook CHAT_INIT only after activation → minimum canonical owner`
 
-Maintaining this Playbook repository:
+Maintaining this Playbook:
 
-`Playbook AGENTS.md → task-relevant canonical owner`
+`Playbook AGENTS.md → maintainer routing when applicable → task-relevant canonical owner`
 
-Whole-repository capability / gap / absence review:
+Whole-repository capability/gap/absence review:
 
-`CAPABILITY_INDEX.md / PLAYBOOK_INDEX.json → bounded discovery → canonical owner confirmation`
+`CAPABILITY_INDEX.md / PLAYBOOK_INDEX.json → bounded discovery → canonical-owner confirmation`
 
 **繁體中文**
 
 人類路徑：
 
-`README → 理解價值與導入方式 → 選擇 Playbook 基準版本 + Project AI mode → 在 project governance 加入薄型 adoption／activation 宣告 → 交給 AI／代理`
+`README → 理解價值／導入 → 選 baseline + Project AI mode → 加入薄型 project declaration → 交給 AI`
 
-實際專案的 AI／代理路徑：
+Adopter project 的 AI 路徑：
 
-`專案身分 → 若有明確宣告則先走 project-native activation gate → 需要時讀 project governance／adoption state → declared Playbook baseline + Project AI mode → 只有 activation 後才進 Playbook CHAT_INIT.md → 最低充分權威主責文件`
+`Project identity/bootstrap → 若有宣告則先走 project-native activation gate → 需要時才讀 project governance/adoption state → declared baseline + Project AI mode → activation 後才進 Playbook CHAT_INIT → 最低充分 canonical owner`
 
-維護本 Playbook 儲存庫：
+維護本 Playbook：
 
-`Playbook AGENTS.md → 與任務相關的權威主責文件`
+`Playbook AGENTS.md → 需要時進 maintainer routing → task-relevant canonical owner`
 
-整個儲存庫的能力／缺口／不存在檢視：
+整個 repository 的 capability／gap／absence review：
 
-`CAPABILITY_INDEX.md / PLAYBOOK_INDEX.json → 有界探索 → 確認權威主責文件`
+`CAPABILITY_INDEX.md / PLAYBOOK_INDEX.json → bounded discovery → canonical-owner confirmation`
 
 ## Relationship to real projects / 與實際專案的關係
 
 **English**
 
-The Playbook stores cross-project development methods, not product-specific truth. Each real project still owns its own:
+The Playbook stores cross-project development methods, not product-specific truth. Each real project still owns its technical truth, current task/evidence, selected AI mode, repository write boundaries, activation routing, secrets, deployment values, hardware/protocol specifics, and release/branch state.
 
-- technical source of truth;
-- current task / blocker / evidence;
-- selected Project AI mode plus lower-level maintenance / repository write boundary;
-- project-native Playbook activation trigger / routing when declared;
-- hardware pinout / protocol specifics;
-- secrets / deployment values;
-- release / branch state.
-
-Do not copy the whole Playbook into every project. Keep a thin declaration / routing layer in the project's governance, and keep project-specific truth in the project itself. A project may durably adopt the Playbook while keeping task classes that do not need shared governance on a project-native low-cost hot path.
+Do not copy the whole Playbook into every project. Keep only a thin adoption/routing layer in project governance, and keep project-specific truth in the project itself.
 
 **繁體中文**
 
-Playbook 保存跨專案共通的「怎麼開發」，不保存產品專屬的「系統是什麼」。每個實際專案仍自行擁有：
+Playbook 保存跨專案共通的「怎麼開發」，不保存單一產品的「系統是什麼」。各 real project 仍自行擁有 technical truth、current task/evidence、AI mode、repository write boundary、activation routing、secret、deployment value、hardware/protocol specifics 與 release/branch state。
 
-- 技術事實來源；
-- 目前任務／阻塞點／證據；
-- 已選 Project AI mode 與 lower-level maintenance／repository寫入邊界；
-- 若有宣告，則由專案自己擁有 Playbook activation trigger／routing；
-- 硬體腳位配置／協定細節；
-- 機密資訊／部署值；
-- 發行版本／分支狀態。
-
-不要把整份 Playbook 複製進每個專案。只需在 project governance 保留薄型導入／路由層，專案專屬事實則留在專案自己的權威資訊介面。專案可以持久採用 Playbook，同時讓不需要 shared governance 的 task class 維持 project-native、低成本 hot path。
+不要把整份 Playbook 複製進每個 project；只在 project governance 保留薄型 adoption／routing layer，project-specific truth 留在 project 自己的 canonical surface。
 
 ## License
 
