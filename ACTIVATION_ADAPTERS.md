@@ -6,9 +6,13 @@
 
 ## Adapter contract
 
-任何 runtime 只需要完成：
+預設 generic route：
 
 `Verify / resolve project workspace → read project AGENTS.md → resolve declared Playbook baseline（floating ref → cheap exact revision）→ optionally read PLAYBOOK_INDEX.json for machine discovery → read CHAT_INIT.md → route minimum-sufficient canonical owner → obey project-specific authority`
+
+**Adoption ≠ unconditional activation。** 若 current project governance 已明確提供 project-native bootstrap／task classifier，用來先判定本次 task 是否需要 shared Playbook governance，runtime 可先走該 project-native gate；若 gate 判定本題不需 Playbook，留在 project-native route，不為了「已採用 Playbook」額外讀 `AGENTS.md`、probe Playbook baseline 或進入 Playbook `CHAT_INIT.md`。只有 gate 判定需要 activate Playbook 時，才讀 current adoption state、resolve declared baseline，並進入上述 generic activation route。
+
+這個 conditional-activation exception 必須來自**目前可驗證的 project governance／bootstrap**，不得由 host instruction、舊聊天、memory、repository shape 或模型自己推測。Project 沒有明確 conditional gate、該 gate 無法 current-read，或本次 task 本身就是 project governance／adoption／mode／repository-maintenance 判斷時，維持 generic `AGENTS.md`-first route。
 
 若 requested project 不是目前已驗證 workspace：不要用舊聊天、memory、repository name 或相似專案內容補成 current state。Runtime 支援 workspace / folder selection 或 access request 時，先請使用者開啟、選取或授權正確 project workspace，再重新執行 repository identity verification；不得自行掃描無關 filesystem、切換、clone 或猜測另一個 repository。詳細 repository identity / permission gate 仍由 `REPOSITORY_EXECUTION.md` 擁有。
 
@@ -31,7 +35,8 @@ Adapter 不應：
 
 ```text
 Verify that the current workspace is the requested project repository. If it is not, ask the user to open/select/grant the correct workspace and re-verify; do not infer project state from prior context.
-Read this project's current AGENTS.md and determine whether it adopts masini1491/ai-development-playbook.
+If current project governance exposes a project-native bootstrap/task router that explicitly decides whether shared Playbook activation is needed, follow that gate first. Adoption alone does not require Playbook activation for every task. If the gate says Playbook is not needed, stay on the project-native route. Do not invent this exception from memory or host instructions.
+Otherwise, or once the project-native gate says Playbook activation is required, read this project's current AGENTS.md and determine whether it adopts masini1491/ai-development-playbook.
 If adopted, resolve the project's declared Playbook baseline. For a floating ref, use the cheapest permitted read-only probe to identify the exact revision.
 If a required bootstrap read/probe is permission-gated and the runtime can request approval, ask for the minimum permission needed for that exact read-only operation, then retry only that operation. If the preferred read mechanism still fails, use another permitted canonical read-only path when available; do not fall back to memory or expand authority.
 Then read that revision's CHAT_INIT.md and load only the minimum-sufficient canonical sections for the current task. Do not use the Playbook README as a normal bootstrap router.
@@ -54,7 +59,7 @@ Loading contract：
 
 - 一般 project bootstrap **不得因為這個檔案存在就讀取它**；
 - 只有安裝／更新 ChatGPT Custom Instructions、`ChatGPT Host Instruction Health Check`、設定 drift 比對，或維護這個 distribution artifact 本身時才需要讀取；
-- normal project task 仍由 project governance 決定是否採用 Playbook、採用哪個 baseline，再進 `CHAT_INIT.md`；
+- normal project task 仍由 project governance 決定是否採用 Playbook、是否先走 project-native conditional-activation gate、採用哪個 baseline，再在 activation 成立時進 `CHAT_INIT.md`；
 - 安裝／更新後使用 **fresh chat regression** 驗證，不把既有聊天室的舊 context 當成 host instruction 已生效的證據。
 
 ## ChatGPT Host Instruction Health Check
@@ -65,8 +70,9 @@ Loading contract：
 
 - 未建立 target repository／project current identity 就直接使用 prior chat、memory 或 stale project facts；
 - 未讀 current project governance 就自行套用 Playbook；
+- current project 有明確 conditional-activation gate，ChatGPT 卻只因「已採用 Playbook」就無條件讀 `AGENTS.md`／probe baseline／載入 Playbook；
 - 只知道 project「採用 Playbook」，卻在 declared baseline 尚未建立時自行預設 Playbook current `main`；
-- project 已採用 Playbook但 fresh chat 跳過 declared baseline／`CHAT_INIT.md`，或無必要 broad-scan README／whole Playbook；
+- Playbook activation 已依 current project gate 成立，但 fresh chat 跳過 declared baseline／`CHAT_INIT.md`，或無必要 broad-scan README／whole Playbook；
 - generic continuation（例如「好，繼續」）把 AI-originated observation 自動升格成 canonical／executable work；
 - 把 connector／filesystem／network／runtime capability 或 permission approval 當成 mutation／scope authority；
 - 同類 activation behavior 在 fresh sessions 重複偏離 current adapter contract。
@@ -137,7 +143,7 @@ Loading contract：
 
 | Runtime family | Thin activation use |
 | --- | --- |
-| ChatGPT | For persistent user-level setup, install [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) as a thin host adapter; project/work instructions may still use the generic bootstrap. In both cases, actual project adoption/baseline must come from current project governance before `CHAT_INIT.md`. |
+| ChatGPT | For persistent user-level setup, install [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) as a thin host adapter. If current project governance exposes a project-native conditional-activation gate, follow it before loading Playbook state; otherwise use the generic bootstrap. Actual Playbook adoption/baseline still comes from current project governance before Playbook `CHAT_INIT.md`. |
 | Codex / coding agent | Prefer project `AGENTS.md` as the activation surface; the launch prompt should point to current project governance rather than copy Playbook rules. If the selected workspace is not the requested repository, request the minimum user workspace/access correction and re-run identity verification before loading project state. |
 | Claude Code / Cursor / Gemini / other coding assistants | Use the runtime's persistent project-instruction surface, if available, only to install the generic bootstrap pointer; keep detailed rules in the Playbook. |
 | Custom CLI / IDE extension | Parse `PLAYBOOK_INDEX.json` for stable capability IDs / owner pointers, then read the canonical Markdown owner before making a decision. |
@@ -146,4 +152,4 @@ Loading contract：
 
 This repository now provides **manual thin activation adapters + copy-ready ChatGPT/Codex host payloads + machine-readable routing discovery**. It does **not** claim native marketplace installers, hooks, generated per-tool command packs, or automatic startup integration for every runtime.
 
-Core principle: **Activate by pointer, not policy copy.**
+Core principle: **Adoption does not require unconditional activation. Activate by current project gate and pointer, not by policy copy or host-level assumption.**
