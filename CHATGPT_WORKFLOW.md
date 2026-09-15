@@ -177,6 +177,7 @@ AI-facing Hot/Cold/Evidence/Historical responsibility、default-load、task doss
 Cold item **不可直接 TASKS Short-launch**。Trigger成立或使用者選中後，先重讀 current authority/evidence、reconcile，再 promote到 Hot。
 
 ### Hot admission
+
 適合：
 
 - current executable / critical-path work；
@@ -266,6 +267,7 @@ ChatGPT 不因「還能做更多」就自動建立一串 TASKS/BACKLOG。
 ## Session Compaction / Rehydration Contract
 
 長時間 ChatGPT engineering conversation 可能累積大量 search result、tool output、debug branch、舊假說與已被 supersede 的中間結論。當這些內容開始提高 retrieval cost、誤用 stale premise 或 handoff/recovery 風險時，ChatGPT 應做 **bounded session compaction**；不要等到 Context 已失控才把整段聊天摘要成另一份不可靠 authority。
+
 適合觸發 compaction 的情況包括：
 
 - 同一 task 已跨多個 Stage／大量 tool calls，且 current decision 只依賴其中一小部分 evidence；
@@ -535,6 +537,7 @@ Implementation session不同時負責大範圍 discovery、修改與 completenes
 ## ChatGPT-side Runtime Execution
 
 ChatGPT 不只可讀取 repository 後 reasoning；當 existing project 有適合的 deterministic workload，而且目前 task / governance 允許時，也可把 sandbox 當成**受控的 ephemeral execution surface**。這個 surface只提供暫時計算能力，不取得 repository persistence/write authority，也不成為新的 source of truth。
+
 推薦流程：
 
 `Candidate deterministic workload → Execution Opportunity Scan → current session capability probe → current repository authority → exact workspace/commit/tree → required materialization → identity/freshness check → ChatGPT-side execution → result classification → canonical reconciliation`
@@ -641,4 +644,5 @@ Codex report是 claim，不是 GitHub authority；local-only change不能被 rem
 Analysis/review/Codex result發現 out-of-scope問題時，先依本檔 **AI-originated Durable Work Admission Gate / Follow-up Gate** 與 `REPOSITORY_EXECUTION.md` coordination lifecycle判斷：只留 observation、Cold Candidate/Committed，或真正 Hot admission；不得因「順便看到」就擴張目前 Stage或製造新的 durable obligation。
 
 發現另一 repository也需要同步時，只做 read-only analysis/handoff；write-target switch仍依 `REPOSITORY_EXECUTION.md`。
+
 核心原則：**ChatGPT 負責把真正值得持久化的問題變成最低充分、可追蹤、可執行的工作，並在每個 responsibility transition重新選最低充分 authorized actor；Codex只負責需要其 implementation authority的 Stage。GitHub／canonical evidence 負責證明結果。**
