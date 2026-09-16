@@ -43,9 +43,9 @@
 
   <path d="M380 298 H475" class="arrow" marker-end="url(#arrow)"/>
   <path d="M835 270 H920" class="arrowG" marker-end="url(#arrowG)"/>
-  <path d="M835 326 H1245" class="arrowR" marker-end="url(#arrowR)"/>
+  <path d="M835 326 V400 H1390 V380" class="arrowR" marker-end="url(#arrowR)"/>
   <text x="872" y="252" class="small" fill="#087c55">NO</text>
-  <text x="1138" y="347" class="small" fill="#c2435d">YES</text>
+  <text x="1160" y="392" class="small" fill="#c2435d">YES</text>
 
   <rect x="1040" y="430" width="350" height="150" rx="18" fill="#eef7ff" stroke="#2f8de4" stroke-width="2"/>
   <circle cx="1083" cy="471" r="27" fill="#2185df"/><text x="1083" y="471" class="num">3</text>
@@ -62,7 +62,7 @@
   <text x="500" y="733" class="small">Choose the lowest-sufficient authorized actor; execute or hand off only inside current authority.</text>
   <text x="500" y="757" class="small">選最低充分且已授權 actor，只在 current authority 內執行／交接。</text>
 
-  <path d="M1065 380 V600 H800 V625" class="arrowG" marker-end="url(#arrowG)"/>
+  <path d="M1065 380 V400 H900 V625" class="arrowG" marker-end="url(#arrowG)"/>
   <path d="M1215 580 V600 H800 V625" class="arrow" marker-end="url(#arrow)"/>
 
   <rect x="540" y="820" width="520" height="125" rx="18" fill="#eaf4ff" stroke="#2b85dc" stroke-width="2"/>
