@@ -22,6 +22,22 @@
 
 若上述必要的 read-only workspace／repository identity／Playbook baseline probe 因 sandbox、filesystem、metadata、network 或類似 execution permission 被阻擋，不應直接把 dependency 判成 unavailable。Runtime 若能 request approval／access，先向使用者要求完成該 exact read-only operation 所需的最低 permission，核准後只重試原本被 gate 阻擋的操作；approval 不擴張 task scope、mutation、commit/push、deployment、credential 或其他 network/Git authority。若 preferred read mechanism 仍不可用，才改用目前可用且已允許的其他 canonical read-only acquisition path；**fail over the read mechanism, not the authority**。只有 approval unavailable／denied、permission 後原操作仍失敗，且沒有其他合法 canonical read path 時，才標記對應 bootstrap dependency unresolved／unavailable。完整 permission semantics 仍由 `REPOSITORY_EXECUTION.md` 擁有，adapter 只保存 bootstrap survival pointer。
 
+### Cross-agent host authority boundary
+
+Host／agent-specific instruction surface（例如 `CLAUDE.md`、`GEMINI.md`、Copilot repository instructions、IDE rule 或其他 compatibility adapter）可以讓該 host **discover、read、route、follow** target repository 的 canonical governance；它的存在本身不會改變 target project 的 `Project AI mode`，也不會自動把該 host admission 成 canonical executor。
+
+核心分離：
+
+`Host compatibility ≠ Project AI mode ≠ task authorization ≠ write authority ≠ execution authority ≠ completion authority`
+
+- Compatibility adapter 應只做 bootstrap／handoff pointer；不要複製 method、runtime、retrieval、storage、validation 或 completion policy，避免形成第二份 current-state authority。
+- 如果多個 agent-instruction surfaces 同時被 runtime 載入，重疊的 bootstrap text 只視為 **compatibility handoff**，不得因此推導 parallel authority、multiple policy owners 或較高 permission。
+- Adapter 應 hand off 到 **target repository 自己目前宣告的 canonical bootstrap／router**。不同 repository 可以有不同 native hot path；不得因某個 shared Playbook 或 host adapter 習慣某一 bootstrap shape，就覆蓋 target repository 的 current route。
+- Host 能理解、建議或遵循 canonical governance，不等於該 host 已取得 mutation／runtime execution／credential／deployment authority。真正 actor admission 仍由 current user instruction、project governance、Task／Stage 與 capability gate共同決定。
+- Host native behavior 或 adapter wording若與 current canonical governance衝突，以 current canonical authority為準；adapter 必須 narrow／stop，不得發明 fallback來保住 host-specific行為。
+
+核心原則：**Compatibility grants discoverability and routing, not execution admission. Adapter presence must never silently rewrite Project AI mode or repository authority.**
+
 Adapter 不應：
 
 - 複製完整 Playbook policy 到 tool-specific config；
