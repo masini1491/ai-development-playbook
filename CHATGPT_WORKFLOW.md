@@ -586,14 +586,16 @@ Python、Node.js、Shell/Bash、Java、Go、Rust、C/C++ compiler、Git、SQLite
 
 - **Readable source ≠ transferable payload ≠ materialized artifact ≠ verified executable runtime.** 上一層 PASS 不得推導下一層 PASS。
 - 模型能看到 connector 回傳的文字、base64 或其他表示，只證明 source acquisition / model-visible content；**不等於已存在可證明無損的 tool-to-tool payload handoff primitive**。
-- 若 execution surface 缺少適當 handoff primitive，不得用模型重寫、節錄、重新編碼、手工重建或其他 model-mediated reconstruction 冒充 canonical byte-for-byte materialization。需要 exact artifact 時，materialization / integrity 保持未建立，execution 不得宣稱 canonical runtime PASS。
+- 若 execution surface 缺少適當 direct handoff primitive，不得用模型重寫、節錄、語意重建、重新生成 source、手工拼寫內容或其他 **model-mediated reconstruction** 冒充 canonical byte-for-byte materialization。需要 exact artifact 時，未經 deterministic integrity verification 的 reconstruction 仍保持 materialization / integrity 未建立，execution 不得宣稱 canonical runtime PASS。
+- **Model-mediated opaque transport 與 model-mediated reconstruction 必須分開。** 若模型只在 acquisition surface 與 execution surface之間搬運 bounded opaque payload，不解讀／改寫 payload semantics，而且 transport contract可用 deterministic evidence完整驗證，例如 per-chunk index／length／hash、固定 reassembly順序、mismatch bounded retry、final decoded size／cryptographic hash與 canonical source identity一致，則模型參與 transport本身**不會**使 materialization失效。只有整條 transport＋reassembly＋final integrity chain都建立後，才可宣稱 exact materialization；任一段無法驗證就停在該 evidence boundary。
+- 沒有 automatic/direct connector→runtime object bridge，**不等於** verified materialization必然不可能；先判斷是否存在已授權、可端到端驗證的 opaque transport contract。反之，「看起來一樣」或模型自述「完整搬過去了」都不是 transport／integrity evidence。
 - 若存在另一條合法 canonical acquisition path，可切換 route 並從該 path重新取得／materialize；但必須明確記成**新的 acquisition route**，不得把 alternate path 的成功回填成原本 connector → runtime bridge 已成功。
 - Capability evidence 必須綁定實際 runtime / execution surface / session。某一 surface 的 handoff gap 只能支持該 scope 的 capability conclusion；不得升格成所有 ChatGPT plan、model、session 或未來 runtime 的 universal product capability claim。
-- Reporting 應保留逐層 evidence，例如：`Acquisition: PASS`、`Payload handoff: UNAVAILABLE`、`Materialization: NOT ESTABLISHED`、`Integrity: NOT ESTABLISHED`、`Execution: NOT RUN`。Project有既定 status taxonomy 時沿用其等價語意，不另建全域 framework。
+- Reporting 應保留逐層 evidence，例如：`Acquisition: PASS`、`Payload handoff: VERIFIED | UNAVAILABLE`、`Materialization: VERIFIED | NOT ESTABLISHED`、`Integrity: VERIFIED | NOT ESTABLISHED`、`Execution: RUN | NOT RUN`。Project有既定 status taxonomy 時沿用其等價語意，不另建全域 framework。
 
 本 gate 不要求所有 connector workflow 都經過 Python，也不建立固定 byte/token/file-size threshold；只有 current execution correctness 真的依賴跨 surface artifact handoff / materialization 時才啟用。
 
-核心原則：**Visibility is not transport; transport is not materialization; materialization is not verified execution. Preserve each evidence boundary independently and report runtime-specific capability truth.**
+核心原則：**Visibility is not transport; transport is not materialization; materialization is not verified execution. Reconstruction cannot impersonate canonical bytes, but bounded opaque transport may establish exact materialization when deterministic end-to-end integrity evidence proves it.**
 
 ### Runtime Asset Reuse Fast Path
 
@@ -606,6 +608,7 @@ Python、Node.js、Shell/Bash、Java、Go、Rust、C/C++ compiler、Git、SQLite
 一般原則：
 
 - Conversation／checkpoint 記得「之前載入過」本身不是 runtime evidence；必須在目前 execution environment中實際確認 asset存在且可用。
+- **Cache／materialized file existence ≠ verified cache state。** 若 runtime asset 是經 transport／decode／reassembly／temporary cache建立，且 correctness依賴 exact canonical identity，reuse probe應要求最低充分 machine-visible verification state，例如 source repository/path/ref or commit、artifact hash/size、runtime/core version或其他 project-owned identity欄位；必要時先 write marker、read-back marker與 post-write probe，再允許 execution。具體 marker檔名、schema與版本屬 project implementation，不升格成 Playbook固定格式。
 - Reuse probe 只檢查會改變本次 execution correctness的最低充分項目，例如 executable存在、版本／hash／source identity仍符合已知 contract、必要 dependency/runtime未 material改變；不得為了 fast path又重跑完整 acquisition流程。
 - 使用者明確要求 latest/current HEAD、已有 evidence顯示 source/tool更新、dependency/runtime materially改變、asset identity無法可靠確認、probe失敗，或 correctness明確依賴 current canonical revision時，退出 fast path，重新取得 current canonical asset。
 - 若同一 validated asset可服務多次 independent execution，不要求每次都重新下載或 materialize；但 project正式 policy若要求 per-run immutable snapshot／fresh environment，服從該較高 contract。
