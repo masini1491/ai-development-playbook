@@ -27,6 +27,20 @@ MACHINE_INDEX_SCHEMA_VERSION = 1
 MACHINE_INDEX_AUTHORITY = "routing-only"
 CHATGPT_CUSTOM_INSTRUCTIONS_NAME = "CHATGPT_CUSTOM_INSTRUCTIONS.txt"
 CHATGPT_CUSTOM_INSTRUCTIONS_MAX_CHARS = 5000
+CROSS_AGENT_ADAPTERS = {
+    "CLAUDE.md": "Claude Code",
+    "GEMINI.md": "Gemini CLI",
+    ".github/copilot-instructions.md": "GitHub Copilot",
+}
+CROSS_AGENT_REQUIRED_POINTERS = ("`CHAT_INIT.md`", "`AGENTS.md`", "`PLAYBOOK_INDEX.json`")
+CROSS_AGENT_REQUIRED_PHRASES = (
+    "not a Playbook authority",
+    "does not create a second current-state policy source",
+    "compatibility handoff only, never as parallel authority",
+    "does not grant repository write, runtime execution, credential, deployment, external-service, or completion authority",
+    "current canonical governance wins",
+)
+CROSS_AGENT_MAX_LINES = 32
 
 
 @dataclass(frozen=True, order=True)
@@ -305,6 +319,43 @@ def _check_chatgpt_custom_instructions(root: Path) -> list[Diagnostic]:
     return diagnostics
 
 
+def _check_cross_agent_adapters(root: Path) -> list[Diagnostic]:
+    if not (root / "AGENTS.md").is_file():
+        return []
+
+    diagnostics: list[Diagnostic] = []
+    texts: dict[str, str] = {}
+    for relative, host in CROSS_AGENT_ADAPTERS.items():
+        path = root / relative
+        if not path.is_file():
+            diagnostics.append(Diagnostic(relative, 1, "CROSS_AGENT_ADAPTER", f"Missing cross-agent bootstrap adapter: {relative}"))
+            continue
+
+        text = path.read_text(encoding="utf-8")
+        texts[relative] = text
+        if host not in text:
+            diagnostics.append(Diagnostic(relative, 1, "CROSS_AGENT_ADAPTER", f"Host identity missing: {host}"))
+        for pointer in CROSS_AGENT_REQUIRED_POINTERS:
+            if pointer not in text:
+                diagnostics.append(Diagnostic(relative, 1, "CROSS_AGENT_ADAPTER", f"Canonical bootstrap pointer missing: {pointer}"))
+        for phrase in CROSS_AGENT_REQUIRED_PHRASES:
+            if phrase not in text:
+                diagnostics.append(Diagnostic(relative, 1, "CROSS_AGENT_ADAPTER", f"Authority boundary missing phrase: {phrase!r}"))
+        if "```" in text or "~~~" in text:
+            diagnostics.append(Diagnostic(relative, 1, "CROSS_AGENT_ADAPTER", "Thin cross-agent adapters must not contain fenced policy/code blocks"))
+        if len(text.splitlines()) > CROSS_AGENT_MAX_LINES:
+            diagnostics.append(Diagnostic(relative, 1, "CROSS_AGENT_ADAPTER", f"Adapter exceeds thin-shim limit of {CROSS_AGENT_MAX_LINES} lines"))
+
+    if len(texts) == len(CROSS_AGENT_ADAPTERS):
+        normalized = []
+        for relative, host in CROSS_AGENT_ADAPTERS.items():
+            normalized.append(texts[relative].replace(host, "<HOST>"))
+        if len(set(normalized)) != 1:
+            diagnostics.append(Diagnostic("CLAUDE.md", 1, "CROSS_AGENT_ADAPTER", "Cross-agent adapters drift: bodies must remain identical except for host identity"))
+
+    return diagnostics
+
+
 def _machine_index_target(root: Path, relative: Any) -> Path | None:
     if not isinstance(relative, str) or not relative.strip():
         return None
@@ -415,6 +466,7 @@ def check_repository(root: Path) -> list[Diagnostic]:
         diagnostics.extend(_check_chat_init_router(path, root, text))
         diagnostics.extend(_check_fences(path, root, text))
     diagnostics.extend(_check_chatgpt_custom_instructions(root))
+    diagnostics.extend(_check_cross_agent_adapters(root))
     diagnostics.extend(_check_machine_index(root))
     return sorted(diagnostics)
 
