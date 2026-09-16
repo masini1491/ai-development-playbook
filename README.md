@@ -233,9 +233,10 @@ Persistent host instructions are **optional activation adapters**, not the core 
 
 - [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) is a copy-ready ChatGPT host adapter for product surfaces where the current instruction field can accept it.
 - [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) is the corresponding Codex host adapter where that product/runtime exposes a compatible persistent-instruction surface.
+- [`CLAUDE.md`](CLAUDE.md), [`GEMINI.md`](GEMINI.md), and [`.github/copilot-instructions.md`](.github/copilot-instructions.md) are thin project-level compatibility shims for Claude Code, Gemini CLI, and GitHub Copilot. They hand off to the repository's canonical bootstrap/routing surfaces rather than becoming additional policy owners.
 - [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) owns the current activation, loading, health-check, and product-surface caveats.
 
-Product UI names, field limits, and available persistent-instruction surfaces can change independently of Playbook policy. Do not treat README wording or an older screenshot as product authority. A host adapter being installed also does not prove that a project adopts the Playbook or grant repository mutation authority.
+Product UI names, field limits, and available persistent-instruction surfaces can change independently of Playbook policy. Do not treat README wording or an older screenshot as product authority. A host adapter or compatibility shim being present also does not change Project AI mode, prove that a project adopts the Playbook, or grant repository write/execution authority.
 
 **繁體中文**
 
@@ -243,9 +244,10 @@ Persistent host instruction 是**可選 activation adapter**，不是核心 adop
 
 - [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) 是給目前產品 surface 能容納該 payload 時使用的 ChatGPT copy-ready host adapter。
 - [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) 是對應的 Codex host adapter，只有在該 product/runtime 提供相容 persistent-instruction surface 時才使用。
+- [`CLAUDE.md`](CLAUDE.md)、[`GEMINI.md`](GEMINI.md) 與 [`.github/copilot-instructions.md`](.github/copilot-instructions.md) 是 Claude Code、Gemini CLI 與 GitHub Copilot 的薄型 project-level compatibility shim；它們只把 host 交接到 repository 的 canonical bootstrap／routing surface，不成為額外 policy owner。
 - [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) 擁有目前的 activation、loading、health-check 與 product-surface caveat。
 
-產品 UI 名稱、欄位限制與可用 persistent-instruction surface 都可能獨立於 Playbook policy 改變。不要把 README 舊文字或舊截圖當成產品權威；host adapter 被安裝也不代表某 project 已 adoption，更不會授予 repository mutation authority。
+產品 UI 名稱、欄位限制與可用 persistent-instruction surface 都可能獨立於 Playbook policy 改變。不要把 README 舊文字或舊截圖當成產品權威；host adapter／compatibility shim 的存在也不會改變 Project AI mode、證明某 project 已 adoption，或授予 repository write／execution authority。
 
 ## Evidence and behavioral evaluation / 證據與行為迴歸
 
@@ -315,6 +317,7 @@ Humans normally do not need to read these files in order. This map shows the mai
 | [`CHAT_INIT.md`](CHAT_INIT.md) | Minimum Playbook bootstrap/task router after activation; repository-read recovery |
 | [`PROJECT_MODES.md`](PROJECT_MODES.md) | `ChatGPT-Only` / `ChatGPT+Codex`; mode-is-not-tier semantics; minimum ChatGPT capability floor; Free cold-start target |
 | [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) | Thin host/runtime activation adapters, conditional activation, loading contract, health checks |
+| [`CLAUDE.md`](CLAUDE.md) / [`GEMINI.md`](GEMINI.md) / [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Thin project-level host compatibility shims; bootstrap handoff only, not policy or execution authority |
 | [`AI_CONTEXT.md`](AI_CONTEXT.md) | Context/information architecture, progressive routing, retrieval cost, Always-on/Hot/Cold/Evidence/Historical lifecycle |
 | [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | Identity, provenance, source-vs-derived authority, snapshot/search-hit/evidence guards |
 | [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT planning/coordination, work admission, actor admission, runtime execution, session compaction/rehydration, result reconciliation |
