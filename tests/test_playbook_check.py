@@ -19,6 +19,30 @@ class PlaybookCheckTests(unittest.TestCase):
             path.write_text(content, encoding="utf-8")
         return root
 
+    def adapter_text(self, host: str) -> str:
+        return f"""# {host} bootstrap compatibility
+
+This file is a thin repository bootstrap shim for {host}. It is not a Playbook authority and does not create a second current-state policy source.
+
+## Bootstrap
+
+- Start from `CHAT_INIT.md` and follow its minimum-sufficient task routing.
+- Read `AGENTS.md` only when the current route or Playbook-maintenance task requires repository-maintainer governance.
+- Use `PLAYBOOK_INDEX.json` only for machine-readable owner discovery when needed; it is routing-only metadata.
+- If multiple agent-instruction surfaces are loaded, treat overlapping bootstrap text as compatibility handoff only, never as parallel authority.
+- This adapter does not grant repository write, runtime execution, credential, deployment, external-service, or completion authority.
+
+## Authority boundary
+
+If this file or the host's native behavior conflicts with current repository canonical governance, the current canonical governance wins. Narrow or stop rather than inventing an adapter fallback, and do not duplicate Project AI mode, repository execution, validation, model-selection, materialization, or other normative policy here.
+"""
+
+    def valid_adapter_files(self) -> dict[str, str]:
+        files = {"AGENTS.md": "# Governance\n"}
+        for relative, host in playbook_check.CROSS_AGENT_ADAPTERS.items():
+            files[relative] = self.adapter_text(host)
+        return files
+
     def test_valid_local_link_passes(self) -> None:
         root = self.make_repo({"README.md": "[Context](AI_CONTEXT.md)\n", "AI_CONTEXT.md": "# Context\n"})
         self.assertEqual([], playbook_check.check_repository(root))
@@ -94,6 +118,34 @@ class PlaybookCheckTests(unittest.TestCase):
         diagnostics = playbook_check.check_repository(root)
         self.assertEqual(["CHATGPT_CUSTOM_INSTRUCTIONS"], [item.code for item in diagnostics])
         self.assertIn("copy-ready plain text", diagnostics[0].message)
+
+    def test_cross_agent_adapters_pass_when_thin_and_aligned(self) -> None:
+        root = self.make_repo(self.valid_adapter_files())
+        self.assertEqual([], playbook_check.check_repository(root))
+
+    def test_cross_agent_adapter_missing_file_fails(self) -> None:
+        files = self.valid_adapter_files()
+        del files["GEMINI.md"]
+        root = self.make_repo(files)
+        diagnostics = playbook_check.check_repository(root)
+        self.assertTrue(any(item.code == "CROSS_AGENT_ADAPTER" and "GEMINI.md" in item.message for item in diagnostics))
+
+    def test_cross_agent_adapter_requires_authority_boundary(self) -> None:
+        files = self.valid_adapter_files()
+        files["CLAUDE.md"] = files["CLAUDE.md"].replace(
+            "current canonical governance wins",
+            "the adapter decides",
+        )
+        root = self.make_repo(files)
+        diagnostics = playbook_check.check_repository(root)
+        self.assertTrue(any(item.code == "CROSS_AGENT_ADAPTER" and "Authority boundary missing phrase" in item.message for item in diagnostics))
+
+    def test_cross_agent_adapter_drift_fails(self) -> None:
+        files = self.valid_adapter_files()
+        files["GEMINI.md"] += "\nExtra host-specific policy.\n"
+        root = self.make_repo(files)
+        diagnostics = playbook_check.check_repository(root)
+        self.assertTrue(any(item.code == "CROSS_AGENT_ADAPTER" and "adapters drift" in item.message.lower() for item in diagnostics))
 
     def test_machine_index_valid_targets_and_sections_pass(self) -> None:
         manifest = {
