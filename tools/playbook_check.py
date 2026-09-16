@@ -41,6 +41,11 @@ CROSS_AGENT_REQUIRED_PHRASES = (
     "current canonical governance wins",
 )
 CROSS_AGENT_MAX_LINES = 32
+CROSS_AGENT_MACHINE_INDEX_POINTERS = {
+    "claude_code_bootstrap": "CLAUDE.md",
+    "gemini_cli_bootstrap": "GEMINI.md",
+    "github_copilot_bootstrap": ".github/copilot-instructions.md",
+}
 
 
 @dataclass(frozen=True, order=True)
@@ -427,6 +432,16 @@ def _check_machine_index(root: Path) -> list[Diagnostic]:
             if not isinstance(group, dict):
                 diagnostics.append(Diagnostic(MACHINE_INDEX_NAME, 1, "MANIFEST_FORMAT", f"{group_name} must be an object"))
             else:
+                if group_name == "adapters" and any((root / relative).is_file() for relative in CROSS_AGENT_ADAPTERS):
+                    for key, expected_relative in CROSS_AGENT_MACHINE_INDEX_POINTERS.items():
+                        actual_relative = group.get(key)
+                        if actual_relative != expected_relative:
+                            diagnostics.append(Diagnostic(
+                                MACHINE_INDEX_NAME,
+                                1,
+                                "MANIFEST_ADAPTER",
+                                f"adapters.{key} must point to {expected_relative}; found {actual_relative!r}",
+                            ))
                 for key, relative in group.items():
                     referenced_paths.append((f"{group_name}.{key}", relative))
 

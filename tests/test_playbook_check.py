@@ -156,17 +156,50 @@ If this file or the host's native behavior conflicts with current repository can
                 {"id": "bootstrap", "owner": "CHAT_INIT.md", "section": "啟動順序", "kind": "contract"}
             ],
             "implementations": {"check": "tools/check.py"},
-            "adapters": {"activation": "ACTIVATION_ADAPTERS.md"},
+            "adapters": {
+                "activation": "ACTIVATION_ADAPTERS.md",
+                "claude_code_bootstrap": "CLAUDE.md",
+                "gemini_cli_bootstrap": "GEMINI.md",
+                "github_copilot_bootstrap": ".github/copilot-instructions.md",
+            },
             "behavioral_regression": {"matrix": "evals/regression_matrix.json", "runner": "tools/check.py"},
         }
         root = self.make_repo({
             "PLAYBOOK_INDEX.json": json.dumps(manifest, ensure_ascii=False),
             "CHAT_INIT.md": "# Init\n\n## 啟動順序\n",
             "ACTIVATION_ADAPTERS.md": "# Adapter\n",
+            "CLAUDE.md": "# Claude Code\n",
+            "GEMINI.md": "# Gemini CLI\n",
+            ".github/copilot-instructions.md": "# GitHub Copilot\n",
             "tools/check.py": "",
             "evals/regression_matrix.json": "{}",
         })
         self.assertEqual([], playbook_check.check_repository(root))
+
+
+    def test_machine_index_requires_cross_agent_adapter_pointers(self) -> None:
+        manifest = {
+            "schema_version": 1,
+            "authority": "routing-only",
+            "bootstrap": {"path": "CHAT_INIT.md"},
+            "capabilities": [
+                {"id": "bootstrap", "owner": "CHAT_INIT.md", "section": "啟動順序", "kind": "contract"}
+            ],
+            "adapters": {"activation": "ACTIVATION_ADAPTERS.md"},
+        }
+        root = self.make_repo({
+            "PLAYBOOK_INDEX.json": json.dumps(manifest, ensure_ascii=False),
+            "CHAT_INIT.md": "# Init\n\n## 啟動順序\n",
+            "ACTIVATION_ADAPTERS.md": "# Adapter\n",
+            "CLAUDE.md": "# Claude Code\n",
+            "GEMINI.md": "# Gemini CLI\n",
+            ".github/copilot-instructions.md": "# GitHub Copilot\n",
+        })
+        diagnostics = playbook_check._check_machine_index(root)
+        self.assertEqual(3, sum(item.code == "MANIFEST_ADAPTER" for item in diagnostics))
+        self.assertTrue(any("claude_code_bootstrap" in item.message for item in diagnostics))
+        self.assertTrue(any("gemini_cli_bootstrap" in item.message for item in diagnostics))
+        self.assertTrue(any("github_copilot_bootstrap" in item.message for item in diagnostics))
 
     def test_machine_index_missing_target_fails(self) -> None:
         manifest = {
