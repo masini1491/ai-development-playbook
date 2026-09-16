@@ -294,7 +294,10 @@
   },
   "adapters": {
     "activation": "ACTIVATION_ADAPTERS.md",
-    "session_handoff": "SESSION_HANDOFF_TEMPLATE.md"
+    "session_handoff": "SESSION_HANDOFF_TEMPLATE.md",
+    "claude_code_bootstrap": "CLAUDE.md",
+    "gemini_cli_bootstrap": "GEMINI.md",
+    "github_copilot_bootstrap": ".github/copilot-instructions.md"
   },
   "behavioral_regression": {
     "matrix": "evals/regression_matrix.json",
