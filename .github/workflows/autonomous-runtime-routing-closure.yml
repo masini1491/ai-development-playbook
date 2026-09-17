@@ -51,20 +51,14 @@ jobs:
                   s=s.replace(old,new)
               p.write_text(s,encoding='utf-8',newline='\n')
           p=Path('PLAYBOOK_INDEX.json'); s=p.read_text(encoding='utf-8')
-          old='''    {
-              "id": "execution.chatgpt-runtime",
-              "owner": "CHATGPT_WORKFLOW.md",
-              "section": "ChatGPT-side Runtime Execution",
-              "kind": "contract"
-            },'''
-          new='''    {
-              "id": "execution.chatgpt-runtime",
-              "owner": "CHATGPT_RUNTIME_EXECUTION.md",
-              "section": "ChatGPT-side Runtime Execution",
-              "kind": "contract"
-            },'''
-          assert s.count(old)==1, s.count(old)
-          p.write_text(s.replace(old,new),encoding='utf-8',newline='\n')
+          marker='"id": "execution.chatgpt-runtime"'
+          i=s.index(marker)
+          owner_old='"owner": "CHATGPT_WORKFLOW.md"'
+          owner_new='"owner": "CHATGPT_RUNTIME_EXECUTION.md"'
+          j=s.index(owner_old,i)
+          assert s.find('"id":', i+len(marker), j) == -1
+          s=s[:j]+owner_new+s[j+len(owner_old):]
+          p.write_text(s,encoding='utf-8',newline='\n')
           PY
           test "$(git hash-object CHAT_INIT.md)" = 548f40a7a09216a0cdc013c1c5feb175bc5e4208
           test "$(git hash-object CAPABILITY_INDEX.md)" = e28c5c2315802ca8667301eac9f77cef245e7250
