@@ -195,6 +195,21 @@ Sandbox/network approval不等於 Git mutation authorization。只有目前 Task
 
 Canonical evidence 不取代 runtime/build/hardware validation。
 
+### Remote Repository Mutation Transport Integrity Gate
+
+當 ChatGPT／connector／remote execution surface 要把已驗證 candidate 寫入 Git canonical state 時，必須把 `candidate bytes → transported representation → remote blob → committed tree → current branch ref` 視為不同 evidence boundary；cross-surface materialization 的一般規則另見 `CHATGPT_RUNTIME_EXECUTION.md` → `Artifact Handoff / Materialization Gate`。
+
+- **先 pin base**：mutation 前確認 exact target repository、branch/ref、base commit/tree 與受影響 path；write 前再 fresh-check 會影響 fast-forward／authority 的 ref。
+- **先辨識 canonicalization**：UTF-8 wrapper、base64、CRLF/LF、BOM、trailing newline 或 API wrapper 若可能改變 bytes，先以 bounded probe 或 documented behavior建立 current transport semantics；不得把 local filesystem bytes 與 remote Git blob無條件視為同一 representation。
+- **Blob/content identity gate**：能在 ref mutation 前建立 blob時，remote returned blob SHA 必須等於 deterministic expected Git blob identity；mismatch 時 STOP，不建立 tree/commit/ref。Contents API 會立即 commit 時，只在 isolated staging branch 執行，並在 promotion 前 read-back resulting content blob／diff。
+- **Whole-payload transport不是唯一合法路徑**：若 direct/file-aware handoff unavailable，可在 current repository governance明確允許的情況下，使用 bounded remote deterministic transformation bridge，例如在 isolated branch 傳輸小型 patch／transformation logic／verified chunks，由 remote checkout exact base、assert base identities、reassemble／transform、verify target blob identities、跑必要 validation，再自動移除 temporary transport artifact。Temporary workflow／script 本身不得殘留在 final tree，且 final `base..head` diff 必須只含正式 target changes。
+- **Transport limitation 不得反向支配 architecture**：不得只因某 connector payload 不易傳輸就拆檔、重組 canonical owner 或新增永久 tooling。檔案拆分仍須獨立通過 `AI_CONTEXT.md` 的 retrieval intent／Context Cohesion／retrieval-cost gates。
+- **Promotion fail-closed**：staging result 必須有最低充分 remote read-back；promotion 前 fresh-check destination ref 與 fast-forward compatibility，使用 non-force update。Ref update 本身跨過 causal boundary，完成後依 `DEBUG_VALIDATION.md` → `Causal-Boundary Evidence Invalidation` 重新取得必要 post-action evidence。
+- **Autonomy fallback 不等於 human obligation**：若目前 execution surface無法建立 deterministic transport integrity，標記 remote write transport unavailable並切換已授權 execution surface；要求 human 本機套 patch／push只在使用者明確選擇 human-assisted fallback 時使用，不作 autonomous workflow 的正常完成條件。
+- 不建立固定 KB／token／file-size threshold；是否切換 transport route由 current capability evidence與 integrity結果決定。
+
+核心原則：**Candidate bytes ≠ transported representation ≠ remote blob ≠ committed tree ≠ current branch state；每跨一層，只用該層 deterministic evidence升級，且 temporary transport mechanism不得污染 final canonical tree。**
+
 ## Repository-facing 文件完整性（Repository Documentation Integrity）
 
 公開 README、showcase、project overview 若宣稱開發方式、驗證狀態、專案規模或 AI-assisted workflow，claim 應可追溯到正確 authority；README 本身不應成為另一套 execution/validation policy。
