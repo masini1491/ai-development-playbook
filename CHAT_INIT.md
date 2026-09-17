@@ -38,7 +38,7 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
 4. 從 current project governance 解析 `Project AI mode`。只接受 `ChatGPT-Only` 或 `ChatGPT+Codex`；若尚未宣告，這是 **mode selection unresolved**，不是第三種 mode。不得從 available tools、舊聊天室、repository shape、Codex 是否可用或上一個 actor猜測。Mode-dependent implementation actor／handoff／broader mutation decision在選定前維持 `REPOSITORY_EXECUTION.md` 的 conservative fallback／STOP boundary；不依賴 mode 的合法 read-only work可維持最低風險範圍。
 5. 進入大型主題文件後，優先用 heading／symbol／stable pointer 直接命中 relevant section；若檔首有 Section Router，先用 router。Exact target 已唯一命中時可 direct-leaf bypass。
 6. Whole-repository capability／gap／absence review：先讀薄 discovery surface `CAPABILITY_INDEX.md`，再依 pointer、`PLAYBOOK_INDEX.json`、合理 owner／repository search 做最低充分 bounded coverage；negative claim 在 final synthesis 前重新 reconciliation。詳細 authority 見 `AI_CONTEXT.md` → `Absence Claim Coverage Gate`。
-7. 既有 project 首次採用本手冊，或已讀範圍明確出現 material deterministic execution candidate 時，才做最低充分 Execution Opportunity Scan；候選成立再讀 `CHATGPT_WORKFLOW.md` → `ChatGPT-side Runtime Execution`。
+7. 既有 project 首次採用本手冊，或已讀範圍明確出現 material deterministic execution candidate 時，才做最低充分 Execution Opportunity Scan；候選成立再讀 `CHATGPT_RUNTIME_EXECUTION.md`。
 8. 依 project authority 確認目前 Task／Stage 的 scope、permission、evidence 與 validation requirement，再開始分析、產生 Prompt 或執行工作。
 9. 若同層正式 authority 衝突、repository identity 不清楚，mode-dependent decision 仍未選定 Project AI mode，或 evidence 不足以安全決定下一步，STOP 並指出缺口；不得用舊聊天、cached copy 或 memory 猜補 current authority。
 
@@ -53,7 +53,7 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
 - 新 repository／pre-implementation 階段由 ChatGPT 蒐集 reference、形成 research synthesis／requirements／architecture，穩定 implementation actor／source mutation lifecycle 尚未接手且需要 bounded direct-write
   → `PROJECT_BOOTSTRAP.md`；確認 `research-bootstrap` activation、Research Write Allowlist 與 exit／actor-transition gate，再依需要讀 `REPOSITORY_EXECUTION.md`
 - ChatGPT-side deterministic runtime execution
-  → `CHATGPT_WORKFLOW.md` → `ChatGPT-side Runtime Execution`
+  → `CHATGPT_RUNTIME_EXECUTION.md`
 - Codex Prompt mode／delivery／copy-ready／Codex result reconciliation／ChatGPT user-facing response contract
   → `CHATGPT_WORKFLOW.md`；只有 `Project AI mode: ChatGPT+Codex` 且 `Actor Admission / Handoff Gate` 判定目前 Stage需要Codex handoff時，才進 Codex-specific routing
 - Fresh ChatGPT session 出現 repository identity／project governance／Playbook adoption、undeclared baseline 被預設成 current `main`、undeclared Project AI mode 被猜成某種 actor topology、跳過 `CHAT_INIT.md`、generic continuation 擴張 AI-originated work、或 capability 被誤當 authority 等具體 activation anomaly

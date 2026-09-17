@@ -380,7 +380,7 @@ Playbook identity probe 只回答「declared baseline/ref 是否改變」；它�
 - Production/application/firmware source、executable tests、build/dependency/tooling、CI/release/deploy或其他 project governance指定給 coding agent的 mutation，才進 Codex handoff。
 - **Previous actor ≠ next actor。** 上一 Stage由 Codex完成，只代表上一 Stage需要Codex；不能用它作下一 Stage的 actor evidence。
 - Project已進 implementation phase也不代表所有後續 research / evidence / fixture工作都屬 Codex；phase決定 write boundary的一部分，但 actor仍依 current responsibility判斷。
-- ChatGPT capability也不是無條件 direct-execution authority。需要 runtime/tool時仍依 `ChatGPT-side Runtime Execution` 的 capability gate；需要 repository mutation時仍依 `REPOSITORY_EXECUTION.md` 的 current write boundary。
+- ChatGPT capability也不是無條件 direct-execution authority。需要 runtime/tool時仍依 `CHATGPT_RUNTIME_EXECUTION.md` → `Execution Capability Gate`；需要 repository mutation時仍依 `REPOSITORY_EXECUTION.md` 的 current write boundary。
 - 若 actor choice受 stale session context影響，先依本檔 `Session Compaction / Rehydration Contract` 做 bounded actor-routing rehydration，再決定；不得要求使用者用「不用 Codex 就能做？」之類提醒來解除 handoff inertia。
 
 核心原則：**Choose the actor from the current work, not from the previous Stage. Handoff is a decision, not a habit.**

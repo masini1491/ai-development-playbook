@@ -4,7 +4,7 @@
 > **Read when**：ChatGPT 本身要在 sandbox/runtime 執行 deterministic validator、test、calculator、parser、build、artifact materialization 或其他 project-owned computation。
 > **Usually skip when**：純 planning、coordination、Codex Prompt drafting、result reconciliation，且 ChatGPT 不執行任何 deterministic workload。
 
-本檔由 `CHATGPT_WORKFLOW.md` 路由；不重新定義 repository mutation / permission、validation semantics 或 Codex execution policy。需要時分別回到 `REPOSITORY_EXECUTION.md`、`DEBUG_VALIDATION.md`、`CODEX_EXECUTION.md`。
+本檔是 ChatGPT-side deterministic execution 的 direct-leaf owner；`CHATGPT_WORKFLOW.md` 保留 compatibility routing stub。它不重新定義 repository mutation / permission、validation semantics 或 Codex execution policy。需要時分別回到 `REPOSITORY_EXECUTION.md`、`DEBUG_VALIDATION.md`、`CODEX_EXECUTION.md`。
 
 
 ChatGPT 不只可讀取 repository 後 reasoning；當 existing project 有適合的 deterministic workload，而且目前 task / governance 允許時，也可把 sandbox 當成**受控的 ephemeral execution surface**。這個 surface只提供暫時計算能力，不取得 repository persistence/write authority，也不成為新的 source of truth。

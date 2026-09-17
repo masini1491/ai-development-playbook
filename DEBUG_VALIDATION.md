@@ -210,7 +210,7 @@ Behavioral evaluation 用來驗證：**AI／Agent 已讀到規則後，實際 de
 - 若既有 always-on CI 造成大量低價值 failure notification，不應先刪 validator、關掉 invariant或降低 failure threshold；先評估是否只需調整 trigger、execution owner或 placement。
 - 反之，若移除 CI 會失去 formal merge/release/security gate、external-contributor protection或其他必要 independent enforcement，不得只因某個 ChatGPT／Agent／human session當下能執行就取消 gate。
 - **Execution owner 不改變 check semantics。** 同一 validator/test由不同 authorized actor執行時，預期輸入、exit semantics與 evidence boundary應保持一致；actor authorization由 repository governance決定。
-- ChatGPT-side execution 的 runtime/toolchain capability、canonical snapshot與 session-specific discipline由 `CHATGPT_WORKFLOW.md` 的 `ChatGPT-side Runtime Execution` 負責；本節不重複 actor-specific capability policy。
+- ChatGPT-side execution 的 runtime/toolchain capability、canonical snapshot與 session-specific discipline由 `CHATGPT_RUNTIME_EXECUTION.md` 負責；本節不重複 actor-specific capability policy。
 - Placement change若會改變正式 completion/merge/release contract，必須同步更新 canonical governance與必要 evidence；不得只刪 workflow檔就宣稱「驗證已改由別處承擔」。
 
 核心原則：**保留 deterministic validation contract，再按 independent enforcement需求與 operational cost選最低充分 execution placement；CI、ChatGPT、local human或其他 actor都不是固定答案。**

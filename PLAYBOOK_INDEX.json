@@ -203,7 +203,7 @@
     },
     {
       "id": "execution.chatgpt-runtime",
-      "owner": "CHATGPT_WORKFLOW.md",
+      "owner": "CHATGPT_RUNTIME_EXECUTION.md",
       "section": "ChatGPT-side Runtime Execution",
       "kind": "contract"
     },

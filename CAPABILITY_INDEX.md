@@ -52,7 +52,7 @@
 | Evidence lifecycle / real-world evidence | `DEBUG_VALIDATION.md`；embedded/hardware差異另見 `EMBEDDED_PROJECTS.md` | Software/test evidence不自動覆蓋 hardware／bench／production／user-observed evidence。 |
 | Cost-aware execution | `CODEX_EXECUTION.md` | `Evidence → Context → Model → Reasoning → Agent → Validation`，依證據逐層 escalation。 |
 | Prompt-authorized child model / reasoning routing | Prompt authorization：`CHATGPT_WORKFLOW.md` → `Prompt-authorized Child Profile Routing`；execution semantics：`CODEX_EXECUTION.md` → `Root / Child Profile Routing`、`Subagent / Delegation Gate`、`Parallel Multi-Agent Gate`、`Child Profile Routing 回報（Completion / Final）` | **Normative contract 已存在**；root profile維持 user-selected，合法 bounded child 可 serial delegation 並向上／向下 override model／reasoning；只有 concurrent workstreams 才另受 parallel gate 約束。Final report區分 requested/accepted override 與 independently observable effective profile；runtime capability／observability仍依 execution surface。 |
-| ChatGPT bounded ephemeral execution | `CHATGPT_WORKFLOW.md` → `ChatGPT-side Runtime Execution` | Runtime capability不等於 repository mutation authority；只執行最低充分 deterministic workload。 |
+| ChatGPT bounded ephemeral execution | `CHATGPT_RUNTIME_EXECUTION.md` | Runtime capability不等於 repository mutation authority；只執行最低充分 deterministic workload。 |
 | Research / architecture / ownership | `RESEARCH_ARCHITECTURE.md` | Research、state/lifecycle、target/capability、ownership與 external-service authority separation。 |
 
 ## Maturity wording guard
