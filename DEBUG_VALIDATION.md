@@ -556,6 +556,17 @@ Evidence reuse 原則：
 - 不得因「進入下一 Stage」本身就把所有舊 PASS 作廢；也不得為了省成本沿用已被 material change 影響的 evidence。
 - 若無法判斷舊 evidence 是否仍適用，先縮小 change impact / dependency / contract 差異；仍無法確定時標記 `REVALIDATION_REQUIRED`，不要猜測。
 
+### Causal-Boundary Evidence Invalidation
+
+Evidence 只對它實際觀察到的 state 與 dependency boundary 有效。若後續 action materially 改變已驗證 object、dependency、authority-sensitive state 或 completion premise，受影響 claim 的 pre-action evidence 不得直接重用為 post-action completion proof；應取得該 claim 所需的最低充分 post-action evidence。
+
+- 先判斷 action 實際跨過哪些 evidence boundary；只把受 material impact 的 claim 標為 `REVALIDATION_REQUIRED`，不要把所有既有 evidence 機械式作廢。
+- Revalidation 只取得受影響 claim 所需的最低充分 post-action evidence；可證明獨立且未受影響的 evidence 繼續保持 `CURRENT`。
+- `test → modify source`：修改前 PASS 不能證明修改後 source；`read HEAD → merge`：merge 前 HEAD 不能證明 merge 後 main。
+- `validate config → setup modifies config` 或 `tool call → material state change`：若 action 改變 validation/completion premise，需補足必要的 post-action evidence，不能用 action 前 evidence 宣稱 action 後 completion。
+
+核心原則：**Pre-action evidence proves only the pre-action state it actually observed; crossing a material causal boundary invalidates only the affected claim, and revalidation remains minimum-sufficient.**
+
 文件可保留歷史測試事實，但 current summary 必須明確指出最新 superseding rule，避免舊 PASS 被誤讀成目前 PASS。
 
 ### 行為保持 ≠ 證據保持（Behavior-preserving ≠ Evidence-preserving）
