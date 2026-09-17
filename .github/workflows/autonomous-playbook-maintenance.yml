@@ -1,0 +1,66 @@
+name: autonomous-playbook-maintenance
+on:
+  push:
+    branches:
+      - docs/autonomous-continuation-evidence-20260917
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Transform, validate, and self-remove
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=f99d185bbbd274468adc6a9dc0326788f7dc1f44
+          test "$(git merge-base HEAD "$BASE")" = "$BASE"
+          test "$(git hash-object CHATGPT_WORKFLOW.md)" = dbad69d6b6217f548d04dae55c26d1b65774de7c
+          test "$(git hash-object DEBUG_VALIDATION.md)" = 733fff8420086af6b60148ac46c48931a84fc601
+          test ! -e CHATGPT_RUNTIME_EXECUTION.md
+          python - <<'PY'
+          from pathlib import Path
+          wf=Path('CHATGPT_WORKFLOW.md'); dbg=Path('DEBUG_VALIDATION.md')
+          s=wf.read_text(encoding='utf-8-sig')
+          old='- ChatGPT sandbox／deterministic runtime → `ChatGPT-side Runtime Execution`'
+          new='- ChatGPT sandbox／deterministic runtime → `CHATGPT_RUNTIME_EXECUTION.md`'
+          assert s.count(old)==1
+          s=s.replace(old,new)
+          anchor='`Repository / authority identity → Current task goal / scope → Referenced current canonical state → Unresolved evidence gap → Next authorized action`\n\n'
+          insert='**Recovered context / identity ≠ recovered authority.** Rehydration artifact 即使成功恢復 repository identity、task context、routing 或 continuity，也只恢復 knowledge / orientation；它不會自行恢復 mutation、completion acceptance 或 high-impact decision authority。進入 authority-sensitive action 前，仍須由對應的 current authoritative source 重新建立當下 authority。\n\n'
+          assert s.count(anchor)==1
+          s=s.replace(anchor,anchor+insert)
+          start=s.index('## ChatGPT-side Runtime Execution\n')
+          end=s.index('\n## Codex 結果 reconciliation\n',start)
+          section=s[start:end]
+          heading='## ChatGPT-side Runtime Execution\n\n'
+          assert section.startswith(heading)
+          body=section[len(heading):]
+          header=('# ChatGPT-side Runtime Execution\n\n> **Authority**：ChatGPT-side deterministic workload execution、execution capability、cross-surface artifact handoff / materialization、runtime asset reuse 與 canonical execution discipline。\n> **Read when**：ChatGPT 本身要在 sandbox/runtime 執行 deterministic validator、test、calculator、parser、build、artifact materialization 或其他 project-owned computation。\n> **Usually skip when**：純 planning、coordination、Codex Prompt drafting、result reconciliation，且 ChatGPT 不執行任何 deterministic workload。\n\n本檔由 `CHATGPT_WORKFLOW.md` 路由；不重新定義 repository mutation / permission、validation semantics 或 Codex execution policy。需要時分別回到 `REPOSITORY_EXECUTION.md`、`DEBUG_VALIDATION.md`、`CODEX_EXECUTION.md`。\n\n\n')
+          runtime=header+body.rstrip('\n')+'\n'
+          stub=('## ChatGPT-side Runtime Execution\n\nChatGPT-side deterministic workload execution、execution capability、artifact handoff / materialization、runtime asset reuse 與 canonical execution discipline 已移至 `CHATGPT_RUNTIME_EXECUTION.md`。只有 ChatGPT 本身需要執行 deterministic workload 時才載入該 owner；純 planning / coordination / Prompt drafting 不為形式載入。\n')
+          s=(s[:start]+stub+s[end:]).rstrip('\n')+'\n'
+          wf.write_text(s,encoding='utf-8',newline='\n')
+          Path('CHATGPT_RUNTIME_EXECUTION.md').write_text(runtime,encoding='utf-8',newline='\n')
+          d=dbg.read_text(encoding='utf-8-sig')
+          anchor2='- 若無法判斷舊 evidence 是否仍適用，先縮小 change impact / dependency / contract 差異；仍無法確定時標記 `REVALIDATION_REQUIRED`，不要猜測。\n\n'
+          causal=('### Causal-Boundary Evidence Invalidation\n\nEvidence 只對它實際觀察到的 state 與 dependency boundary 有效。若後續 action materially 改變已驗證 object、dependency、authority-sensitive state 或 completion premise，受影響 claim 的 pre-action evidence 不得直接重用為 post-action completion proof；應取得該 claim 所需的最低充分 post-action evidence。\n\n- 先判斷 action 實際跨過哪些 evidence boundary；只把受 material impact 的 claim 標為 `REVALIDATION_REQUIRED`，不要把所有既有 evidence 機械式作廢。\n- Revalidation 只取得受影響 claim 所需的最低充分 post-action evidence；可證明獨立且未受影響的 evidence 繼續保持 `CURRENT`。\n- `test → modify source`：修改前 PASS 不能證明修改後 source；`read HEAD → merge`：merge 前 HEAD 不能證明 merge 後 main。\n- `validate config → setup modifies config` 或 `tool call → material state change`：若 action 改變 validation/completion premise，需補足必要的 post-action evidence，不能用 action 前 evidence 宣稱 action 後 completion。\n\n核心原則：**Pre-action evidence proves only the pre-action state it actually observed; crossing a material causal boundary invalidates only the affected claim, and revalidation remains minimum-sufficient.**\n\n')
+          assert d.count(anchor2)==1
+          d=d.replace(anchor2,anchor2+causal).rstrip('\n')+'\n'
+          dbg.write_text(d,encoding='utf-8',newline='\n')
+          PY
+          test "$(git hash-object CHATGPT_WORKFLOW.md)" = 51aa89cf44e388c435c2f2492b0cb12f2e65a26f
+          test "$(git hash-object DEBUG_VALIDATION.md)" = 12d0fd3886ac7b55a14c3d6155371f1a8e0e96e6
+          test "$(git hash-object CHATGPT_RUNTIME_EXECUTION.md)" = 28eb1bf413faf74e9f3a96aa481d165ff09bec57
+          python tools/playbook_check.py
+          python -m unittest discover -s tests -q
+          git rm .github/workflows/autonomous-playbook-maintenance.yml
+          git add CHATGPT_WORKFLOW.md DEBUG_VALIDATION.md CHATGPT_RUNTIME_EXECUTION.md
+          test "$(git diff --cached --name-only "$BASE" | sort | tr '\n' ' ')" = "CHATGPT_RUNTIME_EXECUTION.md CHATGPT_WORKFLOW.md DEBUG_VALIDATION.md "
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m "Clarify continuation and evidence boundaries"
+          git push origin HEAD:docs/autonomous-continuation-evidence-20260917
