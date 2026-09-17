@@ -1,0 +1,41 @@
+name: autonomous-remote-mutation-integrity
+on:
+  push:
+    branches:
+      - docs/remote-mutation-transport-integrity-20260917
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Amend repository transport integrity contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=6365f0e58ce89a41bd55249bf636b55e28e2e0f0
+          test "$(git merge-base HEAD "$BASE")" = "$BASE"
+          test "$(git hash-object REPOSITORY_EXECUTION.md)" = afff40ccf70fbe7f031b353d91f67ad61b9edd83
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('REPOSITORY_EXECUTION.md')
+          s=p.read_text(encoding='utf-8-sig')
+          anchor='Canonical evidence 不取代 runtime/build/hardware validation。\n\n'
+          section='''### Remote Repository Mutation Transport Integrity Gate\n\n當 ChatGPT／connector／remote execution surface 要把已驗證 candidate 寫入 Git canonical state 時，必須把 `candidate bytes → transported representation → remote blob → committed tree → current branch ref` 視為不同 evidence boundary；cross-surface materialization 的一般規則另見 `CHATGPT_RUNTIME_EXECUTION.md` → `Artifact Handoff / Materialization Gate`。\n\n- **先 pin base**：mutation 前確認 exact target repository、branch/ref、base commit/tree 與受影響 path；write 前再 fresh-check 會影響 fast-forward／authority 的 ref。\n- **先辨識 canonicalization**：UTF-8 wrapper、base64、CRLF/LF、BOM、trailing newline 或 API wrapper 若可能改變 bytes，先以 bounded probe 或 documented behavior建立 current transport semantics；不得把 local filesystem bytes 與 remote Git blob無條件視為同一 representation。\n- **Blob/content identity gate**：能在 ref mutation 前建立 blob時，remote returned blob SHA 必須等於 deterministic expected Git blob identity；mismatch 時 STOP，不建立 tree/commit/ref。Contents API 會立即 commit 時，只在 isolated staging branch 執行，並在 promotion 前 read-back resulting content blob／diff。\n- **Whole-payload transport不是唯一合法路徑**：若 direct/file-aware handoff unavailable，可在 current repository governance明確允許的情況下，使用 bounded remote deterministic transformation bridge，例如在 isolated branch 傳輸小型 patch／transformation logic／verified chunks，由 remote checkout exact base、assert base identities、reassemble／transform、verify target blob identities、跑必要 validation，再自動移除 temporary transport artifact。Temporary workflow／script 本身不得殘留在 final tree，且 final `base..head` diff 必須只含正式 target changes。\n- **Transport limitation 不得反向支配 architecture**：不得只因某 connector payload 不易傳輸就拆檔、重組 canonical owner 或新增永久 tooling。檔案拆分仍須獨立通過 `AI_CONTEXT.md` 的 retrieval intent／Context Cohesion／retrieval-cost gates。\n- **Promotion fail-closed**：staging result 必須有最低充分 remote read-back；promotion 前 fresh-check destination ref 與 fast-forward compatibility，使用 non-force update。Ref update 本身跨過 causal boundary，完成後依 `DEBUG_VALIDATION.md` → `Causal-Boundary Evidence Invalidation` 重新取得必要 post-action evidence。\n- **Autonomy fallback 不等於 human obligation**：若目前 execution surface無法建立 deterministic transport integrity，標記 remote write transport unavailable並切換已授權 execution surface；要求 human 本機套 patch／push只在使用者明確選擇 human-assisted fallback 時使用，不作 autonomous workflow 的正常完成條件。\n- 不建立固定 KB／token／file-size threshold；是否切換 transport route由 current capability evidence與 integrity結果決定。\n\n核心原則：**Candidate bytes ≠ transported representation ≠ remote blob ≠ committed tree ≠ current branch state；每跨一層，只用該層 deterministic evidence升級，且 temporary transport mechanism不得污染 final canonical tree。**\n\n'''
+          assert s.count(anchor)==1
+          s=s.replace(anchor,anchor+section)
+          p.write_text(s.rstrip('\n')+'\n',encoding='utf-8',newline='\n')
+          PY
+          test "$(git hash-object REPOSITORY_EXECUTION.md)" = 612a0af1d96c551923d55e2548967e81d017d0df
+          python tools/playbook_check.py
+          python -m unittest discover -s tests -q
+          git rm .github/workflows/autonomous-remote-mutation-integrity.yml
+          git add REPOSITORY_EXECUTION.md
+          test "$(git diff --cached --name-only "$BASE" | sort | tr '\n' ' ')" = "REPOSITORY_EXECUTION.md "
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m "Document remote mutation transport integrity"
+          git push origin HEAD:docs/remote-mutation-transport-integrity-20260917
