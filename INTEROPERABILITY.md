@@ -32,6 +32,8 @@ Core invariants:
 - **External result ≠ canonical completion evidence by default.** Results remain subject to the project's validation contract, evidence requirements, canonical read-back, and `INFORMATION_INTEGRITY.md` guards.
 - **External routing metadata ≠ current project truth.** Generated commands, indexes, manifests, registries, or installation metadata help discovery／activation; they do not become project factual authority unless explicitly assigned that role.
 - **Adoption does not force default loading.** External artifacts should be loaded according to current Task need and their project-assigned semantic class, not merely because they are durable.
+- **Role-bounded integration should prefer least-capability surfaces.** 若 external integration 中某 actor 的 assigned responsibility 只需要 read／inspect／plan／review，且 integration surface 能在 capability 層不提供 write／delete／exec／admin 等非必要能力，優先採取較小 capability surface，而不是只靠 Prompt 要求 actor 不使用較大能力。Capability minimization 不取代 project authority，但可縮小 prompt injection、routing error 與 accidental mutation 的 blast radius。
+- **External runtime auto-update ≠ previously validated behavior remains current.** 若 external skill／runtime／adapter 可自動更新或其 installed revision 會獨立漂移，先前 version-specific validation 只證明當時實際觀察到的 revision／behavior。當 current decision materially 依賴該 external runtime 的現行行為時，重新建立最低充分 installed／upstream identity 與 relevant current evidence；不得把舊 PASS 永久沿用。
 
 Compact form:
 
@@ -93,6 +95,20 @@ Playbook mapping:
 - If project governance explicitly requires a specific skill／procedure, that requirement can become part of the project's execution contract, while the skill still does not create new work outside the authorized scope.
 - Skill-produced plans, reviews, test results, or completion reports are **planning/evidence outputs according to their semantic role**; they remain subject to project canonical ownership and Playbook completion/read-back requirements.
 - Plugin／marketplace installation and session-start activation are **distribution / activation capabilities**. Runtime activation maturity must not be confused with authority maturity or behavioral correctness evidence.
+
+### Codex with ChatGPT
+
+Codex with ChatGPT（C2C）提供 ChatGPT planning／review 與 Codex execution 之間的 external coordination/runtime integration，包含 bounded control protocol 與 read-only workspace evidence access。
+
+Playbook mapping:
+
+- C2C 在 Playbook 中屬於 `ChatGPT+Codex` collaboration profile 的 **optional external execution / coordination implementation**；它不是第三種 Project AI mode，也不因安裝而改變 `PROJECT_MODES.md` 的 actor topology authority。
+- C2C Skill、protocol、setup／repair procedure 屬 **execution methodology / activation surface**。安裝、auto-update、automatic activation 或 protocol state 不會自行建立 Task／Stage authorization、repository write authority、credential authority 或 durable obligation。
+- C2C 的 read-only workspace connector／MCP 屬 **data / evidence acquisition capability**。它可讓 planning／review actor 取得 current workspace、Git 與 execution evidence，但 connector capability 本身不授予該 actor repository mutation authority。
+- `INIT`、`PLAN`、`EXECUTED`、`HANDOFF`、`DONE` 等 C2C protocol state 是 **coordination state**。其中 `EXECUTED`／agent-reported tests 仍是 execution claim；Playbook completion acceptance 繼續依 current canonical evidence、validation contract 與 required read-back。
+- C2C HANDOFF 是 **continuity / rehydration artifact**。它可保存 goal、progress、known issue 與 next step，但 current code／diff／validation truth 仍應由 current workspace 重新取得；handoff 不恢復或擴張 authority。
+- C2C 的 control-plane／data-plane separation 與 read-only review surface 可作為 interoperability implementation reference；其特定 message size、iteration limit、ChatGPT Project／connector topology、browser automation、Cloudflare tunnel、OAuth／pairing、repair 流程與 command syntax 仍由 upstream current canonical documentation 擁有，不提升為 Playbook universal policy。
+- 若 project 實際採用 C2C，對 version-specific command、runtime、security、setup 或 compatibility claim 應重新讀 current upstream／installed revision；本 profile 只保存 Playbook-side semantic mapping，不鏡像 upstream implementation catalog。
 
 ### GSA-TTS Agentic Coding Playbook
 

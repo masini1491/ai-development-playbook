@@ -87,6 +87,25 @@ Git／permission、Conversation-scoped Repository Write Lock、ChatGPT 實際可
 
 這不是「一個概念只能一個檔案」規則；同一檔案可以有多個 section，但每個 surface 的 primary responsibility 應清楚。
 
+## Cross-Actor Control / Data Plane Separation
+
+多個 actor／agent 協作時，若 receiving actor 能直接從 current authoritative source 取得 repository、artifact 或 evidence，actor-to-actor transport 預設只攜帶最低充分的 **control state**，不要把 control message 當成大型 canonical data 的搬運通道。
+
+可概念性區分：
+
+- **Control plane**：goal、scope、authority-relevant state、bounded decision／status、canonical pointer、next action／STOP condition。
+- **Data plane**：file body、diff、log、test output、repository state、execution evidence 與其他應由 current authoritative source 取得的資料。
+
+一般原則：
+
+- Receiving actor 能可靠 direct-read current data 時，優先 `pointer / identity → direct retrieval`，不要在 Prompt、handoff、agent message 或 coordination record 重複複製長 file／diff／log。
+- Control-plane report 只證明 sender 傳送的 coordination state；它不自行證明 referenced data-plane state、repository completion 或 validation truth。當 decision／completion materially 依賴 current evidence 時，receiver 仍應取得最低充分 current evidence。
+- 若 receiving actor 無法取得 required data plane、跨 system handoff 必須攜帶不可重取的 artifact，或 exact transport 本身就是 requirement，才使用 admitted minimum-sufficient artifact handoff，並保留 provenance／identity／integrity boundary。
+- 不以固定 byte、token、line count 決定 control／data 分層；boundary 由 information responsibility、authority、retrievability 與 evidence semantics 決定。
+- 不得為了迎合 transport／tool payload limitation 而扭曲 canonical repository architecture；transport recovery 與 information ownership 是不同問題。
+
+核心原則：**Coordinate through the smallest sufficient control plane; retrieve substantive current evidence through its authoritative data plane whenever possible. Control state ≠ data evidence.**
+
 ## Independent Retrieval Intent Gate
 
 建立新文件、task dossier、evidence dossier、router 或其他 durable artifact 前，先問：
