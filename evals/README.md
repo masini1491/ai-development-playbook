@@ -30,6 +30,16 @@ Scenario ownership：
 
 `response_reference` 應指向可追溯 evidence；若完整 response 因 conversation-local、privacy、授權或保存成本無法進 repository，必須明確說明限制，不得假裝 repository record 本身等於完整原始 transcript。
 
+## Canary / compatibility evidence
+
+`evals/canaries/` 保存不使用 BEH run-record schema 的 runtime canary、metadata-observability record 與 compatibility smoke evidence。這些記錄可保留其自己的 `record_type`、scope 與 evidence boundary，但：
+
+- 不屬於 `evals/runs/*.json` 的 BEH formal／retrospective run-record contract；
+- 不作為 `tools/behavioral_eval.py` run-record schema validator 的輸入；
+- 不得因位於 `evals/` 就升格成 canonical scenario、formal regression PASS 或新的 policy authority。
+
+當某個 canary／smoke 後續被正式納入 BEH scenario，應另依當時 canonical scenario contract 產生符合 run-record schema 的 `evals/runs/` evidence；不要直接把原 canary JSON 重新解讀成 formal BEH run。
+
 ## Regression matrix
 
 `evals/regression_matrix.json` 是 **selection-only metadata**：把常見 Playbook change class 對應到應優先重跑的既有 BEH scenario。它不複製 scenario 的 Expected／Forbidden，也不建立新的 behavioral authority。

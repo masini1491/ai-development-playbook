@@ -34,7 +34,7 @@
   },
   "evidence_boundary": [
     "This record establishes only these two GPT-6 Astra Low closing behavioral cases at the fixed Playbook revision above.",
-    "The combined 6/6 statement refers to these two closing cases plus the prior four-case smoke persisted in evals/runs/GPT6-ASTRA-LOW-2026-09-09-compatibility-smoke.json.",
+    "The combined 6/6 statement refers to these two closing cases plus the prior four-case smoke persisted in evals/canaries/GPT6-ASTRA-LOW-2026-09-09-compatibility-smoke.json.",
     "It does not establish conformance for other reasoning levels, the full behavioral-eval suite, every Codex execution path, or future GPT-6 Astra product/runtime revisions.",
     "The two evaluated Codex sessions were supplied by the user as complete observed responses; this persistence step does not independently re-execute those sessions."
   ]
