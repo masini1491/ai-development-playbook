@@ -189,6 +189,44 @@ Use [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) w
 
 若需要較完整、可直接調整的採用範例，請使用 [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md)。
 
+## One-message ChatGPT bootstrap / 一句話啟動 ChatGPT
+
+**English**
+
+If you want to try the Playbook in ChatGPT without changing persistent settings first, start a fresh chat and paste the prompt that matches your situation.
+
+**Quickly try this Playbook:**
+
+```text
+Use GitHub Connect to read the latest `main` of `masini1491/ai-development-playbook`. Enter through `CHAT_INIT.md`, load only the minimum-sufficient canonical owner(s) needed for my task, and do not scan the whole Playbook or substitute old chat/model memory for current GitHub state.
+```
+
+**Inside a project that already adopts the Playbook:**
+
+```text
+Read the current project's bootstrap/governance first and follow any project-native activation gate. Only if the project requires shared Playbook governance, use its declared Playbook baseline and Project AI mode, resolve a floating baseline to an exact revision when needed, enter that revision's `CHAT_INIT.md`, and load only the minimum-sufficient canonical owner(s) for my task.
+```
+
+If a materially required GitHub read is unavailable, report that access gap explicitly instead of silently continuing from stale memory or incomplete repository content.
+
+**繁體中文**
+
+如果只是想先在 ChatGPT 快速試用 Playbook，不需要先修改永久設定。開一個新的 ChatGPT 聊天室，依你的情境貼上下面其中一段即可。
+
+**快速試用這份 Playbook：**
+
+```text
+請透過 GitHub Connect 讀取 `masini1491/ai-development-playbook` 最新 `main`。從 `CHAT_INIT.md` 進入，依我的任務只載入最低充分的 canonical owner；不要完整掃描 Playbook，也不要用舊聊天或模型記憶取代目前的 GitHub 狀態。
+```
+
+**在已採用 Playbook 的專案中：**
+
+```text
+請先讀目前專案的 bootstrap／governance，並遵守專案自己的 activation gate。只有專案判定需要共用 Playbook 治理時，才依專案宣告的 Playbook baseline 與 Project AI mode 啟用；必要時把 floating baseline 解析成 exact revision，再進入該 revision 的 `CHAT_INIT.md`，並只載入本題最低充分的 canonical owner。
+```
+
+如果本題實質需要 GitHub 讀取但目前無法取得，應明確回報存取缺口，不要默默改用過時記憶或不完整的儲存庫內容繼續。
+
 ## ChatGPT cold start / ChatGPT 冷啟動
 
 **English**
