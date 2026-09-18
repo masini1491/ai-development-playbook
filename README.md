@@ -144,6 +144,44 @@ Current project identity / bootstrap
 - **互通性（Interoperability）**：外部規格、skills、記憶系統與治理框架可以共存，但不會只因連接在一起就自動繼承 authority。
 - **成本考量的執行策略**：證據、Context、模型／推理、執行角色與驗證都先用最低充分層級，不足再升級。
 
+## One-message ChatGPT bootstrap / 一句話啟動 ChatGPT
+
+**English**
+
+If you want to try the Playbook in ChatGPT without changing persistent settings first, start a fresh chat and paste the prompt that matches your situation.
+
+**Quickly try this Playbook:**
+
+```text
+Use GitHub Connect to read the latest `main` of `masini1491/ai-development-playbook`. Enter through `CHAT_INIT.md`, load only the minimum-sufficient canonical owner(s) needed for my task, and do not scan the whole Playbook or substitute old chat/model memory for current GitHub state.
+```
+
+**Inside a project that already adopts the Playbook:**
+
+```text
+Read the current project's bootstrap/governance first and follow any project-native activation gate. Only if the project requires shared Playbook governance, use its declared Playbook baseline and Project AI mode, resolve a floating baseline to an exact revision when needed, enter that revision's `CHAT_INIT.md`, and load only the minimum-sufficient canonical owner(s) for my task.
+```
+
+If a materially required GitHub read is unavailable, report that access gap explicitly instead of silently continuing from stale memory or incomplete repository content.
+
+**繁體中文**
+
+如果只是想先在 ChatGPT 快速試用 Playbook，不需要先修改永久設定。開一個新的 ChatGPT 聊天室，依你的情境貼上下面其中一段即可。
+
+**快速試用這份 Playbook：**
+
+```text
+請透過 GitHub Connect 讀取 `masini1491/ai-development-playbook` 最新 `main`。從 `CHAT_INIT.md` 進入，依我的任務只載入最低充分的 canonical owner；不要完整掃描 Playbook，也不要用舊聊天或模型記憶取代目前的 GitHub 狀態。
+```
+
+**在已採用 Playbook 的專案中：**
+
+```text
+請先讀目前專案的 bootstrap／governance，並遵守專案自己的 activation gate。只有專案判定需要共用 Playbook 治理時，才依專案宣告的 Playbook baseline 與 Project AI mode 啟用；必要時把 floating baseline 解析成 exact revision，再進入該 revision 的 `CHAT_INIT.md`，並只載入本題最低充分的 canonical owner。
+```
+
+如果本題實質需要 GitHub 讀取但目前無法取得，應明確回報存取缺口，不要默默改用過時記憶或不完整的儲存庫內容繼續。
+
 ## 5-minute adoption / 5 分鐘導入
 
 **English**
@@ -189,43 +227,19 @@ Use [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) w
 
 若需要較完整、可直接調整的採用範例，請使用 [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md)。
 
-## One-message ChatGPT bootstrap / 一句話啟動 ChatGPT
+## Relationship to real projects / 與實際專案的關係
 
 **English**
 
-If you want to try the Playbook in ChatGPT without changing persistent settings first, start a fresh chat and paste the prompt that matches your situation.
+The Playbook stores cross-project development methods, not product-specific truth. Each real project still owns its technical truth, current task/evidence, selected AI mode, repository write boundaries, activation routing, secrets, deployment values, hardware/protocol specifics, and release/branch state.
 
-**Quickly try this Playbook:**
-
-```text
-Use GitHub Connect to read the latest `main` of `masini1491/ai-development-playbook`. Enter through `CHAT_INIT.md`, load only the minimum-sufficient canonical owner(s) needed for my task, and do not scan the whole Playbook or substitute old chat/model memory for current GitHub state.
-```
-
-**Inside a project that already adopts the Playbook:**
-
-```text
-Read the current project's bootstrap/governance first and follow any project-native activation gate. Only if the project requires shared Playbook governance, use its declared Playbook baseline and Project AI mode, resolve a floating baseline to an exact revision when needed, enter that revision's `CHAT_INIT.md`, and load only the minimum-sufficient canonical owner(s) for my task.
-```
-
-If a materially required GitHub read is unavailable, report that access gap explicitly instead of silently continuing from stale memory or incomplete repository content.
+Do not copy the whole Playbook into every project. Keep only a thin adoption/routing layer in project governance, and keep project-specific truth in the project itself.
 
 **繁體中文**
 
-如果只是想先在 ChatGPT 快速試用 Playbook，不需要先修改永久設定。開一個新的 ChatGPT 聊天室，依你的情境貼上下面其中一段即可。
+Playbook 保存跨專案共通的「怎麼開發」，不保存單一產品的「系統是什麼」。各實際專案仍自行擁有技術事實來源、目前任務／證據、AI mode、儲存庫寫入邊界、activation routing、機密資訊、部署參數、硬體／協定細節與 release/branch state。
 
-**快速試用這份 Playbook：**
-
-```text
-請透過 GitHub Connect 讀取 `masini1491/ai-development-playbook` 最新 `main`。從 `CHAT_INIT.md` 進入，依我的任務只載入最低充分的 canonical owner；不要完整掃描 Playbook，也不要用舊聊天或模型記憶取代目前的 GitHub 狀態。
-```
-
-**在已採用 Playbook 的專案中：**
-
-```text
-請先讀目前專案的 bootstrap／governance，並遵守專案自己的 activation gate。只有專案判定需要共用 Playbook 治理時，才依專案宣告的 Playbook baseline 與 Project AI mode 啟用；必要時把 floating baseline 解析成 exact revision，再進入該 revision 的 `CHAT_INIT.md`，並只載入本題最低充分的 canonical owner。
-```
-
-如果本題實質需要 GitHub 讀取但目前無法取得，應明確回報存取缺口，不要默默改用過時記憶或不完整的儲存庫內容繼續。
+不要把整份 Playbook 複製進每個專案；只在專案治理文件保留精簡的採用／routing layer，專案自身的技術事實仍留在專案自己的 canonical surface。
 
 ## ChatGPT cold start / ChatGPT 冷啟動
 
@@ -287,32 +301,6 @@ Product UI names, field limits, and available persistent-instruction surfaces ca
 
 產品 UI 名稱、欄位限制與可用的持久指令介面，都可能獨立於 Playbook policy 改變。不要把 README 舊文字或舊截圖當成產品權威；host adapter／compatibility shim 的存在也不會改變 Project AI mode、證明某專案已採用 Playbook，或授予儲存庫寫入／執行權限。
 
-## Evidence and behavioral evaluation / 證據與行為評估
-
-**English**
-
-The repository includes deterministic validators and behavioral-evaluation fixtures. Their purpose is to keep claims scoped to what was actually tested; they are not a second policy system.
-
-Start here:
-
-- [`evals/README.md`](evals/README.md) — behavioral evaluation structure and current evidence index.
-- [`evals/`](evals/) — scenarios, supplemental cases, cold-start fixtures, regression matrix, and run records.
-- [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) — canonical validation/evidence/completion contract.
-
-Human-facing README examples should stay illustrative rather than duplicate a growing list of dated run snapshots.
-
-**繁體中文**
-
-儲存庫內含確定性驗證器與行為評估測試樣本；它們的目的，是讓每項主張只涵蓋實際驗證過的範圍，不是第二套政策系統。
-
-從這裡開始：
-
-- [`evals/README.md`](evals/README.md)：行為評估結構與目前的證據索引。
-- [`evals/`](evals/)：測試情境、補充案例、cold-start fixture、regression matrix 與執行紀錄。
-- [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md)：canonical validation／evidence／completion contract。
-
-README 只保留人類容易理解的概覽，不再複製會快速過時的一長串帶日期執行快照。
-
 ## Adoption Doctor / 導入檢查器
 
 **English**
@@ -343,38 +331,31 @@ python tools/adoption_doctor.py <project-root>
 
 如果 exact materialization 無法驗證，就應回報 acquisition／materialization gap，不得宣稱 deterministic validation 已 PASS。
 
-## Repository map / 文件地圖
+## Evidence and behavioral evaluation / 證據與行為評估
 
 **English**
 
-Humans normally do not need to read these files in order. This map shows the main canonical owners and adapters.
+The repository includes deterministic validators and behavioral-evaluation fixtures. Their purpose is to keep claims scoped to what was actually tested; they are not a second policy system.
 
-| File | Primary responsibility |
-|---|---|
-| [`AGENTS.md`](AGENTS.md) | Maintainer authority for this Playbook repository; human-surface contract; self-maintenance/write/execution boundaries |
-| [`CHAT_INIT.md`](CHAT_INIT.md) | Minimum Playbook bootstrap/task router after activation; repository-read recovery |
-| [`PROJECT_MODES.md`](PROJECT_MODES.md) | `ChatGPT-Only` / `ChatGPT+Codex`; mode-is-not-tier semantics; minimum ChatGPT capability floor; Free cold-start target |
-| [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) | Thin host/runtime activation adapters, conditional activation, loading contract, health checks |
-| [`CLAUDE.md`](CLAUDE.md) / [`GEMINI.md`](GEMINI.md) / [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Thin project-level host compatibility shims; bootstrap handoff only, not policy or execution authority |
-| [`AI_CONTEXT.md`](AI_CONTEXT.md) | Context/information architecture, progressive routing, retrieval cost, Always-on/Hot/Cold/Evidence/Historical lifecycle |
-| [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | Identity, provenance, source-vs-derived authority, snapshot/search-hit/evidence guards |
-| [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT planning/coordination, work admission, actor admission, runtime execution, session compaction/rehydration, result reconciliation |
-| [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) | Codex execution profile, reasoning/context/tool scheduling/reporting after Codex is actually selected |
-| [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) | Repository identity, lower-level actor/path-action authority, permissions, write/read-back boundaries |
-| [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) | Debugging, retry, validation, evidence lifecycle, completion, behavioral evaluation |
-| [`PROJECT_BOOTSTRAP.md`](PROJECT_BOOTSTRAP.md) | Research/bootstrap lifecycle and bounded research-write/actor-transition contracts |
-| [`RESEARCH_ARCHITECTURE.md`](RESEARCH_ARCHITECTURE.md) | Research, requirements, architecture, lifecycle, ownership |
-| [`INTEROPERABILITY.md`](INTEROPERABILITY.md) | External systems/spec/skills/governance interoperability and authority mapping |
-| [`CAPABILITY_INDEX.md`](CAPABILITY_INDEX.md) | Thin whole-repository capability/gap/absence discovery index |
-| [`PLAYBOOK_INDEX.json`](PLAYBOOK_INDEX.json) | Machine-readable routing manifest; not policy/current-state authority |
-| [`EMBEDDED_PROJECTS.md`](EMBEDDED_PROJECTS.md) | Embedded/hardware-specific workflow |
-| [`UI_UX.md`](UI_UX.md) | UI/UX/i18n/design-system adaptation |
-| [`TOOLCHAIN.md`](TOOLCHAIN.md) | Local runtime/toolchain/PowerShell contract |
-| [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) | Minimal adoption example |
+Start here:
+
+- [`evals/README.md`](evals/README.md) — behavioral evaluation structure and current evidence index.
+- [`evals/`](evals/) — scenarios, supplemental cases, cold-start fixtures, regression matrix, and run records.
+- [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) — canonical validation/evidence/completion contract.
+
+Human-facing README examples should stay illustrative rather than duplicate a growing list of dated run snapshots.
 
 **繁體中文**
 
-一般人類使用者不需要依序讀完這些檔案；這張表只說明主要 canonical owner／adapter 在哪裡。上表檔名與責任本身就是雙語共用的技術路由資訊；正式內容請依任務只讀必要的 owner。
+儲存庫內含確定性驗證器與行為評估測試樣本；它們的目的，是讓每項主張只涵蓋實際驗證過的範圍，不是第二套政策系統。
+
+從這裡開始：
+
+- [`evals/README.md`](evals/README.md)：行為評估結構與目前的證據索引。
+- [`evals/`](evals/)：測試情境、補充案例、cold-start fixture、regression matrix 與執行紀錄。
+- [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md)：canonical validation／evidence／completion contract。
+
+README 只保留人類容易理解的概覽，不再複製會快速過時的一長串帶日期執行快照。
 
 ## Human and AI reading paths / 人類與 AI 的讀取路徑
 
@@ -414,19 +395,38 @@ Whole-repository capability/gap/absence review:
 
 `CAPABILITY_INDEX.md / PLAYBOOK_INDEX.json → bounded discovery → canonical-owner confirmation`
 
-## Relationship to real projects / 與實際專案的關係
+## Repository map / 文件地圖
 
 **English**
 
-The Playbook stores cross-project development methods, not product-specific truth. Each real project still owns its technical truth, current task/evidence, selected AI mode, repository write boundaries, activation routing, secrets, deployment values, hardware/protocol specifics, and release/branch state.
+Humans normally do not need to read these files in order. This map shows the main canonical owners and adapters.
 
-Do not copy the whole Playbook into every project. Keep only a thin adoption/routing layer in project governance, and keep project-specific truth in the project itself.
+| File | Primary responsibility |
+|---|---|
+| [`AGENTS.md`](AGENTS.md) | Maintainer authority for this Playbook repository; human-surface contract; self-maintenance/write/execution boundaries |
+| [`CHAT_INIT.md`](CHAT_INIT.md) | Minimum Playbook bootstrap/task router after activation; repository-read recovery |
+| [`PROJECT_MODES.md`](PROJECT_MODES.md) | `ChatGPT-Only` / `ChatGPT+Codex`; mode-is-not-tier semantics; minimum ChatGPT capability floor; Free cold-start target |
+| [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) | Thin host/runtime activation adapters, conditional activation, loading contract, health checks |
+| [`CLAUDE.md`](CLAUDE.md) / [`GEMINI.md`](GEMINI.md) / [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Thin project-level host compatibility shims; bootstrap handoff only, not policy or execution authority |
+| [`AI_CONTEXT.md`](AI_CONTEXT.md) | Context/information architecture, progressive routing, retrieval cost, Always-on/Hot/Cold/Evidence/Historical lifecycle |
+| [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | Identity, provenance, source-vs-derived authority, snapshot/search-hit/evidence guards |
+| [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT planning/coordination, work admission, actor admission, runtime execution, session compaction/rehydration, result reconciliation |
+| [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) | Codex execution profile, reasoning/context/tool scheduling/reporting after Codex is actually selected |
+| [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) | Repository identity, lower-level actor/path-action authority, permissions, write/read-back boundaries |
+| [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) | Debugging, retry, validation, evidence lifecycle, completion, behavioral evaluation |
+| [`PROJECT_BOOTSTRAP.md`](PROJECT_BOOTSTRAP.md) | Research/bootstrap lifecycle and bounded research-write/actor-transition contracts |
+| [`RESEARCH_ARCHITECTURE.md`](RESEARCH_ARCHITECTURE.md) | Research, requirements, architecture, lifecycle, ownership |
+| [`INTEROPERABILITY.md`](INTEROPERABILITY.md) | External systems/spec/skills/governance interoperability and authority mapping |
+| [`CAPABILITY_INDEX.md`](CAPABILITY_INDEX.md) | Thin whole-repository capability/gap/absence discovery index |
+| [`PLAYBOOK_INDEX.json`](PLAYBOOK_INDEX.json) | Machine-readable routing manifest; not policy/current-state authority |
+| [`EMBEDDED_PROJECTS.md`](EMBEDDED_PROJECTS.md) | Embedded/hardware-specific workflow |
+| [`UI_UX.md`](UI_UX.md) | UI/UX/i18n/design-system adaptation |
+| [`TOOLCHAIN.md`](TOOLCHAIN.md) | Local runtime/toolchain/PowerShell contract |
+| [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) | Minimal adoption example |
 
 **繁體中文**
 
-Playbook 保存跨專案共通的「怎麼開發」，不保存單一產品的「系統是什麼」。各實際專案仍自行擁有技術事實來源、目前任務／證據、AI mode、儲存庫寫入邊界、activation routing、機密資訊、部署參數、硬體／協定細節與 release/branch state。
-
-不要把整份 Playbook 複製進每個專案；只在專案治理文件保留精簡的採用／routing layer，專案自身的技術事實仍留在專案自己的 canonical surface。
+一般人類使用者不需要依序讀完這些檔案；這張表只說明主要 canonical owner／adapter 在哪裡。上表檔名與責任本身就是雙語共用的技術路由資訊；正式內容請依任務只讀必要的 owner。
 
 ## License
 
