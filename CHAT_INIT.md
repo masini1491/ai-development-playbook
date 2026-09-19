@@ -33,9 +33,9 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
 新聊天室處理工程專案時：
 
 1. 明確確認本次**目標 Repository：`owner/repo`**；不要只使用可能對應多個 repository 的模糊名稱。
-2. 依本檔「最低必要路由」直接選出本次 Task 所需的 canonical 主題／section；不要為了「熟悉規則」完整掃描整份手冊，也不要把 `README.md` 當必要中繼站。
-3. 讀實際目標 repository 最新 `AGENTS.md`／project governance、current Hot coordination surface（若採用）與本次 task 直接相關的最低必要正式 source of truth；Cold、Evidence、History 不因存在就預設載入。
-4. 從 current project governance 解析 `Project AI mode`。只接受 `ChatGPT-Only` 或 `ChatGPT+Codex`；若尚未宣告，這是 **mode selection unresolved**，不是第三種 mode。不得從 available tools、舊聊天室、repository shape、Codex 是否可用或上一個 actor猜測。Mode-dependent implementation actor／handoff／broader mutation decision在選定前維持 `REPOSITORY_EXECUTION.md` 的 conservative fallback／STOP boundary；不依賴 mode 的合法 read-only work可維持最低風險範圍。
+2. 先讀實際目標 repository 最新 `AGENTS.md`／project governance、current Hot coordination surface（若採用）與本次 task 直接相關的最低必要正式 source of truth；Cold、Evidence、History 不因存在就預設載入。**Project-specific governance 先於 shared Playbook 的 detailed routing。**
+3. 從 current project governance 解析 `Project AI mode`。只接受 `ChatGPT-Only` 或 `ChatGPT+Codex`；若尚未宣告，這是 **mode selection unresolved**，不是第三種 mode。不得從 available tools、舊聊天室、repository shape、Codex 是否可用或上一個 actor猜測。Mode-dependent implementation actor／handoff／broader mutation decision在選定前維持 `REPOSITORY_EXECUTION.md` 的 conservative fallback／STOP boundary；不依賴 mode 的合法 read-only work可維持最低風險範圍。
+4. 依已建立的 repository／governance／mode／task premise，用本檔「最低必要路由」選出本次 Task 所需的 canonical Playbook 主題／section；不要為了「熟悉規則」完整掃描整份手冊，也不要把 `README.md` 當必要中繼站。
 5. 進入大型主題文件後，優先用 heading／symbol／stable pointer 直接命中 relevant section；若檔首有 Section Router，先用 router。Exact target 已唯一命中時可 direct-leaf bypass。
 6. Whole-repository capability／gap／absence review：先讀薄 discovery surface `CAPABILITY_INDEX.md`，再依 pointer、`PLAYBOOK_INDEX.json`、合理 owner／repository search 做最低充分 bounded coverage；negative claim 在 final synthesis 前重新 reconciliation。詳細 authority 見 `AI_CONTEXT.md` → `Absence Claim Coverage Gate`。
 7. 既有 project 首次採用本手冊，或已讀範圍明確出現 material deterministic execution candidate 時，才做最低充分 Execution Opportunity Scan；候選成立再讀 `CHATGPT_RUNTIME_EXECUTION.md`。

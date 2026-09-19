@@ -152,6 +152,7 @@ Active campaign／Stage 若仍高度共享 mutable premise、blocker、validatio
 一般原則：
 
 - Router 是 **disambiguation tool，不是 ceremony**。若 stable metadata、exact task identity、path、symbol 或 current pointer 已唯一命中 canonical target，直接讀 target；不要為了流程完整強迫多讀中間 router。
+- **Section Router entry order is not execution order, authority precedence, or mandatory reading order.** Route directly to the minimum-sufficient owner／leaf；procedural order comes from the selected canonical contract。
 - 大型 policy / docs 優先 section-level bounded read；大型 source 優先 `symbol/function cluster → caller/callee → file expansion`，不要一開始全文載入。
 - 跨 topic 只讀真正參與本次 decision / execution / validation 的 sections；「相關」不等於「必讀」。
 - Available context ≠ required context；資訊存在不代表本次必須載入。
