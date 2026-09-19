@@ -27,6 +27,7 @@
 - GitHub token / app / cross-repo credential mechanics → `Credential / Permission Profile`
 - Platform limit or product behavior affects the route → `Platform Capability / Limit Freshness`
 - Hash mismatch / ref drift / partial operation / workflow failure → `Failure / Recovery Routing`
+- Merged/closed PR、task branch、staging ref 或其他 terminal GitHub residue → `Post-Operation Ref / PR Cleanup Gate`
 - Completion evidence checklist → `Operational Evidence Summary`
 
 ## GitHub Operation Routing
@@ -292,6 +293,91 @@ identify exact product/API behavior needed
 
 核心原則：**Fail at the layer that failed; do not repair transport gaps by inventing content, widening authority, forcing refs, or downgrading validation.**
 
+## Post-Operation Ref / PR Cleanup Gate
+
+GitHub operation 進入 terminal state 後，除了確認 canonical result，也要對本次 operation 建立的 task-scoped GitHub artifacts 做明確 disposition。這是 repository hygiene／lifecycle closure，不會因 cleanup capability存在就自動取得 branch、PR、Release 或其他 GitHub mutation authority。
+
+先區分 audit record 與 disposable ref：
+
+- **Merged／closed PR record 是 audit history，不是 residue。** 正常情況保留其 title、discussion、review、scope、head/base identity、merge/close state與時間證據；不要為「乾淨」刪除／改寫歷史。
+- **Task／staging branch、temporary ref、draft publication 或 temporary execution artifact 才需要 terminal disposition**：delete、retain with explicit role、或 mark unresolved。
+- Functional／publication result已正確進入 canonical state，但 disposable artifact尚未處置時，可以分別回報「主要 operation完成」與「repository hygiene仍有 outstanding residue」；不要把兩者混成同一 PASS／FAIL 語意。
+
+### Branch / PR classification
+
+對 branch cleanup至少做下列分類：
+
+```text
+merged PR
++ current branch still exists
++ current branch SHA == terminal PR head SHA
++ branch is not default / protected / declared long-lived
++ no explicit rollback / provenance / deployment / integration retention role
+→ strong disposable-branch candidate
+→ delete only with current repository mutation authority
+
+merged PR
++ branch advanced after merge
+→ do not auto-delete
+→ inspect post-merge commits / current role first
+
+closed but unmerged PR
+→ preserve branch by default
+→ resolve whether work is superseded, abandoned, still needed, or uniquely retained
+→ delete only after explicit terminal disposition
+
+branch with no matched PR
+→ branch name / age alone is insufficient
+→ establish purpose, unique work, and retention role before deletion
+```
+
+Merged PR 的 head branch仍停在 terminal PR head，是「merge 後沒有再承載新工作」的強 evidence，但它本身仍不是 deletion authority。若 repository採 squash/rebase/merge等不同整合方式，不要求 branch commit一定成為 default branch ancestor；應以 PR terminal state、current canonical result與 branch retention role共同判斷。
+
+### Long-lived / retained refs
+
+下列 ref 不應套用 short-lived cleanup推定：
+
+- default／protected branch；
+- release／deployment／environment／integration branch；
+- current migration、rollback、provenance或compatibility contract明確保留的 ref；
+- branch已在 terminal PR後承載新的 authorized commits；
+- project governance另有 retention / archival requirement。
+
+需要保留時，最好能從 branch naming、repository governance、task/evidence dossier或其他 current canonical surface看出 retention role；不要讓「暫時留著」永久變成無主 residue。
+
+### Optional automatic deletion profile
+
+若 repository 的 branch model已明確是「one task → short-lived branch → PR → merge → branch retired」，可以使用 GitHub 的 merge後自動刪除 head branch能力作為 implementation convenience。這不是 Playbook universal requirement，也不適合 default/protected/long-lived或需要 post-merge continuation的 branch。
+
+Automation 只實作已成立的 lifecycle policy：
+
+```text
+repository branch model says merged task branch retires
++ GitHub setting safely matches that model
+→ auto-delete may close routine residue
+
+automation available
+≠ every merged branch is disposable
+```
+
+Closed-unmerged PR、advanced-after-merge branch或無法建立 retention status的 ref仍需 individually reconcile，不得靠 auto-cleanup assumption處理。
+
+### Completion cleanup sequence
+
+對使用 PR／staging ref／temporary GitHub object的 operation，可採：
+
+```text
+canonical result / merge / publication read-back
+→ enumerate task-scoped GitHub artifacts
+→ classify audit history vs disposable / retained refs
+→ verify no unresolved unique work or retention role
+→ perform authorized cleanup
+→ read back terminal branch / PR / publication state when material
+→ report operation completion and hygiene status separately
+```
+
+核心原則：**Preserve audit history; dispose of task-scoped refs deliberately. A terminal PR does not require deleting its record, and a leftover branch is not automatically safe to delete merely because the main operation succeeded.**
+
 ## Operational Evidence Summary
 
 完成 GitHub operation 前，按 operation保留最低充分 evidence：
@@ -304,5 +390,6 @@ identify exact product/API behavior needed
 | Remote mutation bridge | exact base + workflow/script identity + permission scope + validation + self-cleanup + final diff |
 | Actions validation | tested SHA + run/job/command scope + result + artifact identity when material |
 | Release publication | tag/target + publication state + metadata/assets + final read-back |
+| Terminal cleanup / ref disposition | terminal PR/publication state + task-scoped ref inventory + retain/delete rationale + cleanup read-back when mutated |
 
 自然語言「已完成」「已上傳」「CI過了」「Release發了」都不是獨立 completion authority；只有與本次 operation scope相稱的 GitHub object/run/publication read-back 才能關閉對應 claim。
