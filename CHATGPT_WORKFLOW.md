@@ -10,7 +10,7 @@
 - task contract／clarification／scope exclusion → `Task Contract：Goal / Context / Exclusions`
 - durable work／Hot-Cold admission／follow-up → `Persistence／Coordination Admission`、`AI-originated Durable Work Admission Gate`、`Task Identity / Revision Gate`、`Follow-up / New Work Gate`
 - 長 session compaction／freshness／handoff → `Session Compaction / Rehydration Contract`
-- actor 選擇／Codex handoff／Prompt mode → `Actor Admission / Handoff Gate`、`Codex Prompt 模式選擇`、`Prompt 建議設定與固定資訊`、`Child Routing Forecast`、`Prompt-authorized Child Profile Routing`
+- actor 選擇／Codex handoff／Prompt mode → `Actor Admission / Handoff Gate`、`Codex Prompt 模式選擇`、`Prompt 建議設定與固定資訊`、`Child Routing Forecast`、`Prompt-authorized Child Delegation / Profile Routing`
 - copy-ready Prompt／launch settings separation／Prompt slimming／last-mile enforcement → `可直接複製的 Codex Prompt`、`Prompt Artifact Separation / Canonical Shapes`、`Codex Prompt Pre-Send Gate`、`Prompt lean／長度診斷`
 - ChatGPT sandbox／deterministic runtime → `CHATGPT_RUNTIME_EXECUTION.md`
 - Codex completion reconciliation → `Codex 結果 reconciliation`
@@ -468,22 +468,31 @@ ChatGPT 在 Codex completion reconciliation 時可把 forecast 與既有 `Child 
 
 核心原則：**ChatGPT may forecast delegation value during planning; Codex retains execution-time delegation authority. Forecast ≠ spawn instruction.**
 
-### Prompt-authorized Child Profile Routing
+### Prompt-authorized Child Delegation / Profile Routing
 
-除非使用者或 current project governance 明確禁止 subagent／Multi-Agent，ChatGPT 產生 Codex handoff 時，**預設確保 Codex能從 current project governance／Hot contract／admitted Prompt其中至少一個 surface取得最低充分 child profile routing authorization**。如果 current repository authority已提供等價 authorization，Prompt只 reference，不重複；只有 repository authority未提供時，才在 copy-ready Prompt補一條 compact authorization。這個預設授權只是打開合法 routing 能力，**不代表要求 Codex 一定 spawn child**。
+ChatGPT 必須把 **child delegation authorization** 與 **child profile-override authorization** 視為兩個獨立維度：前者只回答「Codex 是否可對通過 runtime delegation gate 的 bounded subtask spawn child」，後者只在 child 已合法成立後回答「是否可指定不同 model／reasoning」。允許 profile override **永遠不會**自行建立 delegation authority；project 也可以合法地允許 child delegation、但要求所有 child 繼承 root profile。
+
+除非使用者或 current project governance 明確禁止 subagent／Multi-Agent，ChatGPT 產生 Codex handoff 時，預設確保 Codex能從 current project governance／Hot contract／admitted Prompt其中至少一個 surface取得最低充分 bounded child delegation authorization；在 higher authority 未禁止 mixed-profile execution 時，也可分開提供最低充分 profile-override authorization。Current repository authority 已提供等價 authorization 時只 reference，不重複；只有缺少對應 authorization 時才在 copy-ready Prompt補 compact wording。這些 authorization 只打開合法 routing 能力，**不代表要求 Codex 一定 spawn child或一定 override profile**。
 
 最低充分語義必須保留：
 
-- 只有原本就符合 `CODEX_EXECUTION.md` 的 `Subagent / Delegation Gate` 的 bounded subtask 才可 spawn child；
-- 對已合法 delegation 的 child，Codex 可依 `CODEX_EXECUTION.md` 的最低充分 end-to-end cost／quality 原則，在 runtime **向上或向下** override child model／reasoning；可包含不同模型或同模型不同 reasoning；
-- **不得為了換 model／reasoning、少一次 root UI 操作、降低單價或 retry 而創造 child**；root profile仍由使用者決定，main critical path若需要 root escalation則走既有 STOP／relaunch gate；
-- completion／final report仍依 `CODEX_EXECUTION.md` 的 `Child profile routing: NONE | USED` 與 observability boundary 回報。
+- **Delegation authorization**：只有原本就符合 `CODEX_EXECUTION.md` 的 `Subagent / Delegation Gate` 的 bounded subtask 才可 spawn child；authorization ≠ spawn obligation。
+- **Profile-override authorization**：只有 child 已合法成立，且 current authorization另外允許 profile override時，Codex才可依 `CODEX_EXECUTION.md` 的最低充分 end-to-end cost／quality原則，在 runtime向上或向下 override child model／reasoning；沒有這層 authorization時 child繼承 parent profile。
+- **不得為了換 model／reasoning、少一次 root UI 操作、降低單價或 retry 而創造 child**；root profile仍由使用者決定，main critical path若需要 root escalation則走既有 STOP／relaunch gate。
+- completion／final report仍依 `CODEX_EXECUTION.md` 分別回報 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 與 `Child profile routing: NONE | USED`，並遵守 observability boundary。
 
 ChatGPT 不需要在產 Prompt 時預先列舉所有可能 child 或硬編每個 profile。若 exact bounded subtask／profile 只有 runtime 才能判斷，可直接授權 Codex在上述 gate內自行選最低充分 child profile；若目前 evidence 已足以固定某個 child role／profile，則可在 Prompt 中明確 pin 該 override。
 
-TASKS Short-launch 也適用本預設，但保持 lean：若 project governance／Hot contract 尚未提供等價 authorization，只需補一條 compact bounded authorization，例如 `Bounded child delegation/profile override is permitted only through the current CODEX_EXECUTION gates; do not expand task scope or authority.`；不複製整段 execution policy。若 current task 明顯不適合 delegation、execution surface不支援 child profile override，或 higher authority禁止 subagent，則不啟用／明確關閉，不得假裝 mixed-profile execution 可用。
+TASKS Short-launch 也適用本預設，但保持 lean：若 project governance／Hot contract 尚未提供等價 authorization，最多補兩條彼此獨立的 compact semantics，例如：
 
-核心原則：**Root profile 是 launch choice；合法 child profile 是 runtime routing choice。Prompt 預設授權 bounded mixed-model／mixed-reasoning execution，但不把 profile switching 變成 delegation authority。**
+```text
+Bounded child delegation is permitted only through the current CODEX_EXECUTION gates; do not expand task scope or authority.
+Child profile override is permitted only for an already-admitted child through the current CODEX_EXECUTION profile/data-egress gates.
+```
+
+若只允許 delegation、不允許 mixed-profile execution，就只提供第一層並讓 child繼承 parent profile；不為形式補第二層。若 current task 明顯不適合 delegation、execution surface不支援 child profile override，或 higher authority禁止 subagent／mixed-profile routing，則依實際 authority關閉對應維度，不得把兩者綁成 all-or-nothing。
+
+核心原則：**Child delegation authority ≠ child profile-override authority. Root profile 是 launch choice；合法 child profile 是 runtime routing choice；profile switching 不建立 delegation authority。**
 
 ## Codex reporting contract activation
 

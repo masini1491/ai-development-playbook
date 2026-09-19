@@ -27,13 +27,14 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 **Root model / reasoning** 由使用者在 Codex UI／launch configuration 選擇；Codex 不得自行改變目前 root thread 的 model 或 reasoning，也不得把 child override 冒充 root 已切換。
 
-**Child model / reasoning** 只有在 current user instruction、project governance 或 admitted Codex Prompt 已明確授權 subagent／delegation，而且該 subtask 已獨立通過本檔 `Subagent / Delegation Gate` 時，才可在 spawn child 時依最低充分原則指定 model／reasoning override。未指定 override 時 child 繼承 parent profile。
+**Child delegation authorization** 與 **child profile-override authorization** 是兩個不同 gate。只有 current user instruction、project governance 或 admitted Codex Prompt 已授權 bounded child delegation，而且該 subtask已獨立通過本檔 `Subagent / Delegation Gate`，才可 spawn child。Child 已合法成立後，只有 current authority另外允許 profile override時，才可依最低充分原則指定不同 model／reasoning；否則 child繼承 parent profile。
 
-- Child profile override 只改變該 child 的 execution profile，不擴張 Task／Stage、repository write、permission、credential、deployment 或 external-service authority。
-- **想使用不同 model／reasoning 本身不是 delegation authority。** 不得為了避開 root UI 切換而把 tightly-coupled、critical-path 或本來應由 root 完成的工作硬拆成 child。
+- Child profile override 只改變該 child 的 execution profile，不擴張 Task／Stage、repository write、permission、credential、deployment、external-service 或 delegation authority。
+- **想使用不同 model／reasoning本身不是 delegation authority；允許 delegation也不自動等於允許 mixed-profile execution。** 不得為了避開 root UI切換而把 tightly-coupled、critical-path或本來應由 root完成的工作硬拆成 child。
+- 在把 project Context送給 child前，若 requested child profile／router會 materially改變 inference destination、外部接收者或 data-policy boundary，先依 `REPOSITORY_EXECUTION.md` → `External inference / data-egress boundary` 建立 fresh disclosure decision；舊 root destination可讀不代表新 child destination也可讀。Same admitted destination且 project沒有額外 restriction時不為形式增加 provider ceremony。
 - Child 可是 serial delegation；**不需要**先證明 parallelization benefit。只有同時執行多個 child／workstream 時，才另外套用 `Parallel Multi-Agent Gate`。
-- 若 main critical path 本身已 materially 超出 current root profile，依下方「升級處理」回報並由使用者決定是否重新 launch；不要用 child routing 偷渡 root escalation。
-- 若 execution surface 不支援 requested child model／reasoning、runtime 沒有暴露對應可用 profile，或 override 被拒絕，原樣回報 limitation；不得猜 model slug／effort 或假裝切換成功。
+- 若 main critical path本身已 materially超出 current root profile，依下方「升級處理」回報並由使用者決定是否重新 launch；不要用 child routing偷渡 root escalation。
+- 若 execution surface不支援 requested child model／reasoning、runtime沒有暴露對應可用 profile，或 override被拒絕，原樣回報 limitation；不得猜 model slug／effort或假裝切換成功。
 
 新開、Branch / Fork、Resume 或跨 session handoff 後，若 Model / Reasoning 會影響成本或能力：
 
@@ -348,6 +349,21 @@ Codex 無權自行換 **root** model／reasoning。達到 root escalation condit
 - 想使用不同 model／reasoning、少一次手動 UI 切換、降低單價、增加 token budget 或把 retry 換個 agent，本身都**不能**成立 delegation authority。
 
 Delegation 成立後，才依 `Root / Child Profile Routing` 判斷 child 繼承 parent profile 或指定最低充分 model／reasoning override。
+
+Child 若需要 repository mutation，實際 mutation authority必須重新取交集：
+
+```text
+child mutation authority
+= parent current Stage authority
+∩ explicitly delegated bounded responsibility
+∩ repository path/action authority
+∩ child workspace / permission / credential capability
+```
+
+- Parent/root 對 broader Stage有 write authority，不代表 child自動繼承整個 Stage的 mutable surface；read-only reviewer／validator預設仍是 read-only，除非其 bounded responsibility另有明確 mutation authority。
+- Serial mutating child成立時，root先界定 child當次 mutable responsibility並避免對同一 order-sensitive target做衝突 write；child完成後回傳最低充分 diff/result/evidence，root在繼續 dependent mutation或 completion claim前先對 current workspace／canonical state做 bounded reconciliation。
+- Concurrent mutating children除了本 gate外仍必須通過 `Parallel Multi-Agent Gate`；shared mutable target、order-sensitive side effect或需要高頻 cross-agent synchronization時，不以多 child平行化。
+- Child mutation／reconciliation不建立新的 Task／Stage，也不讓 child結果自己成為 canonical completion authority。
 
 一次 `Subagent / Delegation Gate` 判定只對**當時的 bounded child candidate／subtask 與 execution topology** 有效，不是 whole-run sticky authority：
 

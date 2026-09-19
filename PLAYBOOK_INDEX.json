@@ -219,9 +219,21 @@
       "kind": "contract"
     },
     {
+      "id": "handoff.prompt-child-delegation",
+      "owner": "CHATGPT_WORKFLOW.md",
+      "section": "Prompt-authorized Child Delegation / Profile Routing",
+      "kind": "contract"
+    },
+    {
       "id": "handoff.prompt-child-profile-routing",
       "owner": "CHATGPT_WORKFLOW.md",
-      "section": "Prompt-authorized Child Profile Routing",
+      "section": "Prompt-authorized Child Delegation / Profile Routing",
+      "kind": "contract"
+    },
+    {
+      "id": "execution.codex-child-delegation",
+      "owner": "CODEX_EXECUTION.md",
+      "section": "Subagent / Delegation Gate",
       "kind": "contract"
     },
     {
