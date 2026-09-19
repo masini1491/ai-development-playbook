@@ -1,8 +1,8 @@
 # Information Integrity Guards
 
-> **Authority**：跨專案 semantic identity、derived artifact authority、durable confirmed fact ownership、evidence provenance precision／provisional-vs-settled observation／lineage independence／temporal semantics／negative observation semantics、scope-qualified status propagation、private-to-public generalization、remote snapshot consistency、search-result authority/currentness。
+> **Authority**：跨專案 semantic identity、derived artifact authority、instruction／data authority separation、durable confirmed fact ownership、evidence provenance precision／provisional-vs-settled observation／lineage independence／temporal semantics／negative observation semantics、scope-qualified status propagation、private-to-public generalization、remote snapshot consistency、search-result authority/currentness。
 >
-> **Read when**：目前工作涉及 aggregate/bundle identity、跨來源 synthesis、evidence metadata/provenance/independence、estimate／preflight value 與 post-execution actual 的 evidence boundary、時間或多 clock 語意、negative observation／unknown、status scope、private evidence 公開泛化、remote canonical snapshot validation、repository search hit authority，或把 confirmed fact 保存到 report／analysis／eval 等 derived artifact。
+> **Read when**：目前工作涉及 aggregate/bundle identity、跨來源 synthesis、untrusted／instruction-like retrieved content 的 authority 判斷、evidence metadata/provenance/independence、estimate／preflight value 與 post-execution actual 的 evidence boundary、時間或多 clock 語意、negative observation／unknown、status scope、private evidence 公開泛化、remote canonical snapshot validation、repository search hit authority，或把 confirmed fact 保存到 report／analysis／eval 等 derived artifact。
 >
 > 本檔只保存跨專案 integrity contract；domain-specific ID 格式、lifecycle 名稱、資料 schema、validation ladder 與公開／機密分類細節仍由各 project owner 決定。
 

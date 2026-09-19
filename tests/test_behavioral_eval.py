@@ -24,7 +24,7 @@ class BehavioralEvalTests(unittest.TestCase):
         return {
             "schema_version": 1,
             "authority": "selection-only",
-            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 22)],
+            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 23)],
             "change_classes": {
                 "routing": ["BEH-008", "BEH-009", "BEH-010", "BEH-012", "BEH-015", "BEH-019", "BEH-020", "BEH-021"],
                 "validation": ["BEH-004", "BEH-005", "BEH-014", "BEH-016"],
@@ -32,6 +32,7 @@ class BehavioralEvalTests(unittest.TestCase):
                 "session-compaction-rehydration": ["BEH-009", "BEH-010", "BEH-015"],
                 "actor-admission-and-handoff": ["BEH-010", "BEH-013", "BEH-019", "BEH-020", "BEH-021"],
                 "prompt-delivery": ["BEH-020", "BEH-021"],
+                "information-integrity": ["BEH-008", "BEH-011", "BEH-012", "BEH-014", "BEH-018", "BEH-022"],
                 "phase3-cold-start-core": [
                     "BEH-002",
                     "BEH-006",
@@ -76,6 +77,7 @@ class BehavioralEvalTests(unittest.TestCase):
             "BEH-019",
             "BEH-020",
             "BEH-021",
+            "BEH-022",
         ):
             with self.subTest(scenario_id=scenario_id):
                 record = self.valid_record()
@@ -191,6 +193,14 @@ class BehavioralEvalTests(unittest.TestCase):
             ["BEH-020", "BEH-021"],
             behavioral_eval.select_regression_scenarios(
                 self.valid_matrix(), "prompt-delivery"
+            ),
+        )
+
+    def test_select_information_integrity_regression_includes_beh_022(self) -> None:
+        self.assertEqual(
+            ["BEH-008", "BEH-011", "BEH-012", "BEH-014", "BEH-018", "BEH-022"],
+            behavioral_eval.select_regression_scenarios(
+                self.valid_matrix(), "information-integrity"
             ),
         )
 

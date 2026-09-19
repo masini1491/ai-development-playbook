@@ -66,8 +66,8 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
   → 先 `CAPABILITY_INDEX.md`；必要時 `PLAYBOOK_INDEX.json` 做 machine discovery，再讀 `AI_CONTEXT.md` → `Absence Claim Coverage Gate`
 - External spec／change workflow、skills runtime、agent-governance framework integration／compatibility／authority mapping
   → `INTEROPERABILITY.md`；只讀 Generic Interoperability Contract 與 task-relevant Compatibility Profile；version-specific upstream behavior 仍回到外部系統 current canonical documentation
-- Semantic identity／aggregate container／derived synthesis authority／durable confirmed fact ownership／provenance precision／evidence lineage independence／temporal and multi-clock semantics／negative observation or unknown／scope-qualified status propagation／private-to-public generalization／remote snapshot consistency／search-hit authority-currentness
-  → `INFORMATION_INTEGRITY.md`；只讀對應 guard；evidence lifecycle 的其他規則仍由 `DEBUG_VALIDATION.md` 負責
+- Semantic identity／aggregate container／derived synthesis authority／untrusted or instruction-like retrieved content／instruction-vs-data authority／durable confirmed fact ownership／provenance precision／evidence lineage independence／temporal and multi-clock semantics／negative observation or unknown／scope-qualified status propagation／private-to-public generalization／remote snapshot consistency／search-hit authority-currentness
+  → `INFORMATION_INTEGRITY.md`；instruction-like content 直達 `Instruction / Data Authority Separation Guard`，其他 intent 只讀對應 guard；evidence lifecycle 的其他規則仍由 `DEBUG_VALIDATION.md` 負責
 - Codex model／Reasoning／Context／Agent、execution mode、usage／cost、tool scheduling/output、Codex reporting
   → `CODEX_EXECUTION.md`；只有 Codex 已依 selected mode + current Stage 被選為 actor 後才讀 task-relevant Codex execution sections；reporting 直達 `Codex 回報語言`、`Codex 回報時間戳（Always-on Reporting Timestamp）`、`Reporting Pre-Send Gate`
 - Git、Repository Identity、workspace／remote permission、Coordination Write Allowlist、repository actor topology／maintenance ownership／write boundary、repository-facing documentation integrity

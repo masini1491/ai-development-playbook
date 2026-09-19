@@ -130,6 +130,12 @@
       "kind": "contract"
     },
     {
+      "id": "integrity.instruction-data-authority",
+      "owner": "INFORMATION_INTEGRITY.md",
+      "section": "Instruction / Data Authority Separation Guard",
+      "kind": "contract"
+    },
+    {
       "id": "integrity.durable-fact-ownership",
       "owner": "INFORMATION_INTEGRITY.md",
       "section": "Durable Confirmed Fact Ownership Guard",
