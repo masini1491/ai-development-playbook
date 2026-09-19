@@ -7,7 +7,7 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 ## Section Router
 
 - root／child model profile、override authority、mixed-profile execution → `Root / Child Profile Routing`、`Delegation Opportunity Scan`、`Subagent / Delegation Gate`、`Nested Routing / Recursive Orchestration Guard`、`Parallel Multi-Agent Gate`、`升級處理`
-- Codex user-facing language／timestamp／child-delegation／child-profile summary → `Codex 回報語言`、`Codex 回報時間戳`、`Child Profile Routing 回報`、`Reporting Pre-Send Gate`
+- Codex user-facing language／content hierarchy／timestamp／child-delegation／child-profile summary → `Codex 回報語言`、`Codex Response Presentation Contract`、`Codex 回報時間戳`、`Child Profile Routing 回報`、`Reporting Pre-Send Gate`
 - repository execution／Git／permission preflight → `Prompt execution gates`、`REPOSITORY_EXECUTION.md`
 - model ladder／reasoning calibration／usage budget／root fallback → `模型分工`、`推理強度校準`、`Usage window-aware execution budgeting`、`Resource-Exhaustion Root Fallback`
 - Context expansion／subagent decision／routing observability／parallelization → `Progressive Context`、`Delegation Opportunity Scan`、`Subagent / Delegation Gate`、`Nested Routing / Recursive Orchestration Guard`、`Routing Decision Observability`、`Parallel Multi-Agent Gate`
@@ -21,7 +21,7 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 不是選最強模型，而是選最低充分模型。
 
-本檔大部分章節仍依 Task 做 Progressive Reading；但 **Codex user-facing reporting contract 是 always-on cross-cutting contract**。只要 project `AGENTS.md`／正式 routing 已把 Codex reporting 指向本檔，每個 Codex execution 都至少必須取得本檔的「Codex 回報語言」、「Codex 回報時間戳」與「Reporting Pre-Send Gate」規則，再依 Task 讀其他最低必要章節。不得因本次工作只是 MQTT、BLE、文件、maintenance、validation 或其他特定 domain，就把 reporting contract 判成無關而跳過。
+本檔大部分章節仍依 Task 做 Progressive Reading；但 **Codex user-facing reporting contract 是 always-on cross-cutting contract**。只要 project `AGENTS.md`／正式 routing 已把 Codex reporting 指向本檔，每個 Codex execution 都至少必須取得本檔的「Codex 回報語言」、「Codex Response Presentation Contract」、「Codex 回報時間戳」與「Reporting Pre-Send Gate」規則，再依 Task 讀其他最低必要章節。不得因本次工作只是 MQTT、BLE、文件、maintenance、validation 或其他特定 domain，就把 reporting contract 判成無關而跳過。
 
 ## Root / Child Profile Routing
 
@@ -49,6 +49,35 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 程式碼、identifier、file/path、command、raw log、error string、protocol field、API name、library/tool name 與既有正式技術名詞保持原文；不得為了翻譯改寫 source semantics、machine contract 或 evidence 原文。
 
 純 tool output、command stdout/stderr、execution surface 自動產生的 progress/status UI 不需要為符合本規則另外翻譯或包裝成自然語言回覆。
+
+## Codex Response Presentation Contract
+
+本節控制 Codex **如何組織 user-facing 結果**，不改變 Task／Stage、Git、validation、completion 或 evidence authority，也不建立新的 project status taxonomy。
+
+預設資訊順序：
+
+```text
+Direct result / scope-qualified current status
+→ Material changes / findings
+→ Required validation / canonical evidence
+→ Remaining gap / blocker only if present
+→ Execution transparency metadata
+→ Reporting timestamp
+```
+
+這是 content hierarchy，不要求每次固定 headings。小型工作可以用一兩段完成；大型或 PARTIAL／STOP 狀態才依需要分段。
+
+一般原則：
+
+- **Result first**：第一個實質段落先讓使用者知道「目前結果是什麼、完成到哪個 scope」。若 project已有正式 status taxonomy就沿用；沒有時用自然語言說清楚，不自行發明新的 DONE／PARTIAL／WARNING enum。
+- **Material changes, not execution diary**：final/completion 預設摘要實際改變的 behavior、files/surfaces、architecture或重要 evidence；不要只因 tool call真的發生過，就按時間順序敘述「先讀A、再跑B、接著改C」。只有某個 execution step會 materially解釋結果、root cause、recovery、blocker或 evidence lineage時才保留。
+- **Validation hierarchy**：先回答 required validation contract 是否滿足及其有效 scope，再列會改變判斷的 material checks／canonical evidence。不得用大量 PASS command清單掩蓋一個未跑、失敗或 scope-limited 的 required validation；未執行／無法執行的 required check要說明原因與對 completion claim 的影響。
+- **Evidence stays scope-qualified**：commit SHA、branch、working-tree state、test/build結果、hardware／deployment evidence只支持其實際觀察範圍；不要把「tests pass」寫成 broader Done，亦不要為版面簡潔省略 material evidence gap。
+- **Remaining gap only when real**：沒有 blocker／unresolved就不要機械加「下一步」；有 gap時只列會阻止 current completion、需要使用者決策或已屬 current Stage responsibility 的項目，不把 adjacent improvement變成新義務。
+- **Transparency metadata comes after the result**：child delegation／profile routing、routing observability等 execution metadata通常放在 task result與validation之後、timestamp之前；只有它本身 materially解釋 STOP／failure／capability limitation 時才提前。
+- **Progress follows the same hierarchy**：中間進度先講 materially changed current state／blocker，不重複 execution surface 已顯示的 spinner、百分比或上一則 substantially identical evidence。
+
+核心原則：**Report the state the user needs to act on, then the minimum evidence needed to trust that state. Execution trace is not the default final report.**
 
 ## Codex 回報時間戳（Always-on Reporting Timestamp）
 
@@ -105,6 +134,12 @@ Profile-routing 是另一個維度：
 
 Child delegation／profile summary 是 execution transparency，不取代 task result、validation、Git 或 completion evidence，也不把 delegation 或 model switch 本身當成成功證據。
 
+User-facing rendering可保持 compact，但不得丟失兩個維度：
+
+- 若兩者都為 `NONE`，可合併成一行：`Child delegation: NONE｜Child profile routing: NONE`。
+- 若 delegation 為 `CONSIDERED_NOT_USED`／`USED`，或 profile routing 為 `USED`，使用短 block保留本節要求的 materially distinct role／reason／requested profile／result／observability boundary。
+- 這組 metadata預設放在 task result／validation／remaining-gap之後、reporting timestamp之前；不得搶在主要結果前面，除非 child/runtime limitation本身就是 current blocker。
+
 核心原則：**使用者應能從 final report 分辨「沒有候選／未需要 substantive evaluation」、「評估後未使用」、「實際使用 child」，並在 profile override 發生時看出要求切換過哪些 model／reasoning 以及可證明到哪一層；requested override ≠ independently verified effective profile。**
 
 ## Reporting Pre-Send Gate
@@ -115,11 +150,14 @@ Reporting policy 被讀取或在 Prompt 中重述，仍不等於最後送出的�
 
 1. **User-facing classification**：本次輸出若會形成使用者可見、可據此判斷狀態或作為後續工作依據的自然語言訊息，就進入本 gate；不得因稱為 progress、intermediate、summary 或非 final 而跳過。
 2. **Language check**：最終草稿的自然語言回覆符合本檔「Codex 回報語言」或使用者／project 當次明確覆蓋的 reporting language；技術原文不需翻譯。
-3. **Child-routing report check（completion/final only）**：若本次是 completion summary／final report，確認已依上節同時標記 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 與 `Child profile routing: NONE | USED`；若 profile routing 為 `USED`，列出 materially distinct requested model／reasoning、bounded role/result 與 effective-profile observability boundary。一般 progress/STOP reply 不為形式補此欄。
-4. **Timestamp source check**：直接使用可信 runtime/platform current wall clock產生 absolute timestamp，依需要轉換 reporting timezone；不使用模型推算、舊回覆、commit timestamp或 placeholder。只有 primary clock unavailable／suspect時才依 `INFORMATION_INTEGRITY.md` 的 `Reporting Wall-clock Source Guard` 使用 conditional external sanity/fallback；仍無可信來源則使用 `回報時間：UNAVAILABLE`。
-5. **Timestamp render check**：最終草稿不得保留 `??:??`、`YYYY-MM-DD HH:mm`、錯誤 timezone 或其他 malformed/stale timestamp。若 runtime time可取得但 render失敗，重新取值並修復；這是 reporting failure，不是 system-clock failure evidence。
-6. **Final-line check**：檢查最終草稿最後一個非空白行是否為本 contract 要求的 timestamp line，且沒有任何正文、附註、citation、summary 或其他內容出現在其後。
-7. **Fail-closed repair**：若 language、required child-delegation/profile summary、timestamp source/render、格式或 final-line position 任一項不合格，先修正最終草稿並重新檢查；**未通過 pre-send check 的 user-facing reply 不得送出**。
+3. **Result visibility check**：第一個實質段落已直接說明 current result／scope-qualified status／blocker；若 project有正式 status taxonomy就沿用，沒有時不為本 gate自行發明 enum。不得讓 execution diary、child metadata或長 validation清單把主要結果埋在後面。
+4. **Evidence / scope check**：completion／validation claim與實際 evidence scope一致；required validation若未跑、FAIL或只能支持較窄 scope，已清楚揭露原因與對 current completion的影響。不得用 PASS數量掩蓋 material gap。
+5. **Presentation-noise check**：移除不會改變使用者判斷的 tool-call chronology、重複 log／command清單、routing internals、重複 conclusion與機械式 next-step padding；保留會解釋 result、root cause、recovery、blocker或 evidence lineage的最低充分 execution detail。
+6. **Child-routing report check（completion/final only）**：若本次是 completion summary／final report，確認已依上節同時保留 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 與 `Child profile routing: NONE | USED` 兩個語意維度；兩者皆 `NONE` 時可同列一行。若 profile routing 為 `USED`，列出 materially distinct requested model／reasoning、bounded role/result 與 effective-profile observability boundary。一般 progress/STOP reply 不為形式補此欄。
+7. **Timestamp source check**：直接使用可信 runtime/platform current wall clock產生 absolute timestamp，依需要轉換 reporting timezone；不使用模型推算、舊回覆、commit timestamp或 placeholder。只有 primary clock unavailable／suspect時才依 `INFORMATION_INTEGRITY.md` 的 `Reporting Wall-clock Source Guard` 使用 conditional external sanity/fallback；仍無可信來源則使用 `回報時間：UNAVAILABLE`。
+8. **Timestamp render check**：最終草稿不得保留 `??:??`、`YYYY-MM-DD HH:mm`、錯誤 timezone 或其他 malformed/stale timestamp。若 runtime time可取得但 render失敗，重新取值並修復；這是 reporting failure，不是 system-clock failure evidence。
+9. **Final-line check**：檢查最終草稿最後一個非空白行是否為本 contract 要求的 timestamp line，且沒有任何正文、附註、citation、summary 或其他內容出現在其後。
+10. **Fail-closed repair**：若 result visibility、language、evidence/scope、presentation noise、required child-delegation/profile summary、timestamp source/render、格式或 final-line position任一項不合格，先修正最終草稿並重新檢查；**未通過 pre-send check 的 user-facing reply 不得送出。**
 
 若 execution surface 原生提供 output validator、response post-processing hook、schema check 或其他可在送出前對最終文字做 deterministic validation 的能力，優先用它執行上述可機械判定項目；若沒有這類能力，仍必須做 bounded final-draft self-check。不得把 model-only self-check 宣稱為平台層 deterministic guarantee，也不得為了單一 reporting rule自行建立高複雜度 validator、agent loop 或外部服務。
 
