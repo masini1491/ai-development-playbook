@@ -118,6 +118,40 @@ Current project identity / bootstrap
 
 > **Illustrative workflow / 流程概覽**：The diagram summarizes the stable human-facing flow only. Canonical rules remain in the linked owner documents, and product UI/version details are intentionally excluded.／本圖只摘要穩定的人類閱讀流程；正式規則仍以對應 canonical owner 為準，並刻意不放產品 UI／版本細節。
 
+## Example: cloud deterministic loop / 範例：雲端確定性開發閉環
+
+**English**
+
+A project can separate AI reasoning / authorized repository mutation from deterministic validation when project governance assigns each responsibility explicitly. For example:
+
+```text
+authorized ChatGPT repository mutation
+→ GitHub canonical state
+→ CI / GitHub Actions compile + tests
+→ machine evidence tied to the tested commit
+→ ChatGPT reconciliation
+```
+
+This can keep a project moving when a local coding-agent runtime is unavailable or its usage quota is exhausted, without replacing machine validation with model inference. CI availability does **not** transfer implementation authority between AI actors: in `ChatGPT+Codex`, work already assigned to Codex / the coding-agent executor remains there unless current project governance or the authorized Stage explicitly reassigns it. The CI runner should receive only the minimum permissions / credentials required for the validation job, and a PASS proves only the commit, command, runtime, and test scope actually exercised.
+
+Canonical details: [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) → `Validation Execution Placement Gate` and [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) → authorization / capability layers.
+
+**繁體中文**
+
+只要專案治理規則明確分配各自責任，就可以把 AI 的推理／已授權 repository mutation，與確定性驗證拆開。例如：
+
+```text
+已授權的 ChatGPT repository mutation
+→ GitHub canonical state
+→ CI / GitHub Actions compile + tests
+→ 綁定 tested commit 的 machine evidence
+→ ChatGPT reconciliation
+```
+
+這種做法可以在本機 coding-agent runtime 不可用或 usage quota 用盡時，繼續利用外部 deterministic runtime 驗證，而不是拿模型推論取代 compile／test。CI 可用並**不會**自動把 implementation authority 從一個 AI actor 轉給另一個：在 `ChatGPT+Codex` 中，若實作工作已分派給 Codex／coding-agent executor，仍必須由目前 project governance 或 authorized Stage 明確重新分派，ChatGPT 才能接手。CI runner 也只應取得 validation job 所需的最低權限／credential；PASS 只證明實際執行到的 commit、command、runtime 與 test scope。
+
+正式規則見 [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) → `Validation Execution Placement Gate`，以及 [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) → authorization / capability layers。
+
 ## What it covers / 主要涵蓋範圍
 
 **English**
