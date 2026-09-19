@@ -34,7 +34,8 @@
       "BEH-013",
       "BEH-014",
       "BEH-019",
-      "BEH-020"
+      "BEH-020",
+      "BEH-022"
     ],
     "coordination-admission": [
       "BEH-002",
@@ -94,11 +95,13 @@
       "BEH-011",
       "BEH-012",
       "BEH-014",
-      "BEH-018"
+      "BEH-018",
+      "BEH-022"
     ],
     "external-workflow-interoperability": [
       "BEH-013",
-      "BEH-014"
+      "BEH-014",
+      "BEH-022"
     ],
     "phase3-cold-start-core": [
       "BEH-002",

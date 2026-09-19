@@ -9,6 +9,7 @@ Scenario ownership：
 - `evals/BEH_017_018_SUPPLEMENTAL.md`：BEH-017–018 targeted supplemental scenarios；
 - `evals/BEH_019_SUPPLEMENTAL.md`：BEH-019 project-mode / maintainer-authority supplemental scenario；
 - `evals/BEH_020_021_SUPPLEMENTAL.md`：BEH-020–021 ChatGPT → Codex Prompt-delivery enforcement regression pair。
+- `evals/BEH_022_SUPPLEMENTAL.md`：BEH-022 untrusted-content / instruction-authority targeted supplemental scenario。
 
 ## Run record
 
