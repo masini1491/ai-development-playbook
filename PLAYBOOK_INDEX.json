@@ -231,6 +231,36 @@
       "kind": "contract"
     },
     {
+      "id": "github.repository-acquisition",
+      "owner": "GITHUB_OPERATIONS.md",
+      "section": "Repository Acquisition",
+      "kind": "contract"
+    },
+    {
+      "id": "github.inbound-verified-transport",
+      "owner": "GITHUB_OPERATIONS.md",
+      "section": "Inbound Verified Transport",
+      "kind": "contract"
+    },
+    {
+      "id": "github.outbound-mutation-transport",
+      "owner": "GITHUB_OPERATIONS.md",
+      "section": "Outbound Repository Mutation",
+      "kind": "contract"
+    },
+    {
+      "id": "github.remote-deterministic-execution",
+      "owner": "GITHUB_OPERATIONS.md",
+      "section": "Remote Deterministic Execution",
+      "kind": "contract"
+    },
+    {
+      "id": "github.release-publication",
+      "owner": "GITHUB_OPERATIONS.md",
+      "section": "Tag / Release Publication",
+      "kind": "contract"
+    },
+    {
       "id": "repository.write-authority",
       "owner": "REPOSITORY_EXECUTION.md",
       "section": "聊天室級 Repository 寫入鎖",

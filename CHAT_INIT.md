@@ -72,6 +72,8 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
   → `CODEX_EXECUTION.md`；只有 Codex 已依 selected mode + current Stage 被選為 actor 後才讀 task-relevant Codex execution sections；reporting 直達 `Codex 回報語言`、`Codex 回報時間戳（Always-on Reporting Timestamp）`、`Reporting Pre-Send Gate`
 - Git、Repository Identity、workspace／remote permission、Coordination Write Allowlist、repository actor topology／maintenance ownership／write boundary、repository-facing documentation integrity
   → `REPOSITORY_EXECUTION.md`；先用檔首 `Section Router`，actor責任問題直達 `Repository Actor Topology / Maintenance Ownership`；Project AI mode本身仍由 `PROJECT_MODES.md` 擁有
+- GitHub Connect／repository-native connector 的具體操作、repository acquisition、large/opaque verified transport、Git object mutation、remote deterministic bridge、GitHub Actions execution/evidence、artifact lifecycle、tag／Release publication
+  → `GITHUB_OPERATIONS.md`；本檔只選 GitHub-specific route／recipe，actor／write／credential authority仍回 `REPOSITORY_EXECUTION.md`，validation／PASS scope仍回 `DEBUG_VALIDATION.md`
 - 除錯、根因、重試、驗證、evidence lifecycle、後續 evidence 與歷史判斷／紀錄 reconciliation
   → `DEBUG_VALIDATION.md`；先用檔首 `Section Router`
 - 研究、新技術／協定、architecture、target/capability、state/lifecycle、ownership

@@ -103,6 +103,8 @@ README 的 human-facing language / layout contract：
 
 `CODEX_EXECUTION.md` 是 **Codex／coding agent execution authority**：負責 model / reasoning / Context / Agent、execution mode、cost / usage budgeting、tool scheduling/output、escalation 與 Codex reporting；只有 selected mode／current Stage已合法選中Codex時才進入其 task-specific execution contract。
 
+`GITHUB_OPERATIONS.md` 是 **GitHub-specific operational pattern owner**：在 authority 已由 project governance 建立後，負責 GitHub repository acquisition、verified transport、remote mutation bridge、Actions deterministic execution/evidence、artifact lifecycle 與 tag／Release publication 的 route selection／execution recipes；不重新定義 actor／write／credential authority或 generic validation semantics。
+
 `REPOSITORY_EXECUTION.md`、`DEBUG_VALIDATION.md`、`RESEARCH_ARCHITECTURE.md` 等 shared topic 文件只保存真正跨 agent 共用的 repository lower-level actor/path-action authority、permission/write boundary、evidence、validation、architecture contract；其中 `REPOSITORY_EXECUTION.md` 不另建 user-selectable AI mode。
 
 AI／coding agent 不應預設完整掃描全部文件；先從 `CHAT_INIT.md` 進入，再依 task topic讀最低必要主題／section。Exact target 已明確時可 direct-leaf bypass，不為 routing ceremony 多讀中間層。
