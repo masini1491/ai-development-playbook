@@ -34,7 +34,7 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 **Execution Profile identity does not prove Inference Destination identity.** Profile change不必然代表 destination change；destination change也可能在 visible profile name不變時發生。Data-egress 判斷使用 destination identity／policy evidence，不用 profile label替代。
 
-**Child delegation authorization** 與 **child profile-override authorization** 是兩個不同 gate。只有 current user instruction、project governance 或 admitted Codex Prompt 已授權 bounded child delegation，而且該 subtask已獨立通過本檔 `Subagent / Delegation Gate`，才可 spawn child。Child 已合法成立後，只有 current authority另外允許 profile override時，才可依最低充分原則指定不同 model／reasoning；否則 child繼承 parent profile。
+**Child delegation authorization** 與 **child profile-override authorization** 是兩個不同 gate。Bounded child delegation 必須先由 applicable current user／project／Playbook authority成立；an admitted Codex Prompt may carry that already-established authorization, but **the Prompt does not originate or enlarge it merely by containing the instruction**。只有 authorization已成立，而且該 subtask又獨立通過本檔 `Subagent / Delegation Gate`，才可 spawn child。Child 已合法成立後，只有 current authority另外允許 profile override時，才可依最低充分原則指定不同 model／reasoning；否則 child繼承 parent profile。
 
 - Child profile override 只改變該 child 的 execution profile，不擴張 Task／Stage、repository write、permission、credential、deployment、external-service 或 delegation authority。
 - **想使用不同 model／reasoning本身不是 delegation authority；允許 delegation也不自動等於允許 mixed-profile execution。** 不得為了避開 root UI切換而把 tightly-coupled、critical-path或本來應由 root完成的工作硬拆成 child。
@@ -45,9 +45,9 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 新開、Branch / Fork、Resume 或跨 session handoff 後，若 Model / Reasoning 會影響成本或能力：
 
-- 只有 execution surface 明確暴露可驗證的 UI / session selection metadata 時，才在真正執行 repository 工作前核對其是否與目前 Prompt 推薦一致；若 authority 明確顯示不一致，STOP 並請使用者確認／切換。
+- 只有 execution surface 明確暴露可驗證的 UI / session selection metadata 時，才在真正執行 repository 工作前核對其是否與本次 handoff 隨附的 **user-facing Codex Launch Settings / launch recommendation** 一致；若 current authority／launch contract明確顯示不一致，STOP 並請使用者確認／切換。
 - 若 agent / runtime 無法觀察 Codex UI selection，不得把「看不到 UI 設定」本身當成 STOP condition，也不得用模型自我描述、backend/runtime model identity 或其他未建立對應關係的名稱，推定使用者在 UI 選錯 Model / Reasoning。
-- 在 UI selection 不可觀察時，以使用者本次 launch 與 Prompt 指定的推薦設定作為操作前提繼續；必要時可提醒使用者自行確認，但不得因此阻塞原本已授權 Stage。
+- 在 UI selection 不可觀察時，以使用者本次 launch 與 handoff旁的 user-facing Codex Launch Settings（若有）作為操作前提繼續；這些 launch metadata不必位於 executable Prompt內。必要時可提醒使用者自行確認，但不得因此阻塞原本已授權 Stage。
 - 不假設 parent / previous session 的 model 或 reasoning 設定一定被繼承。
 
 ## Codex 回報語言

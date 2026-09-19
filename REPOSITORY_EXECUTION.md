@@ -324,6 +324,7 @@ Opt-in 不要求使用上述固定名稱；語意與 AI loading responsibility�
 ### 不得自我擴權
 
 - ChatGPT **不得直接修改 project `AGENTS.md`／governance 來把新 path 或 responsibility 加進自己的 authority**，除非 selected mode與該 repository現有 governance已明確授予 ChatGPT對該 governance surface的 maintenance authority，且本次變更本身已獲使用者／Task授權。
+- 唯一由本 Playbook另外定義的 bootstrap 初始化例外，是 `PROJECT_BOOTSTRAP.md` → `Bootstrap Governance Initialization Exception`。只有該 gate 的**全部 premise**成立時，ChatGPT才可建立其明確列出的最低充分 bootstrap governance；這個例外只解決「尚無 material governance 時如何建立第一個 research-bootstrap boundary」，**不建立一般 governance mutation authority、不授權日後自我擴張，也不適用於已有 material governance 的 repository**。
 - 啟用／擴大 allowlist或 actor responsibility必須是明確授權的 governance change，並由當時已具合法 governance mutation authority的 actor執行；不得靠「沒有Codex」、「connector可寫」或「目前session做得到」推導自我擴權。
 - 使用者說「記一下」、「這個先留著」可以授權在**既有 allowlist內**保存對應資訊；不會自動建立新的 path permission。
 - ChatGPT可寫入某 surface，不代表該 surface具有 execution authority；Hot/Cold/Evidence semantics依 `AI_CONTEXT.md`。

@@ -376,8 +376,8 @@ Playbook identity probe 只回答「declared baseline/ref 是否改變」；它�
 
 一般原則：
 
-- 官方／外部資料 retrieval、bounded research、fixture / corpus 蒐集、provenance、comparison、schema / edge-case synthesis、read-only review，以及目前 session可安全完成的 deterministic evidence processing，若不需要 Codex-owned repository mutation，優先由 ChatGPT直接完成。
-- Production/application/firmware source、executable tests、build/dependency/tooling、CI/release/deploy或其他 project governance指定給 coding agent的 mutation，才進 Codex handoff。
+- 官方／外部資料 retrieval、bounded research、fixture / corpus 蒐集、provenance、comparison、schema / edge-case synthesis、read-only review，以及目前 session可安全完成的 deterministic evidence processing，若 current authority／capability已允許 ChatGPT完成且不需要另一路 coding-agent mutation，優先由 ChatGPT直接完成。
+- Production/application/firmware source、executable tests、build/dependency/tooling、CI/release/deploy只是常見 implementation artifacts，**artifact type alone does not select Codex**。只有 `Project AI mode: ChatGPT+Codex`，而且 current project governance／authorized Stage把本次 required mutation明確分派給 coding-agent responsibility時，才進 Codex handoff；`ChatGPT-Only` 則由 ChatGPT在其實際 authority／capability交集內執行或 STOP。
 - **Previous actor ≠ next actor。** 上一 Stage由 Codex完成，只代表上一 Stage需要Codex；不能用它作下一 Stage的 actor evidence。
 - Project已進 implementation phase也不代表所有後續 research / evidence / fixture工作都屬 Codex；phase決定 write boundary的一部分，但 actor仍依 current responsibility判斷。
 - ChatGPT capability也不是無條件 direct-execution authority。需要 runtime/tool時仍依 `CHATGPT_RUNTIME_EXECUTION.md` → `Execution Capability Gate`；需要 repository mutation時仍依 `REPOSITORY_EXECUTION.md` 的 current write boundary。
@@ -474,7 +474,7 @@ A handoff Prompt may carry authorization established by applicable user／projec
 
 ChatGPT 必須把 **child delegation authorization** 與 **child profile-override authorization** 視為兩個獨立維度：前者只回答「Codex 是否可對通過 runtime delegation gate 的 bounded subtask spawn child」，後者只在 child 已合法成立後回答「是否可指定不同 model／reasoning」。允許 profile override **永遠不會**自行建立 delegation authority；project 也可以合法地允許 child delegation、但要求所有 child 繼承 root profile。
 
-除非使用者或 current project governance 明確禁止 subagent／Multi-Agent，ChatGPT 產生 Codex handoff 時，預設確保 Codex能從 current project governance／Hot contract／admitted Prompt其中至少一個 surface取得最低充分 bounded child delegation authorization；在 higher authority 未禁止 mixed-profile execution 時，也可分開提供最低充分 profile-override authorization。Current repository authority 已提供等價 authorization 時只 reference，不重複；只有缺少對應 authorization 時才在 copy-ready Prompt補 compact wording。這些 authorization 只打開合法 routing 能力，**不代表要求 Codex 一定 spawn child或一定 override profile**。
+除非使用者或 current project governance 明確禁止 subagent／Multi-Agent，ChatGPT 產生 Codex handoff 時，預設確保 applicable current authority已建立最低充分 bounded child delegation authorization，且 Codex能從 current project governance／Hot contract取得它；只有 repository-owned surface無法承載本次必要 authorization時，才由 admitted Prompt做最低充分 **transport**。在 higher authority 未禁止 mixed-profile execution 時，也可用同樣方式分開承載 profile-override authorization。Prompt只傳遞已成立的 authorization，不自行創造或擴張它；repository authority已有等價資訊時只 reference、不重複。這些 authorization只打開合法 routing能力，**不代表要求 Codex一定 spawn child或一定 override profile**。
 
 最低充分語義必須保留：
 
