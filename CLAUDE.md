@@ -1,6 +1,8 @@
-# Claude Code bootstrap compatibility
+# Claude Code bootstrap override
 
-This file is a thin repository bootstrap shim for Claude Code. It is not a Playbook authority and does not create a second current-state policy source.
+This file is an intentional thin routing shim for Claude Code. It is not a Playbook authority and does not create a second current-state policy source.
+
+Claude Code may natively use `AGENTS.md` when no `CLAUDE.md` is present. This repository intentionally keeps `CLAUDE.md` because the root `AGENTS.md` is maintainer governance, while ordinary Claude Code task bootstrap should enter through `CHAT_INIT.md`. Exact Claude Code discovery / configuration behavior is version-specific and remains owned by Claude Code upstream.
 
 ## Bootstrap
 

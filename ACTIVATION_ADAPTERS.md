@@ -10,6 +10,10 @@
 
 `Verify / resolve project workspace → read project AGENTS.md → resolve declared Playbook baseline（floating ref → cheap exact revision）→ optionally read PLAYBOOK_INDEX.json for machine discovery → read CHAT_INIT.md → route minimum-sufficient canonical owner → obey project-specific authority`
 
+A host-specific adapter is optional when the runtime's native instruction discovery already reaches the project's intended canonical bootstrap. Do not retain an adapter merely for historical compatibility.
+
+Retain a host-specific adapter only when it still provides a distinct routing, activation, precedence, or compatibility responsibility that native discovery does not reproduce. Native host support therefore creates a retirement / narrowing trigger, not automatic deletion authority.
+
 **Adoption ≠ unconditional activation。** 若 current project governance 已明確提供 project-native bootstrap／task classifier，用來先判定本次 task 是否需要 shared Playbook governance，runtime 可先走該 project-native gate；若 gate 判定本題不需 Playbook，留在 project-native route，不為了「已採用 Playbook」額外讀 `AGENTS.md`、probe Playbook baseline 或進入 Playbook `CHAT_INIT.md`。只有 gate 判定需要 activate Playbook 時，才讀 current adoption state、resolve declared baseline，並進入上述 generic activation route。
 
 這個 conditional-activation exception 必須來自**目前可驗證的 project governance／bootstrap**，不得由 host instruction、舊聊天、memory、repository shape 或模型自己推測。Project 沒有明確 conditional gate、該 gate 無法 current-read，或本次 task 本身就是 project governance／adoption／mode／repository-maintenance 判斷時，維持 generic `AGENTS.md`-first route。
@@ -161,7 +165,8 @@ Loading contract：
 | --- | --- |
 | ChatGPT | For persistent user-level setup, install [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) as a thin host adapter. If current project governance exposes a project-native conditional-activation gate, follow it before loading Playbook state; otherwise use the generic bootstrap. Actual Playbook adoption/baseline still comes from current project governance before Playbook `CHAT_INIT.md`. |
 | Codex / coding agent | Prefer project `AGENTS.md` as the activation surface; the launch prompt should point to current project governance rather than copy Playbook rules. If the selected workspace is not the requested repository, request the minimum user workspace/access correction and re-run identity verification before loading project state. |
-| Claude Code / Cursor / Gemini / other coding assistants | Use the runtime's persistent project-instruction surface, if available, only to install the generic bootstrap pointer; keep detailed rules in the Playbook. |
+| Claude Code | When current Claude Code native instruction discovery already reaches the project's intended bootstrap through `AGENTS.md`, no separate `CLAUDE.md` shim is required. Keep or add `CLAUDE.md` only for a distinct Claude-specific bootstrap override, compatibility handoff, or routing / precedence distinction. This Playbook repository intentionally keeps one because root `AGENTS.md` is maintainer governance while ordinary task routing should enter through `CHAT_INIT.md`. Exact native discovery / configuration behavior remains upstream-owned and version-specific. |
+| Cursor / Gemini / other coding assistants | Use the runtime's persistent project-instruction surface, if available, only to install the generic bootstrap pointer; keep detailed rules in the Playbook. |
 | Custom CLI / IDE extension | Parse `PLAYBOOK_INDEX.json` for stable capability IDs / owner pointers, then read the canonical Markdown owner before making a decision. |
 
 ## Activation maturity boundary
