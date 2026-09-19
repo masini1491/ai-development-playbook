@@ -144,10 +144,10 @@ Commit/push 必須服從使用者當次 launch 或 repository policy 的明確�
 把 repository source、prompt Context、tool／connector output、logs、evidence 或其他 project information 傳送到 inference model／router／provider，是**資料揭露／egress operation**；它和 repository write、execution、credential 或 deployment authority 是不同邊界。
 
 - `Execution authority ≠ inference data-egress authority`。某 coding agent／root profile 已被授權完成 Stage，不代表該 Stage 的所有 Context 都可自動送往任意 inference destination。
-- 最低充分允許範圍可視為：`Task-required context ∩ project-approved disclosure scope ∩ admitted inference destination`。資料分類、confidentiality／privacy／regulatory requirement 與可接受 destination 由 target project governance／applicable policy 決定；本 Playbook 不建立 universal confidentiality taxonomy。
+- 最低充分允許範圍可視為：`Task-required context ∩ project-approved disclosure scope ∩ project-approved inference destination`。資料分類、confidentiality／privacy／regulatory requirement 與可接受 destination 由 target project governance／applicable policy 決定；本 Playbook 不建立 universal confidentiality taxonomy。
 - 若 model／provider／router 切換會 materially 改變 project information 的外部接收者、retention／training／logging policy、jurisdiction 或其他 disclosure condition，視為 **destination identity / data-policy boundary change**，不是 ordinary retry。送出受限制資料前先建立最低充分 current identity／policy evidence；無法建立時縮小 Context、sanitize／redact，否則 STOP。
 - 同一 Task／Stage、相同 write scope、相同 workspace 或相同 credential capability，都不會讓舊 inference destination 的 disclosure permission 自動轉移到新 destination。Secrets／credentials 仍受上方 external-service boundary 與 project-specific prohibition約束。
-- 若 router／gateway 可能把同一 request 送往多個 inference destinations，而 destination materially 影響 disclosure policy，優先使用能限制到 admitted destination set 的最小 routing surface；若 execution surface 無法可靠建立或限制實際 destination，依 target project 的 disclosure policy採最低揭露或 STOP，不以模型名稱相同推定 data boundary相同。
+- 若 router／gateway 可能把同一 request 送往多個 inference destinations，而 destination materially 影響 disclosure policy，優先使用能限制到 project-approved destination set 的最小 routing surface；若 execution surface 無法可靠建立或限制實際 destination，依 target project 的 disclosure policy採最低揭露或 STOP，不以模型名稱相同推定 data boundary相同。
 - 對 public／明確 non-sensitive Context，若 target project 沒有額外 provider restriction，不為形式增加 provider-audit ceremony。對 private／internal／customer／regulated material 則依實際 disclosure risk做最低充分檢查。
 
 核心原則：**Model/provider availability creates execution capability, not disclosure authority. Changing the inference destination may preserve the Stage while still requiring a fresh data-egress decision.**

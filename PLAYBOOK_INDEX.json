@@ -221,13 +221,13 @@
     {
       "id": "handoff.prompt-child-delegation",
       "owner": "CHATGPT_WORKFLOW.md",
-      "section": "Prompt-authorized Child Delegation / Profile Routing",
+      "section": "Child Delegation / Profile-Override Authorization Handoff",
       "kind": "contract"
     },
     {
       "id": "handoff.prompt-child-profile-routing",
       "owner": "CHATGPT_WORKFLOW.md",
-      "section": "Prompt-authorized Child Delegation / Profile Routing",
+      "section": "Child Delegation / Profile-Override Authorization Handoff",
       "kind": "contract"
     },
     {
@@ -239,7 +239,7 @@
     {
       "id": "execution.codex-child-profile-routing",
       "owner": "CODEX_EXECUTION.md",
-      "section": "Root / Child Profile Routing",
+      "section": "Root Profile Authority / Child Profile Override",
       "kind": "contract"
     },
     {

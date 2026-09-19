@@ -6,8 +6,8 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 ## Section Router
 
-- root／child model profile、override authority、mixed-profile execution → `Root / Child Profile Routing`、`Delegation Opportunity Scan`、`Subagent / Delegation Gate`、`Nested Routing / Recursive Orchestration Guard`、`Parallel Multi-Agent Gate`、`升級處理`
-- Codex user-facing language／content hierarchy／timestamp／child-delegation／child-profile summary → `Codex 回報語言`、`Codex Response Presentation Contract`、`Codex 回報時間戳`、`Child Profile Routing 回報`、`Reporting Pre-Send Gate`
+- root／child model profile、override authority、mixed-profile execution → `Root Profile Authority / Child Profile Override`、`Delegation Opportunity Scan`、`Subagent / Delegation Gate`、`Nested Routing / Recursive Orchestration Guard`、`Parallel Multi-Agent Gate`、`升級處理`
+- Codex user-facing language／content hierarchy／timestamp／child-delegation／child-profile summary → `Codex 回報語言`、`Codex Response Presentation Contract`、`Codex 回報時間戳`、`Child Profile Override 回報`、`Reporting Pre-Send Gate`
 - repository execution／Git／permission preflight → `Prompt execution gates`、`REPOSITORY_EXECUTION.md`
 - model ladder／reasoning calibration／usage budget／root fallback → `模型分工`、`推理強度校準`、`Usage window-aware execution budgeting`、`Resource-Exhaustion Root Fallback`
 - Context expansion／subagent decision／routing observability／parallelization → `Progressive Context`、`Delegation Opportunity Scan`、`Subagent / Delegation Gate`、`Nested Routing / Recursive Orchestration Guard`、`Routing Decision Observability`、`Parallel Multi-Agent Gate`
@@ -23,15 +23,22 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 本檔大部分章節仍依 Task 做 Progressive Reading；但 **Codex user-facing reporting contract 是 always-on cross-cutting contract**。只要 project `AGENTS.md`／正式 routing 已把 Codex reporting 指向本檔，每個 Codex execution 都至少必須取得本檔的「Codex 回報語言」、「Codex Response Presentation Contract」、「Codex 回報時間戳」與「Reporting Pre-Send Gate」規則，再依 Task 讀其他最低必要章節。不得因本次工作只是 MQTT、BLE、文件、maintenance、validation 或其他特定 domain，就把 reporting contract 判成無關而跳過。
 
-## Root / Child Profile Routing
+## Root Profile Authority / Child Profile Override
 
 **Root model / reasoning** 由使用者在 Codex UI／launch configuration 選擇；Codex 不得自行改變目前 root thread 的 model 或 reasoning，也不得把 child override 冒充 root 已切換。
+
+本節固定區分：
+
+- **Execution Profile**：本次 inference execution 使用或要求的 model + reasoning settings；profile identity只描述 execution configuration。
+- **Inference Destination**：實際接收 project Context 的 provider／router／endpoint／recipient boundary，以及其 materially relevant data-policy identity。
+
+**Execution Profile identity does not prove Inference Destination identity.** Profile change不必然代表 destination change；destination change也可能在 visible profile name不變時發生。Data-egress 判斷使用 destination identity／policy evidence，不用 profile label替代。
 
 **Child delegation authorization** 與 **child profile-override authorization** 是兩個不同 gate。只有 current user instruction、project governance 或 admitted Codex Prompt 已授權 bounded child delegation，而且該 subtask已獨立通過本檔 `Subagent / Delegation Gate`，才可 spawn child。Child 已合法成立後，只有 current authority另外允許 profile override時，才可依最低充分原則指定不同 model／reasoning；否則 child繼承 parent profile。
 
 - Child profile override 只改變該 child 的 execution profile，不擴張 Task／Stage、repository write、permission、credential、deployment、external-service 或 delegation authority。
 - **想使用不同 model／reasoning本身不是 delegation authority；允許 delegation也不自動等於允許 mixed-profile execution。** 不得為了避開 root UI切換而把 tightly-coupled、critical-path或本來應由 root完成的工作硬拆成 child。
-- 在把 project Context送給 child前，若 requested child profile／router會 materially改變 inference destination、外部接收者或 data-policy boundary，先依 `REPOSITORY_EXECUTION.md` → `External inference / data-egress boundary` 建立 fresh disclosure decision；舊 root destination可讀不代表新 child destination也可讀。Same admitted destination且 project沒有額外 restriction時不為形式增加 provider ceremony。
+- 在把 project Context送給 child前，若 requested child **Execution Profile** 或 runtime routing path會 materially改變 **Inference Destination**、外部接收者或 data-policy boundary，先依 `REPOSITORY_EXECUTION.md` → `External inference / data-egress boundary` 建立 fresh disclosure decision；舊 root destination可讀不代表新 child destination也可讀。Same project-approved inference destination且 project沒有額外 restriction時不為形式增加 provider ceremony。
 - Child 可是 serial delegation；**不需要**先證明 parallelization benefit。只有同時執行多個 child／workstream 時，才另外套用 `Parallel Multi-Agent Gate`。
 - 若 main critical path本身已 materially超出 current root profile，依下方「升級處理」回報並由使用者決定是否重新 launch；不要用 child routing偷渡 root escalation。
 - 若 execution surface不支援 requested child model／reasoning、runtime沒有暴露對應可用 profile，或 override被拒絕，原樣回報 limitation；不得猜 model slug／effort或假裝切換成功。
@@ -75,7 +82,7 @@ Direct result / scope-qualified current status
 - **Validation hierarchy**：先回答 required validation contract 是否滿足及其有效 scope，再列會改變判斷的 material checks／canonical evidence。不得用大量 PASS command清單掩蓋一個未跑、失敗或 scope-limited 的 required validation；未執行／無法執行的 required check要說明原因與對 completion claim 的影響。
 - **Evidence stays scope-qualified**：commit SHA、branch、working-tree state、test/build結果、hardware／deployment evidence只支持其實際觀察範圍；不要把「tests pass」寫成 broader Done，亦不要為版面簡潔省略 material evidence gap。
 - **Remaining gap only when real**：沒有 blocker／unresolved就不要機械加「下一步」；有 gap時只列會阻止 current completion、需要使用者決策或已屬 current Stage responsibility 的項目，不把 adjacent improvement變成新義務。
-- **Transparency metadata comes after the result**：child delegation／profile routing、routing observability等 execution metadata通常放在 task result與validation之後、timestamp之前；只有它本身 materially解釋 STOP／failure／capability limitation 時才提前。
+- **Transparency metadata comes after the result**：child delegation／profile override、routing observability等 execution metadata通常放在 task result與validation之後、timestamp之前；只有它本身 materially解釋 STOP／failure／capability limitation 時才提前。
 - **Progress follows the same hierarchy**：中間進度先講 materially changed current state／blocker，不重複 execution surface 已顯示的 spinner、百分比或上一則 substantially identical evidence。
 
 核心原則：**Report the state the user needs to act on, then the minimum evidence needed to trust that state. Execution trace is not the default final report.**
@@ -116,7 +123,7 @@ Codex 的**每一個實質 user-facing 回覆**最後一行都應附上絕對時
 - 若 final draft 出現 `??:??`、`YYYY-MM-DD HH:mm` placeholder、錯誤時區、明顯 stale timestamp 或其他 malformed time，但 runtime clock本身可取得，視為 **reporting / formatting failure**：重新從可信 runtime/platform source取值並修復 draft，不把它誤報成 system-clock failure。
 - 這是 cross-cutting reporting contract，可由 project governance / playbook routing 啟用；**不要求 ChatGPT 為了 activation 把完整 reporting policy 或固定時間句重複塞進每一份 Codex launch Prompt**。
 
-### Child Profile Routing 回報（Completion / Final）
+### Child Profile Override 回報（Completion / Final）
 
 每個 Codex completion summary／final report 都要分開揭露 **child delegation 是否被實際考慮／使用**，以及 **是否曾使用不同的 child model／reasoning profile**；不要求每一則中間 progress message 重複此資訊。
 
@@ -128,8 +135,8 @@ Delegation decision 最低充分格式：
 
 Profile-routing 是另一個維度：
 
-- 沒有 child model／reasoning override：`Child profile routing: NONE`。即使 `Child delegation: USED`，child 若只繼承 parent profile，仍屬 `NONE`；需要時可註明 `child inherited parent profile`，不得把 `NONE` 誤寫成「沒有使用 child」的證據。
-- 有 override：`Child profile routing: USED`，並列出每個 materially distinct child profile 的 **requested model／reasoning、bounded subtask／role，以及結果狀態**；同 profile 多次重複使用可合併，不為形式列完整 agent log。
+- 沒有 child model／reasoning override：`Child profile override: NONE`。即使 `Child delegation: USED`，child 若只繼承 parent profile，仍屬 `NONE`；需要時可註明 `child inherited parent profile`，不得把 `NONE` 誤寫成「沒有使用 child」的證據。
+- 有 override：`Child profile override: USED`，並列出每個 materially distinct child profile 的 **requested model／reasoning、bounded subtask／role，以及結果狀態**；同 profile 多次重複使用可合併，不為形式列完整 agent log。
 - 若 runtime 有獨立可觀察的 effective profile metadata，可標記 `effective profile verified`；若只能證明 spawn request 接受且 child 正常執行，必須標記 `override request accepted / effective profile not independently observable` 或等價限制。
 - 不使用 child 自我描述、自然語言聲稱「我是某模型」或 parent 的推測作為 effective profile 證據。
 
@@ -137,8 +144,8 @@ Child delegation／profile summary 是 execution transparency，不取代 task r
 
 User-facing rendering可保持 compact，但不得丟失兩個維度：
 
-- 若兩者都為 `NONE`，可合併成一行：`Child delegation: NONE｜Child profile routing: NONE`。
-- 若 delegation 為 `CONSIDERED_NOT_USED`／`USED`，或 profile routing 為 `USED`，使用短 block保留本節要求的 materially distinct role／reason／requested profile／result／observability boundary。
+- 若兩者都為 `NONE`，可合併成一行：`Child delegation: NONE｜Child profile override: NONE`。
+- 若 delegation 為 `CONSIDERED_NOT_USED`／`USED`，或 profile override 為 `USED`，使用短 block保留本節要求的 materially distinct role／reason／requested profile／result／observability boundary。
 - 這組 metadata預設放在 task result／validation／remaining-gap之後、reporting timestamp之前；不得搶在主要結果前面，除非 child/runtime limitation本身就是 current blocker。
 
 核心原則：**使用者應能從 final report 分辨「沒有候選／未需要 substantive evaluation」、「評估後未使用」、「實際使用 child」，並在 profile override 發生時看出要求切換過哪些 model／reasoning 以及可證明到哪一層；requested override ≠ independently verified effective profile。**
@@ -154,7 +161,7 @@ Reporting policy 被讀取或在 Prompt 中重述，仍不等於最後送出的�
 3. **Result visibility check**：第一個實質段落已直接說明 current result／scope-qualified status／blocker；若 project有正式 status taxonomy就沿用，沒有時不為本 gate自行發明 enum。不得讓 execution diary、child metadata或長 validation清單把主要結果埋在後面。
 4. **Evidence / scope check**：completion／validation claim與實際 evidence scope一致；required validation若未跑、FAIL或只能支持較窄 scope，已清楚揭露原因與對 current completion的影響。不得用 PASS數量掩蓋 material gap。
 5. **Presentation-noise check**：移除不會改變使用者判斷的 tool-call chronology、重複 log／command清單、routing internals、重複 conclusion與機械式 next-step padding；保留會解釋 result、root cause、recovery、blocker或 evidence lineage的最低充分 execution detail。
-6. **Child-routing report check（completion/final only）**：若本次是 completion summary／final report，確認已依上節同時保留 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 與 `Child profile routing: NONE | USED` 兩個語意維度；兩者皆 `NONE` 時可同列一行。若 profile routing 為 `USED`，列出 materially distinct requested model／reasoning、bounded role/result 與 effective-profile observability boundary。一般 progress/STOP reply 不為形式補此欄。
+6. **Child-routing report check（completion/final only）**：若本次是 completion summary／final report，確認已依上節同時保留 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 與 `Child profile override: NONE | USED` 兩個語意維度；兩者皆 `NONE` 時可同列一行。若 profile override 為 `USED`，列出 materially distinct requested model／reasoning、bounded role/result 與 effective-profile observability boundary。一般 progress/STOP reply 不為形式補此欄。
 7. **Timestamp source check**：直接使用可信 runtime/platform current wall clock產生 absolute timestamp，依需要轉換 reporting timezone；不使用模型推算、舊回覆、commit timestamp或 placeholder。只有 primary clock unavailable／suspect時才依 `INFORMATION_INTEGRITY.md` 的 `Reporting Wall-clock Source Guard` 使用 conditional external sanity/fallback；仍無可信來源則使用 `回報時間：UNAVAILABLE`。
 8. **Timestamp render check**：最終草稿不得保留 `??:??`、`YYYY-MM-DD HH:mm`、錯誤 timezone 或其他 malformed/stale timestamp。若 runtime time可取得但 render失敗，重新取值並修復；這是 reporting failure，不是 system-clock failure evidence。
 9. **Final-line check**：檢查最終草稿最後一個非空白行是否為本 contract 要求的 timestamp line，且沒有任何正文、附註、citation、summary 或其他內容出現在其後。
@@ -284,7 +291,7 @@ Condition-triggered 原則：
 
 `primary root resource exhausted → preserve current Stage / evidence / workspace state → user selects or relaunches an admitted alternate root profile → re-check minimum-sufficient capability + any changed inference data-egress boundary → resume same authorized Stage | STOP`
 
-- Codex／coding agent 不得因 primary quota耗盡自行靜默切換 root model／provider；root choice仍服從 `Root / Child Profile Routing` 的 user／launch authority。Project/runtime若另有明確 higher-authority automatic-routing contract，仍不得跳過 Task／Stage、data-egress、permission、credential或validation boundary。
+- Codex／coding agent 不得因 primary quota耗盡自行靜默切換 root model／provider；root choice仍服從 `Root Profile Authority / Child Profile Override` 的 user／launch authority。Project/runtime若另有明確 higher-authority automatic-routing contract，仍不得跳過 Task／Stage、data-egress、permission、credential或validation boundary。
 - Resource fallback 預設延續**同一個已授權 Stage**與已取得的可信 evidence；它不建立新的 Task／Stage、write scope、credential、deployment、external-service authority或 durable obligation。
 - 若 alternate root 改變 inference destination，送出 project Context 前先依 `REPOSITORY_EXECUTION.md` → `External inference / data-egress boundary` 重新判斷 disclosure；舊 provider可讀不代表新 provider也可讀。
 - Alternate profile仍必須滿足 remaining work 的最低充分 model／reasoning／tool capability。若不足以安全完成，STOP、等待 primary resource恢復或由使用者選擇更適合的 admitted profile；不得為了繼續工作降低 security、correctness、validation或completion evidence標準。
@@ -348,16 +355,17 @@ Codex 無權自行換 **root** model／reasoning。達到 root escalation condit
 - 若 root 下一步會立即依賴 child 結果，serial delegation 可以成立；但若需要高頻來回共享 mutable state、共同 root cause 或 tightly-coupled reasoning，優先留在 root；
 - 想使用不同 model／reasoning、少一次手動 UI 切換、降低單價、增加 token budget 或把 retry 換個 agent，本身都**不能**成立 delegation authority。
 
-Delegation 成立後，才依 `Root / Child Profile Routing` 判斷 child 繼承 parent profile 或指定最低充分 model／reasoning override。
+Delegation 成立後，才依 `Root Profile Authority / Child Profile Override` 判斷 child 繼承 parent profile 或指定最低充分 model／reasoning override。
 
-Child 若需要 repository mutation，實際 mutation authority必須重新取交集：
+Child 若需要 repository mutation，實際 **Allowed child mutation** 必須重新取交集；不要把 execution permission／credential capability 包裝成 authority：
 
 ```text
-child mutation authority
-= parent current Stage authority
+Allowed child mutation
+= parent/root current Stage-authorized mutation scope
 ∩ explicitly delegated bounded responsibility
 ∩ repository path/action authority
-∩ child workspace / permission / credential capability
+∩ execution permission
+∩ credential capability
 ```
 
 - Parent/root 對 broader Stage有 write authority，不代表 child自動繼承整個 Stage的 mutable surface；read-only reviewer／validator預設仍是 read-only，除非其 bounded responsibility另有明確 mutation authority。
