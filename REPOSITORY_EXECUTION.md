@@ -213,6 +213,8 @@ Canonical evidence 不取代 runtime/build/hardware validation。
 
 當 ChatGPT／connector／remote execution surface 要把已驗證 candidate 寫入 Git canonical state 時，必須把 `candidate bytes → transported representation → remote blob → committed tree → current branch ref` 視為不同 evidence boundary；cross-surface materialization 的一般規則另見 `CHATGPT_RUNTIME_EXECUTION.md` → `Artifact Handoff / Materialization Gate`。
 
+GitHub-specific object mutation、isolated branch／temporary workflow transport與 post-write read-back recipe另見 [`GITHUB_OPERATIONS.md`](GITHUB_OPERATIONS.md) → `Outbound Repository Mutation`、`Remote Deterministic Mutation Bridge`；本 gate仍擁有 generic repository mutation transport integrity semantics。
+
 - **先 pin base**：mutation 前確認 exact target repository、branch/ref、base commit/tree 與受影響 path；write 前再 fresh-check 會影響 fast-forward／authority 的 ref。
 - **先辨識 canonicalization**：UTF-8 wrapper、base64、CRLF/LF、BOM、trailing newline 或 API wrapper 若可能改變 bytes，先以 bounded probe 或 documented behavior建立 current transport semantics；不得把 local filesystem bytes 與 remote Git blob無條件視為同一 representation。
 - **Blob/content identity gate**：能在 ref mutation 前建立 blob時，remote returned blob SHA 必須等於 deterministic expected Git blob identity；mismatch 時 STOP，不建立 tree/commit/ref。Contents API 會立即 commit 時，只在 isolated staging branch 執行，並在 promotion 前 read-back resulting content blob／diff。

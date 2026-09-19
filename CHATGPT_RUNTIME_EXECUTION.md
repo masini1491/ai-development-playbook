@@ -55,6 +55,8 @@ Python、Node.js、Shell/Bash、Java、Go、Rust、C/C++ compiler、Git、SQLite
 
 `Source acquisition → payload transport / handoff → byte materialization → identity / integrity verification → execution → result evidence`
 
+GitHub-specific acquisition／large or opaque inbound transport recipe另見 [`GITHUB_OPERATIONS.md`](GITHUB_OPERATIONS.md) → `Repository Acquisition`、`Inbound Verified Transport`；本 gate仍擁有 cross-surface materialization與 execution semantics。
+
 - **Readable source ≠ transferable payload ≠ materialized artifact ≠ verified executable runtime.** 上一層 PASS 不得推導下一層 PASS。
 - 模型能看到 connector 回傳的文字、base64 或其他表示，只證明 source acquisition / model-visible content；**不等於已存在可證明無損的 tool-to-tool payload handoff primitive**。
 - 若 execution surface 缺少適當 direct handoff primitive，不得用模型重寫、節錄、語意重建、重新生成 source、手工拼寫內容或其他 **model-mediated reconstruction** 冒充 canonical byte-for-byte materialization。需要 exact artifact 時，未經 deterministic integrity verification 的 reconstruction 仍保持 materialization / integrity 未建立，execution 不得宣稱 canonical runtime PASS。

@@ -134,7 +134,7 @@ authorized ChatGPT repository mutation
 
 This can keep a project moving when a local coding-agent runtime is unavailable or its usage quota is exhausted, without replacing machine validation with model inference. CI availability does **not** transfer implementation authority between AI actors: in `ChatGPT+Codex`, work already assigned to Codex / the coding-agent executor remains there unless current project governance or the authorized Stage explicitly reassigns it. The CI runner should receive only the minimum permissions / credentials required for the validation job, and a PASS proves only the commit, command, runtime, and test scope actually exercised.
 
-Canonical details: [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) → `Validation Execution Placement Gate` and [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) → authorization / capability layers.
+Concrete GitHub execution recipe: [`GITHUB_OPERATIONS.md`](GITHUB_OPERATIONS.md) → `Remote Deterministic Execution`. Canonical authority and validation semantics remain in [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) → authorization / capability layers and [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) → `Validation Execution Placement Gate`.
 
 **繁體中文**
 
@@ -150,7 +150,7 @@ Canonical details: [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) → `Validation 
 
 這種做法可以在本機 coding-agent runtime 不可用或 usage quota 用盡時，繼續利用外部 deterministic runtime 驗證，而不是拿模型推論取代 compile／test。CI 可用並**不會**自動把 implementation authority 從一個 AI actor 轉給另一個：在 `ChatGPT+Codex` 中，若實作工作已分派給 Codex／coding-agent executor，仍必須由目前 project governance 或 authorized Stage 明確重新分派，ChatGPT 才能接手。CI runner 也只應取得 validation job 所需的最低權限／credential；PASS 只證明實際執行到的 commit、command、runtime 與 test scope。
 
-正式規則見 [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) → `Validation Execution Placement Gate`，以及 [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) → authorization / capability layers。
+GitHub 具體執行 recipe 見 [`GITHUB_OPERATIONS.md`](GITHUB_OPERATIONS.md) → `Remote Deterministic Execution`；正式 authority 與 validation semantics 仍分別由 [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) → authorization / capability layers，以及 [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) → `Validation Execution Placement Gate` 擁有。
 
 ## What it covers / 主要涵蓋範圍
 

@@ -190,6 +190,8 @@ Behavioral evaluation 用來驗證：**AI／Agent 已讀到規則後，實際 de
 
 **Validator existence ≠ validator 必須在 CI 執行。** Deterministic check 的 invariant、pass/fail semantics 與 execution placement 是不同決策；先保留可驗證 contract，再依 enforcement value、authorized mutation path 與 operational cost選最低充分執行位置。
 
+GitHub Actions-specific compile／test execution、run identity與 artifact evidence recipe另見 [`GITHUB_OPERATIONS.md`](GITHUB_OPERATIONS.md) → `Remote Deterministic Execution`；本 gate仍擁有 generic placement與 PASS／FAIL semantics。
+
 判斷至少考慮：
 
 - **Independent enforcement need**：是否需要在任何單一 ChatGPT／Agent／human session之外強制阻擋錯誤；
