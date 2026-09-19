@@ -23,7 +23,8 @@
     "BEH-019",
     "BEH-020",
     "BEH-021",
-    "BEH-022"
+    "BEH-022",
+    "BEH-023"
   ],
   "change_classes": {
     "repository-authority": [
@@ -70,7 +71,8 @@
     ],
     "prompt-delivery": [
       "BEH-020",
-      "BEH-021"
+      "BEH-021",
+      "BEH-023"
     ],
     "delegation-and-child-routing": [
       "BEH-017"

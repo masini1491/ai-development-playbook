@@ -11,7 +11,7 @@
 - durable work／Hot-Cold admission／follow-up → `Persistence／Coordination Admission`、`AI-originated Durable Work Admission Gate`、`Task Identity / Revision Gate`、`Follow-up / New Work Gate`
 - 長 session compaction／freshness／handoff → `Session Compaction / Rehydration Contract`
 - actor 選擇／Codex handoff／Prompt mode → `Actor Admission / Handoff Gate`、`Codex Prompt 模式選擇`、`Prompt 建議設定與固定資訊`、`Child Routing Forecast`、`Prompt-authorized Child Profile Routing`
-- copy-ready Prompt／Prompt slimming／last-mile enforcement → `可直接複製的 Codex Prompt`、`Codex Prompt Pre-Send Gate`、`Prompt lean／長度診斷`
+- copy-ready Prompt／launch settings separation／Prompt slimming／last-mile enforcement → `可直接複製的 Codex Prompt`、`Prompt Artifact Separation / Canonical Shapes`、`Codex Prompt Pre-Send Gate`、`Prompt lean／長度診斷`
 - ChatGPT sandbox／deterministic runtime → `CHATGPT_RUNTIME_EXECUTION.md`
 - Codex completion reconciliation → `Codex 結果 reconciliation`
 - repository write／permission／Git boundary → `REPOSITORY_EXECUTION.md`
@@ -421,9 +421,22 @@ Standalone仍只帶最低充分 Context；self-contained ≠ 完整聊天/全部
 
 Codex model / reasoning / Context / Agent / execution-mode成本規則由 `CODEX_EXECUTION.md` 維護。ChatGPT依該 authority選最低充分建議。
 
-Direct Short Prompt / Standalone Full Prompt前段至少包含 target repo/branch、推薦 root model、root reasoning、1–3句理由、是否值得便宜模型前置蒐證；必要時補 Context / execution mode。這裡的 model/reasoning 是**使用者要在 Codex UI／launch surface 選的 root profile**，不是宣告整個 Prompt 執行期間所有合法 child 都必須沿用同一 profile。
+**Root launch settings 是給使用者操作 Codex UI／launch surface 的 metadata，不是 Codex executable task instruction。** 當本手冊要求顯示推薦 root model、root reasoning、1–3句理由、是否值得便宜模型前置蒐證，以及必要的 Context / execution mode時，預設放在 copy-ready fenced Prompt **外面**；不要為了固定欄位把它們塞進 Codex execution body。
 
-TASKS Short-launch若 referenced Hot Stage已保存設定，不重複展開；可在可複製 Prompt外用一行顯示 root UI 建議。
+最低充分 user-facing launch metadata 可用：
+
+```text
+Codex Launch Settings
+- Root model: ...
+- Root reasoning: ...
+- Why: ...
+- Cheap-model evidence pass: YES | NO
+- Context / execution mode: ...   # only when material
+```
+
+Copy-ready Prompt 本身只保留 Codex實際執行所需的 repository／task／Stage／scope／validation／STOP／launch-only delta。Direct Short / Standalone需要的 target repo／branch intent仍屬 executable contract；**root model／reasoning建議與推薦理由不屬 executable contract**。
+
+TASKS Short-launch若 referenced Hot Stage已保存 execution settings，不在 launch body重複；ChatGPT仍可在 fenced Prompt外顯示使用者需要的 root UI建議。
 
 ### Child Routing Forecast
 
@@ -435,27 +448,29 @@ ChatGPT 在 `Actor Admission / Handoff Gate` 已判定需要 Codex handoff 後�
 - `Child Routing Forecast: POSSIBLE`：已有 plausible candidate，但是否值得 delegation 仍取決於 runtime evidence／topology。
 - `Child Routing Forecast: RECOMMENDED`：目前已知工作中已有 bounded、可獨立驗證，且預期具 material cost／quality／specialization／isolation benefit 的 candidate；仍不形成 spawn 義務。
 
-Prompt 必須帶最低充分 forecast transport：狀態 + 一句 planning rationale + 一句 execution rule，明確寫出這只是 non-binding planning hint，Codex 仍需在 runtime 依 `Delegation Opportunity Scan`／`Subagent / Delegation Gate` 重新判斷。只有會實質改善 execution planning 時才補 candidate responsibility／delegation trigger；不要在 planning 階段硬編 child 數量或 profile。
+Forecast 是 **ChatGPT planning state**，不是每份 Codex Prompt都必須 transport 的欄位。Transport policy：
 
-最低充分 copy-ready 語意可寫成：
+- `NONE` → **不放進 executable Prompt**；不要輸出 `Child Routing Forecast: NONE`、rationale或「請重新判斷」boilerplate。Codex runtime本來就依 `CODEX_EXECUTION.md` 做 `Delegation Opportunity Scan`。
+- `POSSIBLE`／`RECOMMENDED` → 只有當已辨識的 bounded candidate **會 material 改善 Codex 初始 decomposition** 時，才把最低充分 cue送進 Prompt；通常一個短句即可，不要求固定 status label／三行模板。
+- Hot contract／project governance已保存等價 cue → launch只引用，不再 transport第二份 forecast。
+
+例如真正有 material candidate時，可只寫：
 
 ```text
-Child Routing Forecast: POSSIBLE
-Planning rationale: <one bounded reason>
-Execution rule: Non-binding planning hint; re-evaluate at runtime through Delegation Opportunity Scan / Subagent Delegation Gate.
+A bounded independent-audit child may be useful; re-evaluate it through the current delegation gate.
 ```
 
 Forecast 不授權 spawn、parallelization、child profile override、scope／write／permission／credential／deployment 擴張。Codex 仍必須依 `CODEX_EXECUTION.md` 的 `Delegation Opportunity Scan` 與 `Subagent / Delegation Gate` 在 execution time 自行判斷；`POSSIBLE`／`RECOMMENDED` ≠ must delegate，`NONE` 也不禁止 Codex 在 runtime 出現新 material evidence 時重新辨識合法 candidate。
 
 ChatGPT 在 Codex completion reconciliation 時可把 forecast 與既有 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 對照，作為後續 planning feedback；forecast／actual 不一致本身不是 failure，也不要求建立新的 trace store、schema 或 logging framework。
 
-TASKS Short-launch 仍保持 lean：若 Hot contract 已保存等價 planning cue，launch只引用；否則最多補上述 compact forecast transport，不複製整套 delegation policy。
+核心原則：**Do the forecast every time it is required; transport only materially useful forecast information. Internal planning state ≠ Prompt metadata.**
 
 核心原則：**ChatGPT may forecast delegation value during planning; Codex retains execution-time delegation authority. Forecast ≠ spawn instruction.**
 
 ### Prompt-authorized Child Profile Routing
 
-除非使用者或 current project governance 明確禁止 subagent／Multi-Agent，ChatGPT 產生 Codex handoff Prompt 時，**預設在同一份 copy-ready Prompt 內給出最低充分的 child profile routing authorization**。這個預設授權只是打開合法 routing 能力，**不代表要求 Codex 一定 spawn child**。
+除非使用者或 current project governance 明確禁止 subagent／Multi-Agent，ChatGPT 產生 Codex handoff 時，**預設確保 Codex能從 current project governance／Hot contract／admitted Prompt其中至少一個 surface取得最低充分 child profile routing authorization**。如果 current repository authority已提供等價 authorization，Prompt只 reference，不重複；只有 repository authority未提供時，才在 copy-ready Prompt補一條 compact authorization。這個預設授權只是打開合法 routing 能力，**不代表要求 Codex 一定 spawn child**。
 
 最低充分語義必須保留：
 
@@ -466,7 +481,7 @@ TASKS Short-launch 仍保持 lean：若 Hot contract 已保存等價 planning cu
 
 ChatGPT 不需要在產 Prompt 時預先列舉所有可能 child 或硬編每個 profile。若 exact bounded subtask／profile 只有 runtime 才能判斷，可直接授權 Codex在上述 gate內自行選最低充分 child profile；若目前 evidence 已足以固定某個 child role／profile，則可在 Prompt 中明確 pin 該 override。
 
-TASKS Short-launch 也適用本預設，但保持 lean：若 project governance／Hot contract 尚未提供等價 authorization，只需補一條 bounded child-routing authorization pointer，不複製整段 execution policy。若 current task 明顯不適合 delegation、execution surface不支援 child profile override，或 higher authority禁止 subagent，則不啟用／明確關閉，不得假裝 mixed-profile execution 可用。
+TASKS Short-launch 也適用本預設，但保持 lean：若 project governance／Hot contract 尚未提供等價 authorization，只需補一條 compact bounded authorization，例如 `Bounded child delegation/profile override is permitted only through the current CODEX_EXECUTION gates; do not expand task scope or authority.`；不複製整段 execution policy。若 current task 明顯不適合 delegation、execution surface不支援 child profile override，或 higher authority禁止 subagent，則不啟用／明確關閉，不得假裝 mixed-profile execution 可用。
 
 核心原則：**Root profile 是 launch choice；合法 child profile 是 runtime routing choice。Prompt 預設授權 bounded mixed-model／mixed-reasoning execution，但不把 profile switching 變成 delegation authority。**
 
@@ -499,6 +514,68 @@ ChatGPT後續 Prompt不再列整套 Playbook文件或複製 common policy全文�
 
 Copy-ready是 delivery contract，不是增加 Prompt長度的理由。
 
+### Prompt Artifact Separation / Canonical Shapes
+
+ChatGPT 交付 Codex handoff時，先分清三個 surface：
+
+```text
+ChatGPT planning state
+≠ user-facing Codex launch settings
+≠ Codex executable Prompt
+```
+
+- planning-only state（例如 `Child Routing Forecast: NONE`）預設不 transport；
+- root model／reasoning／推薦理由／cheap-model evidence-pass等 UI metadata放 fenced Prompt外；
+- fenced Prompt只放 Codex真正需要執行的 contract。
+
+#### TASKS Short-launch canonical shape
+
+Short-launch 的 Stage pointer 必須來自**最後一次 current canonical Hot read-back**。若 ChatGPT剛更新／revision Hot Stage，先 read-back，再引用 exact path + exact Stage identity；不得用記憶、舊 wording或自行 paraphrase出的 Stage名稱代替 canonical identity。
+
+最低充分形狀：
+
+```text
+Repository: <owner/repo>
+
+Read the latest project governance and execute only:
+`<Hot path> → <exact Stage identity from current canonical read-back>`.
+
+Fresh-check repository state, follow that Stage's current scope / validation / STOP contract,
+perform only the authorized work, and report completion with canonical evidence.
+Do not execute adjacent Hot / Cold work.
+
+<optional one-line child-routing authorization only when current repository authority does not already provide it>
+```
+
+Launch-time material delta若尚未 canonicalize且確實會改變 execution，可補最低充分內容；若它需要 durable tracking，先更新 Hot contract而不是把 Short-launch變成第二份 specification。
+
+#### Direct Short canonical shape
+
+沒有可引用的 current Hot Stage時，bounded one-off work至少維持：
+
+```text
+Repository: <owner/repo>
+Branch / base intent: <only when material>
+
+Task:
+<one bounded executable goal>
+
+Scope:
+<minimum necessary allowed / forbidden boundary>
+
+Validation:
+<minimum sufficient check>
+
+STOP:
+<material blocker / authority / unexpected-scope condition>
+
+Read the latest project governance first and do not expand beyond this task.
+```
+
+不需要的欄位省略；Standalone Full只在既有 exception成立時，從這個 bounded contract增加**Codex無法從 repository取得但完成工作真正必需**的 context，不把聊天歷史或 Playbook全文搬進去。
+
+核心原則：**Stable artifact shape beats repeated prose policy. Exact canonical task identity goes inside the Prompt; user launch metadata and internal planning state stay outside unless they materially change execution.**
+
 ## Codex Prompt Pre-Send Gate
 
 讀懂 Prompt policy、正確解釋 Hot／Cold 或先前已選對 Prompt mode，**都不足以證明最後送出的 Codex Prompt artifact 合規**。每一次 copy-ready Codex Prompt 在交付前，都必須對**最終草稿本身**做一次 bounded pre-send check；這是 last-mile execution control，不是新的 Prompt mode 或 persistence framework。
@@ -508,9 +585,11 @@ Copy-ready是 delivery contract，不是增加 Prompt長度的理由。
 1. **Actor check**：current responsibility／authority仍需要 Codex handoff。若 premise 已改變，回到 `Actor Admission / Handoff Gate`；不得因 Prompt已寫好就照送。
 2. **Persistence closure**：若 current work 依本檔 admission rules 屬 durable／tracked Stage，且 ChatGPT 具有 current coordination write authority，先完成必要 Hot admission／revision與 canonical read-back；**不得把 Prompt 當 Stage persistence surface**。反之，一次性、低風險、低 tracking value work 不得為了本 gate 被強迫建立 Hot task。
 3. **Prompt-mode check**：若 current Hot coordination已有可執行 Stage且 Codex能取得該 Stage／authority，最終草稿必須是 `TASKS Short-launch`；沒有 Hot Stage且符合一次性 bounded條件時才使用 `Direct Short Prompt`；`Standalone Full Prompt` 必須能指出本檔已列出的至少一個 explicit exception。
-4. **Reference / duplication check**：逐段檢查 final draft 是否重複 Codex 可由 current repository取得的 TASKS／dossier／AGENTS／spec／validation owner／protocol detail／hardware evidence／root-cause history／長 exclusions 或其他 canonical content。能由 pointer可靠取得的內容刪除重複正文，只保留 launch-time material delta。
-5. **Full-Prompt exception check**：若 draft 是 Standalone Full，明確確認「為什麼 reference不足」；只有 self-contained／比較保險／資訊很重要／前面研究很多，都不是 exception。
-6. **Fail-closed repair**：任一檢查不合格時，先修正 persistence、重新選 mode 或縮減／重生 Prompt，然後重新檢查。**技術內容正確不能豁免 delivery contract；未通過本 gate 的 Prompt 不得送出。**
+4. **Exact-pointer check（Short-launch）**：Stage pointer來自最後一次 current canonical Hot read-back，且 path + Stage identity可直接回查；不得自行 paraphrase／縮寫／猜測 Stage名稱。若剛做 Hot revision卻尚未 read-back，先完成 read-back再產 Prompt。
+5. **Artifact-separation check**：root model／reasoning、推薦理由、cheap-model evidence-pass與其他 user launch settings在 fenced Prompt外；planning-only `Child Routing Forecast: NONE` 不得進 executable body。POSSIBLE／RECOMMENDED forecast與 child-routing authorization只有 materially需要且 repository authority未已提供等價資訊時才用最低充分文字 transport。
+6. **Reference / duplication check**：逐段檢查 final draft 是否重複 Codex 可由 current repository取得的 TASKS／dossier／AGENTS／spec／validation owner／protocol detail／hardware evidence／root-cause history／長 exclusions 或其他 canonical content。能由 pointer可靠取得的內容刪除重複正文，只保留 launch-time material delta。
+7. **Full-Prompt exception check**：若 draft 是 Standalone Full，明確確認「為什麼 reference不足」；只有 self-contained／比較保險／資訊很重要／前面研究很多，都不是 exception。
+8. **Fail-closed repair**：任一檢查不合格時，先修正 persistence、重新選 mode、refresh exact pointer或縮減／重生 Prompt，然後重新檢查。**技術內容正確不能豁免 delivery contract；未通過本 gate 的 Prompt 不得送出。**
 
 這個 gate 檢查的是 Prompt artifact 是否符合已成立的 workflow state，不取代前面的 admission／authority／freshness decision，也不要求建立字數、token 或 keyword hard limit。若未來 execution surface提供可靠 structured-output validator，可用它檢查可機械判定的部分；semantic duplication／mode適用性仍依本 contract判斷，不假裝簡單長度 heuristic等價於 compliance。
 
