@@ -181,7 +181,7 @@ If you want to try the Playbook in ChatGPT without changing persistent settings 
 **Quickly try this Playbook:**
 
 ```text
-Use GitHub Connect to read the latest `main` of `masini1491/ai-development-playbook`. Enter through `CHAT_INIT.md`, load only the minimum-sufficient canonical owner(s) needed for my task, and do not scan the whole Playbook or substitute old chat/model memory for current GitHub state.
+Use connected GitHub repository access available in this ChatGPT surface to read the latest `main` of `masini1491/ai-development-playbook`. Enter through `CHAT_INIT.md`, load only the minimum-sufficient canonical owner(s) needed for my task, and do not scan the whole Playbook or substitute old chat/model memory for current GitHub state.
 ```
 
 **Inside a project that already adopts the Playbook:**
@@ -199,7 +199,7 @@ If a materially required GitHub read is unavailable, report that access gap expl
 **快速試用這份 Playbook：**
 
 ```text
-請透過 GitHub Connect 讀取 `masini1491/ai-development-playbook` 最新 `main`。從 `CHAT_INIT.md` 進入，依我的任務只載入最低充分的 canonical owner；不要完整掃描 Playbook，也不要用舊聊天或模型記憶取代目前的 GitHub 狀態。
+請使用目前 ChatGPT 介面可用的 GitHub 儲存庫連線能力讀取 `masini1491/ai-development-playbook` 最新 `main`。從 `CHAT_INIT.md` 進入，依我的任務只載入最低充分的 canonical owner；不要完整掃描 Playbook，也不要用舊聊天或模型記憶取代目前的 GitHub 狀態。
 ```
 
 **在已採用 Playbook 的專案中：**
@@ -281,8 +281,10 @@ Preferred regression profile:
 Free ChatGPT
 + fresh chat
 + empty cache
-+ GitHub Connect-only repository authority acquisition
++ connected GitHub repository access as the sole repository authority acquisition path
 ```
+
+GitHub availability varies by plan, workspace, and product surface. If the tested Free ChatGPT surface does not expose connected GitHub repository access, this regression profile is unavailable on that surface rather than silently substituting another acquisition path.
 
 After current repository authority is established, the session may use additional ChatGPT-native capabilities that are actually available and materially required, while preserving the same identity, integrity, execution, and validation gates.
 
@@ -298,8 +300,10 @@ If the core workflow fails under this profile, first ask whether the blocker is 
 Free ChatGPT
 + fresh chat
 + empty cache
-+ GitHub Connect-only repository authority acquisition
++ connected GitHub repository access as the sole repository authority acquisition path
 ```
+
+GitHub 可用性會依方案、workspace 與產品介面而異。若受測的 Free ChatGPT 介面沒有提供已連線的 GitHub 儲存庫存取能力，這個 regression profile 在該介面就是 unavailable；不要偷偷換成其他 acquisition path 卻仍宣稱是同一 profile。
 
 建立目前的 repository authority 後，可以再使用該 ChatGPT 介面實際提供、而且本題實質需要的 ChatGPT 原生能力，但仍必須維持相同的 identity、integrity、execution 與 validation gate。
 
@@ -312,7 +316,7 @@ Free ChatGPT
 Persistent host instructions are **optional activation adapters**, not the core adoption mechanism and not project authority.
 
 - [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) is a copy-ready ChatGPT host adapter for product surfaces where the current instruction field can accept it.
-- [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) is the corresponding Codex host adapter where that product/runtime exposes a compatible persistent-instruction surface.
+- [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) is the copy-ready Codex global host adapter for Codex's documented global `AGENTS.md` instruction chain; version-sensitive install and precedence details stay in [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md).
 - [`CLAUDE.md`](CLAUDE.md), [`GEMINI.md`](GEMINI.md), and [`.github/copilot-instructions.md`](.github/copilot-instructions.md) are thin project-level compatibility shims for Claude Code, Gemini CLI, and GitHub Copilot. They hand off to the repository's canonical bootstrap/routing surfaces rather than becoming additional policy owners.
 - [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) owns the current activation, loading, health-check, and product-surface caveats.
 
@@ -323,7 +327,7 @@ Product UI names, field limits, and available persistent-instruction surfaces ca
 持久化 host instruction 是**可選的啟用 adapter**，不是核心採用機制，也不是 project authority。
 
 - [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) 是可直接複製使用的 ChatGPT host adapter，適用於目前產品介面可容納該 payload 的情況。
-- [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) 是對應的 Codex host adapter，只有在該 product/runtime 提供相容的持久指令介面時才使用。
+- [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) 是可直接複製的 Codex global host adapter，對應 Codex 文件化的全域 `AGENTS.md` 指令鏈；會隨版本改變的安裝位置與 precedence 細節留在 [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md)。
 - [`CLAUDE.md`](CLAUDE.md)、[`GEMINI.md`](GEMINI.md) 與 [`.github/copilot-instructions.md`](.github/copilot-instructions.md) 是 Claude Code、Gemini CLI 與 GitHub Copilot 的精簡專案層級相容轉接層（compatibility shim）；它們只把 host 導向儲存庫的 canonical bootstrap／routing surface，不成為額外的政策權威來源。
 - [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) 負責目前的啟用、載入、health-check 與產品介面注意事項。
 

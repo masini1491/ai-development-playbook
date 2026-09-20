@@ -72,14 +72,14 @@ Do not infer repository write or execution authority from access capability.
 
 For ChatGPT-facing adapter design and regression, the preferred **low-capability cold-start compatibility target** is:
 
-`Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition`
+`Free ChatGPT + fresh chat + empty cache + connected GitHub repository access as the sole repository authority acquisition path`
 
-This is a host／product compatibility target, not a Project AI mode definition and not a universal promise about every ChatGPT account or product revision.
+This is a host／product compatibility target, not a Project AI mode definition and not a universal promise about every ChatGPT account or product revision. GitHub availability can vary by plan, workspace, and product surface; if the tested Free ChatGPT surface does not expose connected GitHub repository access, this profile is unavailable on that surface rather than silently substituting another acquisition path.
 
 Target semantics:
 
 - start without prior conversation state, preloaded project Context, warmed runtime cache, or previously materialized repository artifacts;
-- establish current repository authority through GitHub Connect / repository-native connector acquisition, without making public GitHub HTML/raw URLs, generic Web search, shell Git/clone, Python HTTP, stale memory, or another repository-acquisition mechanism a prerequisite for this regression profile;
+- establish current repository authority through the connected GitHub repository capability, without making public GitHub HTML/raw URLs, generic Web search, shell Git/clone, Python HTTP, stale memory, or another repository-acquisition mechanism a prerequisite for this regression profile;
 - after repository authority is established, use only the additional ChatGPT-native capabilities actually available and materially required by the task, while preserving the same authority, identity, integrity, materialization, execution, and validation contracts;
 - richer paid-plan surfaces, Codex, warmed caches, broader connectors, larger Context, or stronger runtimes remain optional acceleration unless a concrete project proves they are materially required;
 - a successful run proves compatibility only for the tested product/runtime/repository revision/scenario; it does not establish universal Free ChatGPT capability.
