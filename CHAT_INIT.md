@@ -30,17 +30,80 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
 
 ## 啟動順序
 
-新聊天室處理工程專案時：
+### Bootstrap Tier Model
 
-1. 明確確認本次**目標 Repository：`owner/repo`**；不要只使用可能對應多個 repository 的模糊名稱。
-2. 先讀實際目標 repository 最新 `AGENTS.md`／project governance、current Hot coordination surface（若採用）與本次 task 直接相關的最低必要正式 source of truth；Cold、Evidence、History 不因存在就預設載入。**Project-specific governance 先於 shared Playbook 的 detailed routing。**
-3. 從 current project governance 解析 `Project AI mode`。只接受 `ChatGPT-Only` 或 `ChatGPT+Codex`；若尚未宣告，這是 **mode selection unresolved**，不是第三種 mode。不得從 available tools、舊聊天室、repository shape、Codex 是否可用或上一個 actor猜測。Mode-dependent implementation actor／handoff／broader mutation decision在選定前維持 `REPOSITORY_EXECUTION.md` 的 conservative fallback／STOP boundary；不依賴 mode 的合法 read-only work可維持最低風險範圍。
-4. 依已建立的 repository／governance／mode／task premise，用本檔「最低必要路由」選出本次 Task 所需的 canonical Playbook 主題／section；不要為了「熟悉規則」完整掃描整份手冊，也不要把 `README.md` 當必要中繼站。
-5. 進入大型主題文件後，優先用 heading／symbol／stable pointer 直接命中 relevant section；若檔首有 Section Router，先用 router。Exact target 已唯一命中時可 direct-leaf bypass。
-6. Whole-repository capability／gap／absence review：先讀薄 discovery surface `CAPABILITY_INDEX.md`，再依 pointer、`PLAYBOOK_INDEX.json`、合理 owner／repository search 做最低充分 bounded coverage；negative claim 在 final synthesis 前重新 reconciliation。詳細 authority 見 `AI_CONTEXT.md` → `Absence Claim Coverage Gate`。
-7. 既有 project 首次採用本手冊，或已讀範圍明確出現 material deterministic execution candidate 時，才做最低充分 Execution Opportunity Scan；候選成立再讀 `CHATGPT_RUNTIME_EXECUTION.md`。
-8. 依 project authority 確認目前 Task／Stage 的 scope、permission、evidence 與 validation requirement，再開始分析、產生 Prompt 或執行工作。
-9. 若同層正式 authority 衝突、repository identity 不清楚，mode-dependent decision 仍未選定 Project AI mode，或 evidence 不足以安全決定下一步，STOP 並指出缺口；不得用舊聊天、cached copy 或 memory 猜補 current authority。
+本 Playbook 採用一個可由 adopter repository 重用的 **semantic bootstrap tier model**。Tier 定義的是「在往下一個 decision／action boundary 前，哪一類責任必須已解析」，**不是固定檔名、固定讀檔數量或所有 repository 都必須建立相同 surface 的要求**。
+
+```text
+Tier 0 — Authority / Identity
+→ 我現在處理的是哪個 repository / revision / authority context？
+
+Tier 1 — Work-State / Intent Routing
+→ 這次是哪一類工作？目前 active mode / task / stage / lifecycle 是什麼？
+
+Tier 2 — Canonical Domain Owner
+→ 真正負責本題語意、技術、方法或工程 truth 的 canonical owner / leaf 是誰？
+
+Tier 3 — Action Contract Closure
+→ 即將執行的 action 還需要哪些 conditional contract？
+→ applicable contract closed 才進入 ACTION READY
+
+ACTION READY
+→ perform the authorized action
+
+Tier 4 — Completion Evidence Closure
+→ 實際結果需要哪些 validation / read-back / reporting / completion evidence，才能形成 scope-qualified claim？
+```
+
+跨 repository 共通規則：
+
+- **Tier 是 responsibility boundary，不是 ceremony。** Exact current target／owner／leaf 已唯一時，可依 `AI_CONTEXT.md` 的 Progressive Routing／Direct-leaf Bypass 直接命中；不為形式逐層讀中間文件。
+- **Repository 可以有不同 mapping。** Tier 1 可以是 project mode、method routing、knowledge-domain routing、lifecycle state 或其他 repository-owned work classifier；Tier 2 可以是 source、method owner、knowledge leaf、architecture owner 等。可省略不適用的 surface，但不得省略仍 materially applicable 的 responsibility。
+- **不得帶著 material unresolved prerequisite 跨 tier boundary。** Tier 0 的 repository／authority identity、Tier 1 的 active work identity、Tier 2 的 canonical owner，若會 material 改變後續 decision，就先解析到最低充分程度；不得用 memory／舊聊天／search hit 猜補。
+- **Tier 3 由 `AI_CONTEXT.md` → `Action Contract Closure` 約束。** Progressive reading 可以少讀，但在 executable artifact、tool call、mutation、runtime、validation、handoff、delegation或其他 governed action 開始前，所有 applicable minimum canonical contract 必須 closure；未 closure 只 block受影響 action。
+- **Tier 4 不得被 Tier 3 取代。** 已讀懂規則只代表可以開始 action，不代表 action 成功；PASS／completion／current-state claim 仍必須由實際 validation、canonical read-back、reporting或其他 owner-defined evidence成立。
+- **Early tier 不應吸收 later-tier domain policy。** Bootstrap只保存 stable responsibility／routing semantics；GitHub、Prompt、delegation、runtime、validation、engineering method等具體 procedure留在其 canonical owner。
+
+核心原則：**Bootstrap tiers define what must be resolved before moving forward；progressive routing defines how little must be loaded to resolve each tier。不同 repository 可以映射到不同 files／routers，但不能用 selective reading 合理化 materially unresolved tier。**
+
+### This Playbook's Default Mapping
+
+對採用本 Playbook 的一般工程 repository，預設以最低充分方式映射：
+
+**Tier 0 — Authority / Identity**
+
+- 明確確認目標 Repository：`owner/repo`；不要只使用可能對應多個 repository 的模糊名稱。
+- 先讀實際目標 repository 最新 project governance、current Hot coordination surface（若採用）與本次 task 直接相關的最低必要正式 source of truth；Cold、Evidence、History 不因存在就預設載入。
+- Currentness materially影響判斷時建立足夠的 ref／revision identity；project-specific governance 先於 shared Playbook detailed routing。
+
+**Tier 1 — Work-State / Intent Routing**
+
+- 從 current project governance 解析 `Project AI mode`。只接受 `ChatGPT-Only` 或 `ChatGPT+Codex`；未宣告是 **mode selection unresolved**，不是第三種 mode，也不得從 available tools、舊聊天室、repository shape或上一個 actor猜測。
+- 建立本次 Task／Stage／lifecycle／current Hot identity到足以判斷 active work；mode-dependent implementation actor／handoff／broader mutation在 unresolved 時維持 `REPOSITORY_EXECUTION.md` 的 conservative boundary。
+- 不依賴 unresolved mode／lifecycle 的合法 read-only work，可維持最低風險範圍。
+
+**Tier 2 — Canonical Domain Owner**
+
+- 依已建立的 repository／governance／work identity，用本檔「最低必要路由」直達本次 Task 所需的 canonical Playbook owner／section；不要為了熟悉規則完整掃描手冊，也不要把 `README.md` 當必要中繼站。
+- 進入大型 owner 後優先使用 Section Router、heading、symbol或 stable pointer；exact target已唯一時 direct-leaf。
+- Whole-repository capability／gap／absence review 才先讀 `CAPABILITY_INDEX.md`，再依 `PLAYBOOK_INDEX.json`／合理 owner search做 bounded coverage；negative claim semantics回 `AI_CONTEXT.md` → `Absence Claim Coverage Gate`。
+
+**Tier 3 — Action Contract Closure**
+
+- 跨 action boundary 前依 `AI_CONTEXT.md` → `Action Contract Closure` close最低充分 applicable contract。
+- 若 current scope出現 material deterministic execution candidate，再做最低充分 Execution Opportunity Scan；成立才讀 `CHATGPT_RUNTIME_EXECUTION.md`。
+- Prompt／Codex handoff／delegation、repository mutation／permission、GitHub operation、validation execution或其他 conditional action，只在該 action真正 applicable 時讀其 canonical owner；不把全部 action contract塞進 bootstrap。
+- Repository identity、authority、required evidence或其他 material prerequisite unresolved 時，只 block受影響 action並做 bounded recovery；不得用舊聊天、cache或 memory 補成 current contract。
+
+**Tier 4 — Completion Evidence Closure**
+
+- Action完成後，回到該 action／domain owner要求的 validation、canonical read-back、reporting、completion evidence與 scope-qualified status。
+- Tool success、artifact generation、commit存在、handoff已送出或某一局部 test PASS，都不得自行升格成較大的 completion claim。
+- 若 current branch／artifact／external state在 action後跨過 material causal boundary，重新取得 owner要求的最低充分 post-action evidence。
+
+推薦的通用 hot path：
+
+`Tier 0 Authority → Tier 1 Work Identity → Tier 2 Canonical Owner → Tier 3 Action Contract Closure → ACTION READY → execute → Tier 4 Completion Evidence → STOP when sufficient`
 
 ## 最低必要路由
 
