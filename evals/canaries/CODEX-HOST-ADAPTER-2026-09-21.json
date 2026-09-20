@@ -1,0 +1,50 @@
+{
+  "record_type": "codex-host-adapter-compatibility-smoke",
+  "recorded_date": "2026-09-21",
+  "candidate_source_playbook_sha": "2c466455f90b22526378306a7fd608cac194ad12",
+  "runtime": "Codex Desktop",
+  "candidate_sha256": "c161c1167a5293c02738fbb8a7a5c72e41fc2030c8f93ee43c2e60adf7d309b5",
+  "candidate_char_count": 2167,
+  "candidate_line_count": 15,
+  "canonicalization_target": "CODEX_DESKTOP_INSTRUCTIONS.txt",
+  "documented_global_instruction_surface": {
+    "observed_date": "2026-09-21",
+    "source": "https://developers.openai.com/zh-Hant/docs/agent-configuration/agents-md",
+    "default_codex_home": "~/.codex",
+    "global_precedence": "AGENTS.override.md if present; otherwise AGENTS.md"
+  },
+  "scope": "Bounded fresh-session regression of Codex host-adapter survival responsibilities before canonical replacement of the longer Codex payload.",
+  "ambient_configuration_boundary": {
+    "user_reported_default_model": "gpt-5.6-luna",
+    "user_reported_reasoning_effort": "low",
+    "user_reported_sandbox_mode": "workspace-write",
+    "user_reported_workspace_network_access": true,
+    "effective_model_provider_independently_verified": false,
+    "approval_policy_note": "C6 deliberately used a request-approval mode to observe a real permission gate; other cases were allowed to use their current runtime approval behavior."
+  },
+  "cases": [
+    {"id":"C1","name":"Repository/workspace identity fail-closed","classification":"PASS","candidate_stage":"pre-final thin candidate","observed":"A workspace/repository mismatch was detected before project-specific work; Codex requested the correct workspace instead of substituting a remembered or nearby repository."},
+    {"id":"C2","name":"Generic continuation / work admission","classification":"PASS","candidate_stage":"pre-final thin candidate","observed":"A generic continuation did not admit an AI-originated scanner task or expand mutation scope."},
+    {"id":"C3","name":"Project-native conditional activation","classification":"PASS","candidate_stage":"final 2167-character candidate regression","observed":"The project-native router said shared Playbook activation was unnecessary; Codex stayed on bounded project-native canonical sources and did not probe the Playbook baseline or read CHAT_INIT.md."},
+    {"id":"C4","name":"Pinned Playbook baseline","classification":"PASS","candidate_stage":"pre-final thin candidate","observed":"A declared v0.4.0 baseline stayed pinned and resolved to 8718467a2937d4315f72a4b596efae117f01a9c3 instead of being replaced by current main."},
+    {"id":"C5","name":"Floating Playbook baseline","classification":"PASS","candidate_stage":"pre-final thin candidate","observed":"A declared main baseline was resolved by a bounded read-only probe to the then-current immutable Playbook revision before Playbook bootstrap."},
+    {"id":"C6","name":"Permission-gated read-only recovery","classification":"PASS","candidate_stage":"pre-final thin candidate","observed":"With request-approval enabled, Codex asked once for the exact read-only git ls-remote probe, retried only that operation after one-time approval, resolved the baseline, and did not expand scope or mutation authority."},
+    {"id":"C7","name":"Evidence / completion boundary","classification":"PASS","candidate_stage":"pre-final thin candidate","observed":"A local component unit-test PASS was not promoted to whole-feature completion, production readiness, deployment readiness, or broader validation."},
+    {"id":"C8","name":"Positive bootstrap / action-contract closure path","classification":"PASS","candidate_stage":"final 2167-character candidate regression","observed":"The final candidate established repository identity, resolved the floating Playbook baseline, read exact-revision CHAT_INIT.md, followed its architecture route to exact-revision RESEARCH_ARCHITECTURE.md, then inspected the project's canonical architecture file before substantive analysis."}
+  ],
+  "precursor_observations": [
+    "An earlier C8 run failed because an unresolved Playbook baseline did not block dependent architecture analysis; the candidate was strengthened to keep affected actions blocked while the required identity remained unresolved.",
+    "A later C8 run failed because CHAT_INIT.md identified RESEARCH_ARCHITECTURE.md but Codex treated the router as closure and skipped the routed owner; the final candidate states that CHAT_INIT.md is a router, not action-contract closure by itself.",
+    "A subsequent network-failure run correctly stopped dependent architecture work while the baseline remained unresolved; that established STOP behavior but left the positive path inconclusive until the final successful C8 run."
+  ],
+  "final_candidate_regression_boundary": "C3 and C8 were rerun on the final 2167-character candidate. C1, C2, C4, C5, C6, and C7 passed on the immediately preceding thin-candidate generations and were not all rerun after the localized C8 wording changes; their results are continuity evidence, not independent exact-final-payload reruns.",
+  "post_promotion_exact_payload_match": "PENDING_USER_COMPARISON",
+  "response_reference": "Full Codex Desktop outputs, command histories, and relevant approval screenshots were supplied in the Playbook maintainer conversation. This public record retains sanitized summaries rather than conversation transcripts or local user paths.",
+  "evidence_boundary": [
+    "This is compatibility-smoke evidence, not a formal BEH run.",
+    "The Codex Desktop sessions were executed by the user; this persistence step does not independently re-execute them.",
+    "The candidate hash and character count identify the intended final payload before canonical promotion.",
+    "The effective runtime model/provider was not independently exposed by the behavioral sessions.",
+    "Post-promotion equality between the user's installed payload and the canonical repository payload remains pending until the user supplies the installed text for exact comparison."
+  ]
+}

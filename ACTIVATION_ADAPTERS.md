@@ -154,32 +154,32 @@ Health Check 建議流程：
 
 Health Check 建議流程：
 
-`Codex report anomaly → canonical/project reconciliation → classify symptom → activation mismatch plausible? → inspect current adapter identity → ask user to verify Codex personal instruction only if needed → compare against CODEX_DESKTOP_INSTRUCTIONS.txt → full replacement if missing/stale/mixed → minimal fresh-chat regression`
+`Codex report anomaly → canonical/project reconciliation → classify symptom → activation mismatch plausible? → inspect current adapter identity → ask user to verify the effective Codex global instruction surface only if needed → compare against CODEX_DESKTOP_INSTRUCTIONS.txt → full replacement if missing/stale/mixed → minimal fresh-session regression`
 
 一般原則：
 
-- ChatGPT 不得假裝能看到或修改使用者的 Codex 個人化設定；若產品沒有 settings-read/write capability，請使用者到 Codex Settings / Personalization / Codex Instructions 檢查，並在必要時貼出文字或截圖。
+- ChatGPT 不得假裝能看到或修改使用者目前 effective Codex global instruction。Codex 現行文件化的 global discovery 在 `$CODEX_HOME`（預設 `~/.codex`）先讀 `AGENTS.override.md`，否則讀 `AGENTS.md`；必要時請使用者貼出實際生效檔內容或等價設定證據。不要用舊版 UI 路徑或舊聊天猜測 effective surface。
 - 先確認 Playbook current adapter revision，再比較設定，避免拿舊聊天室裡的 host instruction 當 current expected value。
-- 若設定缺失、過期、混合多版或 materially inconsistent，提供 [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) 的**完整內容作為整段覆蓋來源**；不要只給 delta patch 造成殘留規則。
-- 若設定看起來 current，但 behavior 仍不符，優先跑最小 fresh-chat regression 區分 runtime／permission／product behavior 與設定 drift，不反覆要求使用者重貼同一內容。
+- 若 effective global instruction 缺失、過期、混合多版或 materially inconsistent，提供 [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) 的**完整內容作為整段覆蓋來源**；不要只給 delta patch 造成殘留規則。
+- 若 effective global instruction 看起來 current，但 behavior 仍不符，優先跑最小 fresh-session regression 區分 runtime／permission／product behavior 與設定 drift，不反覆要求使用者重貼同一內容。
 - Health Check 是 diagnosis／recovery，不授權修改 project repository、擴張 current task、或把 Codex runtime bug 持久化成 project work。
 
 核心原則：**先證明是 activation symptom，再檢查 host instruction；不要把任何怪回報都當成設定壞掉。**
 
-## Codex Desktop — copy-ready persistent instruction
+## Codex — copy-ready global host instruction
 
-Codex Desktop 的人類安裝用 persistent instruction 已獨立成純文字 distribution artifact：
+Codex 的人類安裝用 global persistent host instruction 已獨立成純文字 distribution artifact：
 
 [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt)
 
-這個 `.txt` 檔案**只保存要貼進 Codex 個人化指示欄位的完整 payload**；沒有 Markdown code fence、前言、診斷說明或其他周邊文字，目的就是降低人工複製時混入其他內容的風險。
+這個 `.txt` 檔案只保存 thin host-adapter payload；它本身不會被 Codex 自動載入，也不是 project-specific policy。依目前文件化的 Codex instruction discovery，預設安裝目標是 `$CODEX_HOME/AGENTS.md`（通常為 `~/.codex/AGENTS.md`）；若同層 `AGENTS.override.md` 存在，Codex 會優先使用 override。臨時 regression 可使用 override，但正式安裝／drift 比對必須先確認哪個 global file 實際生效。這個 install surface 是 product-version-specific compatibility contract；若 upstream discovery semantics materially 改變，重新驗證 adapter，而不是保留舊 UI 假設。
 
-使用方式：開啟該檔 → 全選 → 複製 → 完整取代 Codex Settings / Personalization / Codex Instructions 的現有內容。
+使用方式：開啟該 `.txt` → 全選 → 複製 → 完整取代目前 effective global instruction file 的 payload。不要把新版 append 到舊長版 instruction，以免多版規則同時生效。
 
 Loading contract：
 
-- 一般 project bootstrap **不得因為這個檔案存在就讀取它**；
-- 只有安裝／更新 Codex 個人化指示、Host Instruction Health Check、設定 drift 比對，或維護這個 distribution artifact 本身時才需要讀取；
+- 一般 project bootstrap **不得因為這個 distribution artifact 存在就讀取它**；
+- 只有安裝／更新 Codex global host instruction、Host Instruction Health Check、effective-surface drift 比對，或維護這個 distribution artifact 本身時才需要讀取；
 - `CODEX_DESKTOP_INSTRUCTIONS.txt` 是 human-installable distribution artifact，不是新的 policy authority；其語意仍由本檔與 routed canonical owners 擁有。
 
 這個分離讓 `ACTIVATION_ADAPTERS.md` 保持 adapter semantics / diagnosis owner，而 `.txt` 只負責安全、明確的人工作業複製邊界。
@@ -189,7 +189,7 @@ Loading contract：
 | Runtime family | Thin activation use |
 | --- | --- |
 | ChatGPT | For persistent user-level setup, install [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) as a thin host adapter. If current project governance exposes a project-native conditional-activation gate, follow it before loading Playbook state; otherwise use the generic bootstrap. Actual Playbook adoption/baseline still comes from current project governance before Playbook `CHAT_INIT.md`. |
-| Codex / coding agent | Prefer project `AGENTS.md` as the activation surface; the launch prompt should point to current project governance rather than copy Playbook rules. If the selected workspace is not the requested repository, request the minimum user workspace/access correction and re-run identity verification before loading project state. |
+| Codex / coding agent | For persistent user-level setup, install [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) through Codex's documented global `AGENTS.md` instruction chain; project `AGENTS.md` remains the project-level activation/governance surface. If the selected workspace is not the requested repository, request the minimum user workspace/access correction and re-run identity verification before loading project state. |
 | Claude Code | When current Claude Code native instruction discovery already reaches the project's intended bootstrap through `AGENTS.md`, no separate `CLAUDE.md` shim is required. Keep or add `CLAUDE.md` only for a distinct Claude-specific bootstrap override, compatibility handoff, or routing / precedence distinction. This Playbook repository intentionally keeps one because root `AGENTS.md` is maintainer governance while ordinary task routing should enter through `CHAT_INIT.md`. Exact native discovery / configuration behavior remains upstream-owned and version-specific. |
 | Cursor / Gemini / other coding assistants | Use the runtime's persistent project-instruction surface, if available, only to install the generic bootstrap pointer; keep detailed rules in the Playbook. |
 | Custom CLI / IDE extension | Parse `PLAYBOOK_INDEX.json` for stable capability IDs / owner pointers, then read the canonical Markdown owner before making a decision. |
