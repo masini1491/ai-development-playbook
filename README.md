@@ -21,11 +21,7 @@ These modes describe **AI actor topology**. They are not ChatGPT subscription ti
 
 Adoption also does **not** mean every task must load the shared Playbook. A project may keep ordinary tasks on its own project-native bootstrap/task-router path and activate the shared Playbook only when the current task actually needs common workflow governance.
 
-For `ChatGPT-Only`, the preferred cold-start compatibility target is:
-
-`Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition`
-
-This is a **design/regression target**, not a promise that every Free account or product surface exposes the same tools. Richer surfaces should remain optional accelerators unless project evidence proves they are materially required.
+`ChatGPT-Only` is designed to keep unnecessary ChatGPT capability requirements low. The preferred compatibility/regression target is documented in the dedicated **ChatGPT cold start** section below.
 
 **繁體中文**
 
@@ -42,11 +38,7 @@ AI Development Playbook 是一套可重用、**以 GitHub 為核心的 AI 工程
 
 採用本手冊也**不代表每個任務都要載入共用 Playbook**。專案可以讓一般任務維持自己的 project-native bootstrap／task-router hot path，只有本次工作真正需要共通工作流程治理時才啟用 Playbook。
 
-對 `ChatGPT-Only`，目前偏好的 cold-start 相容性目標是：
-
-`Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition`
-
-這是**設計／迴歸測試目標**，不是宣稱所有 Free 帳號或產品介面都一定具備相同工具。功能較完整的介面仍應只是可選的加速路徑，除非專案證據顯示它們是實質必要條件。
+對 `ChatGPT-Only`，核心設計會盡量降低不必要的 ChatGPT 能力需求；偏好的相容性／迴歸測試目標見下方獨立的 **ChatGPT 冷啟動** 章節。
 
 > **Human-facing contract / 人類閱讀契約**：This README is the repository's primary human-facing surface. Normative rules remain in the linked canonical owners.／本 README 是此儲存庫的主要人類閱讀介面；正式規則仍以下方連結的 canonical owner 為準。
 
@@ -84,6 +76,7 @@ A typical project flow is:
 Current project identity / bootstrap
 → project-native activation gate when explicitly declared
 → shared Playbook activation only if needed
+→ current project governance / adoption state
 → declared baseline + Project AI mode
 → minimum-sufficient canonical owner
 → current task / authority / evidence
@@ -103,6 +96,7 @@ Current project identity / bootstrap
 目前 project identity / bootstrap
 → 若有明確宣告先走 project-native activation gate
 → 只有需要時才 activate shared Playbook
+→ current project governance / adoption state
 → declared baseline + Project AI mode
 → 最低充分 canonical owner
 → current task / authority / evidence
@@ -444,8 +438,8 @@ Humans normally do not need to read these files in order. This map shows the mai
 | [`CLAUDE.md`](CLAUDE.md) / [`GEMINI.md`](GEMINI.md) / [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Thin project-level host compatibility shims; bootstrap handoff only, not policy or execution authority |
 | [`AI_CONTEXT.md`](AI_CONTEXT.md) | Context/information architecture, progressive routing, retrieval cost, Always-on/Hot/Cold/Evidence/Historical lifecycle |
 | [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | Identity, provenance, source-vs-derived authority, snapshot/search-hit/evidence guards |
-| [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT planning/coordination, work admission, actor admission, runtime execution, session compaction/rehydration, result reconciliation |
-| [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) | Codex execution profile, reasoning/context/tool scheduling/reporting after Codex is actually selected |
+| [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT planning/coordination, work and actor admission, Codex launch settings / Prompt handoff, runtime execution, session compaction/rehydration, result reconciliation |
+| [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) | Codex execution profile, bounded child delegation/profile override, reasoning/context/tool scheduling, and reporting after Codex is actually selected |
 | [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) | Repository identity, lower-level actor/path-action authority, permissions, write/read-back boundaries |
 | [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) | Debugging, retry, validation, evidence lifecycle, completion, behavioral evaluation |
 | [`PROJECT_BOOTSTRAP.md`](PROJECT_BOOTSTRAP.md) | Research/bootstrap lifecycle and bounded research-write/actor-transition contracts |
