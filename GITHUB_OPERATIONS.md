@@ -169,6 +169,17 @@ fresh target repository/ref/base
 - Ref promotion 使用 non-force update；完成後重新取得最低充分 diff/stat/read-back，證明 current branch實際包含 intended changes且無 unintended deletion/truncation。
 - 如果 chosen API surface 會對每個 file call 立即建立 commit，而本次 correctness需要 atomic multi-file candidate，切換到 object/tree route 或 isolated staging route；不要用 API convenience 改寫 architecture/completion requirement。
 
+### Promoted bad-commit repair
+
+若錯誤 mutation 已經 promotion 到 current canonical branch，不要為了「把歷史變乾淨」而 force-update、reset-hard 或 rewrite history。優先建立新的 bounded revert／repair commit保留 audit trail：
+
+- 先 fresh-read current branch與錯誤 commit的實際 scope，確認哪些內容需要撤銷／修復，以及是否已有 newer／independent work不能被覆蓋；
+- entire promoted commit都錯且沒有後續依賴時，可用等價 revert-style repair；若 commit混有應保留內容或 branch已有後續變更，使用 bounded repair patch，不盲目整體回退；
+- repair只恢復／修正已確認的 unintended state，不藉 recovery擴張原 task scope；
+- repair promotion後重新取得最低充分 diff/stat/canonical read-back，證明錯誤已關閉且未丟失 newer／unrelated work。
+
+核心原則：**A bad promoted commit is repaired by a new auditable commit, not by rewriting history. Preserve newer valid work and re-close canonical evidence after repair.**
+
 Generic write authority、conversation write lock與 promotion authority仍由 `REPOSITORY_EXECUTION.md` 決定。
 
 ## Remote Deterministic Mutation Bridge

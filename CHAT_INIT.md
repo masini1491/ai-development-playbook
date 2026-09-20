@@ -10,6 +10,15 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
 
 當本次 task materially 依賴 remote repository 的 current canonical content／artifact 時，先使用**最低充分、已授權、可建立 current identity 的 canonical acquisition route**。Acquisition mechanism 可以 fail over；source authority、task authority、write authority與 evidence semantics不得因此改變。
 
+Compact recovery ladder：
+
+`repository-native connector → public canonical read / direct canonical download（public resource）→ user-mediated exact artifact handoff → minimum user-supplied canonical file / section → REPOSITORY READ BLOCKED`
+
+- Repository-native connector／等價 repository-native read surface已可用時優先使用；不要先要求較高 capability的 shell、generic HTTP或local runtime network。
+- Preferred connector unavailable，但產品／runtime可讓使用者連接或啟用相應 repository connector時，可提供一次**非阻塞式** connection suggestion；不要等待連接完成才停止其他合法 read-only fallback。
+- Exact canonical source／download target已建立但目前 surface無法取得所需 bytes，而使用者可從自己的 host取得時，可改走 user-mediated exact artifact handoff；handoff只改 transport，不升格 authority，material identity重要時仍依下位 owner驗證 provenance／hash／blob／size等最低充分 evidence。
+- 若 current decision只需要單一 canonical file／section，不要求完整 repository或整個 artifact；優先取得最低必要 exact content。
+
 若 current canonical identity／content 仍無法可靠建立，標記 `REPOSITORY READ BLOCKED`／等價 evidence gap，只 block依賴該 evidence 的 action；不得以舊聊天、memory、未驗證 cache、search hit或相似 repository內容補成 current authority。
 
 具體 mechanics 由既有 owners 擁有：
