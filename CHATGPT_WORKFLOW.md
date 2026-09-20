@@ -149,54 +149,30 @@ AI-facing Hot/Cold/Evidence/Historical responsibility、default-load、task doss
 
 ## Persistence／Coordination Admission
 
-完整 write allowlist、Single/Dual/optional surface mode 與 lifecycle，以 `REPOSITORY_EXECUTION.md` 為 authority；ChatGPT在 planning時做 admission decision。
+ChatGPT在 planning時負責**做 admission decision**，但不重新定義 coordination surface semantics或 repository write mechanics：
 
-推薦決策：
+- Hot／Cold／Candidate／Committed semantic responsibility、critical-path與 default-load policy → `AI_CONTEXT.md` → `Hot / Cold Coordination Semantics`
+- persistence surface availability、write allowlist、promotion／execution admission與 completion bookkeeping → `REPOSITORY_EXECUTION.md` → `Coordination Lifecycle / Admission`
 
-`No persistence → Cold admission（project 有 Cold surface時）→ Hot admission`
+推薦 planning decision：
+
+`No persistence → Cold admission（project有合法 Cold surface時）→ Hot admission`
 
 ### No persistence
 
-通常不需要 durable repository memory：
-
-- 一次性 observation / recommendation；
-- 已知位置與修改內容、scope小、低風險；
-- 完成後沒有 material tracking value；
-- 「未來也許可以更漂亮」但沒有明確 trigger/evidence；
-- 不保存不會造成實際 project knowledge loss。
+若本次 observation／recommendation沒有 material durable tracking value，或不保存不會造成 current project work loss，維持 conversation-local，不為「完整」建立 repository item。
 
 ### Cold admission
 
-只有 project已明確 opt-in Cold Registry時使用。適合：
-
-- dormant / trigger-based future work；
-- non-blocking pending validation；
-- 等第二個 consumer／未定硬體／外部條件；
-- 已確認值得記得，但目前不應進 executable Context。
-
-Cold item **不可直接 TASKS Short-launch**。Trigger成立或使用者選中後，先重讀 current authority/evidence、reconcile，再 promote到 Hot。
+當工作值得 durable memory、但依 current `AI_CONTEXT.md` semantics不是 executable／critical path，且 project已合法 opt-in Cold surface時，ChatGPT可提出／執行 Cold admission。Cold不直接 Short-launch；trigger成立後仍需 current reconciliation與 Hot promotion。
 
 ### Hot admission
 
-適合：
-
-- current executable / critical-path work；
-- 阻擋目前 progression 的 blocker；
-- current campaign 的必要 validation；
-- 多 Stage/checkpoint且目前確實需要持續追蹤；
-- next action / dependency已成立；
-- 不保存會使 current committed work material遺失。
-
-Hot coordination通常由 `TASKS.md` 承擔；project可依 governance使用等價 surface。
+當 current work依 `AI_CONTEXT.md` 已屬 executable／critical path，且 repository persistence authority成立時，ChatGPT才 admission到 current Hot surface。Hot admission不自行擴張 implementation actor、source mutation或 validation authority。
 
 ### Pending / Blocked 不自動等於 Hot
 
-`Pending-validation` / `Blocked` 要看是否屬 current critical path：
-
-- 阻擋 progression、next evidence可取得/current campaign → Hot；
-- non-blocking、未定期 external/hardware trigger → Cold（若 project有 Cold surface）。
-
-Single-Surface Mode 沒有 Cold surface時，不要為了「總得記在哪」把所有 future idea塞進 TASKS；只有 material active tracking value才 Hot admission。
+ChatGPT不以 `Pending`／`Blocked` label本身決定 admission；直接依 `AI_CONTEXT.md` 的 critical-path classification，然後把結果交給 `REPOSITORY_EXECUTION.md` 的合法 persistence action。
 
 ## AI-originated Durable Work Admission Gate
 

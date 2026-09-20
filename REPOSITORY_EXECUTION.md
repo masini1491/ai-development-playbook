@@ -357,46 +357,34 @@ ChatGPT 對 allowlisted surface 的合法 mutation，不得因 derived bookkeepi
 
 ## Coordination Lifecycle / Admission
 
-`TASKS.md`、`BACKLOG.md`、task dossier、evidence surface 的 semantic responsibility與 default-load policy由 `AI_CONTEXT.md` 維護。本節只定義 persistence / execution admission 與 backward compatibility。
+`TASKS.md`、`BACKLOG.md`、task dossier、evidence surface 的 **Hot／Cold／Candidate／Committed semantic responsibility與 default-load policy** 由 `AI_CONTEXT.md` 維護。本節只擁有 **repository persistence / promotion / execution admission、backward compatibility與 completion bookkeeping**；不要在此建立第二份 information-semantics definition。
 
 ### No persistence / Cold / Hot
 
-Planning decision 預設先分：
+Planning state 的語意與 critical-path分類依 `AI_CONTEXT.md` → `Hot / Cold Coordination Semantics`。本節只處理對應 repository action：
 
-`No persistence → Cold admission（若 project 有 Cold surface）→ Hot admission`
+- **No persistence**：不建立 durable coordination mutation。
+- **Cold admission**：只有 project已 opt-in Cold surface且 current write authority成立時才可 persistence；Cold item不具 execution authority。
+- **Hot admission**：只有 current work 已符合 Hot semantics，且 current repository governance／Task authorization允許對 Hot surface mutation時才可 persistence／launch。
 
-- **No persistence**：一次性 observation/recommendation，沒有 material durable tracking value。
-- **Cold**：值得長期記得，但目前不是 executable/critical path；只有 project已 opt-in Cold surface時才使用。
-- **Hot**：current executable / critical-path coordination，進 current Hot surface（通常 `/TASKS.md`）。
-
-Single-Surface Mode 沒有 Cold surface時，不應把所有 future idea機械塞進 TASKS。只有真正達到 Hot/active tracking門檻或不保存會造成 material loss時才進 TASKS；其餘保持 discussion/architecture analysis，或由使用者另行授權 project採用 Cold Registry。
+Single-Surface Mode 沒有 Cold surface時，不得為了保存 future idea而把非 Hot work塞進 `TASKS.md`；若沒有合法 durable destination，就維持 discussion／analysis，或另行取得 governance admission。
 
 ### Durable Work Admission
 
-**Observation ≠ recommendation ≠ admitted work。** 發現問題、提出建議、使用者覺得「有道理」都不會自動把它升格成 project obligation。
+**Observation ≠ recommendation ≠ admitted work。** Repository persistence只有在 current authority與 material durable value都成立時才可發生，例如使用者明確要求保存／處理、current task留下 material unresolved、存在 blocker／dependency／trigger、已決定未來要做，或不保存會造成 material work loss。
 
-在建立 durable TASKS/BACKLOG/task dossier前，至少確認存在 material durable value，例如：
-
-- 使用者明確要求保存／處理；
-- current task留下可具名且 material 的 unresolved；
-- 明確 blocker / dependency / trigger；
-- 現實或 architecture premise 改變，使新工作現在才成立；
-- 已決定要做但等待時機/evidence；
-- 不保存會使已確認的重要工作容易遺失。
-
-AI 主動提出的改善若 evidence 尚不足，只因使用者簡短同意／覺得合理而希望「先記著」，優先以 `CANDIDATE` 或 project equivalent 的低 authority Cold item保存（project有 Cold surface時），清楚保留 why/evidence/trigger/current obligation；不得把 persistence本身當成必要性證據。
+AI-originated改善若 evidence尚不足而使用者只希望「先記著」，project有 Cold surface時可依 `AI_CONTEXT.md` 的 Candidate／Committed semantics保存為低 authority durable item；不得把 persistence本身當成必要性或 correctness證據。
 
 **Persistence does not increase recommendation authority。**
 
 ### Candidate / Committed / Hot promotion
 
-- `CANDIDATE`：AI/review提出，值得保留重評，但未決定一定做；
-- `COMMITTED`：已確認未來需要處理，只是現在不是 Hot；
-- Hot：trigger/critical path成立後，先重新讀 current authority/evidence，再 promote到 Hot surface。
+`CANDIDATE`、`COMMITTED` 與 Hot 的 semantic distinction由 `AI_CONTEXT.md` 擁有。本節只規定 promotion／execution action：
 
-Project 不必使用固定字串，但不得把 Candidate因「已在 repo 裡」自動視為 committed debt。
-
-Cold item不能直接 Short-launch。任何 Cold → Hot promotion 都是 planning/reconciliation decision；coding agent不得因看到 BACKLOG item就自行執行或自行 promote。
+- Cold item不能直接 Short-launch或由 coding agent自行執行；
+- Cold → Hot 必須先以 current authority／evidence做 planning reconciliation，確認 trigger／critical path成立；
+- promotion mutation本身仍須符合 current write allowlist、Task/Stage authorization、permission/capability與 project governance；
+- item存在於 repository不構成 promotion evidence。
 
 ### Task identity / revision
 
@@ -406,7 +394,7 @@ Cold item不能直接 Short-launch。任何 Cold → Hot promotion 都是 planni
 
 ### Pending / Blocked classification
 
-Pending-validation / Blocked 是否 Hot 或 Cold依 `AI_CONTEXT.md` 的 critical-path規則，不再機械式一律塞進 TASKS。
+Pending-validation / Blocked 是否 Hot 或 Cold完全依 `AI_CONTEXT.md` 的 critical-path semantics；本節不重述分類規則。Repository action只服從該分類結果與 current persistence authority。
 
 ### Hot completion
 
@@ -414,7 +402,7 @@ Hot item成功且完成必要 evidence後，從 active Hot surface移除／收�
 
 若 project採 persistent `TASKS.md` mode，最後一個 Hot item移除後可收斂成最低充分 `EMPTY` template。`EMPTY`只代表目前沒有 admitted Hot work，不代表沒有 Cold/Candidate/evidence/technical debt或專案已完成。
 
-在宣告完成、移除 Hot entry 或進下一 Stage前，只要本 Stage宣稱 repository mutation、commit/push、coordination bookkeeping或 validation-state變更，依 `DEBUG_VALIDATION.md` Completion Evidence Guard做最低充分 canonical read-back。
+在宣告完成、移除 Hot entry或進下一 Stage前，只要本 Stage宣稱 repository mutation、commit/push、coordination bookkeeping或 validation-state變更，依 `DEBUG_VALIDATION.md` → `Completion Evidence Guard`取得最低充分 canonical read-back。
 
 ## Actor-specific repository mutation boundary
 
