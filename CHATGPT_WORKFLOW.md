@@ -319,28 +319,14 @@ Compaction 是 conversation-level state management，**不自動產生任何 dur
 
 ### Playbook Freshness Probe
 
-長期 ChatGPT engineering session 不應把啟動時讀到的 Playbook identity 永久當成 current。對**跟隨浮動 Playbook ref**（例如 project governance 明確要求 latest/current `main`）的 session，採低成本 HEAD-only freshness probe；對**固定 SHA／tag baseline** 的 project，baseline 本身是 authority，不得因 upstream `main` 變更就自行升級。
+Generic session-local verified-context reuse、material freshness trigger、cheap identity／bounded-diff probe、selective invalidation／reload 與 freshness evidence gap，統一由 `AI_CONTEXT.md` → `Session-local Verified Context Reuse` 擁有。本節只保存 **Playbook baseline-specific delta**。
 
-觸發規則：
+- **Floating declared baseline**（例如 project governance 明確採用 current/latest `main`）：當 `AI_CONTEXT.md` 的 material freshness trigger成立，對該 declared ref做最低成本 identity probe，再依 generic selective-invalidation contract只重讀受影響的 Playbook owner／section。
+- **Pinned SHA／tag baseline**：該 pinned baseline本身是 project authority；看到 upstream newer HEAD、經過一段時間或另一 session已有新版，都不得自行升級。只有 current project governance／使用者合法改變 baseline時才切換。
+- **Playbook-specific material boundary**：Stage／task responsibility改變、準備 Codex handoff、repository mutation／completion acceptance，或其他 decision若 correctness materially依賴 Playbook current actor／authority／validation／reporting contract，可構成 generic freshness trigger；若不影響本次 decision，不為形式 probe。
+- Playbook identity probe只回答 declared baseline/ref identity；它不授權 repository write、execution、deployment、credential、external-service action，也不取代 target project自己的 current governance read-back。
 
-- **Explicit update signal**：使用者或 current project governance 明確指出 Playbook／project rules 已更新、要求 latest，或已有 concrete evidence 顯示目前 working identity 可能 stale 時，立即 probe。
-- **Material boundary trigger**：Stage 完成、task responsibility materially 改變、準備 architecture freeze、repository mutation、completion acceptance、Codex handoff、deployment／external mutation或其他 material decision 前，若 Playbook currentness 可能影響本次 scope／actor／authority／validation／reporting／STOP 判斷，先做一次 declared floating ref 的 HEAD probe。
-- **Currentness-sensitive decision trigger**：即使沒有明確 Stage boundary，只要當前回答或 next action 的 correctness materially 依賴 current Playbook rule，而該 rule 自上次 identity 確認後可能已被新 evidence／revision改變，也應先 probe。
-- **Concrete stale evidence**：已知另一 session、maintainer action、commit notification、read-back mismatch 或其他可驗證訊號顯示 Playbook authority可能已前進時，立即 probe。
-- **Wall-clock age alone ≠ freshness trigger**：經過幾分鐘／幾小時、聊天室閒置多久或訊息數量本身，不足以要求重新查 HEAD；不建立固定分鐘數、background timer、scheduler 或 per-message polling。沒有 material freshness signal 時，沿用 last-confirmed identity直到出現上述 trigger。
-
-Probe 結果處理：
-
-- **HEAD unchanged**：保留已確認 working contract，不重新載入 Playbook、不全文掃描文件。
-- **HEAD changed**：先比較 last-confirmed Playbook identity 與 current declared ref 的 bounded commit/file diff，辨識是否觸及目前 task／actor／authority／validation／reporting所依賴的 canonical owner；只重讀 material changed sections 與必要 routing dependency。不得因 HEAD 有任何 commit 就全文重載。
-- **Changed but irrelevant**：記錄／維持新的 observed Playbook identity 即可，current task contract不因無關變更重建。
-- **Changed and relevant**：以 current higher-authority contract更新 working context；若變更 materially改變 current Stage scope、actor、permission、validation或STOP boundary，先 reconcile再繼續，不把舊 session contract硬撐成 current truth。
-- **Probe unavailable**：不得猜「應該沒變」。保留 last-confirmed identity與 freshness gap；只有當 current decision correctness materially依賴 latest Playbook authority時才 STOP／延後該 decision，否則可在清楚標示 freshness limitation下繼續最低風險工作。
-- **Pinned baseline**：可依使用者要求觀察 upstream newer HEAD 作為 update evidence，但沒有 project governance／使用者明確 baseline change 時，不把 newer HEAD自動升格成本 session authority。
-
-Playbook identity probe 只回答「declared baseline/ref 是否改變」；它不授權新的 repository write、execution、deployment、credential或 external-service action，也不取代 project-specific current governance read-back。
-
-核心原則：**Freshness follows authority-changing events and revision evidence, not wall-clock age. Check identity cheaply, reload selectively. Pinned baseline 不自動漂移。**
+核心原則：**Generic freshness semantics live in AI_CONTEXT；本節只決定 declared Playbook baseline如何參與 freshness。Floating baseline按 material trigger檢查，pinned baseline不自動漂移。**
 
 ## Actor Admission / Handoff Gate
 

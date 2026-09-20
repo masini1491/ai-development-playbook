@@ -20,9 +20,12 @@ Retain a host-specific adapter only when it still provides a distinct routing, a
 
 若 requested project 不是目前已驗證 workspace：不要用舊聊天、memory、repository name 或相似專案內容補成 current state。Runtime 支援 workspace / folder selection 或 access request 時，先請使用者開啟、選取或授權正確 project workspace，再重新執行 repository identity verification；不得自行掃描無關 filesystem、切換、clone 或猜測另一個 repository。詳細 repository identity / permission gate 仍由 `REPOSITORY_EXECUTION.md` 擁有。
 
-若 project 採用 floating Playbook baseline（例如 `main`），在把該 baseline 視為本次 identified activation baseline 前，先用最低成本、已允許的 read-only identity probe resolve 成 exact immutable revision。Moving ref 只用來選 revision；後續需要 same-revision consistency 時仍依 `INFORMATION_INTEGRITY.md` 的 Snapshot Consistency Guard。這不要求 full clone、full fetch 或全文掃描 Playbook。
+Activation-time baseline responsibility只到「建立本次 identified Playbook revision」：
 
-若只知道 project「採用 Playbook」但尚未從 current project governance 讀到 declared baseline，該 baseline 應維持 **unresolved**；不得因 host instruction、舊聊天或本 Playbook 的 current `main` 存在，就自行把 `main` 當成目標 project 的 default baseline。
+- project宣告 floating baseline（例如 `main`）時，在首次進入 Playbook `CHAT_INIT.md` 前，以最低成本合法 read-only identity probe把該 ref resolve成 exact immutable revision；Moving ref只負責選 revision，不要求 full clone／full fetch／全文掃描。
+- project宣告 pinned SHA／tag時依該 baseline進入；不得因 upstream newer HEAD自行改用新版。
+- 只知道「採用 Playbook」但 current project governance尚未提供 baseline時，維持 **baseline unresolved**；不得由 host instruction、舊聊天或本 Playbook自己的 current `main`猜補。
+- Activation成立後，同一 session後續的 freshness trigger、verified-context reuse與 selective reload不再由 adapter維護，回 `AI_CONTEXT.md` → `Session-local Verified Context Reuse`；若需要 same-revision validation snapshot，再依 `INFORMATION_INTEGRITY.md` → `Snapshot Consistency Guard`。
 
 若必要的 read-only workspace／repository identity／Playbook baseline probe 被 capability／permission gate 阻擋，adapter只保留 bootstrap survival boundary：先依 `REPOSITORY_EXECUTION.md` 取得該 exact operation 的最低合法 access，必要時依 `CHAT_INIT.md` → `Repository Read Acquisition / Recovery Gate` 切換合法 canonical read path；**fail over the read mechanism, not the authority**。仍無法建立 required current identity時，保持 dependency unresolved／blocked。Permission recovery、credential／scope分層與 acquisition mechanics不在本檔重述。
 
