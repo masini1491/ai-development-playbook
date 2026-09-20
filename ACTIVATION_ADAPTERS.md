@@ -24,7 +24,7 @@ Retain a host-specific adapter only when it still provides a distinct routing, a
 
 若只知道 project「採用 Playbook」但尚未從 current project governance 讀到 declared baseline，該 baseline 應維持 **unresolved**；不得因 host instruction、舊聊天或本 Playbook 的 current `main` 存在，就自行把 `main` 當成目標 project 的 default baseline。
 
-若上述必要的 read-only workspace／repository identity／Playbook baseline probe 因 sandbox、filesystem、metadata、network 或類似 execution permission 被阻擋，不應直接把 dependency 判成 unavailable。Runtime 若能 request approval／access，先向使用者要求完成該 exact read-only operation 所需的最低 permission，核准後只重試原本被 gate 阻擋的操作；approval 不擴張 task scope、mutation、commit/push、deployment、credential 或其他 network/Git authority。若 preferred read mechanism 仍不可用，才改用目前可用且已允許的其他 canonical read-only acquisition path；**fail over the read mechanism, not the authority**。只有 approval unavailable／denied、permission 後原操作仍失敗，且沒有其他合法 canonical read path 時，才標記對應 bootstrap dependency unresolved／unavailable。完整 permission semantics 仍由 `REPOSITORY_EXECUTION.md` 擁有，adapter 只保存 bootstrap survival pointer。
+若必要的 read-only workspace／repository identity／Playbook baseline probe 被 capability／permission gate 阻擋，adapter只保留 bootstrap survival boundary：先依 `REPOSITORY_EXECUTION.md` 取得該 exact operation 的最低合法 access，必要時依 `CHAT_INIT.md` → `Repository Read Acquisition / Recovery Gate` 切換合法 canonical read path；**fail over the read mechanism, not the authority**。仍無法建立 required current identity時，保持 dependency unresolved／blocked。Permission recovery、credential／scope分層與 acquisition mechanics不在本檔重述。
 
 ### Cross-agent host authority boundary
 
@@ -58,12 +58,34 @@ Verify that the current workspace is the requested project repository. If it is 
 If current project governance exposes a project-native bootstrap/task router that explicitly decides whether shared Playbook activation is needed, follow that gate first. Adoption alone does not require Playbook activation for every task. If the gate says Playbook is not needed, stay on the project-native route. Do not invent this exception from memory or host instructions.
 Otherwise, or once the project-native gate says Playbook activation is required, read this project's current AGENTS.md and determine whether it adopts masini1491/ai-development-playbook.
 If adopted, resolve the project's declared Playbook baseline. For a floating ref, use the cheapest permitted read-only probe to identify the exact revision.
-If a required bootstrap read/probe is permission-gated and the runtime can request approval, ask for the minimum permission needed for that exact read-only operation, then retry only that operation. If the preferred read mechanism still fails, use another permitted canonical read-only path when available; do not fall back to memory or expand authority.
+If a required bootstrap read/probe is blocked, recover only the minimum access needed for that exact read-only operation under current project/Playbook authority. If current canonical identity still cannot be established, keep that dependency unresolved; do not fall back to memory or expand authority.
 Then read that revision's CHAT_INIT.md and load only the minimum-sufficient canonical sections for the current task. Do not use the Playbook README as a normal bootstrap router.
 For machine-readable discovery you may consult PLAYBOOK_INDEX.json when actually needed, but it is routing-only.
 Project-specific governance and technical source of truth remain higher authority.
 Do not infer repository write or execution authority from access capability.
 ```
+
+## ChatGPT Cold-start Compatibility Target
+
+For ChatGPT-facing adapter design and regression, the preferred **low-capability cold-start compatibility target** is:
+
+`Free ChatGPT + fresh chat + empty cache + GitHub Connect-only repository authority acquisition`
+
+This is a host／product compatibility target, not a Project AI mode definition and not a universal promise about every ChatGPT account or product revision.
+
+Target semantics:
+
+- start without prior conversation state, preloaded project Context, warmed runtime cache, or previously materialized repository artifacts;
+- establish current repository authority through GitHub Connect / repository-native connector acquisition, without making public GitHub HTML/raw URLs, generic Web search, shell Git/clone, Python HTTP, stale memory, or another repository-acquisition mechanism a prerequisite for this regression profile;
+- after repository authority is established, use only the additional ChatGPT-native capabilities actually available and materially required by the task, while preserving the same authority, identity, integrity, materialization, execution, and validation contracts;
+- richer paid-plan surfaces, Codex, warmed caches, broader connectors, larger Context, or stronger runtimes remain optional acceleration unless a concrete project proves they are materially required;
+- a successful run proves compatibility only for the tested product/runtime/repository revision/scenario; it does not establish universal Free ChatGPT capability.
+
+If the core workflow cannot cold-start under this target, classify the blocker before changing the baseline: avoidable workflow dependency, unavailable-but-equivalent transport/materialization path, or genuinely material capability requirement. Do not weaken canonical identity, deterministic execution, validation, or evidence requirements merely to preserve this profile.
+
+This target constrains **repository authority acquisition** for the regression profile; it does not prohibit task-required ChatGPT-native execution/runtime capabilities actually exposed by the tested surface. Repository acquisition, artifact handoff/materialization, runtime execution, and result evidence remain separate capability layers.
+
+Core principle: **Project mode defines actor topology; activation adapters own concrete host/product compatibility targets. Optimize the cold-start baseline for the lowest sufficient verified capability, not for a particular subscription label as authority.**
 
 ## ChatGPT — copy-ready custom instruction
 
