@@ -11,6 +11,7 @@ Scenario ownership：
 - `evals/BEH_020_021_SUPPLEMENTAL.md`：BEH-020–021 ChatGPT → Codex Prompt-delivery enforcement regression pair。
 - `evals/BEH_022_SUPPLEMENTAL.md`：BEH-022 untrusted-content / instruction-authority targeted supplemental scenario。
 - `evals/BEH_023_SUPPLEMENTAL.md`：BEH-023 ChatGPT → Codex Prompt artifact separation / exact-stage minimality regression。
+- `evals/BEH_024_SUPPLEMENTAL.md`：BEH-024 large GitHub reconciliation response-shape / bounded tool-choice regression。
 
 ## Run record
 

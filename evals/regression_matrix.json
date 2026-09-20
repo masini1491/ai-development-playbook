@@ -24,7 +24,8 @@
     "BEH-020",
     "BEH-021",
     "BEH-022",
-    "BEH-023"
+    "BEH-023",
+    "BEH-024"
   ],
   "change_classes": {
     "repository-authority": [
@@ -91,7 +92,8 @@
       "BEH-015",
       "BEH-019",
       "BEH-020",
-      "BEH-021"
+      "BEH-021",
+      "BEH-024"
     ],
     "information-integrity": [
       "BEH-008",
@@ -99,7 +101,8 @@
       "BEH-012",
       "BEH-014",
       "BEH-018",
-      "BEH-022"
+      "BEH-022",
+      "BEH-024"
     ],
     "external-workflow-interoperability": [
       "BEH-013",

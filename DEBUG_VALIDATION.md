@@ -417,6 +417,32 @@ Agent 的自然語言 completion report、commit SHA 敘述、`TASKS.md` 狀態�
 - 若 GitHub connector／network／permission 暫時無法取得必要 remote evidence，標記 **REMOTE COMPLETION EVIDENCE UNAVAILABLE**；不得在未核對情況下把 Codex 的 repository-mutation claim提升為已確認完成。
 - Read-back scope 應最低充分：確認此次宣稱的 repository、commit、changed files、關鍵內容與 queue/validation state；不因這條規則每次做 repo-wide audit、full code review 或重新跑 validation。
 
+### Large Artifact / Dataset Acceptance
+
+大型 deterministic／generated artifact 的正式 acceptance 不要求把完整 artifact 全文灌入 active Context。當 current correctness claim 可由更強的 bounded machine evidence建立時，優先採 **canonical invariant-based acceptance**：
+
+```text
+exact canonical artifact / generator / input identities
+→ machine-readable metadata + accounting invariants
+→ deterministic hash / rebuild / verifier evidence when available
+→ focused edge-case / exclusion tests
+→ representative bounded probes only where they add semantic coverage
+→ explicit remaining validation states
+→ scope-qualified acceptance
+```
+
+一般原則：
+
+- **Full artifact ingestion is not a prerequisite for artifact acceptance when the claimed correctness can be established by stronger bounded evidence.** 不為了「完整看過」把大型 dataset、generated corpus或巨量 diff全部載入模型 Context。
+- Invariant-based acceptance只證明實際 invariants、generator/input identity、verifier與 focused cases涵蓋的 correctness；**不等於每一 row／record／line 已被人工或模型逐項 review**。
+- 若 acceptance依賴 exclusion／filtering semantics，應建立可重現的 accounting closure，例如 source total、accepted count、各 exclusion category與其關係；不能只看到 output count就猜 missing rows 的原因。
+- Representative probes用來補足特定 semantic edge evidence，不得用少量 sampling證明尚未被 deterministic invariant／checker涵蓋的 universal property。若 claim要求全量 property，新增／使用相稱的 deterministic verifier，或降低 claim scope。
+- Search hit／test source中的 assertion只證明該文字或 assertion存在；它不單獨證明 test已執行、artifact目前值符合 assertion或整體 validation PASS。需要時與 canonical artifact metadata、run result、hash／rebuild evidence交叉確認。
+- OOS、uncertainty、hardware、production或其他未執行 validation dimension維持 `NOT_RUN`／`UNVALIDATED`／等價 scope-qualified state；不得因 artifact invariants成立而順帶升格。
+- 若 current claim確實需要 raw semantics，而且 metadata／invariant／focused test仍不足，再依 identified evidence gap擴張 bounded region或 full-content read；這是 evidence-driven escalation，不是 ritual。
+
+核心原則：**Bounded retrieval ≠ reduced validation standard. Replace low-value full ingestion with stronger machine-checkable evidence, and keep the acceptance claim inside the evidence actually established.**
+
 核心原則：**Codex 說它改了 GitHub，不等於 GitHub 真的已是那個狀態；ChatGPT 必須先 remote read-back，再接受 completion。**
 
 最低充分 completion evidence 依 Stage 性質選用：

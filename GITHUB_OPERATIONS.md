@@ -82,6 +82,32 @@ repository identity
 - Repository search hit 是 discovery evidence，不因搜尋命中就取得 instruction／authority；語意仍回到 current canonical owner。
 - Read acquisition 若需要落到 ChatGPT runtime filesystem，再進 `Inbound Verified Transport`；model-visible content 不自動等於 runtime bytes。
 
+### GitHub Read Payload / Response-Shape Gate
+
+**Bounded reconciliation starts before the tool call, not after a large response has already entered Context.** 先把 current claim 拆成真正需要的 evidence fields，再選能回傳最低充分 response shape 的 GitHub operation；tool convenience 不構成擴張 payload 的理由。
+
+推薦流程：
+
+```text
+current claim
+→ exact evidence fields needed
+→ lowest-blast-radius GitHub response shape
+→ bounded inspection
+→ expand one level only for an identified evidence gap
+→ STOP when the claim is sufficiently supported
+```
+
+一般原則：
+
+- 只需要 commit／ref identity、parent、changed filenames 或 file stats 時，優先 metadata／branch／compare／listing surface；**不要呼叫會附帶完整 patch／diff body 的 operation**，除非 current claim 真正需要 patch semantics。
+- 只需要確認 exact constant、symbol、test/assertion 或 status 是否存在時，可先用 exact search 作 discovery，再在 resolved canonical revision 讀最低必要 surrounding range；search snippet只證明 discovery hit，不自行成為 semantic／execution authority。
+- 大型 generated artifact 若只需要 count、hash、status、input identity 或其他 machine-readable invariant，優先 metadata／manifest／deterministic summary；只有仍有 semantic evidence gap 時才讀 representative bounded region或更大內容。
+- 共享同一 low-blast-radius acquisition surface、且服務同一 decision boundary 的多個小 invariant可以 batch；**tool-call 數量少不等於 payload 小**，不要為減少 call count把 full diff、full file與 full artifact綁成一個 broad retrieval。
+- 不寫死 universal token／row threshold。若 call 前無法可靠預估 serialized size，優先選擇在 response shape 上結構性排除不需要的 body／patch／full-content surface。
+- Full file／full diff／full artifact只有在 current claim確實需要，而且較窄 evidence surface不足時才擴張；「看完整比較安心」不是 evidence gap。
+
+核心原則：**Choose the response shape from the evidence need. Bounded read is a pre-call routing decision, not a post-hoc reaction to an oversized response.**
+
 ## Inbound Verified Transport
 
 處理 GitHub → ChatGPT/runtime 的 exact or integrity-sensitive artifact。
