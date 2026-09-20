@@ -177,6 +177,25 @@ Active campaign／Stage 若仍高度共享 mutable premise、blocker、validatio
 
 核心原則：**Reuse verified Context until something material invalidates it；freshness 應做 selective invalidation，不應預設 full reload。**
 
+### Action Contract Closure
+
+Progressive Routing 可以省略與目前工作無關的 owner／section，但**不得在治理某個 action 的最低充分 canonical contract 尚未完成解析前，就跨越該 action boundary。** `Minimum-sufficient reading` 限制的是需要載入多少 Context，不是允許只遵守已讀到的部分規則。
+
+推薦流程：
+
+`Proposed action → identify applicable canonical contract(s) → close minimum-sufficient prerequisites → ACTION READY → perform action → applicable post-action / pre-send / completion verification`
+
+一般原則：
+
+- **Action boundary 先於 action。** 即將產生 executable artifact、發出具 side effect 或 evidence impact 的 tool call、執行 mutation／program／validation、建立 handoff，或形成會驅動後續工作的正式 claim 前，先確認本 action 所需的 current canonical contract 已解析到足以安全執行；不得「先做再補讀」。
+- **Closure 是 scoped，不是全文閱讀義務。** Exact owner／section／stable pointer 已知時 direct-leaf；只載入會 material 改變 authority、scope、procedure、validation、STOP 或 output contract 的最低充分內容。不得把本 gate 解讀為每次 action 前全文讀完 Playbook／owner。
+- **Unresolved contract blocks only the affected action.** 必要 owner／identity／prerequisite 尚未能建立時，標記該 action unresolved／blocked 並繼續合法的 bounded read-only recovery；不要把單一 action blocker 擴張成整個聊天室停止，也不得用 memory／舊聊天／未驗證 cache 補成 current contract。
+- **Cross-cutting activation 仍由其 owner 宣告。** 若 current authority 已把某 contract 定義為 always-on 或 conditional cross-cutting prerequisite，該 action 的 closure 必須包含它；本節不複製各 domain 的 prerequisite 清單，也不自行啟用不適用的 owner。
+- **Closure ≠ execution evidence。** 讀完／解析完 governing contract只代表 action 可以開始；實際 artifact、tool result、mutation、validation、reporting 或 completion 是否合規，仍由對應 owner 的 post-action／pre-send／read-back／completion gate驗證。
+- **Existing pre-action gate remains authoritative.** Repository identity、workspace capability、runtime capability、GitHub response-shape、delegation、validation或其他 owner 已有更具體 pre-action contract時，直接依該 owner執行；本節只提供共通 sequencing invariant，不建立第二份 domain policy。
+
+核心原則：**Progressive reading permits selective loading, not partial compliance. Close the minimum canonical contract before crossing the action boundary；未 closure 就不開始該 action。**
+
 ### Absence Claim Coverage Gate
 
 Progressive Reading 的 STOP 條件取決於本次要支持的 **decision／claim**，不是 AI 目前已載入多少 Context。尤其 repository-level 的 negative claim（例如「不存在」、「缺少」、「尚未實作」、「沒有對應 contract／tooling」）需要比單一 positive lookup 更廣、但仍 bounded 的 retrieval coverage。
