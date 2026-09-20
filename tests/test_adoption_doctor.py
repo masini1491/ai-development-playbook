@@ -97,6 +97,28 @@ project-specific authority 與 common Playbook 衝突，以 project-specific aut
         codes = [item.code for item in adoption_doctor.check_project(root)]
         self.assertIn("BASELINE_NOT_EXPLICIT", codes)
 
+    def test_exact_sha_baseline_is_valid(self) -> None:
+        sha = "cbeefa7ebcdcbaaabda3c479bd1bac8317be5b50"
+        text = self.healthy_agents().replace("Playbook baseline: `main`", f"Playbook baseline: `{sha}`")
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("BASELINE_EXPLICIT", codes)
+        self.assertNotIn("BASELINE_INVALID", codes)
+
+    def test_named_ref_baseline_is_valid(self) -> None:
+        text = self.healthy_agents().replace("Playbook baseline: `main`", "Playbook baseline: `release/v0.4.0`")
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("BASELINE_EXPLICIT", codes)
+        self.assertNotIn("BASELINE_INVALID", codes)
+
+    def test_malformed_baseline_warns(self) -> None:
+        text = self.healthy_agents().replace("Playbook baseline: `main`", "Playbook baseline: `latest rules please`")
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("BASELINE_INVALID", codes)
+        self.assertNotIn("BASELINE_EXPLICIT", codes)
+
     def test_multiple_explicit_baselines_warn(self) -> None:
         text = self.healthy_agents().replace("Playbook baseline: `main`", "Playbook baseline: `main`\nPlaybook baseline: `v0.1.0`")
         root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})

@@ -25,7 +25,9 @@
     "BEH-021",
     "BEH-022",
     "BEH-023",
-    "BEH-024"
+    "BEH-024",
+    "BEH-025",
+    "BEH-026"
   ],
   "change_classes": {
     "repository-authority": [
@@ -73,10 +75,12 @@
     "prompt-delivery": [
       "BEH-020",
       "BEH-021",
-      "BEH-023"
+      "BEH-023",
+      "BEH-025"
     ],
     "delegation-and-child-routing": [
-      "BEH-017"
+      "BEH-017",
+      "BEH-026"
     ],
     "reporting-contract": [
       "BEH-018"
@@ -93,7 +97,8 @@
       "BEH-019",
       "BEH-020",
       "BEH-021",
-      "BEH-024"
+      "BEH-024",
+      "BEH-025"
     ],
     "information-integrity": [
       "BEH-008",
@@ -125,6 +130,10 @@
     "permission-recovery": [
       "BEH-004",
       "BEH-016"
+    ],
+    "action-contract-closure": [
+      "BEH-025",
+      "BEH-026"
     ]
   }
 }

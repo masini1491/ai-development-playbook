@@ -24,15 +24,17 @@ class BehavioralEvalTests(unittest.TestCase):
         return {
             "schema_version": 1,
             "authority": "selection-only",
-            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 25)],
+            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 27)],
             "change_classes": {
                 "routing": ["BEH-008", "BEH-009", "BEH-010", "BEH-012", "BEH-015", "BEH-019", "BEH-020", "BEH-021"],
                 "validation": ["BEH-004", "BEH-005", "BEH-014", "BEH-016"],
                 "permission-recovery": ["BEH-004", "BEH-016"],
                 "session-compaction-rehydration": ["BEH-009", "BEH-010", "BEH-015"],
                 "actor-admission-and-handoff": ["BEH-010", "BEH-013", "BEH-019", "BEH-020", "BEH-021"],
-                "prompt-delivery": ["BEH-020", "BEH-021", "BEH-023"],
+                "prompt-delivery": ["BEH-020", "BEH-021", "BEH-023", "BEH-025"],
                 "information-integrity": ["BEH-008", "BEH-011", "BEH-012", "BEH-014", "BEH-018", "BEH-022"],
+                "delegation-and-child-routing": ["BEH-017", "BEH-026"],
+                "action-contract-closure": ["BEH-025", "BEH-026"],
                 "phase3-cold-start-core": [
                     "BEH-002",
                     "BEH-006",
@@ -80,6 +82,8 @@ class BehavioralEvalTests(unittest.TestCase):
             "BEH-022",
             "BEH-023",
             "BEH-024",
+            "BEH-025",
+            "BEH-026",
         ):
             with self.subTest(scenario_id=scenario_id):
                 record = self.valid_record()
@@ -195,6 +199,22 @@ class BehavioralEvalTests(unittest.TestCase):
             ["BEH-020", "BEH-021", "BEH-023"],
             behavioral_eval.select_regression_scenarios(
                 self.valid_matrix(), "prompt-delivery"
+            ),
+        )
+
+    def test_select_delegation_regression_includes_initial_scan(self) -> None:
+        self.assertEqual(
+            ["BEH-017", "BEH-026"],
+            behavioral_eval.select_regression_scenarios(
+                self.valid_matrix(), "delegation-and-child-routing"
+            ),
+        )
+
+    def test_select_action_contract_closure_regression(self) -> None:
+        self.assertEqual(
+            ["BEH-025", "BEH-026"],
+            behavioral_eval.select_regression_scenarios(
+                self.valid_matrix(), "action-contract-closure"
             ),
         )
 

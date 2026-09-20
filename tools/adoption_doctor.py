@@ -12,10 +12,13 @@ import sys
 MIN_PYTHON = (3, 11)
 PLAYBOOK_REPO = "masini1491/ai-development-playbook"
 ALLOWED_PROJECT_AI_MODES = ("ChatGPT-Only", "ChatGPT+Codex")
-BASELINE_ASSIGN_RE = re.compile(
-    r"(?im)^\s*(?:[-*]\s*)?playbook\s+baseline\s*[:：]\s*`?(main|v\d+\.\d+\.\d+)`?\s*[。.]?\s*$"
+BASELINE_DECL_RE = re.compile(
+    r"(?im)^\s*(?:[-*]\s*)?playbook\s+baseline\s*[:：]\s*(.+?)\s*$"
 )
+BASELINE_TOKEN_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/-]*$")
+SHA40_RE = re.compile(r"^[0-9a-f]{40}$")
 VERSION_TOKEN_RE = re.compile(r"`?(v\d+\.\d+\.\d+)`?")
+SHA_TOKEN_RE = re.compile(r"(?<![0-9a-f])[0-9a-f]{40}(?![0-9a-f])")
 PROJECT_AI_MODE_RE = re.compile(r"(?im)^\s*(?:[-*]\s*)?Project AI mode\s*[:：]\s*(.+?)\s*$")
 LEGACY_CHATGPT_PROJECT_MODE_RE = re.compile(r"(?im)^\s*(?:[-*]\s*)?ChatGPT Project Mode\s*[:：]\s*(.+?)\s*$")
 MARKDOWN_FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})")
@@ -85,18 +88,34 @@ def _without_fenced_markdown(text: str) -> str:
     return "".join(rendered)
 
 
+def _valid_baseline_token(value: str) -> bool:
+    if SHA40_RE.fullmatch(value):
+        return True
+    if not BASELINE_TOKEN_RE.fullmatch(value):
+        return False
+    if value in {".", ".."} or value.startswith(("/", ".")) or value.endswith(("/", ".")):
+        return False
+    if ".." in value or "//" in value or "@{" in value or value.endswith(".lock"):
+        return False
+    return True
+
+
 def _baseline_findings(text: str) -> list[Finding]:
-    explicit = BASELINE_ASSIGN_RE.findall(text)
-    if len(explicit) == 1:
-        return [_finding("PASS", "BASELINE_EXPLICIT", f"Explicit Playbook baseline: {explicit[0]}")]
-    if len(explicit) > 1:
-        rendered = ", ".join(explicit)
+    declarations = [_strip_inline_code(value.rstrip("。.").strip()) for value in BASELINE_DECL_RE.findall(text)]
+    if len(declarations) > 1:
+        rendered = ", ".join(declarations)
         return [_finding("WARN", "BASELINE_AMBIGUOUS", f"Multiple explicit Playbook baseline declarations found: {rendered}")]
+    if len(declarations) == 1:
+        value = declarations[0]
+        if _is_placeholder(value) or not _valid_baseline_token(value):
+            return [_finding("WARN", "BASELINE_INVALID", f"Playbook baseline declaration is not a valid-looking Git ref / 40-character lowercase SHA: {value}")]
+        return [_finding("PASS", "BASELINE_EXPLICIT", f"Explicit Playbook baseline: {value}")]
 
     mentions = set()
     if re.search(r"(?<![\w/])main(?![\w/])", text):
         mentions.add("main")
     mentions.update(VERSION_TOKEN_RE.findall(text))
+    mentions.update(SHA_TOKEN_RE.findall(text))
     if mentions:
         return [_finding("WARN", "BASELINE_NOT_EXPLICIT", f"Playbook baseline is mentioned but not declared as one explicit `Playbook baseline:` value: {', '.join(sorted(mentions))}")]
     return [_finding("WARN", "BASELINE_MISSING", "No recognizable `Playbook baseline:` declaration found.")]

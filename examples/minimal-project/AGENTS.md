@@ -7,7 +7,7 @@
 Playbook baseline: `main`
 Project AI mode: `<ChatGPT-Only | ChatGPT+Codex>`
 
-需要可重現 baseline 時，把上面唯一的 baseline declaration 改成已發布 tag，例如 `v0.1.0`；不要同時保留多個 active baseline declaration。
+需要可重現 baseline 時，把上面唯一的 baseline declaration pin 到已發布 tag（例如 `v0.1.0`）或 exact 40-character commit SHA；也可以使用 project-declared named ref。Floating ref 由 activation contract resolve 成當次 exact revision；不要同時保留多個 active baseline declaration。
 
 `Project AI mode` 只接受 `ChatGPT-Only` 或 `ChatGPT+Codex`。若尚未選擇，不要猜第三種模式；依 Playbook 保守 fallback 處理，直到使用者／project governance 明確選定。完整語意見 Playbook `PROJECT_MODES.md`。
 
