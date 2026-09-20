@@ -196,7 +196,7 @@ class BehavioralEvalTests(unittest.TestCase):
 
     def test_select_prompt_delivery_regression_set(self) -> None:
         self.assertEqual(
-            ["BEH-020", "BEH-021", "BEH-023"],
+            ["BEH-020", "BEH-021", "BEH-023", "BEH-025"],
             behavioral_eval.select_regression_scenarios(
                 self.valid_matrix(), "prompt-delivery"
             ),
