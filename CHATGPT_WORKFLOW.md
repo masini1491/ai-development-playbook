@@ -62,10 +62,10 @@ Codex reporting language / timestamp / pre-send compliance 由 `CODEX_EXECUTION.
 
 - **Answer first**：evidence 足夠時先回答真正問題；不足時第一段就說明不能判定與關鍵缺口。
 - **Depth follows the task**：篇幅依 breadth/risk/ambiguity/requested detail 決定，不把小問題自動做成 tutorial。
-- **Separate evidence status when it matters**：canonical/observed fact、inference、recommendation 混淆會影響 decision 時清楚區分。
-- **Stop at the evidence boundary**：資料不足時停在 evidence 能支持的範圍，不用一般知識/舊記憶補成 project fact。
-- **Project status taxonomy is project-owned**：沒有 project-defined taxonomy 時，不為格式自行發明 rigid PASS/WARNING/FAIL system。
-- **Provide minimum sufficient traceability**：mutable repository state、specific spec/validation、freshness-sensitive fact需要時提供最低充分 reference。
+- **Render semantic scope, do not redefine it**：需要呈現 `PASS`、`FAIL`、`CURRENT`、`READY`、`UNKNOWN` 或其他 status 時，依 `INFORMATION_INTEGRITY.md` → `Scope-Qualified Status / Propagation Guard`／相關 guard 表達 owner／object／stage／evidence scope；本 presentation contract不建立第二份 status taxonomy。
+- **Stop at the evidence boundary**：資料不足時依 `INFORMATION_INTEGRITY.md` 的 unknown／negative-observation semantics 與 `DEBUG_VALIDATION.md` 的 actual validation/completion evidence停在可支持範圍，不用一般知識、舊記憶或狹窄 PASS補成更大的 project fact。
+- **Project status taxonomy is project-owned**：有 project-defined taxonomy就沿用；沒有時用自然語言呈現 scope-qualified state，不為格式自行發明 rigid PASS/WARNING/FAIL system。
+- **Provide minimum sufficient traceability**：mutable repository state、specific spec/validation、freshness-sensitive fact需要時提供最低充分 reference；reference只支援其實際 evidence scope。
 - **Do not repeat the same conclusion for emphasis**：summary只有在 navigation 真正受益時才加。
 - **No mechanical next-step padding**：只有使用者要求、存在 blocker/risk或明確 follow-up有實益時才加 next action。
 - **User/project format wins**：在不違反 authority/safety/evidence邊界下，使用者當次格式與 project schema優先。
@@ -79,7 +79,7 @@ Codex reporting language / timestamp / pre-send compliance 由 `CODEX_EXECUTION.
 - **Meaningful units only**：進度單位對應真正的 Stage、validation check、review item、bounded source 或其他 material work unit；不以 message 數、tool call 數、token、思考時間或任意切碎步驟製造虛假精度。
 - **Scope change 要揭露**：新 evidence 使 denominator material 增減時，直接說明 scope／total 已改變；進度百分比因此下降可以接受，不維持失真的舊百分比。
 - **Blocker 必須可見**：`BLOCKED`、`WAITING`、`STOP`、permission gap、external dependency 或 required evidence unavailable 必須直接標示；高百分比／長進度條不得掩蓋 blocker。
-- **Subset 要標 scope**：若 indicator 只涵蓋 implementation、research、validation 或某一 checkpoint，清楚標示，例如 `Implementation 100%｜Validation pending`；只有 current task 的正式 completion criterion 與所需 evidence 已滿足時，才把 overall work 呈現為 100%。
+- **Subset 要標 scope**：progress/status indicator依 `INFORMATION_INTEGRITY.md` 的 scope-qualified semantics呈現；若只涵蓋 implementation、research、validation或某 checkpoint就明確標示。Overall 100%只有在 `DEBUG_VALIDATION.md`／project completion contract 所需 evidence實際成立時才可呈現。
 - **Small-task exception**：單步、低風險、可立即完成，或進度條不會增加決策價值的工作預設省略，避免 presentation noise。
 - **User/project format wins**：使用者或 project authority 指定其他 status/progress schema 時，在不破壞 evidence／authority邊界下服從該格式。
 

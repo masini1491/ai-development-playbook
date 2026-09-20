@@ -77,10 +77,10 @@ Direct result / scope-qualified current status
 
 一般原則：
 
-- **Result first**：第一個實質段落先讓使用者知道「目前結果是什麼、完成到哪個 scope」。若 project已有正式 status taxonomy就沿用；沒有時用自然語言說清楚，不自行發明新的 DONE／PARTIAL／WARNING enum。
+- **Result first**：第一個實質段落先讓使用者知道目前結果與有效 scope；status semantics依 `INFORMATION_INTEGRITY.md` → `Scope-Qualified Status / Propagation Guard`，project有正式 taxonomy就沿用，沒有時用自然語言，不自行發明新的 DONE／PARTIAL／WARNING enum。
 - **Material changes, not execution diary**：final/completion 預設摘要實際改變的 behavior、files/surfaces、architecture或重要 evidence；不要只因 tool call真的發生過，就按時間順序敘述「先讀A、再跑B、接著改C」。只有某個 execution step會 materially解釋結果、root cause、recovery、blocker或 evidence lineage時才保留。
-- **Validation hierarchy**：先回答 required validation contract 是否滿足及其有效 scope，再列會改變判斷的 material checks／canonical evidence。不得用大量 PASS command清單掩蓋一個未跑、失敗或 scope-limited 的 required validation；未執行／無法執行的 required check要說明原因與對 completion claim 的影響。
-- **Evidence stays scope-qualified**：commit SHA、branch、working-tree state、test/build結果、hardware／deployment evidence只支持其實際觀察範圍；不要把「tests pass」寫成 broader Done，亦不要為版面簡潔省略 material evidence gap。
+- **Validation / completion truth stays with its owner**：required validation是否滿足、evidence tier、completion acceptance與未執行 check的影響依 `DEBUG_VALIDATION.md`；Codex只把該 current truth以最低充分 scope呈現，不在 reporting owner重建 validation semantics，也不用大量 PASS command清單掩蓋 material gap。
+- **Evidence stays scope-qualified**：final wording不得把局部 repository／test／build／hardware／deployment evidence升格成 broader status；generic propagation semantics依 `INFORMATION_INTEGRITY.md`，validation-specific升格依 `DEBUG_VALIDATION.md`。
 - **Remaining gap only when real**：沒有 blocker／unresolved就不要機械加「下一步」；有 gap時只列會阻止 current completion、需要使用者決策或已屬 current Stage responsibility 的項目，不把 adjacent improvement變成新義務。
 - **Transparency metadata comes after the result**：child delegation／profile override、routing observability等 execution metadata通常放在 task result與validation之後、timestamp之前；只有它本身 materially解釋 STOP／failure／capability limitation 時才提前。
 - **Progress follows the same hierarchy**：中間進度先講 materially changed current state／blocker，不重複 execution surface 已顯示的 spinner、百分比或上一則 substantially identical evidence。
@@ -158,8 +158,8 @@ Reporting policy 被讀取或在 Prompt 中重述，仍不等於最後送出的�
 
 1. **User-facing classification**：本次輸出若會形成使用者可見、可據此判斷狀態或作為後續工作依據的自然語言訊息，就進入本 gate；不得因稱為 progress、intermediate、summary 或非 final 而跳過。
 2. **Language check**：最終草稿的自然語言回覆符合本檔「Codex 回報語言」或使用者／project 當次明確覆蓋的 reporting language；技術原文不需翻譯。
-3. **Result visibility check**：第一個實質段落已直接說明 current result／scope-qualified status／blocker；若 project有正式 status taxonomy就沿用，沒有時不為本 gate自行發明 enum。不得讓 execution diary、child metadata或長 validation清單把主要結果埋在後面。
-4. **Evidence / scope check**：completion／validation claim與實際 evidence scope一致；required validation若未跑、FAIL或只能支持較窄 scope，已清楚揭露原因與對 current completion的影響。不得用 PASS數量掩蓋 material gap。
+3. **Result visibility check**：第一個實質段落已直接說明 current result／blocker，且 status wording符合 `INFORMATION_INTEGRITY.md` 的 scope-qualified semantics；project有正式 taxonomy就沿用，沒有時不自行發明 enum。不得讓 execution diary、child metadata或 validation清單把主要結果埋在後面。
+4. **Evidence / scope check**：final draft沒有把 underlying evidence擴張成較大的 completion／validation claim；required validation與 completion truth直接服從 `DEBUG_VALIDATION.md`／project contract。若未跑、FAIL、UNKNOWN或只支援較窄 scope，presentation需保留該 material gap；本 gate只檢查文字是否忠實呈現，不重新判定 validation truth。
 5. **Presentation-noise check**：移除不會改變使用者判斷的 tool-call chronology、重複 log／command清單、routing internals、重複 conclusion與機械式 next-step padding；保留會解釋 result、root cause、recovery、blocker或 evidence lineage的最低充分 execution detail。
 6. **Child-routing report check（completion/final only）**：若本次是 completion summary／final report，確認已依上節同時保留 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 與 `Child profile override: NONE | USED` 兩個語意維度；兩者皆 `NONE` 時可同列一行。若 profile override 為 `USED`，列出 materially distinct requested model／reasoning、bounded role/result 與 effective-profile observability boundary。一般 progress/STOP reply 不為形式補此欄。
 7. **Timestamp source check**：直接使用可信 runtime/platform current wall clock產生 absolute timestamp，依需要轉換 reporting timezone；不使用模型推算、舊回覆、commit timestamp或 placeholder。只有 primary clock unavailable／suspect時才依 `INFORMATION_INTEGRITY.md` 的 `Reporting Wall-clock Source Guard` 使用 conditional external sanity/fallback；仍無可信來源則使用 `回報時間：UNAVAILABLE`。
