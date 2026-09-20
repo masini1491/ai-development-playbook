@@ -112,6 +112,12 @@
       "kind": "contract"
     },
     {
+      "id": "context.action-contract-closure",
+      "owner": "AI_CONTEXT.md",
+      "section": "Action Contract Closure",
+      "kind": "contract"
+    },
+    {
       "id": "context.absence-claim-coverage",
       "owner": "AI_CONTEXT.md",
       "section": "Absence Claim Coverage Gate",
@@ -331,7 +337,7 @@
     {
       "id": "adoption.doctor",
       "owner": "AGENTS.md",
-      "section": "本 repository 的 minimal validator contract",
+      "section": "Maintainer tooling execution pointer",
       "kind": "contract"
     }
   ],
