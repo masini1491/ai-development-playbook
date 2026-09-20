@@ -104,14 +104,14 @@ If this file or the host's native behavior conflicts with current repository can
         self.assertEqual(["A.md", "B.md"], [item.path for item in diagnostics])
 
     def test_chatgpt_custom_instructions_at_limit_passes(self) -> None:
-        root = self.make_repo({"CHATGPT_CUSTOM_INSTRUCTIONS.txt": "a" * 5000})
+        root = self.make_repo({"CHATGPT_CUSTOM_INSTRUCTIONS.txt": "a" * 1500})
         self.assertEqual([], playbook_check.check_repository(root))
 
     def test_chatgpt_custom_instructions_over_limit_fails(self) -> None:
-        root = self.make_repo({"CHATGPT_CUSTOM_INSTRUCTIONS.txt": "a" * 5001})
+        root = self.make_repo({"CHATGPT_CUSTOM_INSTRUCTIONS.txt": "a" * 1501})
         diagnostics = playbook_check.check_repository(root)
         self.assertEqual(["CHATGPT_CUSTOM_INSTRUCTIONS"], [item.code for item in diagnostics])
-        self.assertIn("exceeds 5000 characters", diagnostics[0].message)
+        self.assertIn("exceeds 1500 characters", diagnostics[0].message)
 
     def test_chatgpt_custom_instructions_markdown_fence_fails(self) -> None:
         root = self.make_repo({"CHATGPT_CUSTOM_INSTRUCTIONS.txt": "```text\nbootstrap\n```\n"})

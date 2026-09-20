@@ -98,7 +98,7 @@ ChatGPT 的人類安裝用 persistent Custom Instructions 已獨立成純文字 
 
 這個 `.txt` 檔案只保存要貼進 ChatGPT Settings / Personalization / Custom Instructions 的完整 thin-bootstrap payload；沒有 Markdown code fence、前言或診斷文字。它是 user-level host adapter，不是 project-specific policy，也不會因被安裝就讓任何 project 自動採用 Playbook。
 
-目前 distribution contract 將 payload 維持在 **5,000 characters 以內**，以符合本 adapter 目前人工驗證時 ChatGPT Custom Instructions 欄位的限制；這是 product-version-specific installation constraint，不是 Playbook policy authority。若產品限制改變，應更新 distribution artifact／validator，而不是複製更多 policy 進 host setting。
+目前 distribution contract 將唯一 canonical ChatGPT host adapter 維持在 **1,500 characters 以內**。這個上限是 Playbook 的 distribution target，用來覆蓋目前較低容量的 ChatGPT Custom Instructions surface；即使某些 plan／surface 可接受更長 payload，也不另維護 5,000-character expanded variant。產品欄位限制仍屬 product-version-specific installation constraint，不是 Playbook policy authority；若產品限制 materially 改變，重新驗證 adapter／validator，而不是把更多 canonical policy 複製進 host setting。
 
 Loading contract：
 
