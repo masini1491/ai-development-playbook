@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120">
+  <title>Representative Playbook adoption patterns / 代表性 Playbook 落地型態</title>
+  <desc>Four repository patterns show how shared Playbook methodology can coexist with different project-specific governance, routing, coordination, and domain ownership structures. / 四種 repository 型態展示共通 Playbook 方法論如何與不同的專案治理、routing、coordination 與 domain ownership 共存。</desc>
   <defs>
     <style>
       .bg{fill:#fbfdff}.title{font:700 44px "Noto Sans CJK TC",Arial,sans-serif;fill:#0f2a5f}

@@ -66,11 +66,11 @@ Playbook 的核心刻意把幾個概念分開：
 - **採用 ≠ 無條件啟用**：只有專案路由判定需要時，才載入共用治理規則。
 - **優先最低充分路徑**：證據、Context、模型／推理、執行角色、runtime capability 與驗證，都只有在目前層級不足時才擴張。
 
-The ownership diagram below shows the intended split: reusable cross-project methodology moves upward into shared canonical owners, while project/domain-specific truth stays in the repository or domain that actually owns it.
-
-下圖說明預期的 ownership 分層：可重用的跨專案方法論上移到 shared canonical owner；project／domain-specific truth 則留在真正擁有它的 repository 或 domain。
+Shared methodology moves upward; project/domain truth stays with its local canonical owner.／共通方法論上移；project／domain truth 留在自己的 canonical owner。
 
 ![Shared versus project-local ownership architecture](assets/readme-ownership-architecture.svg)
+
+> **Illustrative ownership / 權責概覽**：This diagram summarizes responsibility placement only; canonical rules remain in project governance and routed owners.／本圖只摘要 responsibility placement；正式規則仍以 project governance 與 routed canonical owner 為準。
 
 ## Quick workflow / 快速流程
 
@@ -275,11 +275,11 @@ Playbook 保存跨專案共通的「怎麼開發」，不保存單一產品的�
 
 不要把整份 Playbook 複製進每個專案；只在專案治理文件保留精簡的採用／routing layer，專案自身的技術事實仍留在專案自己的 canonical surface。
 
-The patterns below summarize four real adoption shapes. Public examples are named directly; non-public examples are intentionally generalized. The repositories differ on purpose: the Playbook standardizes semantic responsibility and authority boundaries, not one mandatory file tree.
-
-下列圖例整理四種實際 adoption 型態。公開範例直接命名；非公開範例刻意泛化。這些 repository 本來就可以長得不同：Playbook 統一的是 semantic responsibility 與 authority boundary，而不是強制套用同一份檔案樹。
+Four real adoption shapes illustrate the same semantic architecture without implying a mandatory file tree; public examples are named and non-public examples are generalized.／四種實際 adoption 型態展示同一套 semantic architecture，但不代表固定檔案模板；公開範例直接命名，非公開範例則泛化。
 
 ![Representative Playbook adoption patterns](assets/readme-adopter-patterns.svg)
+
+> **Representative patterns / 代表性案例**：These examples illustrate adoption shapes, not repository requirements.／這些案例只說明可能的落地型態，不是 repository 必備結構。
 
 ## ChatGPT cold start / ChatGPT 冷啟動
 

@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="940" viewBox="0 0 1600 940">
+  <title>Shared and project-local ownership architecture / Shared 與專案本地權責架構</title>
+  <desc>Cross-project methodology belongs in the AI Development Playbook, while project-specific governance, technical truth, stricter overrides, coordination, and domain rules stay with adopter repositories. / 跨專案共通方法論由 AI Development Playbook 擁有；專案治理、技術事實、較嚴限制、協調與 domain 規則留在 adopter repository。</desc>
   <defs>
     <style>
       .bg{fill:#fbfdff}.title{font:700 46px "Noto Sans CJK TC",Arial,sans-serif;fill:#0f2a5f}
