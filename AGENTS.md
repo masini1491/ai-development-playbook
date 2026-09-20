@@ -13,7 +13,7 @@
 - **本 repository 的 AI 程式執行權只屬於具備目前任務所需 runtime / toolchain 的 ChatGPT session**：只有能實際滿足該 command 的 executable/version/dependency 與必要 filesystem/network capability 的 ChatGPT session，才可執行本 repository 內的 validator、tests 或其他程式／script。ChatGPT 能產生某語言的程式碼，不代表目前 execution environment 一定具備該語言的 runtime。若目前 session 不具備最低必要執行能力，應明確回報無法執行，不得因此交由 Codex、其他 coding agent、GitHub Actions、pre-commit 或其他自動化機制代跑，除非使用者日後明確改變本規則。
 - **Codex / coding agent 對本 repository 預設唯讀**：可讀取並遵守本手冊，但不得以一般 project coordination → Codex implementation workflow 修改本 repository，也不得執行本 repository 內的程式／tests。
 - 本 repository 的 `TASKS.md` 若存在，只作為 ChatGPT 維護本手冊時的暫時 unfinished-work queue；不代表要交由 Codex 執行。
-- 對一般採用本 Playbook 的 project repository，先依 `PROJECT_MODES.md` 選 `ChatGPT-Only` 或 `ChatGPT+Codex`，再依 `REPOSITORY_EXECUTION.md` 的 lower-level path/action authority決定實際 mutation。Mode 未宣告時維持 conservative fallback（ChatGPT default direct-write僅 root `TASKS.md`，除非 project governance另有已生效 allowlist）；`ChatGPT-Only` 可在 project governance／Task/Stage明確授權的範圍內由 ChatGPT 維護 source/docs/tests/tooling；`ChatGPT+Codex` 才依 current governance／Stage把指定 implementation mutation交給 Codex／coding-agent executor。Mode selection或tool capability都不會自行擴張 authority。
+- 一般 adopter project 的 AI mode selection 與 lower-level actor/path-action authority，分別由 `PROJECT_MODES.md` 與 `REPOSITORY_EXECUTION.md` 擁有；本檔不重述其 mode／fallback／mutation semantics。
 - 不得把一般 project 的 ChatGPT coordination write boundary反向套用到本手冊自身。
 
 若使用者日後明確變更本 repository 的維護 ownership，再依最新指示調整。
@@ -26,30 +26,11 @@
 
 這是一個 **maintenance-only discovery pointer**，不是 normal canonical routing dependency；移除 `/maintainer/` 不得改變 ordinary Playbook behavior。
 
-### 本 repository 的 minimal validator contract
+### Maintainer tooling execution pointer
 
-本手冊自身的 deterministic Markdown/routing check 使用 `/tools/playbook_check.py`，tests 使用 `/tests/test_playbook_check.py`。
+本 repository 的 maintainer tooling 仍受上方 Maintenance ownership 約束：只有具備本次 command 所需實際 runtime／dependency／filesystem/network capability 的 ChatGPT session 可執行；Codex／coding agent 預設不得寫入或執行本 repository tooling。
 
-- Runtime：Python 3.11+。
-- Dependency：Python standard library only；不要為第一版 validator 建立 package manager、requirements 或額外 config framework。
-- 正式檢查：由已確認具備 Python 3.11+ runtime 的 ChatGPT session 執行 `python tools/playbook_check.py`。
-- Unit tests：由已確認具備 Python 3.11+ runtime 的 ChatGPT session 執行 `python -m unittest tests/test_playbook_check.py`。
-- Adoption / Readability Doctor 使用 `/tools/adoption_doctor.py`，只對指定 project repository 做 read-only / report-only adoption 與 routing contract 檢查；不得修改 target project、不得自動修復，也不依賴 network／GitHub mutation。
-- Doctor unit tests：由已確認具備 Python 3.11+ runtime 的 ChatGPT session 執行 `python -m unittest tests/test_adoption_doctor.py`。
-
-Doctor v1 的 deterministic engine 只接受 filesystem root，但支援兩種**輸入取得模式（input acquisition modes）**；兩者使用同一套 check semantics：
-
-- **Local Path Mode**：human／authorized local session 將現有 project repository root 直接傳給 `python tools/adoption_doctor.py <project-root>`。Doctor 只讀該 filesystem tree，不修改 working tree。
-- **ChatGPT GitHub Snapshot Mode**：具備 GitHub repository read capability 的 ChatGPT session 先從使用者指定的 canonical repository／branch／ref 取得 Doctor active checks 所需的最低充分檔案，materialize 到 ChatGPT 自己 runtime 的 temporary／ephemeral snapshot，再執行 `python tools/adoption_doctor.py <snapshot-root>`。Snapshot 只作 execution input，不是新的 project authority，也不得回寫 target repository 或碰觸由 Codex／human 管理的本機 workspace。
-- **GitHub connector 優先**：當 ChatGPT 已具備可讀取指定 repository／branch／ref 的 GitHub connector／等價 repository-native connector 時，Snapshot Mode 優先用該 connector取得 canonical GitHub content，再把最低充分檔案寫入 temporary snapshot；不要先要求 Python sandbox、一般 HTTPS client 或 shell Git 自己具備 GitHub DNS／network。Connector retrieval capability 與本地 runtime network capability 是兩個不同層級，前者可正常而後者受限。
-- 只有 connector 無法取得必要 ref／path、回傳內容不完整，或本次 operation 明確需要 connector不提供的 capability 時，才依 `REPOSITORY_EXECUTION.md` 的最低充分 Access Capability／Permission-Gated Operation評估其他 authorized read path；不得為了「比較穩」擴張成 repository mutation或更高 credential capability。
-- `adoption_doctor.py` 本身**不取得 GitHub credential、不呼叫 GitHub API、不接收 repository write authority**；GitHub read、ref selection 與 snapshot acquisition 都屬於外部 authorized ChatGPT connector／runtime layer。`Input acquisition capability ≠ Doctor network capability ≠ target repository write authority`。
-- GitHub Snapshot Mode 必須先取得 `AGENTS.md`，再依其中 declaration 取得 active deterministic checks 需要的 local target（例如 declared coordination surface）。若必要檔案因 connector／permission／ref／runtime 限制無法完整取得，應回報 `SNAPSHOT / REMOTE EVIDENCE UNAVAILABLE` 或等價的 acquisition gap；**不得把不完整 snapshot 造成的 missing-file 診斷誤報成 target repository 的 deterministic FAIL**。
-- Snapshot Mode 的 branch／ref 必須與使用者要求的 canonical target 一致；未確認 freshness 的 cached/local copy 不得覆蓋較新的 remote canonical evidence。
-
-- 上述 command 是符合本 validator runtime contract 的 ChatGPT session execution contract，不構成 Codex、其他 agent、CI 或自動化工具的執行授權。
-- Validator / Doctor v1 只處理可客觀判定的結構／routing invariant；不得加入需要 AI judgment 的 duplicate-policy、section-length、architecture score、Context Cohesion score 或類似 heuristic。
-- 若未來真的讓 Codex 維護或執行本 repository tooling，必須另由使用者明確授權；本段不建立 Codex write / execution exception。
+Tool-specific runtime、正式 commands、Adoption Doctor input acquisition／GitHub Snapshot contract，以及 behavioral-eval tooling routing，統一由 [`tools/README.md`](tools/README.md) 擁有。**只有目前工作真的要執行、修改或驗證 maintainer tooling 時才讀該 leaf；普通 Playbook policy／documentation maintenance 不為形式載入。**
 
 ## 適用範圍（Scope）
 
@@ -91,23 +72,14 @@ README 的 human-facing language / layout contract：
 
 ## 文件責任與讀取紀律（Document ownership / reading discipline）
 
-`README.md` 是 **唯一 human-facing primary overview + repository router**：保存手冊定位、核心原則、導入方式、文件路由與必要高層摘要；詳細 normative contract 由對應主題文件作為唯一主要 authority。
+本檔只擁有**本 repository 的 maintainer governance、maintenance boundary 與早期必須生效的 repo-specific rules**；詳細 task/topic routing 由 `CHAT_INIT.md` 擁有，AI-readable information architecture／retrieval-cost contract 由 `AI_CONTEXT.md` 擁有，各 domain normative semantics 由其 routed canonical owner 擁有。
 
-`CHAT_INIT.md` 是**新聊天室最小 bootstrap + task router**：AI 可直接從它進入，不必先讀 README；它只負責建立 repository / authority / minimal routing 起點，不複製完整 Git、coordination、Prompt、toolchain 或 validation policy。
+維護時：
 
-`PROJECT_MODES.md` 是**採用本 Playbook 的 project AI mode selection authority**：只定義 `ChatGPT-Only` 與 `ChatGPT+Codex` 兩個 user-selectable AI profiles，以及 mode 未宣告時的 unresolved semantics；不得在其他 canonical owner另建第三、第四種 project AI mode。
-
-`AI_CONTEXT.md` 是 **跨專案 AI-readable repository information architecture authority**：負責 Always-on / Hot / Cold / Evidence / Current / Historical surface semantics、Progressive Routing、Independent Retrieval Intent、Thin Metadata、Derived Metadata Write-Closure 與 Readability / Retrieval Cost Change Gate；不得在其他文件複製完整 context policy。
-
-`CHATGPT_WORKFLOW.md` 是 **ChatGPT／planning conversation authority**：負責 coordination admission、AI-originated durable work、Task identity/revision、Codex Prompt mode / delivery、copy-ready contract、Codex result reconciliation、ChatGPT 回覆 presentation contract 與時間戳；不得收進 Codex execution / cost policy全文。
-
-`CODEX_EXECUTION.md` 是 **Codex／coding agent execution authority**：負責 model / reasoning / Context / Agent、execution mode、cost / usage budgeting、tool scheduling/output、escalation 與 Codex reporting；只有 selected mode／current Stage已合法選中Codex時才進入其 task-specific execution contract。
-
-`GITHUB_OPERATIONS.md` 是 **GitHub-specific operational pattern owner**：在 authority 已由 project governance 建立後，負責 GitHub repository acquisition、verified transport、remote mutation bridge、Actions deterministic execution/evidence、artifact lifecycle 與 tag／Release publication 的 route selection／execution recipes；不重新定義 actor／write／credential authority或 generic validation semantics。
-
-`REPOSITORY_EXECUTION.md`、`DEBUG_VALIDATION.md`、`RESEARCH_ARCHITECTURE.md` 等 shared topic 文件只保存真正跨 agent 共用的 repository lower-level actor/path-action authority、permission/write boundary、evidence、validation、architecture contract；其中 `REPOSITORY_EXECUTION.md` 不另建 user-selectable AI mode。
-
-AI／coding agent 不應預設完整掃描全部文件；先從 `CHAT_INIT.md` 進入，再依 task topic讀最低必要主題／section。Exact target 已明確時可 direct-leaf bypass，不為 routing ceremony 多讀中間層。
+- 保持 **one rule/domain → one primary canonical owner**；若已有 owner，其他 surface只保留最低充分 routing／activation survival wording。
+- AI／coding agent 不預設掃描全部 canonical files；從 current project governance／`CHAT_INIT.md` 直達本次最低必要 owner／section，exact target已知時可 direct-leaf。
+- `README.md` 仍是唯一 human-facing primary overview；AI-facing canonical owners不為 human tutorial flow複製 policy。
+- 新增／搬移／拆分 owner時，依 `AI_CONTEXT.md` 的 Independent Retrieval Intent、Action Contract Closure 與 AI Readability / Retrieval Cost Change Gate確認 routing與成本；不得把 `AGENTS.md` 重新膨脹成第二份 router。
 
 ## 權威順序（Authority）
 
@@ -148,21 +120,15 @@ Cold/Candidate item、historical material或 AI 先前建議不因被持久化�
 
 ### ChatGPT direct-write mutation integrity
 
-本 repository 允許 ChatGPT 直接維護 canonical 文件，因此 direct-write completion 不能只確認「新內容存在」。每次 GitHub direct-write 後，至少做與 mutation scope 相稱的 canonical read-back；若使用整檔 replacement、長文件重寫、大片段搬移或其他可能造成 unintended deletion／truncation 的高 blast-radius mutation，還必須檢查 changed-file diff/stat 與必要的保留區段／尾端內容，確認沒有超出意圖的刪除、截斷、重複或 authority loss。
+本 repository 的 ChatGPT direct-write 仍必須以 current canonical state 關閉 mutation evidence；GitHub-specific candidate／promotion／read-back／recovery mechanics由 `GITHUB_OPERATIONS.md` 擁有，generic permission／write boundary由 `REPOSITORY_EXECUTION.md` 擁有。
 
-推薦最小流程：
+Repo-specific hard boundary：
 
-`Pre-write canonical blob / intended scope → write → commit diff/stat → current canonical read-back → unintended deletion/truncation check → only then accept completion`
+- 不得 force push、reset-hard、rewrite history 或丟棄未知 user work。
+- high-blast-radius replacement／搬移若出現 unintended deletion／truncation，先 STOP，以最近已知正常的 canonical Git history作恢復基準，再只重套原本授權的 bounded change；不得靠 memory重建。
+- completion至少要有與 mutation scope相稱的 current canonical read-back；小型 bounded change不為形式全文重讀。
 
-- 新 heading／新 wording 能讀到，只證明新增內容存在；**不證明原本應保留的內容仍完整**。
-- 若 diff 顯示 deletion 規模明顯超出本次意圖、文件尾端消失、主要 canonical sections 不再可達，或 read-back 與 intended scope 不符，立即 STOP 後續 mutation，先恢復／修正 current canonical state，再繼續其他工作。
-- 發現 unintended deletion／truncation 後，**優先使用 Git history 中最近一個已知正常的 pre-mutation canonical blob／parent commit 作恢復基準**；先還原應保留內容，再只重新套用本次原本授權的 bounded intended change。不得靠舊聊天、memory 或模型自行重建整份文件，除非 Git history／canonical backup 確實不可取得，且必須明確標記 evidence gap。
-- 若整個 commit 都是錯誤 mutation，優先考慮建立新的 revert／repair commit 保留可追溯歷史；不要為了讓 history 看起來乾淨而 force push、reset-hard 或 rewrite history。
-- 恢復完成後仍要重新做 diff/stat + current canonical read-back，證明「遺失內容已恢復」與「原 intended change仍正確存在」兩件事都成立。
-- 小型 bounded patch 可只檢查 scoped diff + relevant section；不要為每個一行修改全文重讀。
-- 這是本 repository maintainer 的 direct-write integrity rule；一般 project 的 completion evidence仍由 `DEBUG_VALIDATION.md` 的 `完成證據關卡` 與該 project governance決定，不因本段擴張 ChatGPT 對其他 repository 的 write authority。
-
-核心原則：**Direct-write success ≠ intended mutation success；發現破壞時先從 canonical Git history恢復，再重新套用最小 intended patch，最後用 current read-back 關閉復原。**
+核心原則：**Direct-write capability does not waive canonical mutation evidence；generic GitHub mechanics stay in their canonical owner。**
 
 優先修改既有主題文件，不要為每個新細節建立新檔。但若跨專案 evidence 顯示已形成穩定、可獨立 retrieval、具有清楚 ownership 的新 information architecture domain，可建立新 canonical owner；建立後其他文件只做 routing。
 
