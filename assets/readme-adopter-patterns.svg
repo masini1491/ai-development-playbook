@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120">
+  <defs>
+    <style>
+      .bg{fill:#fbfdff}.title{font:700 44px "Noto Sans CJK TC",Arial,sans-serif;fill:#0f2a5f}
+      .subtitle{font:700 24px "Noto Sans CJK TC",Arial,sans-serif;fill:#1976d2}
+      .cardTitle{font:700 21px "Noto Sans CJK TC",Arial,sans-serif;fill:#102a56}
+      .body{font:18px "Noto Sans CJK TC",Arial,sans-serif;fill:#17345d}
+      .small{font:16px "Noto Sans CJK TC",Arial,sans-serif;fill:#294b74}
+      .tiny{font:15px "Noto Sans CJK TC",Arial,sans-serif;fill:#526b8c}
+      .pill{font:700 16px "Noto Sans CJK TC",Arial,sans-serif;fill:#20466f}
+      .arrow{fill:none;stroke:#355a89;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#355a89"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1800" height="1120"/>
+  <text x="900" y="58" class="title" text-anchor="middle">Representative Adoption Patterns / 代表性落地型態</text>
+  <text x="900" y="94" class="subtitle" text-anchor="middle">Same semantic architecture; different repository shapes.</text>
+
+  <rect x="260" y="125" width="1280" height="118" rx="22" fill="#edf5ff" stroke="#2f8de4" stroke-width="2"/>
+  <text x="900" y="168" class="cardTitle" text-anchor="middle">AI Development Playbook</text>
+  <text x="900" y="198" class="body" text-anchor="middle">shared methodology / routing / execution / validation / context semantics</text>
+  <text x="900" y="225" class="small" text-anchor="middle">Only activates when the current project route needs shared governance.</text>
+
+  <path d="M900 243 V286" class="arrow" marker-end="url(#arrow)"/>
+  <rect x="650" y="286" width="500" height="60" rx="16" fill="#f4efff" stroke="#7859e6" stroke-width="2"/>
+  <text x="900" y="324" class="cardTitle" text-anchor="middle">Conditional activation / 條件式啟用</text>
+
+  <path d="M900 346 V390 H450 V410" class="arrow" marker-end="url(#arrow)"/>
+  <path d="M900 346 V390 H1350 V410" class="arrow" marker-end="url(#arrow)"/>
+  <path d="M900 390 H450" class="arrow"/>
+  <path d="M900 390 H1350" class="arrow"/>
+
+  <rect x="80" y="410" width="760" height="270" rx="22" fill="#eef7ff" stroke="#2f8de4" stroke-width="2"/>
+  <text x="460" y="451" class="cardTitle" text-anchor="middle">Public method Playbook — ai-divination-playbook</text>
+  <text x="120" y="492" class="body">• Project-native ordinary-reading hot path</text>
+  <text x="120" y="524" class="body">• Method owners keep divination-specific truth</text>
+  <text x="120" y="556" class="body">• Shared development governance activates for maintenance</text>
+  <text x="120" y="598" class="pill">Recursive ownership example:</text>
+  <text x="150" y="632" class="small">ASTROLOGY root owner → Natal owner / Transit owner</text>
+  <text x="150" y="657" class="small">common invariants up; mode-specific policy stays in mode owners</text>
+
+  <rect x="960" y="410" width="760" height="270" rx="22" fill="#eefbf5" stroke="#16a66d" stroke-width="2"/>
+  <text x="1340" y="451" class="cardTitle" text-anchor="middle">Embedded product pattern — generalized</text>
+  <text x="1000" y="492" class="body">• Project governance keeps hardware / protocol / security truth</text>
+  <text x="1000" y="524" class="body">• Shared bootstrap / model / validation methodology stays upstream</text>
+  <text x="1000" y="556" class="body">• TASKS remains current Hot coordination</text>
+  <text x="1000" y="598" class="pill">Key separation:</text>
+  <text x="1030" y="632" class="small">governance normalization ≠ product-state or validation reset</text>
+
+  <rect x="80" y="725" width="760" height="270" rx="22" fill="#fff8e9" stroke="#e5a31b" stroke-width="2"/>
+  <text x="460" y="766" class="cardTitle" text-anchor="middle">Data-analysis product pattern — generalized</text>
+  <text x="120" y="807" class="body">• AGENTS keeps project mapping and mutation boundary</text>
+  <text x="120" y="839" class="body">• TASKS = current Hot; BACKLOG = Cold registry</text>
+  <text x="120" y="871" class="body">• Product truth remains in the product owner</text>
+  <text x="120" y="913" class="pill">Result:</text>
+  <text x="150" y="947" class="small">future work stays durable without entering executable context</text>
+
+  <rect x="960" y="725" width="760" height="270" rx="22" fill="#f5f1ff" stroke="#7859e6" stroke-width="2"/>
+  <text x="1340" y="766" class="cardTitle" text-anchor="middle">Public engineering KB — building-envelope-engineering-kb</text>
+  <text x="1000" y="807" class="body">• CHAT_INIT keeps the project-native retrieval hot path</text>
+  <text x="1000" y="839" class="body">• knowledge-index → domain manifest → canonical leaf</text>
+  <text x="1000" y="871" class="body">• Local validation file owns only the KB-specific recipe</text>
+  <text x="1000" y="913" class="pill">Shared Playbook activates for:</text>
+  <text x="1030" y="947" class="small">repository / workflow governance, execution, validation, context work</text>
+
+  <text x="900" y="1043" class="tiny" text-anchor="middle">Representative examples, not a mandatory file template. Public repositories are named; non-public examples are generalized.</text>
+  <text x="900" y="1068" class="tiny" text-anchor="middle">這些是代表性責任分層，不是固定檔案模板；公開範例直接命名，非公開範例則泛化處理。</text>
+  <text x="900" y="1094" class="tiny" text-anchor="middle">Canonical authority remains in each repository's governance and routed owners.</text>
+</svg>

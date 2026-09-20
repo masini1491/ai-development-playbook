@@ -66,6 +66,12 @@ Playbook 的核心刻意把幾個概念分開：
 - **採用 ≠ 無條件啟用**：只有專案路由判定需要時，才載入共用治理規則。
 - **優先最低充分路徑**：證據、Context、模型／推理、執行角色、runtime capability 與驗證，都只有在目前層級不足時才擴張。
 
+The ownership diagram below shows the intended split: reusable cross-project methodology moves upward into shared canonical owners, while project/domain-specific truth stays in the repository or domain that actually owns it.
+
+下圖說明預期的 ownership 分層：可重用的跨專案方法論上移到 shared canonical owner；project／domain-specific truth 則留在真正擁有它的 repository 或 domain。
+
+![Shared versus project-local ownership architecture](assets/readme-ownership-architecture.svg)
+
 ## Quick workflow / 快速流程
 
 **English**
@@ -268,6 +274,12 @@ Do not copy the whole Playbook into every project. Keep only a thin adoption/rou
 Playbook 保存跨專案共通的「怎麼開發」，不保存單一產品的「系統是什麼」。各實際專案仍自行擁有技術事實來源、目前任務／證據、AI mode、儲存庫寫入邊界、activation routing、機密資訊、部署參數、硬體／協定細節與 release/branch state。
 
 不要把整份 Playbook 複製進每個專案；只在專案治理文件保留精簡的採用／routing layer，專案自身的技術事實仍留在專案自己的 canonical surface。
+
+The patterns below summarize four real adoption shapes. Public examples are named directly; non-public examples are intentionally generalized. The repositories differ on purpose: the Playbook standardizes semantic responsibility and authority boundaries, not one mandatory file tree.
+
+下列圖例整理四種實際 adoption 型態。公開範例直接命名；非公開範例刻意泛化。這些 repository 本來就可以長得不同：Playbook 統一的是 semantic responsibility 與 authority boundary，而不是強制套用同一份檔案樹。
+
+![Representative Playbook adoption patterns](assets/readme-adopter-patterns.svg)
 
 ## ChatGPT cold start / ChatGPT 冷啟動
 
