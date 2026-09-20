@@ -286,6 +286,7 @@ identify exact product/API behavior needed
 - chunk/hash/final identity mismatch → 重取最低必要 unit；仍 mismatch 則 transport fail closed；
 - candidate blob/tree/commit identity mismatch → 不 promotion；
 - destination ref drift → fresh reconcile，不 force；
+- planned destructive target 在 fresh preflight 已不存在 → 視為 current-state drift，重新 reconcile target set；**不得把其 absence 計為本次 operation 的成功 mutation**；
 - workflow/toolchain/environment failure → 依 `DEBUG_VALIDATION.md` failure taxonomy判讀，不直接改 production source；
 - required follow-up workflow 未實際執行 → 不把 expected trigger當 PASS；
 - Release asset／tag／published state read-back不符 → publication未完成；
@@ -332,6 +333,26 @@ branch with no matched PR
 ```
 
 Merged PR 的 head branch仍停在 terminal PR head，是「merge 後沒有再承載新工作」的強 evidence，但它本身仍不是 deletion authority。若 repository採 squash/rebase/merge等不同整合方式，不要求 branch commit一定成為 default branch ancestor；應以 PR terminal state、current canonical result與 branch retention role共同判斷。
+
+### Destructive Cleanup Snapshot / Attribution Gate
+
+批量或 multi-target 的 destructive cleanup 不得只靠較早的 planning snapshot 加上最後的「target 已不存在」來推導本次 mutation 成功。**Absence observed after a destructive operation does not by itself prove deletion by that operation.**
+
+推薦最小 evidence chain：
+
+```text
+planning / classification snapshot (T0)
+→ fresh destructive preflight for current target existence / identity (T1)
+→ execute only targets that remain admitted
+→ capture direct per-target mutation result
+→ post-operation enumeration / read-back (T2)
+→ attribute each terminal state
+```
+
+- 若 target 在 T0 存在，但 T1 fresh preflight 已不存在，將它視為 concurrent/current-state drift；重新 reconcile target set，**不得回報為本次 operation 刪除成功**。
+- 若 target identity、PR relationship、retention role 或其他 deletion premise 在 T1 已改變，skip 該 target並重新分類；不得沿用 stale cleanup decision。
+- Post-state absence只能證明目前 target 不存在；要宣稱 `deleted by this operation`，還需要本次 mutation surface的直接成功 evidence或等價可歸因 evidence。
+- Final summary 應保留最低充分的 per-target disposition，例如本次刪除、preflight前已不存在、因 drift／reclassification跳過、刪除失敗或仍 unresolved；不要求固定 enum，也不要求把 routine cleanup升格成通用 transaction framework。
 
 ### Long-lived / retained refs
 
@@ -390,6 +411,6 @@ canonical result / merge / publication read-back
 | Remote mutation bridge | exact base + workflow/script identity + permission scope + validation + self-cleanup + final diff |
 | Actions validation | tested SHA + run/job/command scope + result + artifact identity when material |
 | Release publication | tag/target + publication state + metadata/assets + final read-back |
-| Terminal cleanup / ref disposition | terminal PR/publication state + task-scoped ref inventory + retain/delete rationale + cleanup read-back when mutated |
+| Terminal cleanup / ref disposition | fresh preflight target inventory/identity + per-target mutation/disposition evidence + terminal PR/publication state + retain/delete rationale + cleanup read-back when mutated |
 
 自然語言「已完成」「已上傳」「CI過了」「Release發了」都不是獨立 completion authority；只有與本次 operation scope相稱的 GitHub object/run/publication read-back 才能關閉對應 claim。
