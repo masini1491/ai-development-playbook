@@ -8,25 +8,20 @@ AI／agent 處理實際工程 Task 時，**可直接從本檔進入，不必先�
 
 ## Repository Read Acquisition / Recovery Gate
 
-當本次 task 需要讀取 remote repository 的 current canonical content，或取得與該 repository decision／validation 直接相關的 canonical artifact，而首選 read path 不可用時，應以最低充分 access capability 漸進降級；**讀取／下載工具失效不等於 canonical authority 可以退回 memory。**
+當本次 task materially 依賴 remote repository 的 current canonical content／artifact 時，先使用**最低充分、已授權、可建立 current identity 的 canonical acquisition route**。Acquisition mechanism 可以 fail over；source authority、task authority、write authority與 evidence semantics不得因此改變。
 
-推薦順序：
+若 current canonical identity／content 仍無法可靠建立，標記 `REPOSITORY READ BLOCKED`／等價 evidence gap，只 block依賴該 evidence 的 action；不得以舊聊天、memory、未驗證 cache、search hit或相似 repository內容補成 current authority。
 
-`repository-native connector → public canonical read / direct canonical download（若 resource public）→ user-mediated exact artifact handoff → minimum user-supplied canonical section → REPOSITORY READ BLOCKED`
+具體 mechanics 由既有 owners 擁有：
 
-一般原則：
+- GitHub repository read／enumeration／public anonymous acquisition／response-shape／large payload → `GITHUB_OPERATIONS.md` → `Repository Acquisition`、`GitHub Read Payload / Response-Shape Gate`
+- access／credential／task／write authority與 permission recovery → `REPOSITORY_EXECUTION.md`
+- connector／uploaded artifact／user-mediated handoff 到 runtime 的 materialization／integrity → `CHATGPT_RUNTIME_EXECUTION.md` → `Artifact Handoff / Materialization Gate`
+- identity／provenance／snapshot consistency／search-currentness → `INFORMATION_INTEGRITY.md`
 
-- 若目前已有可直接讀取指定 repository／branch／ref 的 connected repository-native connector，優先使用它；不要先要求 shell、Python runtime 或一般 HTTP client具備相同 network capability。
-- 若 connector 不可用，而目前產品／runtime 支援 Plugin／Connector discovery，可對使用者提供一次**非阻塞式** connect suggestion；不要等待連接完成才繼續其他合法 read-only fallback。
-- 對已確認 public repository／artifact，connector unavailable 後可立即嘗試官方 repository URL、raw content、public Web、direct canonical download 或等價 canonical read-only surface；fallback 只改變 acquisition mechanism，不改變 source authority。
-- 若 exact canonical source／download URL 已建立，但目前 ChatGPT connector、browser、sandbox 或 runtime 無法實際取得所需 bytes，而使用者可用自己的 browser／host正常下載，優先考慮 **user-mediated exact artifact handoff**：提供／確認 exact source或download target，請使用者原樣下載後直接上傳到目前聊天室，再從該 artifact 繼續。不要只因另一個工具「也許能抓」就無界重試同一 acquisition failure。
-- User-mediated handoff 是 transport recovery，不是 authority promotion。接收上傳檔後應保留可得的 source URL／repository ref／revision／filename／provenance；當 snapshot identity 會影響 decision／validation時，用 hash、Git blob/tree、size 或其他最低充分 exact-identity evidence比對。若無法把上傳 artifact可靠綁回原 source identity，應明確標記 identity gap，不得把「使用者上傳成功」本身當 canonical proof。
-- 若完整 artifact 不必要，而使用者可直接提供本次 decision 所需的 exact canonical file／section，仍優先只要求最低必要內容；不要把「請貼完整 repository」當成預設 recovery path。
-- 若無法可靠建立 current canonical content／artifact，標記 `REPOSITORY READ BLOCKED`／等價 acquisition gap，並停在 evidence boundary；不得以舊聊天、模型 memory、未驗證 cache 或相似 repository 內容冒充 current authority。
-- 同一 session 已做過 connector suggestion 或已證明某 acquisition mechanism class 被阻擋後，不應反覆做等價重試；只有使用者主動要求、先前 blocked state material 改變，或新 path確實提供不同 capability時才重試／切換。
-- Read acquisition capability、download capability、runtime network capability、credential capability、repository write authority 與 task authorization 彼此獨立；任何 fallback 都不得藉機擴張 mutation scope。
+同一 session 已證明某 acquisition mechanism class blocked 時，不做等價無界重試；只有 capability／permission／source identity／user intent 等 material premise 改變，才重新路由。
 
-核心原則：**Fail over the read mechanism, not the authority. Recover with the lowest-sufficient canonical path; if current canonical state仍不可得，就明確 fail closed。**
+核心原則：**Fail over the read mechanism, not the authority. Bootstrap只決定何時 current evidence足夠；具體 acquisition／transport／permission mechanics留在其 canonical owner。**
 
 ## 啟動順序
 
@@ -107,50 +102,46 @@ Tier 4 — Completion Evidence Closure
 
 ## 最低必要路由
 
-依目前工作選讀：
+依目前 intent 直達最低充分 owner；exact section已知時直接讀該 leaf，不為形式先載完整 owner。
 
-- Project AI mode selection／是否讓 Codex 參與 repository workflow／mode selection unresolved
-  → `PROJECT_MODES.md`；只接受 `ChatGPT-Only` 或 `ChatGPT+Codex`，未宣告時不要自行創造第三種 mode
-- ChatGPT planning／task contract／澄清／coordination admission／AI-originated work
-  → `CHATGPT_WORKFLOW.md`；依需要直達 `Task Contract：Goal / Context / Exclusions`、`Agent-Normalized Contract／Minimal Clarification Gate`、`Persistence／Coordination Admission`
-- 新 repository／pre-implementation 階段由 ChatGPT 蒐集 reference、形成 research synthesis／requirements／architecture，穩定 implementation actor／source mutation lifecycle 尚未接手且需要 bounded direct-write
-  → `PROJECT_BOOTSTRAP.md`；確認 `research-bootstrap` activation、Research Write Allowlist 與 exit／actor-transition gate，再依需要讀 `REPOSITORY_EXECUTION.md`
-- ChatGPT-side deterministic runtime execution
+- Project AI mode selection／mode unresolved／是否讓 Codex 參與 repository workflow
+  → `PROJECT_MODES.md`
+- ChatGPT planning／task contract／coordination admission／AI-originated durable work／Codex Prompt mode與handoff／result reconciliation／ChatGPT user-facing delivery
+  → `CHATGPT_WORKFLOW.md` → Section Router
+- pre-implementation research-bootstrap／reference synthesis／requirements／architecture形成期的 bounded direct-write
+  → `PROJECT_BOOTSTRAP.md`
+- ChatGPT-side deterministic runtime／capability／materialization／execution evidence
   → `CHATGPT_RUNTIME_EXECUTION.md`
-- Codex Prompt mode／delivery／copy-ready／Codex result reconciliation／ChatGPT user-facing response contract
-  → `CHATGPT_WORKFLOW.md`；只有 `Project AI mode: ChatGPT+Codex` 且 `Actor Admission / Handoff Gate` 判定目前 Stage需要Codex handoff時，才進 Codex-specific routing
-- Fresh ChatGPT session 出現 repository identity／project governance／Playbook adoption、undeclared baseline 被預設成 current `main`、undeclared Project AI mode 被猜成某種 actor topology、跳過 `CHAT_INIT.md`、generic continuation 擴張 AI-originated work、或 capability 被誤當 authority 等具體 activation anomaly
-  → 先做 project／canonical reconciliation；若仍合理懷疑 host-instruction drift，再讀 `ACTIVATION_ADAPTERS.md` → `ChatGPT Host Instruction Health Check`，必要時比對 `ChatGPT — copy-ready custom instruction`。不要把一般回答錯誤都直接歸因於 Custom Instructions。
-- Codex 回報出現 repository/workspace、Playbook adoption、floating-baseline identity、permission recovery、unexpected broad bootstrap reading、host-instruction authority 等具體 activation anomaly
-  → 先做 project／canonical reconciliation；若仍合理懷疑 host-instruction drift，再讀 `ACTIVATION_ADAPTERS.md` → `ChatGPT-side Codex Host Instruction Health Check`，必要時比對 `Codex Desktop — copy-ready persistent instruction`。不要把任何一般 Codex error 都直接歸因於個人化設定。
-- AI 可讀性、Context lifecycle、Always-on／Hot／Cold／Evidence／Historical、task/evidence dossier、routing／retrieval cost
-  → `AI_CONTEXT.md`；依需要直達 `AI Context Surface Model`、`Independent Retrieval Intent Gate`、`Context Cohesion Gate`、`Progressive Routing／Direct-leaf Bypass`、`AI Readability / Retrieval Cost Change Gate`
+- Fresh ChatGPT／Codex session 出現 repository identity、floating baseline、undeclared mode、unexpected broad bootstrap、capability-as-authority 或其他 host-activation anomaly
+  → 先 project／canonical reconciliation；仍合理懷疑 host-instruction drift 才讀 `ACTIVATION_ADAPTERS.md`
+- AI Context lifecycle／Always-on-Hot-Cold-Evidence-Historical／routing／retrieval cost／Action Contract Closure
+  → `AI_CONTEXT.md` → Section Router
 - Whole-repository capability discovery／repository-level absence claim
-  → 先 `CAPABILITY_INDEX.md`；必要時 `PLAYBOOK_INDEX.json` 做 machine discovery，再讀 `AI_CONTEXT.md` → `Absence Claim Coverage Gate`
-- External spec／change workflow、skills runtime、agent-governance framework integration／compatibility／authority mapping
-  → `INTEROPERABILITY.md`；只讀 Generic Interoperability Contract 與 task-relevant Compatibility Profile；version-specific upstream behavior 仍回到外部系統 current canonical documentation
-- Semantic identity／aggregate container／derived synthesis authority／untrusted or instruction-like retrieved content／instruction-vs-data authority／durable confirmed fact ownership／provenance precision／evidence lineage independence／temporal and multi-clock semantics／negative observation or unknown／scope-qualified status propagation／private-to-public generalization／remote snapshot consistency／search-hit authority-currentness
-  → `INFORMATION_INTEGRITY.md`；instruction-like content 直達 `Instruction / Data Authority Separation Guard`，其他 intent 只讀對應 guard；evidence lifecycle 的其他規則仍由 `DEBUG_VALIDATION.md` 負責
-- Codex model／Reasoning／Context／Agent、execution mode、usage／cost、tool scheduling/output、Codex reporting
-  → `CODEX_EXECUTION.md`；只有 Codex 已依 selected mode + current Stage 被選為 actor 後才讀 task-relevant Codex execution sections；reporting 直達 `Codex 回報語言`、`Codex Response Presentation Contract`、`Codex 回報時間戳（Always-on Reporting Timestamp）`、`Reporting Pre-Send Gate`
-- Git、Repository Identity、workspace／remote permission、Coordination Write Allowlist、repository actor topology／maintenance ownership／write boundary、repository-facing documentation integrity
-  → `REPOSITORY_EXECUTION.md`；先用檔首 `Section Router`，actor責任問題直達 `Repository Actor Topology / Maintenance Ownership`；Project AI mode本身仍由 `PROJECT_MODES.md` 擁有
-- GitHub Connect／repository-native connector 的具體操作、repository acquisition、large/opaque verified transport、Git object mutation、remote deterministic bridge、GitHub Actions execution/evidence、artifact lifecycle、tag／Release publication
-  → `GITHUB_OPERATIONS.md`；本檔只選 GitHub-specific route／recipe，actor／write／credential authority仍回 `REPOSITORY_EXECUTION.md`，validation／PASS scope仍回 `DEBUG_VALIDATION.md`
-- 除錯、根因、重試、驗證、evidence lifecycle、後續 evidence 與歷史判斷／紀錄 reconciliation
-  → `DEBUG_VALIDATION.md`；先用檔首 `Section Router`
-- 研究、新技術／協定、architecture、target/capability、state/lifecycle、ownership
-  → `RESEARCH_ARCHITECTURE.md`；先用檔首 `Section Router`
-- 嵌入式／硬體／板級／硬體驗證差異
+  → `CAPABILITY_INDEX.md`；需要 machine discovery 才用 `PLAYBOOK_INDEX.json`，negative-claim semantics回 `AI_CONTEXT.md`
+- External spec／change workflow／skills runtime／agent-governance interoperability
+  → `INTEROPERABILITY.md`
+- Semantic identity／derived authority／instruction-vs-data／provenance／lineage／temporal semantics／unknown／scope-qualified status／snapshot consistency／search-hit authority
+  → `INFORMATION_INTEGRITY.md`
+- Codex execution／model／Reasoning／Context／tool scheduling／delegation／cost／reporting
+  → `CODEX_EXECUTION.md` → Section Router；一旦 Codex execution active，該檔宣告的 reporting contract屬 cross-cutting prerequisite
+- Git／Repository Identity／workspace／permission／actor topology／write boundary／coordination write authority
+  → `REPOSITORY_EXECUTION.md` → Section Router
+- GitHub-specific repository acquisition／verified transport／Git object mutation／Actions／artifact／tag／Release
+  → `GITHUB_OPERATIONS.md` → Section Router
+- 除錯／root cause／retry／validation／evidence lifecycle／completion claim
+  → `DEBUG_VALIDATION.md` → Section Router
+- research／new technology／protocol／architecture／target-capability／state-lifecycle／ownership
+  → `RESEARCH_ARCHITECTURE.md` → Section Router
+- embedded／hardware／board-level／hardware validation
   → `EMBEDDED_PROJECTS.md`
-- UI／UX／人機互動／i18n／design-system adaptation
+- UI／UX／HMI／i18n／design-system adaptation
   → `UI_UX.md`
-- 本機工具鏈、runtime、PowerShell／Windows contract
+- local toolchain／runtime／PowerShell／Windows contract
   → `TOOLCHAIN.md`
-- 維護本手冊自身
-  → `AGENTS.md` + `AI_CONTEXT.md` → `AI Readability / Retrieval Cost Change Gate`；若建立在 whole-Playbook capability／absence review，先讀 `CAPABILITY_INDEX.md`
+- 維護本 Playbook自身
+  → `AGENTS.md` + `AI_CONTEXT.md` → `AI Readability / Retrieval Cost Change Gate`；只有 whole-Playbook capability／absence review才先讀 `CAPABILITY_INDEX.md`
 
-若同一 Task 跨兩個主題，只讀真正參與本次 decision／execution／validation 的 sections；Cross-owner review 也不是 full scan 授權，coverage 只擴張到足以支持本次 claim。
+同一 Task跨 owner時，只讀真正參與本次 Tier 1–4 decision／action／evidence closure 的 sections；Cross-owner review不是 full-scan授權。若 owner內有 Section Router，先用它；足夠即 STOP。
 
 ## 權威與執行注意
 
