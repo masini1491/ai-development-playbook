@@ -478,6 +478,7 @@ Short-launch 的 Stage pointer 必須來自**最後一次 current canonical Hot 
 
 ```text
 Repository: <owner/repo>
+Branch: <expected branch, usually main>
 
 Read the latest project governance and execute only:
 `<Hot path> → <exact Stage identity from current canonical read-back>`.
@@ -497,7 +498,7 @@ Launch-time material delta若尚未 canonicalize且確實會改變 execution，�
 
 ```text
 Repository: <owner/repo>
-Branch / base intent: <only when material>
+Branch: <expected branch, usually main>
 
 Task:
 <one bounded executable goal>
@@ -527,12 +528,13 @@ Read the latest project governance first and do not expand beyond this task.
 1. **Actor check**：current responsibility／authority仍需要 Codex handoff。若 premise 已改變，回到 `Actor Admission / Handoff Gate`；不得因 Prompt已寫好就照送。
 2. **Persistence closure**：若 current work 依本檔 admission rules 屬 durable／tracked Stage，且 ChatGPT 具有 current coordination write authority，先完成必要 Hot admission／revision與 canonical read-back；**不得把 Prompt 當 Stage persistence surface**。反之，一次性、低風險、低 tracking value work 不得為了本 gate 被強迫建立 Hot task。
 3. **Prompt-mode check**：若 current Hot coordination已有可執行 Stage且 Codex能取得該 Stage／authority，最終草稿必須是 `TASKS Short-launch`；沒有 Hot Stage且符合一次性 bounded條件時才使用 `Direct Short Prompt`；`Standalone Full Prompt` 必須能指出本檔已列出的至少一個 explicit exception。
-4. **Exact-pointer check（Short-launch）**：Stage pointer來自最後一次 current canonical Hot read-back，且 path + Stage identity可直接回查；不得自行 paraphrase／縮寫／猜測 Stage名稱。若剛做 Hot revision卻尚未 read-back，先完成 read-back再產 Prompt。
-5. **Launch-settings presence check**：若 final response 正在交付 user-facing Codex handoff，且 `Prompt 建議設定與固定資訊` 沒有 explicit exemption，確認 final draft 已在 executable Prompt 外提供 `Root model`、`Root reasoning`、`Why`、`Cheap-model evidence pass`；`Context / execution mode` 仍只在 material 時 required。**沒有產生 launch settings 不能因「沒有放錯位置」而通過下一項 separation check。**
-6. **Artifact-separation check**：root model／reasoning、推薦理由、cheap-model evidence-pass與其他 user launch settings在 fenced Prompt外；planning-only `Child Delegation Forecast: NONE` 不得進 executable body。POSSIBLE／STRONG_CANDIDATE forecast與 child-routing authorization只有 materially需要且 repository authority未已提供等價資訊時才用最低充分文字 transport。
-7. **Reference / duplication check**：逐段檢查 final draft 是否重複 Codex 可由 current repository取得的 TASKS／dossier／AGENTS／spec／validation owner／protocol detail／hardware evidence／root-cause history／長 exclusions 或其他 canonical content。能由 pointer可靠取得的內容刪除重複正文，只保留 launch-time material delta。
-8. **Full-Prompt exception check**：若 draft 是 Standalone Full，明確確認「為什麼 reference不足」；只有 self-contained／比較保險／資訊很重要／前面研究很多，都不是 exception。
-9. **Fail-closed repair**：任一檢查不合格時，先修正 persistence、重新選 mode、refresh exact pointer或縮減／重生 Prompt，然後重新檢查。**技術內容正確不能豁免 delivery contract；未通過本 gate 的 Prompt 不得送出。**
+4. **Repository-identity presence check**：每一份 executable Codex Prompt 都必須明確包含 `Repository: <owner/repo>` 與 `Branch: <expected branch>`，且值來自 current repository／task authority；不得省略 branch、保留 placeholder、或用模糊的 base intent 取代 expected branch。這是 `REPOSITORY_EXECUTION.md` → `Repository Identity Gate` 的 artifact-level closure。
+5. **Exact-pointer check（Short-launch）**：Stage pointer來自最後一次 current canonical Hot read-back，且 path + Stage identity可直接回查；不得自行 paraphrase／縮寫／猜測 Stage名稱。若剛做 Hot revision卻尚未 read-back，先完成 read-back再產 Prompt。
+6. **Launch-settings presence check**：若 final response 正在交付 user-facing Codex handoff，且 `Prompt 建議設定與固定資訊` 沒有 explicit exemption，確認 final draft 已在 executable Prompt 外提供 `Root model`、`Root reasoning`、`Why`、`Cheap-model evidence pass`；`Context / execution mode` 仍只在 material 時 required。**沒有產生 launch settings 不能因「沒有放錯位置」而通過下一項 separation check。**
+7. **Artifact-separation check**：root model／reasoning、推薦理由、cheap-model evidence-pass與其他 user launch settings在 fenced Prompt外；planning-only `Child Delegation Forecast: NONE` 不得進 executable body。POSSIBLE／STRONG_CANDIDATE forecast與 child-routing authorization只有 materially需要且 repository authority未已提供等價資訊時才用最低充分文字 transport。
+8. **Reference / duplication check**：逐段檢查 final draft 是否重複 Codex 可由 current repository取得的 TASKS／dossier／AGENTS／spec／validation owner／protocol detail／hardware evidence／root-cause history／長 exclusions 或其他 canonical content。能由 pointer可靠取得的內容刪除重複正文，只保留 launch-time material delta。
+9. **Full-Prompt exception check**：若 draft 是 Standalone Full，明確確認「為什麼 reference不足」；只有 self-contained／比較保險／資訊很重要／前面研究很多，都不是 exception。
+10. **Fail-closed repair**：任一檢查不合格時，先修正 persistence、重新選 mode、refresh exact pointer或縮減／重生 Prompt，然後重新檢查。**技術內容正確不能豁免 delivery contract；未通過本 gate 的 Prompt 不得送出。**
 
 這個 gate 檢查的是 Prompt artifact 是否符合已成立的 workflow state，不取代前面的 admission／authority／freshness decision，也不要求建立字數、token 或 keyword hard limit。若未來 execution surface提供可靠 structured-output validator，可用它檢查可機械判定的部分；semantic duplication／mode適用性仍依本 contract判斷，不假裝簡單長度 heuristic等價於 compliance。
 

@@ -89,7 +89,11 @@ User-facing rendering可保持 compact，但不得丟失兩個維度：
 
 Codex送出 substantive user-facing reply前，先執行 `REPORTING.md` → `Shared Reporting Pre-Send Gate`。
 
-Codex-specific extension只有：completion／final report若適用，必須在 shared gate 的 actor-extension check確認 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 與 `Child profile override: NONE | USED` 已依上節完整呈現，並放在 task result／validation／remaining-gap之後、final reporting timestamp之前。
+Codex-specific actor-extension check依 reply condition分開處理：
+
+- **Completion／final report**：確認 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 與 `Child profile override: NONE | USED` 已依上節完整呈現，並放在 task result／validation／remaining-gap之後、final reporting timestamp之前。
+- **Root-escalation STOP report**：確認 final draft 已呈現 root cause／observability、completed validation、remaining blocker、recommended root model + reasoning、evidence handoff與 user relaunch decision boundary；不得只寫「建議升級模型」或只給 profile名稱而漏掉 blocker／evidence closure。
+
 
 這個 extension不重建 shared language、result visibility、scope fidelity、timestamp source/render或final-line policy；shared gate PASS也不證明 underlying Git／validation／completion claim為真。
 
@@ -226,6 +230,20 @@ Codex 無權自行換 **root** model／reasoning。達到 root escalation condit
 4. 列出已完成 validation 與 remaining blocker
 5. 建議下一 root model／推理強度
 6. 由使用者決定是否重新 launch
+
+當上述 root escalation 形成 substantive user-facing STOP reply 時，最低充分內容必須完整保留；預設可用下列 compact shape：
+
+```text
+STOP — root escalation required
+Root cause / observability: <established cause or bounded observability state>
+Completed validation: <minimum sufficient completed evidence>
+Remaining blocker: <what the current root profile cannot safely finish>
+Recommended root profile: <model> / <reasoning>
+Evidence handoff: <current Git/worktree/test/log/evidence pointer or bounded summary>
+Decision needed: <user decides whether to relaunch>
+```
+
+這是 condition-triggered rendering，不是所有 Codex completion／progress 的固定模板；等價 wording 可以使用，但不得漏掉 applicable required elements。若同一則訊息同時符合 completion／final report，仍在 timestamp 前依 `Child Profile Override 回報（Completion / Final）` 補 actor-specific transparency。
 
 已明確授權且通過 delegation gate 的 child profile override 不等同 root escalation；它只服務該 bounded child subtask。換 root model 後沿用既有 evidence，不得只因換模型就重新 repo-wide exploration。
 
