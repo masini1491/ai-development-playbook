@@ -205,7 +205,24 @@ Progressive Routing 可以省略與目前工作無關的 owner／section，但**
 - **Closure ≠ execution evidence。** 讀完／解析完 governing contract只代表 action 可以開始；實際 artifact、tool result、mutation、validation、reporting 或 completion 是否合規，仍由對應 owner 的 post-action／pre-send／read-back／completion gate驗證。
 - **Existing pre-action gate remains authoritative.** Repository identity、workspace capability、runtime capability、GitHub response-shape、delegation、validation或其他 owner 已有更具體 pre-action contract時，直接依該 owner執行；本節只提供共通 sequencing invariant，不建立第二份 domain policy。
 
-核心原則：**Progressive reading permits selective loading, not partial compliance. Close the minimum canonical contract before crossing the action boundary；未 closure 就不開始該 action。**
+#### Required Artifact Contract Closure
+
+當 action 最終產生 **user-facing、handoff、executable、machine-consumed 或 completion-driving artifact**，且 applicable canonical owner 已宣告 required elements／metadata／authorization／identity／evidence fields 時，final artifact 必須對每一個 applicable requirement 完成最低充分 closure；不得只驗格式或位置就假設內容已存在。
+
+通用檢查順序：
+
+`Applicability → Presence → Placement → Authority / Evidence Source → Content Boundary → Final Artifact Closure`
+
+- **Applicability**：先確認 requirement 是否真的適用於 current actor／mode／artifact／condition；optional 或 condition-triggered element 不因本節被升格成 universal required field。
+- **Presence before placement**：適用的 required element 必須真的存在。**Placement check 永遠不能替代 presence check；缺失的 element 不會只因「沒有放錯位置」就 PASS。**
+- **Placement**：required element 存在後，再確認它位於正確 surface／field／copy boundary；例如 UI launch metadata、executable body、machine manifest、final report 可以有不同 placement contract。
+- **Authority / Evidence Source**：artifact 只能承載已由 applicable authority／evidence 建立的 identity、authorization、status 或 recommendation；不得因 artifact 需要某欄位就自行製造 authority、補猜 current state 或把 presentation surface 升格成 truth owner。
+- **Content Boundary**：required element 必須帶到最低充分、可用的語義；空殼 placeholder 不算 closure，也不得為了「完整」把 repository-owned canonical contract／history／evidence 全文複製進 artifact。
+- **Final Artifact Closure**：pre-send／pre-execution／completion gate 若適用，必須對**最後實際要送出／執行／持久化的 artifact**檢查上述 closure；planning 階段曾經考慮過某 element，不等於 final artifact 仍包含它。
+
+各 domain owner 繼續擁有「哪些 element 在何種條件下 required、合法 exemption、實際 shape 與 evidence semantics」；本節只提供共通 closure method，不建立 universal artifact schema、固定欄位清單或第二份 domain policy。
+
+核心原則：**Progressive reading permits selective loading, not partial compliance. Close the minimum canonical contract before crossing the action boundary；對 applicable required artifact element，先證明 presence，再檢 placement／authority／content boundary，最後以實際 final artifact closure。**
 
 ### Absence Claim Coverage Gate
 
