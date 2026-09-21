@@ -6,6 +6,17 @@
 
 Git／permission、Conversation-scoped Repository Write Lock、ChatGPT 實際可直接修改哪些 path，仍由 `REPOSITORY_EXECUTION.md` 決定；本檔不授權任何 mutation。
 
+## Section Router
+
+- default-load／Always-on／Hot-Cold-Evidence-Current-Historical surface model → `AI Context Surface Model`、`Always-on Context Admission`
+- instruction applicability／model-runtime evolution → `Instruction Applicability Lifecycle／Model-Upgrade Audit`
+- information responsibility／control-data plane → `Information Surface Responsibility`、`Cross-Actor Control / Data Plane Separation`
+- new surface admission／cohesion／progressive direct-leaf routing → `Independent Retrieval Intent Gate`、`Context Cohesion Gate`、`Progressive Routing／Direct-leaf Bypass`
+- pre-action closure／absence claim／fail-fast ordering → `Action Contract Closure`、`Absence Claim Coverage Gate`、`Fail-fast Context Ordering`
+- routing metadata／routing closure／AI-facing route regression → `Thin Routing Metadata`、`Routing Integrity Contract`、`Generated Routing Metadata／Drift Check`
+- Hot／Cold coordination、dossier、evidence、history、freshness與 canonicalization → `Hot / Cold Coordination Semantics`、`Hot Task Dossier`、`Evidence Staging Surface`、`Historical / Search-noise Isolation`、`Current Snapshot Freshness`、`Canonicalization → Surface Slimming`
+- derived metadata write closure／retention／retrieval cost／hot-path growth → `Derived Metadata Write-Closure Gate`、`Retention / Reconstruction Integration`、`AI Readability / Retrieval Cost Change Gate`
+
 ## 核心目標
 
 > **Repository 應讓 AI 以最低充分 retrieval cost 找到唯一、最新、足夠的 authority。Correctness、authority clarity 與 AI retrieval efficiency 都是 maintainability 的一部分。**
@@ -265,7 +276,24 @@ Top-level router 的大小應主要隨穩定 domain / owner 數量成長，不�
 
 人類標題可以改善、翻譯或改 wording，而不應無必要破壞 machine routing identity。
 
-## AI-facing Surface Maintenance Trigger／Routing Integrity Check
+## Routing Integrity Contract
+
+Routing correctness 不只表示「target file 存在」。對任何 AI-facing bootstrap／router／manifest／index／stable pointer，應能以最低充分 evidence 證明：**declared intent 能到達實際存在、語意適用、authority 唯一且不無理由惡化 hot path 的 canonical destination。**
+
+本 contract 是跨專案方法論，不規定 universal `CHAT_INIT.md`、`PLAYBOOK_INDEX.json`、Section Router、manifest schema或 checker。每個 adopter 應把自己的 bootstrap、router、manifest、canonical owner與 ordinary hot path 對應到下列檢查；小型 direct-reference repository 可用 bounded manual review，大型／高頻 repository 才在有實益時建立 project-local deterministic checker。
+
+Routing integrity 分成四個互補層級：
+
+- **Structural routing integrity**：宣告的 path／owner／section／stable ID／router destination 真實存在、可解析且沒有非法 duplicate／broken edge。這類 objective invariant 適合 deterministic `FAIL`。
+- **Discovery closure**：會 materially 改變 **activation、owner selection、actor selection、authority、execution、validation 或 ordinary hot-path loading** 的 first-order routing decision，至少要有一條 bounded、可發現的 current route；不得要求模型先猜到某 owner 適用，才能找到會告訴它該 owner 適用的規則。
+- **Authority / hot-path integrity**：route 不得建立第二份 policy/state authority，也不得只為形式讓 ordinary task 多載 global owner、額外 hop或重複 reconciliation。`Routing completeness ≠ every rule indexed`；leaf rule不因存在就必須升格為 global capability ID。
+- **Behavioral routing correctness**：當「這個 intent 是否會命中正確 upstream decision」無法由 structure alone 證明時，用 bounded fresh-session／scenario evidence驗證；static pointer PASS 不得冒充 semantic routing PASS。Behavioral evaluation semantics仍由 `DEBUG_VALIDATION.md` 擁有。
+
+Routing-affecting mutation 建議依序 closure：
+
+`affected intent → expected entry surface → structural edge / target check → first-order discovery closure when applicable → authority uniqueness → ordinary hot-path cost → deterministic routing check when admitted → behavioral regression only when structural evidence is insufficient`
+
+### Maintenance Trigger / Growth Budget
 
 AI-friendly repository 不能只在第一次設計時成立；bootstrap、router、registry、index、coordination surface 與 canonical owner 會隨專案成長，因此應有 **repository-defined growth budget／maintenance trigger**，在 AI 讀取路徑開始退化前觸發 bounded information-architecture review。
 
@@ -289,7 +317,9 @@ Budget／trigger 可依 repository 規模與使用型態定義，例如：
 
 至少確認：
 
+- routing surface 宣告的 file／owner／section／router／stable ID destination 真實存在且語意適用；「file exists」不足以證明其宣告的 nested router／section也存在；
 - 新 target 可由預期 entry path 命中，不需要依賴模型猜 path／舊聊天室／全 repo 搜尋；
+- 若 mutation涉及 first-order routing decision，human／machine／project-native discovery surface至少有一條符合實際 consumer 的 bounded route；不要求所有 leaf rule都被全域索引；
 - 只更新必要 router／index，不因單一 leaf mutation製造全域 derived churn；
 - current authority 沒有被 historical／cold／superseded route 重新暴露或混合加權；
 - parent／child、dependency、conditional pointer 等會改變 task identity／scope 的關係仍完整；
@@ -498,6 +528,8 @@ Project 一旦新增 BACKLOG、task dossier、evidence staging 或其他 durable
 ## AI Readability / Retrieval Cost Change Gate
 
 新增、刪除、搬移、拆分、合併規則／文件／source boundary／router／coordination surface 時，除了 correctness 與 authority，也必須檢查 AI retrieval impact。
+
+若正在檢討 **adopter repository 的 ordinary AI hot path**，先確認 shared Playbook activation 是否本來就屬於該 hot path；project-native conditional-activation semantics仍由 `ACTIVATION_ADAPTERS.md` → `Conditional Activation / Adoption ≠ Activation` 擁有。不要先假設 Playbook 已 activation，再只優化 activation 後的 router／manifest／Context。
 
 至少問：
 

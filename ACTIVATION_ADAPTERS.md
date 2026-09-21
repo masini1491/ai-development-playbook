@@ -14,11 +14,15 @@ A host-specific adapter is optional when the runtime's native instruction discov
 
 Retain a host-specific adapter only when it still provides a distinct routing, activation, precedence, or compatibility responsibility that native discovery does not reproduce. Native host support therefore creates a retirement / narrowing trigger, not automatic deletion authority.
 
+### Conditional Activation / Adoption ≠ Activation
+
 **Adoption ≠ unconditional activation。** 若 current project governance 已明確提供 project-native bootstrap／task classifier，用來先判定本次 task 是否需要 shared Playbook governance，runtime 可先走該 project-native gate；若 gate 判定本題不需 Playbook，留在 project-native route，不為了「已採用 Playbook」額外讀 `AGENTS.md`、probe Playbook baseline 或進入 Playbook `CHAT_INIT.md`。只有 gate 判定需要 activate Playbook 時，才讀 current adoption state、resolve declared baseline，並進入上述 generic activation route。
 
 這個 conditional-activation exception 必須來自**目前可驗證的 project governance／bootstrap**，不得由 host instruction、舊聊天、memory、repository shape 或模型自己推測。Project 沒有明確 conditional gate、該 gate 無法 current-read，或本次 task 本身就是 project governance／adoption／mode／repository-maintenance 判斷時，維持 generic `AGENTS.md`-first route。
 
 **Shared reporting 是窄化的 adoption-level exception。** 若 current project governance採用 shared `REPORTING.md` contract，substantive user-facing engineering reply即使在 project-native route中仍遵守該 contract；需要完整規則時只 direct-leaf 到 declared baseline 的 `REPORTING.md`，不因此進入 `CHAT_INIT.md` 或 activate其他 shared owners。Reporting applicability不建立 Task／write／execution／permission／validation authority。
+
+### Bootstrap identity / baseline boundary
 
 若 requested project 不是目前已驗證 workspace：不要用舊聊天、memory、repository name 或相似專案內容補成 current state。Runtime 支援 workspace / folder selection 或 access request 時，先請使用者開啟、選取或授權正確 project workspace，再重新執行 repository identity verification；不得自行掃描無關 filesystem、切換、clone 或猜測另一個 repository。詳細 repository identity / permission gate 仍由 `REPOSITORY_EXECUTION.md` 擁有。
 

@@ -125,6 +125,8 @@ Tier 4 — Completion Evidence Closure
   → `CHATGPT_RUNTIME_EXECUTION.md`
 - Fresh ChatGPT／Codex session 出現 repository identity、floating baseline、undeclared mode、unexpected broad bootstrap、capability-as-authority 或其他 host-activation anomaly
   → 先 project／canonical reconciliation；仍合理懷疑 host-instruction drift 才讀 `ACTIVATION_ADAPTERS.md`
+- 已 activation Playbook 的 adopter-architecture review若在檢查 ordinary-task hot path／conditional Playbook activation／activation cost
+  → `ACTIVATION_ADAPTERS.md` → `Conditional Activation / Adoption ≠ Activation`；若同時檢查 project routing／Context architecture，再讀 `AI_CONTEXT.md` → `Routing Integrity Contract`／`AI Readability / Retrieval Cost Change Gate`。這是 architecture-review route，不代表 ordinary task本身應先 activate Playbook。
 - AI Context lifecycle／Always-on-Hot-Cold-Evidence-Historical／routing／retrieval cost／Action Contract Closure
   → `AI_CONTEXT.md` → Section Router
 - Whole-repository capability discovery／repository-level absence claim

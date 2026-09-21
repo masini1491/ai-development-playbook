@@ -93,6 +93,22 @@ If this file or the host's native behavior conflicts with current repository can
         diagnostics = playbook_check.check_repository(root)
         self.assertEqual(["ROUTER_OWNER"], [item.code for item in diagnostics])
 
+    def test_chat_init_declared_section_router_requires_owner_router(self) -> None:
+        root = self.make_repo({
+            "CHAT_INIT.md": "# Init\n\n## 最低必要路由\n\n- context\n  → `AI_CONTEXT.md` → Section Router\n",
+            "AI_CONTEXT.md": "# Context\n\n## Existing Section\n",
+        })
+        diagnostics = playbook_check.check_repository(root)
+        self.assertEqual(["ROUTER_SECTION"], [item.code for item in diagnostics])
+        self.assertIn("Declared Section Router missing", diagnostics[0].message)
+
+    def test_chat_init_declared_section_router_passes_when_owner_has_router(self) -> None:
+        root = self.make_repo({
+            "CHAT_INIT.md": "# Init\n\n## 最低必要路由\n\n- context\n  → `AI_CONTEXT.md` → Section Router\n",
+            "AI_CONTEXT.md": "# Context\n\n## Section Router\n\n- context → `Existing Section`\n\n## Existing Section\n",
+        })
+        self.assertEqual([], playbook_check.check_repository(root))
+
     def test_unclosed_fence_fails(self) -> None:
         root = self.make_repo({"README.md": "# Demo\n\n```text\nnot closed\n"})
         diagnostics = playbook_check.check_repository(root)

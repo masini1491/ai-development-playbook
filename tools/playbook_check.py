@@ -266,6 +266,11 @@ def _check_chat_init_router(path: Path, root: Path, text: str) -> list[Diagnosti
                 resolved = (root / target).resolve()
                 if not resolved.exists():
                     diagnostics.append(Diagnostic(_relative_display(path, root), index + 1, "ROUTER_OWNER", f"Missing canonical owner target: {target}"))
+                    continue
+                if "→ Section Router" in line:
+                    owner_lines = resolved.read_text(encoding="utf-8").splitlines()
+                    if not _section_ranges(owner_lines, "Section Router"):
+                        diagnostics.append(Diagnostic(_relative_display(path, root), index + 1, "ROUTER_SECTION", f"Declared Section Router missing from owner: {target}"))
     return diagnostics
 
 

@@ -64,6 +64,12 @@
       "kind": "routing"
     },
     {
+      "id": "activation.project-native-conditional",
+      "owner": "ACTIVATION_ADAPTERS.md",
+      "section": "Conditional Activation / Adoption ≠ Activation",
+      "kind": "contract"
+    },
+    {
       "id": "activation.chatgpt-host-instruction-health",
       "owner": "ACTIVATION_ADAPTERS.md",
       "section": "ChatGPT Host Instruction Health Check",
@@ -109,6 +115,18 @@
       "id": "context.repository-memory",
       "owner": "AI_CONTEXT.md",
       "section": "AI Context Surface Model",
+      "kind": "contract"
+    },
+    {
+      "id": "context.routing-integrity",
+      "owner": "AI_CONTEXT.md",
+      "section": "Routing Integrity Contract",
+      "kind": "contract"
+    },
+    {
+      "id": "context.retrieval-architecture",
+      "owner": "AI_CONTEXT.md",
+      "section": "AI Readability / Retrieval Cost Change Gate",
       "kind": "contract"
     },
     {
