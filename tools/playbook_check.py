@@ -352,11 +352,17 @@ def _check_cross_agent_adapters(root: Path) -> list[Diagnostic]:
             diagnostics.append(Diagnostic(relative, 1, "CROSS_AGENT_ADAPTER", f"Adapter exceeds thin-shim limit of {CROSS_AGENT_MAX_LINES} lines"))
 
     if len(texts) == len(CROSS_AGENT_ADAPTERS):
-        normalized = []
+        normalized_shared = []
+        shared_marker = "## Bootstrap"
         for relative, host in CROSS_AGENT_ADAPTERS.items():
-            normalized.append(texts[relative].replace(host, "<HOST>"))
-        if len(set(normalized)) != 1:
-            diagnostics.append(Diagnostic("CLAUDE.md", 1, "CROSS_AGENT_ADAPTER", "Cross-agent adapters drift: bodies must remain identical except for host identity"))
+            text = texts[relative]
+            marker_index = text.find(shared_marker)
+            if marker_index < 0:
+                diagnostics.append(Diagnostic(relative, 1, "CROSS_AGENT_ADAPTER", f"Missing shared adapter section: {shared_marker}"))
+                continue
+            normalized_shared.append(text[marker_index:].replace(host, "<HOST>"))
+        if len(normalized_shared) == len(CROSS_AGENT_ADAPTERS) and len(set(normalized_shared)) != 1:
+            diagnostics.append(Diagnostic("CLAUDE.md", 1, "CROSS_AGENT_ADAPTER", "Cross-agent adapters drift: shared bootstrap/authority bodies must remain identical except for host identity"))
 
     return diagnostics
 

@@ -123,6 +123,15 @@ If this file or the host's native behavior conflicts with current repository can
         root = self.make_repo(self.valid_adapter_files())
         self.assertEqual([], playbook_check.check_repository(root))
 
+    def test_cross_agent_adapter_allows_host_specific_preamble(self) -> None:
+        files = self.valid_adapter_files()
+        files["CLAUDE.md"] = files["CLAUDE.md"].replace(
+            "## Bootstrap",
+            "Claude Code may need a host-specific bootstrap override before the shared contract.\n\n## Bootstrap",
+        )
+        root = self.make_repo(files)
+        self.assertEqual([], playbook_check.check_repository(root))
+
     def test_cross_agent_adapter_missing_file_fails(self) -> None:
         files = self.valid_adapter_files()
         del files["GEMINI.md"]
