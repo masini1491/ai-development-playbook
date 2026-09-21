@@ -24,6 +24,7 @@
 - ordinary task 即使經 project-native gate 判定不需要其他 shared Playbook governance，substantive user-facing reply 仍遵守本 reporting contract；
 - 這不會 activate `CHAT_INIT.md`、Git／validation／research／Codex execution 或其他 shared owner；
 - project governance只需保存 thin pointer；需要完整規則時可 direct-leaf 到 declared Playbook baseline 的本檔，不為 reporting 目的掃描整份 Playbook；
+- 若 declared baseline 是 moving ref，reporting direct-leaf 只需以最低成本把本檔的 target identity 解析到足以支持本次 reporting action 的 exact revision；這個 bounded identity/read 不等於 shared Playbook activation，也不要求進入 `CHAT_INIT.md` 或載入其他 shared owner。同一 session 已驗證的 reporting revision 可重用，直到使用者要求 latest、觀察到 baseline 變更，或其他 material freshness evidence 出現；不要只因每次要回覆就重跑 whole-Playbook bootstrap。
 - reporting applicability 不建立或擴張 Task、write、execution、permission、credential、deployment、validation 或 completion authority；
 - 使用者當次或 project authority 可以覆蓋語言、時區、格式等 presentation preference，但不得用 presentation override 改寫 evidence／status／validation truth。
 
