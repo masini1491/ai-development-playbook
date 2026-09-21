@@ -158,7 +158,7 @@ GitHub 具體執行 recipe 見 [`GITHUB_OPERATIONS.md`](GITHUB_OPERATIONS.md) �
 
 - **Project AI mode and actor admission** — choose `ChatGPT-Only` or `ChatGPT+Codex`, then apply lower-level repository authority.
 - **Conditional activation** — adopted projects can keep low-cost project-native hot paths for tasks that do not need shared governance.
-- **Context architecture** — Always-on / Hot / Cold / Evidence / Current / Historical responsibilities and progressive routing.
+- **Context and routing architecture** — Always-on / Hot / Cold / Evidence / Current / Historical responsibilities, progressive routing, routing integrity, and discovery closure.
 - **Repository and authority integrity** — current identity, path/action authority, permission boundaries, read-back, and source-vs-derived distinctions.
 - **Task admission and coordination** — observation/recommendation/admitted-work separation, task identity, Stage boundaries, follow-up/new-work control.
 - **Validation and evidence** — deterministic checks, behavioral evaluation, hardware/runtime/production evidence, completion reconciliation.
@@ -170,7 +170,7 @@ GitHub 具體執行 recipe 見 [`GITHUB_OPERATIONS.md`](GITHUB_OPERATIONS.md) �
 
 - **Project AI mode 與角色納入**：先選 `ChatGPT-Only`／`ChatGPT+Codex`，再套用較低層級的儲存庫權限規則。
 - **條件式啟用**：已採用 Playbook 的專案，可以讓不需要共用治理規則的任務維持低成本的專案原生 hot path。
-- **Context 架構**：Always-on／Hot／Cold／Evidence／Current／Historical 的責任分工與漸進式 routing。
+- **Context 與 routing 架構**：Always-on／Hot／Cold／Evidence／Current／Historical 的責任分工、漸進式 routing、routing integrity 與 discovery closure。
 - **儲存庫與權威完整性**：目前身分、路徑／操作權限、權限邊界、read-back，以及來源資料與衍生資料的區分。
 - **任務納入／協調**：區分觀察、建議與已正式納入的工作，並管理任務身分、Stage 邊界與 follow-up／new-work 控制。
 - **驗證／證據**：確定性檢查、行為評估、hardware/runtime/production 證據與完成狀態核對。
@@ -355,7 +355,7 @@ Product UI names, field limits, and available persistent-instruction surfaces ca
 
 **English**
 
-Adoption Doctor is a deterministic, read-only, report-only check of a target project's Playbook adoption and routing contract.
+Adoption Doctor is a deterministic, read-only, report-only check of a target project's Playbook adoption declarations and bootstrap wiring. It does **not** prove the full `AI_CONTEXT.md` Routing Integrity Contract, discovery closure, hot-path quality, or behavioral routing correctness.
 
 Local Path Mode:
 
@@ -369,7 +369,7 @@ If exact materialization cannot be verified, report the acquisition/materializat
 
 **繁體中文**
 
-Adoption Doctor 是確定性、唯讀、只產生報告的 Playbook 採用／routing contract 檢查器。
+Adoption Doctor 是確定性、唯讀、只產生報告的 Playbook 採用宣告／bootstrap wiring 檢查器；它**不會**證明 `AI_CONTEXT.md` 的完整 Routing Integrity Contract、discovery closure、hot-path 品質或 behavioral routing correctness。
 
 本機模式：
 
@@ -455,10 +455,10 @@ Humans normally do not need to read these files in order. This map shows the mai
 |---|---|
 | [`AGENTS.md`](AGENTS.md) | Maintainer authority for this Playbook repository; human-surface contract; self-maintenance/write/execution boundaries |
 | [`CHAT_INIT.md`](CHAT_INIT.md) | Minimum Playbook bootstrap/task router after activation; repository-read recovery |
-| [`PROJECT_MODES.md`](PROJECT_MODES.md) | `ChatGPT-Only` / `ChatGPT+Codex`; mode-is-not-tier semantics; minimum ChatGPT capability floor; Free cold-start target |
-| [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) | Thin host/runtime activation adapters, conditional activation, loading contract, health checks |
+| [`PROJECT_MODES.md`](PROJECT_MODES.md) | `ChatGPT-Only` / `ChatGPT+Codex`; mode-is-not-tier semantics; minimum-sufficient ChatGPT capability floor |
+| [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) | Thin host/runtime activation adapters, conditional activation, ChatGPT cold-start compatibility target, loading contract, health checks |
 | [`CLAUDE.md`](CLAUDE.md) / [`GEMINI.md`](GEMINI.md) / [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Thin project-level host compatibility shims; bootstrap handoff only, not policy or execution authority |
-| [`AI_CONTEXT.md`](AI_CONTEXT.md) | Context/information architecture, progressive routing, retrieval cost, Always-on/Hot/Cold/Evidence/Historical lifecycle |
+| [`AI_CONTEXT.md`](AI_CONTEXT.md) | Context/information architecture, progressive routing, routing integrity/discovery closure, retrieval cost, Always-on/Hot/Cold/Evidence/Historical lifecycle |
 | [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | Identity, provenance, source-vs-derived authority, snapshot/search-hit/evidence guards |
 | [`REPORTING.md`](REPORTING.md) | Cross-actor, cross-workflow, activation-independent user-facing reporting, timestamp, progress-integrity and pre-send contract |
 | [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT planning/coordination, work and actor admission, Codex launch settings / Prompt handoff, session compaction/rehydration, result reconciliation, ChatGPT-specific delivery delta |

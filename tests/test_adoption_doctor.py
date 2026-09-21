@@ -27,7 +27,7 @@ class AdoptionDoctorTests(unittest.TestCase):
 Playbook baseline: `main`
 Project AI mode: `ChatGPT+Codex`
 
-新 session 讀取 `CHAT_INIT.md`。
+需要 shared Playbook activation 時，進入 `CHAT_INIT.md`。
 
 ## Authority boundary
 
@@ -86,10 +86,20 @@ project-specific authority 與 common Playbook 衝突，以 project-specific aut
         self.assertIn("PLAYBOOK_DECLARATION_MISSING", codes)
 
     def test_missing_bootstrap_route_fails(self) -> None:
-        text = self.healthy_agents().replace("新 session 讀取 `CHAT_INIT.md`。\n", "")
+        text = self.healthy_agents().replace("需要 shared Playbook activation 時，進入 `CHAT_INIT.md`。\n", "")
         root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
-        codes = [item.code for item in adoption_doctor.check_project(root)]
+        findings = adoption_doctor.check_project(root)
+        codes = [item.code for item in findings]
         self.assertIn("BOOTSTRAP_ROUTING_MISSING", codes)
+        finding = next(item for item in findings if item.code == "BOOTSTRAP_ROUTING_MISSING")
+        self.assertIn("where shared Playbook activation is required", finding.message)
+
+    def test_bootstrap_route_pass_message_is_conditional_activation_compatible(self) -> None:
+        root = self.make_repo({"AGENTS.md": self.healthy_agents(), "TASKS.md": "# Tasks\n"})
+        findings = adoption_doctor.check_project(root)
+        finding = next(item for item in findings if item.code == "BOOTSTRAP_ROUTED")
+        self.assertIn("for shared Playbook activation", finding.message)
+        self.assertNotIn("routes new sessions", finding.message)
 
     def test_baseline_mention_without_explicit_assignment_warns(self) -> None:
         text = self.healthy_agents().replace("Playbook baseline: `main`", "需要最新規則時使用 `main`；可重現時 pin `v0.1.0`")

@@ -19,7 +19,7 @@ Only a ChatGPT session that has actually verified the required runtime / depende
 - `tools/playbook_check.py` — deterministic Markdown / routing checks.
   - Formal check: `python tools/playbook_check.py`
   - Unit tests: `python -m unittest tests/test_playbook_check.py`
-- `tools/adoption_doctor.py` — read-only / report-only adoption and routing-contract checks for a specified project repository.
+- `tools/adoption_doctor.py` — read-only / report-only adoption-declaration and bootstrap-wiring checks for a specified project repository; it does not prove full routing integrity or behavioral routing correctness.
   - Unit tests: `python -m unittest tests/test_adoption_doctor.py`
 - `tools/behavioral_eval.py` — deterministic run-record / regression-selection validation only. Behavioral scenario semantics and evidence classification remain in `DEBUG_VALIDATION.md` and `evals/README.md`; this tool does not itself judge semantic behavioral PASS.
 
