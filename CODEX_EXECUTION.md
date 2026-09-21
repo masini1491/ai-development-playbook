@@ -1,13 +1,13 @@
 # Codex 執行／成本規則（Codex Execution / Cost Rules）
 
-本檔是 **Codex／coding agent execution** 的主要 authority，負責 model / reasoning / Context / Agent / execution mode、cost / usage budgeting、tool scheduling/output discipline、escalation、Codex reporting 與 execution-side resource control。
+本檔是 **Codex／coding agent execution** 的主要 authority，負責 model / reasoning / Context / Agent / execution mode、cost / usage budgeting、tool scheduling/output discipline、escalation，以及 Codex-specific execution/reporting delta。
 
-ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready Prompt、review Codex result 與自己的回覆時間戳，改由 `CHATGPT_WORKFLOW.md` 維護。
+跨 actor user-facing reporting、timestamp與 Reporting Pre-Send Gate由 `REPORTING.md` 擁有。ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready Prompt與review Codex result則由 `CHATGPT_WORKFLOW.md` 維護。
 
 ## Section Router
 
 - root／child model profile、override authority、mixed-profile execution → `Root Profile Authority / Child Profile Override`、`Delegation Opportunity Scan`、`Subagent / Delegation Gate`、`Nested Routing / Recursive Orchestration Guard`、`Parallel Multi-Agent Gate`、`升級處理`
-- Codex user-facing language／content hierarchy／timestamp／child-delegation／child-profile summary → `Codex 回報語言`、`Codex Response Presentation Contract`、`Codex 回報時間戳`、`Child Profile Override 回報`、`Reporting Pre-Send Gate`
+- shared user-facing language／content hierarchy／timestamp／pre-send → `REPORTING.md`；Codex-specific child-delegation／child-profile transparency → `Codex Reporting Delta`、`Child Profile Override 回報`、`Codex Reporting Pre-Send Extension`
 - repository execution／Git／permission preflight → `Prompt execution gates`、`REPOSITORY_EXECUTION.md`
 - model ladder／reasoning calibration／usage budget／root fallback → `模型分工`、`推理強度校準`、`Usage window-aware execution budgeting`、`Resource-Exhaustion Root Fallback`
 - Context expansion／subagent decision／routing observability／parallelization → `Progressive Context`、`Delegation Opportunity Scan`、`Subagent / Delegation Gate`、`Nested Routing / Recursive Orchestration Guard`、`Routing Decision Observability`、`Parallel Multi-Agent Gate`
@@ -21,7 +21,7 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 
 不是選最強模型，而是選最低充分模型。
 
-本檔大部分章節仍依 Task 做 Progressive Reading；但 **Codex user-facing reporting contract 是 always-on cross-cutting contract**。只要 project `AGENTS.md`／正式 routing 已把 Codex reporting 指向本檔，每個 Codex execution 都至少必須取得本檔的「Codex 回報語言」、「Codex Response Presentation Contract」、「Codex 回報時間戳」與「Reporting Pre-Send Gate」規則，再依 Task 讀其他最低必要章節。不得因本次工作只是 MQTT、BLE、文件、maintenance、validation 或其他特定 domain，就把 reporting contract 判成無關而跳過。
+本檔大部分章節依 Task 做 Progressive Reading。**Substantive user-facing reporting 是 `REPORTING.md` 的 always-applicable cross-cutting contract**；Codex-specific owner只在需要 child delegation／profile transparency或其他 execution delta時讀本檔相關 section。不得因 current domain是 MQTT、BLE、文件、maintenance、validation 或其他特定工作，就把已適用的 shared reporting contract判成無關。
 
 ## Root Profile Authority / Child Profile Override
 
@@ -50,78 +50,13 @@ ChatGPT 如何做 TASKS admission、選 Prompt mode、產生／交付 copy-ready
 - 在 UI selection 不可觀察時，以使用者本次 launch 與 handoff旁的 user-facing Codex Launch Settings（若有）作為操作前提繼續；這些 launch metadata不必位於 executable Prompt內。必要時可提醒使用者自行確認，但不得因此阻塞原本已授權 Stage。
 - 不假設 parent / previous session 的 model 或 reasoning 設定一定被繼承。
 
-## Codex 回報語言
+## Codex Reporting Delta
 
-除非使用者當次另有指定，Codex 的**實質 user-facing 回覆**一律使用**繁體中文**，包括 analysis conclusion、progress conclusion、STOP、permission/blocker explanation、validation、error explanation、summary、completion 與 final report。
+所有 Codex substantive user-facing engineering replies先遵守 `REPORTING.md`；本檔只保存 execution actor真正不同的 reporting delta。
 
-程式碼、identifier、file/path、command、raw log、error string、protocol field、API name、library/tool name 與既有正式技術名詞保持原文；不得為了翻譯改寫 source semantics、machine contract 或 evidence 原文。
-
-純 tool output、command stdout/stderr、execution surface 自動產生的 progress/status UI 不需要為符合本規則另外翻譯或包裝成自然語言回覆。
-
-## Codex Response Presentation Contract
-
-本節控制 Codex **如何組織 user-facing 結果**，不改變 Task／Stage、Git、validation、completion 或 evidence authority，也不建立新的 project status taxonomy。
-
-預設資訊順序：
-
-```text
-Direct result / scope-qualified current status
-→ Material changes / findings
-→ Required validation / canonical evidence
-→ Remaining gap / blocker only if present
-→ Execution transparency metadata
-→ Reporting timestamp
-```
-
-這是 content hierarchy，不要求每次固定 headings。小型工作可以用一兩段完成；大型或 PARTIAL／STOP 狀態才依需要分段。
-
-一般原則：
-
-- **Result first**：第一個實質段落先讓使用者知道目前結果與有效 scope；status semantics依 `INFORMATION_INTEGRITY.md` → `Scope-Qualified Status / Propagation Guard`，project有正式 taxonomy就沿用，沒有時用自然語言，不自行發明新的 DONE／PARTIAL／WARNING enum。
-- **Material changes, not execution diary**：final/completion 預設摘要實際改變的 behavior、files/surfaces、architecture或重要 evidence；不要只因 tool call真的發生過，就按時間順序敘述「先讀A、再跑B、接著改C」。只有某個 execution step會 materially解釋結果、root cause、recovery、blocker或 evidence lineage時才保留。
-- **Validation / completion truth stays with its owner**：required validation是否滿足、evidence tier、completion acceptance與未執行 check的影響依 `DEBUG_VALIDATION.md`；Codex只把該 current truth以最低充分 scope呈現，不在 reporting owner重建 validation semantics，也不用大量 PASS command清單掩蓋 material gap。
-- **Evidence stays scope-qualified**：final wording不得把局部 repository／test／build／hardware／deployment evidence升格成 broader status；generic propagation semantics依 `INFORMATION_INTEGRITY.md`，validation-specific升格依 `DEBUG_VALIDATION.md`。
-- **Remaining gap only when real**：沒有 blocker／unresolved就不要機械加「下一步」；有 gap時只列會阻止 current completion、需要使用者決策或已屬 current Stage responsibility 的項目，不把 adjacent improvement變成新義務。
-- **Transparency metadata comes after the result**：child delegation／profile override、routing observability等 execution metadata通常放在 task result與validation之後、timestamp之前；只有它本身 materially解釋 STOP／failure／capability limitation 時才提前。
-- **Progress follows the same hierarchy**：中間進度先講 materially changed current state／blocker，不重複 execution surface 已顯示的 spinner、百分比或上一則 substantially identical evidence。
-
-核心原則：**Report the state the user needs to act on, then the minimum evidence needed to trust that state. Execution trace is not the default final report.**
-
-## Codex 回報時間戳（Always-on Reporting Timestamp）
-
-Codex 的**每一個實質 user-facing 回覆**最後一行都應附上絕對時間戳，而不只限於 STOP、validation、completion 或 final report：
-
-`回報時間：YYYY-MM-DD HH:mm (Asia/Taipei)`
-
-實質 user-facing 回覆至少包括：
-
-- analysis / architecture / requirement conclusion；
-- progress conclusion、目前狀態判斷或下一步決策；
-- permission / blocker / STOP explanation；
-- validation / error explanation；
-- completion summary / final report；
-- 其他會被使用者閱讀、跨 session 貼回、比較 freshness 或作為後續 execution 依據的自然語言回覆。
-
-不需要額外時間戳的情況限於：
-
-- execution surface 自動顯示的 tool progress / spinner / status；
-- raw command output / log 本身；
-- 沒有形成獨立 user-facing message 的內部 tool call 中間狀態。
-
-如果 Codex 已經產生一則獨立、可被使用者看見並據此判斷狀態的自然語言訊息，就視為實質 user-facing reply，不因它被稱為「進度」、「中間說明」或「不是 final」而免除時間戳。
-
-一般原則：
-
-- 使用絕對日期時間，不用「剛剛」、「今天早上」等相對時間作唯一 freshness marker。
-- 預設 `Asia/Taipei`；使用者明確指定其他時區時改用該時區並清楚標示。
-- 時間戳代表這份 Codex 回覆產生／完成時間，不是 commit、device、server event 或 validation evidence 發生時間。
-- 時間戳不取代 commit SHA、branch、validation evidence、TASKS state 或其他 completion evidence。
-- **優先直接讀取 execution environment／platform 提供的 current wall clock，再轉換成要求的 reporting timezone；不得由模型自行推算目前時間。** Windows 可使用 `Get-Date`／runtime API，Unix-like surface 可使用 `date`／runtime API，實際 mechanism 依目前 execution surface 選最低成本可驗證來源。
-- 若 runtime/platform clock 可直接取得且 UTC／local timezone 讀值 coherent，不為形式額外連 GitHub 或其他 external service 校時。
-- 若 runtime/platform clock unavailable、明顯矛盾或已有 concrete stale evidence，才依 `INFORMATION_INTEGRITY.md` → `Reporting Wall-clock Source Guard` 使用 cache-aware external sanity／fallback anchor；GitHub HTTP `Date` 不得被當成 unconditional primary clock。
-- execution environment 無法取得可信目前時間時，不得猜測；標記 `回報時間：UNAVAILABLE`。
-- 若 final draft 出現 `??:??`、`YYYY-MM-DD HH:mm` placeholder、錯誤時區、明顯 stale timestamp 或其他 malformed time，但 runtime clock本身可取得，視為 **reporting / formatting failure**：重新從可信 runtime/platform source取值並修復 draft，不把它誤報成 system-clock failure。
-- 這是 cross-cutting reporting contract，可由 project governance / playbook routing 啟用；**不要求 ChatGPT 為了 activation 把完整 reporting policy 或固定時間句重複塞進每一份 Codex launch Prompt**。
+- Codex timestamp literal使用 `回報時間：YYYY-MM-DD HH:mm (Asia/Taipei)`（或合法 timezone override）；timestamp source／final-line／UNAVAILABLE semantics不在此重複。
+- execution result／progress／STOP／permission／validation／completion等共同 presentation hierarchy直接服從 `REPORTING.md`。
+- Codex completion／final report另外需要下節的 child delegation／child profile transparency；這是 actor-specific metadata，不上移成所有 actor的共同欄位。
 
 ### Child Profile Override 回報（Completion / Final）
 
@@ -150,32 +85,13 @@ User-facing rendering可保持 compact，但不得丟失兩個維度：
 
 核心原則：**使用者應能從 final report 分辨「沒有候選／未需要 substantive evaluation」、「評估後未使用」、「實際使用 child」，並在 profile override 發生時看出要求切換過哪些 model／reasoning 以及可證明到哪一層；requested override ≠ independently verified effective profile。**
 
-## Reporting Pre-Send Gate
+## Codex Reporting Pre-Send Extension
 
-Reporting policy 被讀取或在 Prompt 中重述，仍不等於最後送出的文字一定符合 contract。對每一個實質 user-facing reply，Codex 在送出前必須對**最終草稿本身**執行一次 bounded pre-send compliance check；這是 reporting contract 的最後一哩 gate，不是新的 project-specific policy。
+Codex送出 substantive user-facing reply前，先執行 `REPORTING.md` → `Shared Reporting Pre-Send Gate`。
 
-送出前至少依序確認：
+Codex-specific extension只有：completion／final report若適用，必須在 shared gate 的 actor-extension check確認 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 與 `Child profile override: NONE | USED` 已依上節完整呈現，並放在 task result／validation／remaining-gap之後、final reporting timestamp之前。
 
-1. **User-facing classification**：本次輸出若會形成使用者可見、可據此判斷狀態或作為後續工作依據的自然語言訊息，就進入本 gate；不得因稱為 progress、intermediate、summary 或非 final 而跳過。
-2. **Language check**：最終草稿的自然語言回覆符合本檔「Codex 回報語言」或使用者／project 當次明確覆蓋的 reporting language；技術原文不需翻譯。
-3. **Result visibility check**：第一個實質段落已直接說明 current result／blocker，且 status wording符合 `INFORMATION_INTEGRITY.md` 的 scope-qualified semantics；project有正式 taxonomy就沿用，沒有時不自行發明 enum。不得讓 execution diary、child metadata或 validation清單把主要結果埋在後面。
-4. **Evidence / scope check**：final draft沒有把 underlying evidence擴張成較大的 completion／validation claim；required validation與 completion truth直接服從 `DEBUG_VALIDATION.md`／project contract。若未跑、FAIL、UNKNOWN或只支援較窄 scope，presentation需保留該 material gap；本 gate只檢查文字是否忠實呈現，不重新判定 validation truth。
-5. **Presentation-noise check**：移除不會改變使用者判斷的 tool-call chronology、重複 log／command清單、routing internals、重複 conclusion與機械式 next-step padding；保留會解釋 result、root cause、recovery、blocker或 evidence lineage的最低充分 execution detail。
-6. **Child-routing report check（completion/final only）**：若本次是 completion summary／final report，確認已依上節同時保留 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 與 `Child profile override: NONE | USED` 兩個語意維度；兩者皆 `NONE` 時可同列一行。若 profile override 為 `USED`，列出 materially distinct requested model／reasoning、bounded role/result 與 effective-profile observability boundary。一般 progress/STOP reply 不為形式補此欄。
-7. **Timestamp source check**：直接使用可信 runtime/platform current wall clock產生 absolute timestamp，依需要轉換 reporting timezone；不使用模型推算、舊回覆、commit timestamp或 placeholder。只有 primary clock unavailable／suspect時才依 `INFORMATION_INTEGRITY.md` 的 `Reporting Wall-clock Source Guard` 使用 conditional external sanity/fallback；仍無可信來源則使用 `回報時間：UNAVAILABLE`。
-8. **Timestamp render check**：最終草稿不得保留 `??:??`、`YYYY-MM-DD HH:mm`、錯誤 timezone 或其他 malformed/stale timestamp。若 runtime time可取得但 render失敗，重新取值並修復；這是 reporting failure，不是 system-clock failure evidence。
-9. **Final-line check**：檢查最終草稿最後一個非空白行是否為本 contract 要求的 timestamp line，且沒有任何正文、附註、citation、summary 或其他內容出現在其後。
-10. **Fail-closed repair**：若 result visibility、language、evidence/scope、presentation noise、required child-delegation/profile summary、timestamp source/render、格式或 final-line position任一項不合格，先修正最終草稿並重新檢查；**未通過 pre-send check 的 user-facing reply 不得送出。**
-
-若 execution surface 原生提供 output validator、response post-processing hook、schema check 或其他可在送出前對最終文字做 deterministic validation 的能力，優先用它執行上述可機械判定項目；若沒有這類能力，仍必須做 bounded final-draft self-check。不得把 model-only self-check 宣稱為平台層 deterministic guarantee，也不得為了單一 reporting rule自行建立高複雜度 validator、agent loop 或外部服務。
-
-Pre-Send Gate 只驗證 reporting artifact 是否符合 contract，不證明其中的 Git、validation、completion 或 technical claim 為真；這些仍由 `DEBUG_VALIDATION.md`、`REPOSITORY_EXECUTION.md` 與 project authority 的 canonical evidence 決定。
-
-本 gate 與 Always-on Reporting Timestamp 同屬 `CODEX_EXECUTION.md` 的 canonical Codex-reporting authority。README、`CHATGPT_WORKFLOW.md`、project `AGENTS.md` 與 individual Codex Prompt 只需要 routing/reference，不應複製完整 normative checklist。
-
-核心原則：**先檢查實際要送出的 final draft，再送出；「我已讀過規則」不是 reporting compliance evidence。**
-
-ChatGPT 自己的 reply timestamp 由 `CHATGPT_WORKFLOW.md` 維護，兩者不要混用。
+這個 extension不重建 shared language、result visibility、scope fidelity、timestamp source/render或final-line policy；shared gate PASS也不證明 underlying Git／validation／completion claim為真。
 
 ## Prompt execution gates
 

@@ -225,8 +225,9 @@ For an existing GitHub project:
 1. Add a thin Playbook declaration to the project's current governance surface, commonly root `AGENTS.md`.
 2. Choose one declared Playbook baseline, such as `main` or a pinned release/tag.
 3. Choose exactly one Project AI mode: `ChatGPT-Only` or `ChatGPT+Codex`.
-4. Keep the project's own bootstrap/task router authoritative. If it explicitly decides shared Playbook governance is not needed for a task, stay project-native.
-5. When activation is required, resolve the declared baseline (including an exact revision when a floating ref matters), enter that revision's [`CHAT_INIT.md`](CHAT_INIT.md), and load only the minimum canonical owner(s) needed for the task.
+4. Keep the declared baseline's [`REPORTING.md`](REPORTING.md) applicable to substantive user-facing engineering replies as the narrow activation-independent reporting contract; this does not activate other shared governance.
+5. Keep the project's own bootstrap/task router authoritative. If it explicitly decides other shared Playbook governance is not needed for a task, stay project-native.
+6. When other shared activation is required, resolve the declared baseline (including an exact revision when a floating ref matters), enter that revision's [`CHAT_INIT.md`](CHAT_INIT.md), and load only the minimum canonical owner(s) needed for the task.
 
 Minimal adoption block:
 
@@ -237,11 +238,15 @@ This project uses `masini1491/ai-development-playbook` as a common AI engineerin
 Playbook baseline: `main`
 Project AI mode: ChatGPT-Only
 
-Adoption does not require Playbook activation for every task. If this project declares a
-project-native bootstrap / task router that decides whether shared governance is needed,
-follow that gate first. When Playbook activation is required, resolve the declared baseline
-and enter that revision's `CHAT_INIT.md`, then load only the minimum canonical sections
-required by the current task.
+The declared baseline's `REPORTING.md` remains applicable to substantive user-facing
+engineering replies even when other shared Playbook governance is not activated. This
+reporting pointer does not activate `CHAT_INIT.md` or expand task/write/execution authority.
+
+Adoption does not require other Playbook activation for every task. If this project declares
+a project-native bootstrap / task router that decides whether shared governance is needed,
+follow that gate first. When other Playbook activation is required, resolve the declared
+baseline and enter that revision's `CHAT_INIT.md`, then load only the minimum canonical
+sections required by the current task.
 
 This project's own governance and technical source of truth remain higher authority.
 Do not load the whole Playbook into Context by default.
@@ -256,8 +261,9 @@ Use [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md) w
 1. 在專案目前的治理介面（常見是根目錄的 `AGENTS.md`）加入精簡的 Playbook 採用宣告。
 2. 宣告一個 Playbook baseline，例如 `main` 或固定的 release/tag。
 3. Project AI mode 只選一種：`ChatGPT-Only` 或 `ChatGPT+Codex`。
-4. 專案自己的 bootstrap／task router 維持權威；若它明確判定某任務不需要共用 Playbook 治理規則，就維持專案原生流程。
-5. 只有需要啟用 Playbook 時，才解析已宣告的 baseline（floating ref 在必要時解析成 exact revision）、進入該 revision 的 [`CHAT_INIT.md`](CHAT_INIT.md)，再載入本題最低充分的 canonical owner。
+4. 已宣告 baseline 的 [`REPORTING.md`](REPORTING.md) 對 substantive user-facing engineering reply 維持窄化的 activation-independent 適用；這不會啟用其他 shared governance。
+5. 專案自己的 bootstrap／task router 維持權威；若它明確判定某任務不需要其他共用 Playbook 治理規則，就維持專案原生流程。
+6. 只有需要啟用其他 Playbook owner 時，才解析已宣告的 baseline（floating ref 在必要時解析成 exact revision）、進入該 revision 的 [`CHAT_INIT.md`](CHAT_INIT.md)，再載入本題最低充分的 canonical owner。
 
 若需要較完整、可直接調整的採用範例，請使用 [`examples/minimal-project/AGENTS.md`](examples/minimal-project/AGENTS.md)。
 
@@ -454,8 +460,9 @@ Humans normally do not need to read these files in order. This map shows the mai
 | [`CLAUDE.md`](CLAUDE.md) / [`GEMINI.md`](GEMINI.md) / [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Thin project-level host compatibility shims; bootstrap handoff only, not policy or execution authority |
 | [`AI_CONTEXT.md`](AI_CONTEXT.md) | Context/information architecture, progressive routing, retrieval cost, Always-on/Hot/Cold/Evidence/Historical lifecycle |
 | [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | Identity, provenance, source-vs-derived authority, snapshot/search-hit/evidence guards |
-| [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT planning/coordination, work and actor admission, Codex launch settings / Prompt handoff, runtime execution, session compaction/rehydration, result reconciliation |
-| [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) | Codex execution profile, bounded child delegation/profile override, reasoning/context/tool scheduling, and reporting after Codex is actually selected |
+| [`REPORTING.md`](REPORTING.md) | Cross-actor, cross-workflow, activation-independent user-facing reporting, timestamp, progress-integrity and pre-send contract |
+| [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT planning/coordination, work and actor admission, Codex launch settings / Prompt handoff, session compaction/rehydration, result reconciliation, ChatGPT-specific delivery delta |
+| [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) | Codex execution profile, bounded child delegation/profile override, reasoning/context/tool scheduling, and Codex-specific reporting metadata |
 | [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) | Repository identity, lower-level actor/path-action authority, permissions, write/read-back boundaries |
 | [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) | Debugging, retry, validation, evidence lifecycle, completion, behavioral evaluation |
 | [`PROJECT_BOOTSTRAP.md`](PROJECT_BOOTSTRAP.md) | Research/bootstrap lifecycle and bounded research-write/actor-transition contracts |

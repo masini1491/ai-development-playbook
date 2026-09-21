@@ -115,7 +115,9 @@ Tier 4 — Completion Evidence Closure
 
 - Project AI mode selection／mode unresolved／是否讓 Codex 參與 repository workflow
   → `PROJECT_MODES.md`
-- ChatGPT planning／task contract／coordination admission／AI-originated durable work／Codex Prompt mode與handoff／result reconciliation／ChatGPT user-facing delivery
+- Cross-actor substantive user-facing reporting／language／result visibility／scope fidelity／timestamp／Reporting Pre-Send Gate
+  → `REPORTING.md`（adoption-level always-applicable；不因 direct-leaf reporting而 activate其他 shared owners）
+- ChatGPT planning／task contract／coordination admission／AI-originated durable work／Codex Prompt mode與handoff／result reconciliation／ChatGPT-specific delivery delta
   → `CHATGPT_WORKFLOW.md` → Section Router
 - pre-implementation research-bootstrap／reference synthesis／requirements／architecture形成期的 bounded direct-write
   → `PROJECT_BOOTSTRAP.md`
@@ -131,8 +133,8 @@ Tier 4 — Completion Evidence Closure
   → `INTEROPERABILITY.md`
 - Semantic identity／derived authority／instruction-vs-data／provenance／lineage／temporal semantics／unknown／scope-qualified status／snapshot consistency／search-hit authority
   → `INFORMATION_INTEGRITY.md`
-- Codex execution／model／Reasoning／Context／tool scheduling／delegation／cost／reporting
-  → `CODEX_EXECUTION.md` → Section Router；一旦 Codex execution active，該檔宣告的 reporting contract屬 cross-cutting prerequisite
+- Codex execution／model／Reasoning／Context／tool scheduling／delegation／cost／actor-specific reporting metadata
+  → `CODEX_EXECUTION.md` → Section Router
 - Git／Repository Identity／workspace／permission／actor topology／write boundary／coordination write authority
   → `REPOSITORY_EXECUTION.md` → Section Router
 - GitHub-specific repository acquisition／verified transport／Git object mutation／Actions／artifact／tag／Release
@@ -154,7 +156,7 @@ Tier 4 — Completion Evidence Closure
 
 ## 權威與執行注意
 
-Project AI mode selection、Authority、Repository Identity、repository actor topology／write boundary、coordination lifecycle、AI Context surface semantics、permission gates、ChatGPT Prompt delivery、Codex model／Reasoning、reporting timestamp、PowerShell baseline、root-cause labels 與 validation contract **不在本檔重複定義**。
+Project AI mode selection、Authority、Repository Identity、repository actor topology／write boundary、coordination lifecycle、AI Context surface semantics、permission gates、ChatGPT Prompt delivery、Codex model／Reasoning、cross-actor reporting、PowerShell baseline、root-cause labels 與 validation contract **不在本檔重複定義**。
 
 需要其中任一規則時，讀上方對應 canonical 主題文件；實際專案最新正式 technical/governance source of truth 仍高於本手冊。
 

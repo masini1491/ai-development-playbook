@@ -1,12 +1,12 @@
 # ChatGPT 專案聊天室工作流（ChatGPT Project Conversation Workflow）
 
-本檔是 **ChatGPT／planning conversation** 的主要 authority，負責 ChatGPT 在工程專案聊天室中的 planning、coordination admission、Codex Prompt 產生與交付、Codex 結果 reconciliation，以及對使用者的工程回覆 contract。
+本檔是 **ChatGPT／planning conversation** 的主要 authority，負責 ChatGPT 在工程專案聊天室中的 planning、coordination admission、Codex Prompt 產生與交付、Codex 結果 reconciliation，以及 ChatGPT-specific conversation delivery delta。
 
-本檔不重新定義 Codex execution、Git／permission、coordination surface lifecycle、AI Context architecture、validation 或 architecture policy；需要時路由到對應 canonical 文件。
+跨 actor／跨 workflow 的 substantive user-facing reporting、timestamp與 Reporting Pre-Send Gate由 `REPORTING.md` 擁有。本檔不重新定義 Codex execution、Git／permission、coordination surface lifecycle、AI Context architecture、validation 或 architecture policy；需要時路由到對應 canonical 文件。
 
 ## Section Router
 
-- 回覆語言／時間戳／呈現方式 → `ChatGPT 回覆語言與時間戳`、`ChatGPT 工程回覆呈現契約`
+- cross-actor回覆語言／result-first／scope fidelity／timestamp／Reporting Pre-Send Gate → `REPORTING.md`；ChatGPT-specific progress rendering → `ChatGPT Reporting Delta`
 - task contract／clarification／scope exclusion → `Task Contract：Goal / Context / Exclusions`
 - durable work／Hot-Cold admission／follow-up → `Persistence／Coordination Admission`、`AI-originated Durable Work Admission Gate`、`Task Identity / Revision Gate`、`Follow-up / New Work Gate`
 - 長 session compaction／freshness／handoff → `Session Compaction / Rehydration Contract`
@@ -25,67 +25,19 @@
 
 ChatGPT 的角色是建立正確 task contract、選擇最低充分 authorized actor / execution handoff、維護 current coordination scope，並用 canonical evidence 接受或拒絕 completion claim；不是把既有 repository authority 重新抄成第二份 specification，也不是把每個「看起來有道理」的改善建議自動變成專案義務。
 
-## ChatGPT 回覆語言與時間戳（Reply language / timestamp）
+## ChatGPT Reporting Delta
 
-除非使用者當次或 project authority 另有指定，ChatGPT 在遵循本手冊的工程專案聊天室中以**繁體中文**回覆；程式碼、identifier、path、command、raw log、error string、protocol/API/tool name 與正式技術名詞保持原文。
+所有 ChatGPT substantive user-facing engineering replies先遵守 `REPORTING.md`；本檔只保留 conversation actor真正不同的 delivery delta。
 
-ChatGPT 的**實質工程回覆**最後一行預設附上絕對時間戳：
+- ChatGPT timestamp literal使用 `回覆時間：YYYY-MM-DD HH:mm (Asia/Taipei)`（或合法 timezone override）；timestamp source／final-line／UNAVAILABLE semantics不在此重複。
+- analysis／architecture／review／recommendation、coordination decision、Codex Prompt delivery、Codex result reconciliation、STOP／blocker／completion等只要形成 substantive user-facing reply，都適用 shared reporting contract。
+- ChatGPT-specific planning schema、Prompt artifact、session handoff與result reconciliation仍由本檔後續 sections擁有。
 
-`回覆時間：YYYY-MM-DD HH:mm (Asia/Taipei)`
+### Progress Visibility
 
-適用包括 analysis / architecture / requirement decision、review / recommendation、coordination admission、Codex Prompt delivery、Codex result review、STOP / blocker / completion，以及會被跨聊天室引用或比較 freshness 的完整工程回覆。
+當 current work有有限、可辨識且有決策價值的 stages／checks／items時，ChatGPT可附簡潔 progress indicator，例如 `██████░░░░ 60%〔3/5 stages〕`；這是可選的 conversation presentation aid，不是 completion signal。
 
-純工具進度通知、permission request 前的短 preamble、尚未形成結論的中間訊息可以不重複時間戳；同一回合最後完整回覆應附上。
-
-- 預設使用 `Asia/Taipei`；project另有指定時清楚標示。
-- 使用絕對日期時間，不以「剛剛／今天」作唯一 freshness marker。
-- 時間戳代表這份 ChatGPT 回覆產生時間，不是 commit / device / server / validation evidence time。
-- 時間戳不取代 repository SHA、diff、validation evidence 或 coordination state。
-- 目前時間優先使用 execution／platform surface 直接提供的可信 current wall clock；primary source unavailable／suspect 時，才依 `INFORMATION_INTEGRITY.md` → `Reporting Wall-clock Source Guard` 使用 conditional external sanity／fallback，不由模型自行推算目前時間。
-- 送出最終回覆前，檢查 timestamp 是否仍為 `??:??`、`YYYY-MM-DD HH:mm` placeholder、錯誤時區、malformed 或明顯 stale；若可信 current time 可取得，重新取值並修復 final draft，若仍無可信來源則使用 `回覆時間：UNAVAILABLE`，不得送出假的時間字串。
-- 無法取得可信目前時間時使用 `回覆時間：UNAVAILABLE`，不得猜測。
-- 本 contract 要求時間戳時，最終草稿最後一個非空白行必須是完整 timestamp line；不得在其後追加正文、附註或其他內容。
-
-Codex reporting language / timestamp / pre-send compliance 由 `CODEX_EXECUTION.md` 維護。
-
-## ChatGPT 工程回覆呈現契約（Response Presentation Contract）
-
-本節控制 ChatGPT **如何組織與呈現已取得的工程答案**，不改變 underlying authority、evidence standard、project-specific technical contract 或 validation truth。
-
-預設 flow：
-
-`Direct answer / decision → Material findings / evidence → Uncertainty / limits → Next action only if needed`
-
-這是組織原則，不是固定 headings。
-
-一般原則：
-
-- **Answer first**：evidence 足夠時先回答真正問題；不足時第一段就說明不能判定與關鍵缺口。
-- **Depth follows the task**：篇幅依 breadth/risk/ambiguity/requested detail 決定，不把小問題自動做成 tutorial。
-- **Render semantic scope, do not redefine it**：需要呈現 `PASS`、`FAIL`、`CURRENT`、`READY`、`UNKNOWN` 或其他 status 時，依 `INFORMATION_INTEGRITY.md` → `Scope-Qualified Status / Propagation Guard`／相關 guard 表達 owner／object／stage／evidence scope；本 presentation contract不建立第二份 status taxonomy。
-- **Stop at the evidence boundary**：資料不足時依 `INFORMATION_INTEGRITY.md` 的 unknown／negative-observation semantics 與 `DEBUG_VALIDATION.md` 的 actual validation/completion evidence停在可支持範圍，不用一般知識、舊記憶或狹窄 PASS補成更大的 project fact。
-- **Project status taxonomy is project-owned**：有 project-defined taxonomy就沿用；沒有時用自然語言呈現 scope-qualified state，不為格式自行發明 rigid PASS/WARNING/FAIL system。
-- **Provide minimum sufficient traceability**：mutable repository state、specific spec/validation、freshness-sensitive fact需要時提供最低充分 reference；reference只支援其實際 evidence scope。
-- **Do not repeat the same conclusion for emphasis**：summary只有在 navigation 真正受益時才加。
-- **No mechanical next-step padding**：只有使用者要求、存在 blocker/risk或明確 follow-up有實益時才加 next action。
-- **User/project format wins**：在不違反 authority/safety/evidence邊界下，使用者當次格式與 project schema優先。
-
-### Progress Visibility（條件式進度可視化）
-
-當 current work 有**有限、可辨識且有意義的 stages／checks／items**，而進度資訊能實質降低使用者理解成本時，ChatGPT 的實質工程 progress／status 回覆預設可附簡潔 progress indicator，例如 `██████░░░░ 60%〔3/5 stages〕`。這是 presentation aid，不是每則回覆必填。
-
-- **Reliable denominator only**：只有 total／denominator 可由 current task contract、checklist、queue 或其他可信狀態可靠建立時才顯示百分比；百分比應由已知 `completed / total` 推導，不用直覺估計「大概完成幾成」。
-- **Open-ended work 不猜百分比**：research、debugging、root-cause investigation 或 scope 尚未收斂時，改用 phase／completed-current-remaining，或標記 `進度：不可可靠量化`；不得為了視覺完整捏造 denominator。
-- **Meaningful units only**：進度單位對應真正的 Stage、validation check、review item、bounded source 或其他 material work unit；不以 message 數、tool call 數、token、思考時間或任意切碎步驟製造虛假精度。
-- **Scope change 要揭露**：新 evidence 使 denominator material 增減時，直接說明 scope／total 已改變；進度百分比因此下降可以接受，不維持失真的舊百分比。
-- **Blocker 必須可見**：`BLOCKED`、`WAITING`、`STOP`、permission gap、external dependency 或 required evidence unavailable 必須直接標示；高百分比／長進度條不得掩蓋 blocker。
-- **Subset 要標 scope**：progress/status indicator依 `INFORMATION_INTEGRITY.md` 的 scope-qualified semantics呈現；若只涵蓋 implementation、research、validation或某 checkpoint就明確標示。Overall 100%只有在 `DEBUG_VALIDATION.md`／project completion contract 所需 evidence實際成立時才可呈現。
-- **Small-task exception**：單步、低風險、可立即完成，或進度條不會增加決策價值的工作預設省略，避免 presentation noise。
-- **User/project format wins**：使用者或 project authority 指定其他 status/progress schema 時，在不破壞 evidence／authority邊界下服從該格式。
-
-核心原則：**Progress indicator is a coordination / presentation aid, not an authority, scope, or completion signal. 可量化才量化；不可可靠量化就直接說不可量化。**
-
-核心原則：**先回答真正的問題，再用最低充分 evidence 解釋；把事實、推論、限制與建議分清楚，但不要為了「看起來完整」把簡單答案做成固定長模板。**
+Percentage／denominator／subset scope／blocker visibility等 integrity rules直接服從 `REPORTING.md` → `Progress Integrity`；open-ended work不為了視覺完整捏造百分比。單步、低風險或 indicator不增加決策價值時省略。
 
 ## Task Contract：Goal / Context / Exclusions
 
@@ -458,11 +410,11 @@ Child profile override is permitted only for an already-admitted child through t
 
 核心原則：**Child delegation authority ≠ child profile-override authority. Root profile 是 launch choice；合法 child profile 是 runtime routing choice；profile switching 不建立 delegation authority。**
 
-## Codex reporting contract activation
+## Shared reporting contract activation
 
-`CODEX_EXECUTION.md` 的 Codex reporting language / timestamp / Reporting Pre-Send Gate 是 always-on cross-cutting contract。Project governance已 routing到該 authority時，Prompt不需要複製完整 reporting policy；launch仍要求 Codex讀最新 project governance並啟用 contract。
+`REPORTING.md` 是 adoption-level、cross-actor、activation-independent 的 substantive user-facing reporting contract。Project governance已保存 thin reporting pointer時，即使本次 task經 project-native gate留在 local route，也不會關閉 shared reporting；只需在必要時 direct-leaf 到 declared baseline 的 `REPORTING.md`，不因此 activate `CHAT_INIT.md` 或其他 shared owners。
 
-Progressive Reading控制 task-specific Context，不會關閉 reporting contract。Routing有 ambiguity或 Codex無法存取 authority時，才補最低充分 self-contained contract。
+Codex-specific child delegation／profile transparency仍由 `CODEX_EXECUTION.md` 保存；copy-ready Prompt不複製 shared reporting全文。Routing有 ambiguity或 receiving actor無法取得 declared reporting owner時，才用最低充分 self-contained transport修補，不建立第二份 canonical policy。
 
 ## Repository routing 完成後的 Prompt 產生
 

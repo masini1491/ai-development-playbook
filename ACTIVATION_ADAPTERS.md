@@ -18,6 +18,8 @@ Retain a host-specific adapter only when it still provides a distinct routing, a
 
 這個 conditional-activation exception 必須來自**目前可驗證的 project governance／bootstrap**，不得由 host instruction、舊聊天、memory、repository shape 或模型自己推測。Project 沒有明確 conditional gate、該 gate 無法 current-read，或本次 task 本身就是 project governance／adoption／mode／repository-maintenance 判斷時，維持 generic `AGENTS.md`-first route。
 
+**Shared reporting 是窄化的 adoption-level exception。** 若 current project governance採用 shared `REPORTING.md` contract，substantive user-facing engineering reply即使在 project-native route中仍遵守該 contract；需要完整規則時只 direct-leaf 到 declared baseline 的 `REPORTING.md`，不因此進入 `CHAT_INIT.md` 或 activate其他 shared owners。Reporting applicability不建立 Task／write／execution／permission／validation authority。
+
 若 requested project 不是目前已驗證 workspace：不要用舊聊天、memory、repository name 或相似專案內容補成 current state。Runtime 支援 workspace / folder selection 或 access request 時，先請使用者開啟、選取或授權正確 project workspace，再重新執行 repository identity verification；不得自行掃描無關 filesystem、切換、clone 或猜測另一個 repository。詳細 repository identity / permission gate 仍由 `REPOSITORY_EXECUTION.md` 擁有。
 
 Activation-time baseline responsibility只到「建立本次 identified Playbook revision」：
@@ -59,6 +61,7 @@ Adapter 不應：
 ```text
 Verify that the current workspace is the requested project repository. If it is not, ask the user to open/select/grant the correct workspace and re-verify; do not infer project state from prior context.
 If current project governance exposes a project-native bootstrap/task router that explicitly decides whether shared Playbook activation is needed, follow that gate first. Adoption alone does not require Playbook activation for every task. If the gate says Playbook is not needed, stay on the project-native route. Do not invent this exception from memory or host instructions.
+If current project governance adopts the shared reporting contract, keep `REPORTING.md` applicable to substantive user-facing engineering replies even on that project-native route; direct-read only that leaf as needed and do not activate other Playbook owners for reporting alone.
 Otherwise, or once the project-native gate says Playbook activation is required, read this project's current AGENTS.md and determine whether it adopts masini1491/ai-development-playbook.
 If adopted, resolve the project's declared Playbook baseline. For a floating ref, use the cheapest permitted read-only probe to identify the exact revision.
 If a required bootstrap read/probe is blocked, recover only the minimum access needed for that exact read-only operation under current project/Playbook authority. If current canonical identity still cannot be established, keep that dependency unresolved; do not fall back to memory or expand authority.

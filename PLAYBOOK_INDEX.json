@@ -124,6 +124,24 @@
       "kind": "contract"
     },
     {
+      "id": "reporting.shared-user-facing",
+      "owner": "REPORTING.md",
+      "section": "Applicability / Activation Boundary",
+      "kind": "contract"
+    },
+    {
+      "id": "reporting.timestamp",
+      "owner": "REPORTING.md",
+      "section": "Reporting Timestamp",
+      "kind": "contract"
+    },
+    {
+      "id": "reporting.pre-send-gate",
+      "owner": "REPORTING.md",
+      "section": "Shared Reporting Pre-Send Gate",
+      "kind": "contract"
+    },
+    {
       "id": "integrity.semantic-identity",
       "owner": "INFORMATION_INTEGRITY.md",
       "section": "Semantic Identity / Container Guard",
