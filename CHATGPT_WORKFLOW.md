@@ -484,7 +484,7 @@ Short-launch 的 Stage pointer 必須來自**最後一次 current canonical Hot 
 ```text
 Repository: <owner/repo>
 Branch: <expected branch, usually main>
-Handoff revisions: playbook@<declared ref>=<exact producer-observed revision>; target@<branch>=<remote revision only when this handoff materially relies on that target state>
+Handoff revisions: playbook@<declared ref>=<exact producer-observed revision>; target@<branch>=<exact producer-observed remote revision>
 
 Before interpreting project execution state or reading current Hot coordination, complete the current safe remote-sync bootstrap:
 - verify repository / branch / HEAD and preserve unrelated work;
@@ -500,6 +500,8 @@ and report completion with canonical evidence. Do not execute adjacent Hot / Col
 
 <optional one-line child-routing authorization only when current repository authority does not already provide it>
 ```
+
+TASKS Short-launch 的 exact Hot pointer來自 current canonical target read-back，因此 `target@<branch>=<remote SHA>` 是這個 mode 的 required continuity metadata；它記錄 handoff形成時的 target remote provenance，不把 target branch pin住。
 
 Launch-time material delta若尚未 canonicalize且確實會改變 execution，可補最低充分內容；若它需要 durable tracking，先更新 Hot contract而不是把 Short-launch變成第二份 specification。
 
@@ -543,7 +545,7 @@ Do not expand beyond this task.
 
 送出前依序確認：
 
-1. **Revision-continuity closure**：先解析 current project宣告的 Playbook baseline。每一個新的 Codex handoff若使用 floating Playbook ref，final Prompt交付前必須完成 handoff-scoped cheap revision identity probe，並在 `Handoff revisions:` transport exact producer-observed Playbook revision；pinned baseline則 transport該合法pin，不因 upstream新版自行升級。若本次 handoff materially依賴 ChatGPT剛觀察到的 target repository mutable state，再一併 transport `target@<branch>=<remote SHA>`；不適用時省略 target欄位，不輸出 placeholder。Same／changed／unresolved處置依 `AI_CONTEXT.md` → `Cross-boundary Revision Continuity`，這不是 full-Playbook reload要求。
+1. **Revision-continuity closure**：先解析 current project宣告的 Playbook baseline。每一個新的 Codex handoff若使用 floating Playbook ref，final Prompt交付前必須完成 handoff-scoped cheap revision identity probe，並在 `Handoff revisions:` transport exact producer-observed Playbook revision；若 baseline是 pinned SHA／tag，transport declared pin/ref **以及其 resolved exact revision identity**，immutable tag不得只靠tag文字代替exact revision，也不因 upstream新版自行升級。`TASKS Short-launch` 因 exact Hot pointer來自 current target read-back，必須同時 transport `target@<branch>=<remote SHA>`；`Direct Short`／其他沒有current Hot pointer的handoff只在實際material依賴 ChatGPT剛觀察到的 target mutable state時帶 target欄位，不適用時直接省略。Same／changed／unresolved處置依 `AI_CONTEXT.md` → `Cross-boundary Revision Continuity`，這不是 full-Playbook reload要求。
 2. **Actor check**：current responsibility／authority仍需要 Codex handoff。若 premise 已改變，回到 `Actor Admission / Handoff Gate`；不得因 Prompt已寫好就照送。
 3. **Persistence closure**：若 current work 依本檔 admission rules 屬 durable／tracked Stage，且 ChatGPT 具有 current coordination write authority，先完成必要 Hot admission／revision與 canonical read-back；**不得把 Prompt 當 Stage persistence surface**。反之，一次性、低風險、低 tracking value work 不得為了本 gate 被強迫建立 Hot task。
 4. **Prompt-mode check**：若 current Hot coordination已有可執行 Stage且 Codex能取得該 Stage／authority，最終草稿必須是 `TASKS Short-launch`；沒有 Hot Stage且符合一次性 bounded條件時才使用 `Direct Short Prompt`；`Standalone Full Prompt` 必須能指出本檔已列出的至少一個 explicit exception。

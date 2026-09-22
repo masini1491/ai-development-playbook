@@ -12,6 +12,7 @@ Git／permission、Conversation-scoped Repository Write Lock、ChatGPT 實際可
 - instruction applicability／model-runtime evolution → `Instruction Applicability Lifecycle／Model-Upgrade Audit`
 - information responsibility／control-data plane → `Information Surface Responsibility`、`Cross-Actor Control / Data Plane Separation`
 - new surface admission／cohesion／progressive direct-leaf routing → `Independent Retrieval Intent Gate`、`Context Cohesion Gate`、`Progressive Routing／Direct-leaf Bypass`
+- cross-actor／session／execution handoff-result revision continuity → `Cross-boundary Revision Continuity`
 - pre-action contract closure／required-artifact closure／absence claim／fail-fast ordering → `Action Contract Closure`、`Absence Claim Coverage Gate`、`Fail-fast Context Ordering`
 - routing metadata／routing closure／AI-facing route regression → `Thin Routing Metadata`、`Routing Integrity Contract`、`Generated Routing Metadata／Drift Check`
 - Hot／Cold coordination、dossier、evidence、history、freshness與 canonicalization → `Hot / Cold Coordination Semantics`、`Hot Task Dossier`、`Evidence Staging Surface`、`Historical / Search-noise Isolation`、`Current Snapshot Freshness`、`Canonicalization → Surface Slimming`

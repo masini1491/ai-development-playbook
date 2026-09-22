@@ -99,7 +99,7 @@ Codex-specific actor-extension check依 reply condition分開處理：
 
 ## Prompt execution gates
 
-Codex 對一般 project repository 執行 Prompt 時，依任務需要引用 `REPOSITORY_EXECUTION.md` 的共通 gates，並在 target repository 已安全同步、current governance 已重讀後，關閉 shared Playbook freshness：
+Codex 對一般 project repository 執行 Prompt 時，依任務需要引用 `REPOSITORY_EXECUTION.md` 的共通 gates，並在 target repository 已安全同步、current governance 已重讀後，關閉 applicable shared Playbook／target-state revision continuity：
 
 1. Repository Identity Gate
 2. mutation Stage 的 Workspace Write Capability Gate
@@ -107,7 +107,7 @@ Codex 對一般 project repository 執行 Prompt 時，依任務需要引用 `RE
 4. Remote Git Permission Gate / Permission-Gated Operation
 5. safe `git fetch origin` + fast-forward-only sync
 6. re-read latest `AGENTS.md` / `TASKS.md`，並從 current project governance解析 declared Playbook baseline
-7. **Codex execution-start Playbook freshness gate**
+7. **Codex execution-start revision continuity gate**
 8. execute scoped Stage
 9. Targeted Validation
 
