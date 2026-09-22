@@ -99,16 +99,29 @@ Codex-specific actor-extension check依 reply condition分開處理：
 
 ## Prompt execution gates
 
-Codex 對一般 project repository 執行 Prompt 時，依任務需要引用 `REPOSITORY_EXECUTION.md` 的共通 gates：
+Codex 對一般 project repository 執行 Prompt 時，依任務需要引用 `REPOSITORY_EXECUTION.md` 的共通 gates，並在 target repository 已安全同步、current governance 已重讀後，關閉 shared Playbook freshness：
 
 1. Repository Identity Gate
 2. mutation Stage 的 Workspace Write Capability Gate
 3. Git state / unfinished-operation preflight
 4. Remote Git Permission Gate / Permission-Gated Operation
 5. safe `git fetch origin` + fast-forward-only sync
-6. re-read latest `AGENTS.md` / `TASKS.md`
-7. execute scoped Stage
-8. Targeted Validation
+6. re-read latest `AGENTS.md` / `TASKS.md`，並從 current project governance解析 declared Playbook baseline
+7. **Codex execution-start Playbook freshness gate**
+8. execute scoped Stage
+9. Targeted Validation
+
+### Codex execution-start Playbook freshness gate
+
+每一次新的 Prompt execution、Resume、Fork 或跨 session execution handoff，在真正解讀／執行 scoped Stage前都做一次；**不是每個 command、tool call或小步驟重跑**。
+
+- **Floating baseline**（例如 project governance採用 current/latest Playbook `main`）：對 declared Playbook ref做一次最低成本 revision identity probe。若目前 session已有同 revision、且 execution-relevant owner／section已被 current canonical evidence驗證，可直接 reuse；若 revision已改變，先做 bounded diff／dependency判斷，只 reload會 material影響本次 Codex execution的 owner／section，再重新確認受影響的 authority／execution／validation contract後才繼續。
+- **Fresh session / no verified Playbook Context**：先建立 current revision identity，再只載入本次 execution最低充分的 relevant owner／section；不得因沒有可 reuse Context就全文重載 Playbook。
+- **Pinned SHA／tag baseline**：該 pin仍是 project authority；確認使用同一 pin即可，看到 upstream較新 revision不得自行升級。
+- **Freshness unresolved**：若 project宣告 floating baseline但 execution surface無法確認其 current revision，freshness狀態保持 unresolved；可做最低充分 read-only recovery，但不得把舊 session／handoff中的 Playbook revision當成 current truth後直接進 mutation／Stage execution。
+- **Long-running same execution**：同一次連續 execution內不為形式反覆 probe；只有 Stage／task responsibility materially改變、跨新的 execution boundary，或出現 concrete evidence顯示 Playbook baseline可能已變時，才再做 bounded freshness reconciliation。
+
+這個 gate確認的是 **shared Playbook execution contract**；它不取代上面的 target repository `fetch → FF-only sync → re-read governance`，也不把 Playbook freshness變成 target repository freshness的替代品。
 
 若 runtime 已知必要 remote operation 需要 permission escalation，主動要求最小權限，不故意先執行已知會失敗的 command。
 
