@@ -14,6 +14,7 @@ Scenario ownership：
 - `evals/BEH_024_SUPPLEMENTAL.md`：BEH-024 large GitHub reconciliation response-shape / bounded tool-choice regression。
 - `evals/BEH_025_026_SUPPLEMENTAL.md`：BEH-025 action-contract-before-action sequencing；BEH-026 initial delegation opportunity scan before substantive root execution。
 - `evals/BEH_027_SUPPLEMENTAL.md`：BEH-027 cost-aware responsibility decomposition / residual handoff regression。
+- `evals/BEH_028_SUPPLEMENTAL.md`：BEH-028 broad synthesis / project-defined material evidence coverage closure regression。
 
 ## Run record
 

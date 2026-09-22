@@ -30,6 +30,10 @@ PLACEHOLDER_MARKERS = (
     "<command / document / manual gate / none>",
     "<rules / none>",
 )
+MARKDOWN_HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
+ADOPTION_BASELINE_SECTION = "AI Development Playbook baseline"
+AUTHORITY_SECTION = "Authority boundary"
+MINIMUM_CONTRACT_SECTION = "Project-specific minimum contract"
 
 
 @dataclass(frozen=True, order=True)
@@ -86,6 +90,55 @@ def _without_fenced_markdown(text: str) -> str:
             active_fence = None
         rendered.append("\n" if line.endswith("\n") else "")
     return "".join(rendered)
+
+
+def _named_markdown_sections(text: str, heading: str) -> list[str]:
+    """Return active Markdown sections whose heading exactly matches the requested heading."""
+    active_text = _without_fenced_markdown(text)
+    lines = active_text.splitlines(keepends=True)
+    sections: list[str] = []
+
+    for index, line in enumerate(lines):
+        match = MARKDOWN_HEADING_RE.match(line.rstrip("\r\n"))
+        if not match or match.group(2).strip().casefold() != heading.casefold():
+            continue
+
+        level = len(match.group(1))
+        end = len(lines)
+        for next_index in range(index + 1, len(lines)):
+            next_match = MARKDOWN_HEADING_RE.match(lines[next_index].rstrip("\r\n"))
+            if next_match and len(next_match.group(1)) <= level:
+                end = next_index
+                break
+        sections.append("".join(lines[index:end]))
+
+    return sections
+
+
+def _section_scope(
+    text: str,
+    heading: str,
+    code_prefix: str,
+    severity: str,
+) -> tuple[str, list[Finding]]:
+    sections = _named_markdown_sections(text, heading)
+    if len(sections) == 1:
+        return sections[0], []
+    if not sections:
+        return "", [
+            _finding(
+                severity,
+                f"{code_prefix}_SECTION_MISSING",
+                f"Required adoption section {heading!r} is missing; Doctor will not fall back to whole-file matching for this responsibility.",
+            )
+        ]
+    return "", [
+        _finding(
+            severity,
+            f"{code_prefix}_SECTION_AMBIGUOUS",
+            f"Required adoption section {heading!r} appears {len(sections)} times; Doctor will not choose one implicitly.",
+        )
+    ]
 
 
 def _valid_baseline_token(value: str) -> bool:
@@ -235,51 +288,73 @@ def check_project(root: Path) -> list[Finding]:
     text = agents.read_text(encoding="utf-8")
     findings: list[Finding] = [_finding("PASS", "AGENTS_PRESENT", "AGENTS.md exists.")]
 
-    if PLAYBOOK_REPO in text:
+    baseline_text, section_findings = _section_scope(
+        text,
+        ADOPTION_BASELINE_SECTION,
+        "ADOPTION_BASELINE",
+        "FAIL",
+    )
+    findings.extend(section_findings)
+    authority_text, section_findings = _section_scope(
+        text,
+        AUTHORITY_SECTION,
+        "AUTHORITY_BOUNDARY",
+        "WARN",
+    )
+    findings.extend(section_findings)
+    minimum_contract_text, section_findings = _section_scope(
+        text,
+        MINIMUM_CONTRACT_SECTION,
+        "MINIMUM_CONTRACT",
+        "WARN",
+    )
+    findings.extend(section_findings)
+
+    if PLAYBOOK_REPO in baseline_text:
         findings.append(_finding("PASS", "PLAYBOOK_DECLARED", f"Playbook adoption declaration references {PLAYBOOK_REPO}."))
     else:
-        findings.append(_finding("FAIL", "PLAYBOOK_DECLARATION_MISSING", f"AGENTS.md does not reference {PLAYBOOK_REPO}."))
+        findings.append(_finding("FAIL", "PLAYBOOK_DECLARATION_MISSING", f"The {ADOPTION_BASELINE_SECTION!r} section does not reference {PLAYBOOK_REPO}."))
 
-    if "CHAT_INIT.md" in text:
-        findings.append(_finding("PASS", "BOOTSTRAP_ROUTED", "AGENTS.md contains a CHAT_INIT.md bootstrap route marker for shared Playbook activation."))
+    if "CHAT_INIT.md" in baseline_text:
+        findings.append(_finding("PASS", "BOOTSTRAP_ROUTED", "The adoption baseline section contains a CHAT_INIT.md bootstrap route marker for shared Playbook activation."))
     else:
-        findings.append(_finding("FAIL", "BOOTSTRAP_ROUTING_MISSING", "AGENTS.md has no CHAT_INIT.md bootstrap route marker for cases where shared Playbook activation is required."))
+        findings.append(_finding("FAIL", "BOOTSTRAP_ROUTING_MISSING", "The adoption baseline section has no CHAT_INIT.md bootstrap route marker for cases where shared Playbook activation is required."))
 
-    findings.extend(_baseline_findings(text))
-    findings.extend(_project_ai_mode_findings(text))
+    findings.extend(_baseline_findings(baseline_text))
+    findings.extend(_project_ai_mode_findings(baseline_text))
 
-    present = sorted(marker for marker in PLACEHOLDER_MARKERS if marker in text)
+    scoped_adoption_text = "\n".join(
+        part for part in (baseline_text, authority_text, minimum_contract_text) if part
+    )
+    present = sorted(marker for marker in PLACEHOLDER_MARKERS if marker in scoped_adoption_text)
     if present:
-        findings.append(_finding("WARN", "PLACEHOLDERS_PRESENT", f"Known minimal-adoption placeholders remain: {', '.join(present)}"))
+        findings.append(_finding("WARN", "PLACEHOLDERS_PRESENT", f"Known minimal-adoption placeholders remain in the structured adoption sections: {', '.join(present)}"))
     else:
-        findings.append(_finding("PASS", "PLACEHOLDERS_CLEARED", "Known minimal-adoption placeholders are cleared."))
+        findings.append(_finding("PASS", "PLACEHOLDERS_CLEARED", "Known minimal-adoption placeholders are cleared from the structured adoption sections."))
 
-    findings.extend(_declaration_findings(text, "Canonical technical source(s)", "CANONICAL_SOURCES"))
-    findings.extend(_coordination_findings(root, text))
-    findings.extend(_validation_findings(text))
-    findings.extend(_declaration_findings(text, "Project-specific exceptions or restrictions", "PROJECT_EXCEPTIONS"))
+    findings.extend(_declaration_findings(minimum_contract_text, "Canonical technical source(s)", "CANONICAL_SOURCES"))
+    findings.extend(_coordination_findings(root, minimum_contract_text))
+    findings.extend(_validation_findings(minimum_contract_text))
+    findings.extend(_declaration_findings(minimum_contract_text, "Project-specific exceptions or restrictions", "PROJECT_EXCEPTIONS"))
 
-    has_heading = bool(re.search(r"(?im)^#{1,6}\s+Authority boundary\b", text))
-    has_project_authority = "project-specific authority" in text or ("本 repository" in text and "權威" in text)
-    if has_heading and has_project_authority:
-        findings.append(_finding("PASS", "PROJECT_AUTHORITY_MARKER", "Project-specific authority boundary marker is present."))
+    has_project_authority = "project-specific authority" in authority_text or ("本 repository" in authority_text and "權威" in authority_text)
+    if authority_text and has_project_authority:
+        findings.append(_finding("PASS", "PROJECT_AUTHORITY_MARKER", "Project-specific authority boundary marker is present in the Authority boundary section."))
     else:
-        findings.append(_finding("WARN", "PROJECT_AUTHORITY_UNCLEAR", "No clear project-specific authority boundary marker was detected; semantic authority is not proven by this doctor."))
+        findings.append(_finding("WARN", "PROJECT_AUTHORITY_UNCLEAR", "No clear project-specific authority boundary marker was detected in the Authority boundary section; semantic authority is not proven by this doctor."))
 
     markers = (
         "採用 Playbook 本身不會新增",
         "adoption does not grant",
-        "does not grant",
         "不代表取得額外",
         "不會跳過 Current Write Target",
     )
-    if any(marker.lower() in text.lower() for marker in markers):
-        findings.append(_finding("PASS", "NO_AUTHORITY_EXPANSION_MARKER", "Playbook adoption includes a no-authority-expansion marker."))
+    if any(marker.lower() in authority_text.lower() for marker in markers):
+        findings.append(_finding("PASS", "NO_AUTHORITY_EXPANSION_MARKER", "The Authority boundary section includes a no-authority-expansion marker."))
     else:
-        findings.append(_finding("WARN", "NO_AUTHORITY_EXPANSION_UNCLEAR", "No explicit marker was detected saying Playbook adoption does not expand write/execution/deployment/secret authority."))
+        findings.append(_finding("WARN", "NO_AUTHORITY_EXPANSION_UNCLEAR", "No explicit marker was detected in the Authority boundary section saying Playbook adoption does not expand write/execution/deployment/secret authority."))
 
     return sorted(findings)
-
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(

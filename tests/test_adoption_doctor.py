@@ -281,6 +281,51 @@ project-specific authority 與 common Playbook 衝突，以 project-specific aut
         codes = [item.code for item in adoption_doctor.check_project(root)]
         self.assertIn("NO_AUTHORITY_EXPANSION_UNCLEAR", codes)
 
+    def test_fenced_playbook_declaration_is_ignored(self) -> None:
+        text = self.healthy_agents().replace(
+            "本專案採用 `masini1491/ai-development-playbook` 作為共通 AI 開發基準。",
+            "本專案採用共通 AI 開發基準。\n\n```text\nmasini1491/ai-development-playbook\n```",
+        )
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("PLAYBOOK_DECLARATION_MISSING", codes)
+
+    def test_bootstrap_marker_outside_baseline_section_is_ignored(self) -> None:
+        text = self.healthy_agents().replace(
+            "需要 shared Playbook activation 時，進入 `CHAT_INIT.md`。\n",
+            "",
+        )
+        text += "\n## Project notes\nHistorical note mentions CHAT_INIT.md.\n"
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("BOOTSTRAP_ROUTING_MISSING", codes)
+
+    def test_minimum_contract_fields_outside_named_section_are_ignored(self) -> None:
+        text = self.healthy_agents().replace(
+            "## Project-specific minimum contract",
+            "## Project notes",
+        )
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("MINIMUM_CONTRACT_SECTION_MISSING", codes)
+        self.assertIn("CANONICAL_SOURCES_UNDECLARED", codes)
+
+    def test_unrelated_does_not_grant_wording_does_not_satisfy_authority_marker(self) -> None:
+        text = self.healthy_agents().replace(
+            "採用 Playbook 本身不會新增 write / execution authority。",
+            "Documentation does not grant warranty coverage.",
+        )
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("NO_AUTHORITY_EXPANSION_UNCLEAR", codes)
+
+    def test_duplicate_baseline_sections_are_not_chosen_implicitly(self) -> None:
+        text = self.healthy_agents() + "\n## AI Development Playbook baseline\nHistorical duplicate.\n"
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("ADOPTION_BASELINE_SECTION_AMBIGUOUS", codes)
+        self.assertIn("PLAYBOOK_DECLARATION_MISSING", codes)
+
     def test_findings_are_stably_sorted(self) -> None:
         root = self.make_repo({"AGENTS.md": "# AGENTS\n"})
         findings = adoption_doctor.check_project(root)

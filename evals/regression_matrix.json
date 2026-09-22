@@ -28,7 +28,8 @@
     "BEH-024",
     "BEH-025",
     "BEH-026",
-    "BEH-027"
+    "BEH-027",
+    "BEH-028"
   ],
   "change_classes": {
     "repository-authority": [
@@ -138,6 +139,9 @@
     "action-contract-closure": [
       "BEH-025",
       "BEH-026"
+    ],
+    "synthesis-evidence-coverage": [
+      "BEH-028"
     ]
   }
 }

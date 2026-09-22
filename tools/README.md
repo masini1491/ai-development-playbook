@@ -29,6 +29,8 @@ These tools enforce only objective, machine-checkable invariants. Do not add AI-
 
 The Doctor engine accepts a filesystem root and does not itself acquire GitHub credentials, call GitHub APIs, or receive target-repository write authority.
 
+The Doctor parser treats exactly one active, non-fenced instance of each structured adoption section as the deterministic input boundary for its responsibility: AI Development Playbook baseline, Authority boundary, and Project-specific minimum contract. A missing or duplicate section produces a finding; the Doctor does not fall back to whole-file matching for that responsibility. This scopes deterministic parsing only and does not prove the semantic correctness of routing or authority prose.
+
 Two input acquisition modes are supported:
 
 ### Local Path Mode

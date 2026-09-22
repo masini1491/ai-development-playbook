@@ -24,7 +24,7 @@ class BehavioralEvalTests(unittest.TestCase):
         return {
             "schema_version": 1,
             "authority": "selection-only",
-            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 28)],
+            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 29)],
             "change_classes": {
                 "routing": ["BEH-008", "BEH-009", "BEH-010", "BEH-012", "BEH-015", "BEH-019", "BEH-020", "BEH-021"],
                 "validation": ["BEH-004", "BEH-005", "BEH-014", "BEH-016"],
@@ -35,6 +35,7 @@ class BehavioralEvalTests(unittest.TestCase):
                 "information-integrity": ["BEH-008", "BEH-011", "BEH-012", "BEH-014", "BEH-018", "BEH-022"],
                 "delegation-and-child-routing": ["BEH-017", "BEH-026"],
                 "action-contract-closure": ["BEH-025", "BEH-026"],
+                "synthesis-evidence-coverage": ["BEH-028"],
                 "phase3-cold-start-core": [
                     "BEH-002",
                     "BEH-006",
@@ -85,6 +86,7 @@ class BehavioralEvalTests(unittest.TestCase):
             "BEH-025",
             "BEH-026",
             "BEH-027",
+            "BEH-028",
         ):
             with self.subTest(scenario_id=scenario_id):
                 record = self.valid_record()
@@ -226,6 +228,14 @@ class BehavioralEvalTests(unittest.TestCase):
                 self.valid_matrix(), "information-integrity"
             ),
         )
+    def test_select_synthesis_evidence_coverage_regression(self) -> None:
+        self.assertEqual(
+            ["BEH-028"],
+            behavioral_eval.select_regression_scenarios(
+                self.valid_matrix(), "synthesis-evidence-coverage"
+            ),
+        )
+
 
 
 if __name__ == "__main__":
