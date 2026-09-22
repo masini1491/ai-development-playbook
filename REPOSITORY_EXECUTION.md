@@ -299,7 +299,7 @@ Responsibility assignment、path/action authority 與 runtime capability是**正
 
 Actor selection 仍依 `CHATGPT_WORKFLOW.md` 的 `Actor Admission / Handoff Gate`：
 
-`Current work → selected Project AI mode → required responsibility / mutation → repository-declared path/action authority → current capability / permission → lowest-sufficient authorized actor → execute | handoff | STOP`
+`Current work → selected Project AI mode → decompose materially distinct responsibilities → resolve current Stage/task assignment per responsibility → repository-declared path/action authority → current capability / permission → lowest-sufficient authorized actor per responsibility → direct execution + residual handoff | single-actor execution | STOP`
 
 **No handoff is required to an actor that is not part of the selected Project AI mode.** Capability不創造authority，mode selection與repository actor declaration也都不跳過Current Write Target、Task/Stage authorization、credential、validation或completion evidence gates。
 

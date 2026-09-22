@@ -290,7 +290,7 @@ Generic session-local verified-context reuse、material freshness trigger、chea
 
 一般原則：
 
-- 官方／外部資料 retrieval、bounded research、fixture / corpus 蒐集、provenance、comparison、schema / edge-case synthesis、read-only review，以及目前 session可安全完成的 deterministic evidence processing，若 current authority／capability已允許 ChatGPT完成且不需要另一路 coding-agent mutation，優先由 ChatGPT直接完成。
+- 官方／外部資料 retrieval、bounded research、fixture / corpus 蒐集、provenance、comparison、schema / edge-case synthesis、read-only review，以及目前 session可安全完成的 deterministic evidence processing，若 current authority／capability已允許 ChatGPT完成，**以該 responsibility 為單位**優先由 ChatGPT直接完成；同一整體工作另有 residual coding-agent mutation，不會自動取消這個 ChatGPT-direct判斷。
 - **先拆 responsibility，再看 mutation。** 一個工作同時包含高量 research／evidence／reasoning／synthesis 與較小的 downstream repository mutation 時，不得只因最後 artifact 需要另一 actor寫入，就把整段 upstream work一起分派給該 actor。對每個 materially distinct responsibility 分別選 lowest-sufficient authorized actor；另一 actor只接真正需要其 unique authority／capability 的 residual work。
 - **Cost-aware 不等於 correctness downgrade。** 在候選 actor都能維持相同 authority、evidence與completion標準時，應考慮 scarce Codex quota／usage、Context與大量 retrieval成本、重複 research、retry與handoff overhead；ChatGPT能以較低 scarce-agent成本安全完成的 responsibility，預設留在 ChatGPT。不得為省成本降低 validation、source authority、security、privacy或必要 deterministic execution。
 - **Action access ≠ responsibility assignment。** Read/write permission、connector capability或runtime capability只回答某 actor能否執行某 action；current Task／Stage responsibility回答誰擁有這段工作。Permission/capability不得反向製造 responsibility，也不得把 artifact persistence executor自動升格成整個 Stage executor。

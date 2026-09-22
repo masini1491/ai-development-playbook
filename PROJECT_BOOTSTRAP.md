@@ -80,7 +80,7 @@ Implementation invention boundary: <layers implementation actor must not rebuild
 
 推薦判斷：
 
-`Next work → selected Project AI mode → classify responsibility / mutation need → re-read only the current actor-routing authority if stale or materially changed → choose lowest-sufficient authorized actor → execute / handoff`
+`Next work → selected Project AI mode → decompose materially distinct responsibilities / mutation needs → resolve current Stage assignment per responsibility → re-read only the current actor-routing authority if stale or materially changed → choose lowest-sufficient authorized actor per responsibility → direct execution + residual handoff | single-actor execution | STOP`
 
 一般原則：
 
