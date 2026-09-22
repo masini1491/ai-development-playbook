@@ -272,6 +272,14 @@ Human maintainer、CI、hardware validation、deployment system、external servi
 
 Project 不需要為形式建立巨大 responsibility matrix；只要 current governance 在已選 mode 內足以讓 actor admission 判斷「這項工作誰能合法做」即可。若同一 actor對不同 path/action權限不同，可用既有 allowlist、stage contract或其他 repository-owned contract表示。Project-specific restriction可以縮窄 mode 內的 responsibility，但不得把縮窄／executor mapping重新包裝成第三種 Playbook AI mode。
 
+Responsibility assignment、path/action authority 與 runtime capability是**正交維度**：
+
+- **Responsibility assignment**：回答 current Task／Stage 的哪一段工作由誰負責；
+- **Path/action authority**：回答該 actor 對特定 read／write／Git／external action 是否被允許；
+- **Runtime capability / permission**：回答目前 execution surface 技術上是否能完成已授權 action。
+
+判斷順序不得倒置：permission／capability可以限制已分派 responsibility是否可執行，但**不能自行創造或轉移 responsibility**。同理，某 actor擁有 downstream artifact persistence authority，不代表它自動擁有 upstream research／reasoning／evidence responsibility。尚未固定 actor split時，依 `CHATGPT_WORKFLOW.md` 做 lowest-sufficient responsibility decomposition；current Stage已明確分派時先遵守，若要因成本／capability新 evidence重分工，先做合法 Stage revision與 canonical read-back。
+
 ### Mode selection unresolved / conservative fallback
 
 若 project governance **尚未宣告 `ChatGPT-Only` 或 `ChatGPT+Codex`**，這代表 `mode selection unresolved`，不是第三種 mode。不得從 available tools、前一個 session、repository shape、是否安裝 Codex或上一個 actor推測 mode。

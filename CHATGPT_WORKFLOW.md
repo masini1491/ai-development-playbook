@@ -286,11 +286,16 @@ Generic session-local verified-context reuse、material freshness trigger、chea
 
 推薦流程：
 
-`Next work → responsibility / required mutation → current authority + capability → lowest-sufficient authorized actor → ChatGPT direct work | Codex handoff | STOP`
+`Next work → decompose materially distinct responsibilities → resolve current Stage/task responsibility per responsibility → current authority + capability → lowest-sufficient authorized actor per responsibility → ChatGPT direct work + residual handoff | single-actor execution | STOP`
 
 一般原則：
 
 - 官方／外部資料 retrieval、bounded research、fixture / corpus 蒐集、provenance、comparison、schema / edge-case synthesis、read-only review，以及目前 session可安全完成的 deterministic evidence processing，若 current authority／capability已允許 ChatGPT完成且不需要另一路 coding-agent mutation，優先由 ChatGPT直接完成。
+- **先拆 responsibility，再看 mutation。** 一個工作同時包含高量 research／evidence／reasoning／synthesis 與較小的 downstream repository mutation 時，不得只因最後 artifact 需要另一 actor寫入，就把整段 upstream work一起分派給該 actor。對每個 materially distinct responsibility 分別選 lowest-sufficient authorized actor；另一 actor只接真正需要其 unique authority／capability 的 residual work。
+- **Cost-aware 不等於 correctness downgrade。** 在候選 actor都能維持相同 authority、evidence與completion標準時，應考慮 scarce Codex quota／usage、Context與大量 retrieval成本、重複 research、retry與handoff overhead；ChatGPT能以較低 scarce-agent成本安全完成的 responsibility，預設留在 ChatGPT。不得為省成本降低 validation、source authority、security、privacy或必要 deterministic execution。
+- **Action access ≠ responsibility assignment。** Read/write permission、connector capability或runtime capability只回答某 actor能否執行某 action；current Task／Stage responsibility回答誰擁有這段工作。Permission/capability不得反向製造 responsibility，也不得把 artifact persistence executor自動升格成整個 Stage executor。
+- **已成立的 Stage assignment 先遵守，成本優化走 revision。** 若 current admitted Stage已明確把某 responsibility分派給另一 actor，ChatGPT不得只因自己也能做就靜默吸收；若新 evidence顯示存在 materially cheaper且仍合法的 decomposition，先依 `Task Identity / Revision Gate` revision同一 Stage的 actor split並完成 canonical read-back，再按新分工執行。
+- Residual handoff必須避免重做已完成 upstream work：Prompt／handoff只攜帶最低充分 established result、evidence pointer、remaining mutation／validation與STOP boundary；除非 current evidence顯示 upstream result stale／insufficient，不要求 receiving actor重新做整份 research。
 - Production/application/firmware source、executable tests、build/dependency/tooling、CI/release/deploy只是常見 implementation artifacts，**artifact type alone does not select Codex**。只有 `Project AI mode: ChatGPT+Codex`，而且 current project governance／authorized Stage把本次 required mutation明確分派給 coding-agent responsibility時，才進 Codex handoff；`ChatGPT-Only` 則由 ChatGPT在其實際 authority／capability交集內執行或 STOP。
 - **Previous actor ≠ next actor。** 上一 Stage由 Codex完成，只代表上一 Stage需要Codex；不能用它作下一 Stage的 actor evidence。
 - Project已進 implementation phase也不代表所有後續 research / evidence / fixture工作都屬 Codex；phase決定 write boundary的一部分，但 actor仍依 current responsibility判斷。

@@ -13,6 +13,7 @@ Scenario ownership：
 - `evals/BEH_023_SUPPLEMENTAL.md`：BEH-023 ChatGPT → Codex Prompt artifact separation / exact-stage minimality regression。
 - `evals/BEH_024_SUPPLEMENTAL.md`：BEH-024 large GitHub reconciliation response-shape / bounded tool-choice regression。
 - `evals/BEH_025_026_SUPPLEMENTAL.md`：BEH-025 action-contract-before-action sequencing；BEH-026 initial delegation opportunity scan before substantive root execution。
+- `evals/BEH_027_SUPPLEMENTAL.md`：BEH-027 cost-aware responsibility decomposition / residual handoff regression。
 
 ## Run record
 

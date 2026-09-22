@@ -85,6 +85,8 @@ Implementation invention boundary: <layers implementation actor must not rebuild
 一般原則：
 
 - 若下一步主要是官方／外部資料 retrieval、bounded research、fixture / corpus 蒐集、provenance、comparison、schema / edge-case synthesis、read-only validation analysis，且 ChatGPT 目前 tool/runtime 與 project authority足以完成，**預設由 ChatGPT 直接處理**；不要只因上一 Stage 用過 Codex 就先產生 Codex Prompt。
+- 上述 ChatGPT-direct default只在 current Task／Stage responsibility尚未把該 work明確分派給其他 actor時適用；**read-only access本身不覆蓋 current Stage ownership**。若既有 actor split把本可由ChatGPT低成本完成的大量 research與一個較小 Codex-only mutation綁在一起，且 ChatGPT有合法 coordination revision authority，先 revision同一 Stage成 responsibility-level split，再讓Codex只接 residual mutation；不得一邊忽略 Stage assignment、一邊以「省流量」為由私下換 actor。
+- Stage-transition cost optimization以 end-to-end cost為準：避免讓 scarce coding-agent quota承擔大量可由ChatGPT完成的 retrieval／reasoning，也避免為了形式拆得太細而產生更高 handoff／reconciliation成本。最低成本永遠受 correctness、authority、evidence與validation標準約束。
 - 若下一步需要 production/application/firmware source mutation、executable tests、build/dependency/tooling、CI/release/deploy 或其他 implementation artifact，先依 selected `Project AI mode` 決定可參與的 AI profile，再套用 current project governance／Stage 的 lower-level authority：`ChatGPT+Codex` 只有明確分派給 coding-agent responsibility 時才 handoff；`ChatGPT-Only` 不製造 Codex handoff，改由 ChatGPT在實際已授權 scope內處理或因 authority/capability不足而 STOP。
 - Actor 判斷以**selected Project AI mode、目前工作的 responsibility、required mutation surface、execution capability 與 project authority**為準，不以「之前是誰做的」或「project已進 implementation phase」單獨決定。
 - 長時間 project chat 若 current Playbook / project governance 在 session 開始後可能已演進，而且下一步 actor choice會改變成本或 authority，先 bounded rehydrate **mode／actor-routing relevant sections**；不全文重讀 Playbook，也不把舊 conversation 的 actor分工當永久 current truth。

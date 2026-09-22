@@ -27,7 +27,8 @@
     "BEH-023",
     "BEH-024",
     "BEH-025",
-    "BEH-026"
+    "BEH-026",
+    "BEH-027"
   ],
   "change_classes": {
     "repository-authority": [
@@ -40,14 +41,16 @@
       "BEH-014",
       "BEH-019",
       "BEH-020",
-      "BEH-022"
+      "BEH-022",
+      "BEH-027"
     ],
     "coordination-admission": [
       "BEH-002",
       "BEH-003",
       "BEH-013",
       "BEH-020",
-      "BEH-021"
+      "BEH-021",
+      "BEH-027"
     ],
     "runtime-and-validation-placement": [
       "BEH-004",
@@ -70,7 +73,8 @@
       "BEH-013",
       "BEH-019",
       "BEH-020",
-      "BEH-021"
+      "BEH-021",
+      "BEH-027"
     ],
     "prompt-delivery": [
       "BEH-020",
