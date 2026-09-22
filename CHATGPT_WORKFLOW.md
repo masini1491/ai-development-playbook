@@ -477,7 +477,7 @@ ChatGPT planning state
 
 #### TASKS Short-launch canonical shape
 
-Short-launch 的 Stage pointer 必須來自**最後一次 current canonical Hot read-back**。若 ChatGPT剛更新／revision Hot Stage，先 read-back，再引用 exact path + exact Stage identity；不得用記憶、舊 wording或自行 paraphrase出的 Stage名稱代替 canonical identity。
+Short-launch 的 Stage pointer 必須來自**最後一次 current canonical Hot read-back**。該 read-back與 `Handoff revisions:` 中的 `target@<branch>=<remote SHA>` 必須錨定**同一個 exact target remote revision**；不得用 commit X 讀到的 Hot pointer搭配 commit Y 的 target SHA。若 ChatGPT剛更新／revision Hot Stage，先完成 post-mutation canonical read-back，並以該次 read-back所屬的 exact remote revision同時形成 Stage pointer與target revision metadata；不得用記憶、舊 wording或自行 paraphrase出的 Stage名稱代替 canonical identity，也不為此建立額外 full-snapshot ceremony。
 
 最低充分形狀：
 
@@ -501,7 +501,7 @@ and report completion with canonical evidence. Do not execute adjacent Hot / Col
 <optional one-line child-routing authorization only when current repository authority does not already provide it>
 ```
 
-TASKS Short-launch 的 exact Hot pointer來自 current canonical target read-back，因此 `target@<branch>=<remote SHA>` 是這個 mode 的 required continuity metadata；它記錄 handoff形成時的 target remote provenance，不把 target branch pin住。
+TASKS Short-launch 的 exact Hot pointer來自 current canonical target read-back，因此 `target@<branch>=<remote SHA>` 是這個 mode 的 required continuity metadata；pointer與SHA必須來自同一 exact remote revision。它記錄 handoff形成時的 target remote provenance，不把 target branch pin住，也不要求額外載入與handoff無關的repository內容。
 
 Launch-time material delta若尚未 canonicalize且確實會改變 execution，可補最低充分內容；若它需要 durable tracking，先更新 Hot contract而不是把 Short-launch變成第二份 specification。
 

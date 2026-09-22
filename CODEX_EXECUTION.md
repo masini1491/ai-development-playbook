@@ -116,17 +116,17 @@ Codex 對一般 project repository 執行 Prompt 時，依任務需要引用 `RE
 每一次新的 Prompt execution、Resume、Fork 或跨 session execution handoff，在真正解讀／執行 scoped Stage前都做一次；**不是每個 command、tool call或小步驟重跑**。
 
 1. 先完成 target repository safe remote-sync並重讀 current governance／Hot coordination，取得 current declared Playbook baseline與合法 execution scope。
-2. 讀取 Prompt中的 `Handoff revisions:` producer-observed metadata。對 floating Playbook ref，用 current authoritative surface取得 exact current revision；若Prompt同時帶有 material target remote revision，Codex必須在 `git fetch origin` 後以 fetched `origin/<branch>` 等同語義 remote revision與之比較，**不得拿 pre-fetch local HEAD直接比較**。
+2. 讀取 Prompt中的 `Handoff revisions:` producer-observed metadata。對 floating Playbook ref，用 current authoritative surface取得 exact current revision；對 pinned SHA／tag，保留 declared pin/ref，並解析同一 pin/ref的 exact immutable revision identity後與handoff metadata核對，tag文字相同不能取代exact revision比較，也不得自行升級到upstream新版。若Prompt同時帶有 material target remote revision，Codex必須在 `git fetch origin` 後以 fetched `origin/<branch>` 等同語義 remote revision與之比較，**不得拿 pre-fetch local HEAD直接比較**。
 3. Same／changed／unresolved與 material impact處置統一依 `AI_CONTEXT.md` → `Cross-boundary Revision Continuity`。Fresh session若沒有verified Playbook Context，只載入本次execution最低充分 owner／section；revision changed也只reload受material影響部分。
 4. 若 current authority仍可合法繼續，safe-sync後的 local HEAD才建立為本次 **target execution baseline**。Long-running same execution不為形式反覆probe；只有跨新execution boundary、Stage／responsibility materially改變或 concrete stale evidence出現時再reconcile。
 
 Completion／final report在continuity適用時用一條compact metadata把 producer-side evidence傳回 ChatGPT：
 
-- mutation Stage：`Execution revisions: playbook@<declared ref>=<execution revision>; target=<execution-baseline SHA>→<result SHA>`
-- validation/read-only Stage：`Execution revisions: playbook@<declared ref>=<execution revision>; target-tested=<exact tested SHA>`
-- legal no-op可用 `target=<SHA>→same`
+- mutation Stage：`Execution revisions: playbook@<declared ref>=<execution revision>; target=<owner/repo>@<branch>=<execution-baseline SHA>→<result SHA>`
+- validation/read-only Stage：`Execution revisions: playbook@<declared ref>=<execution revision>; target-tested=<owner/repo>@<branch>=<exact tested SHA>`
+- legal no-op可用 `target=<owner/repo>@<branch>=<SHA>→same`
 
-只transport實際觀察且consumer需要的revision；不得猜值、不得把local-only result冒充remote canonical state，也不得因格式需要新增大型metadata framework。
+只transport實際觀察且consumer需要的revision；target metadata必須保留足以讓獨立貼回的result唯一辨識 repository + ref/branch + exact revision lineage，不假設consumer仍保有原Prompt上下文。不得猜值、不得把local-only result冒充remote canonical state，也不得因格式需要新增大型metadata framework。
 
 這個 gate確認的是 shared Playbook與material target-state的跨 boundary continuity；它不取代 target repository `fetch → FF-only sync → re-read governance`、Git mutation evidence或 Completion Evidence Guard。
 
