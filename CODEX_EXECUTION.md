@@ -91,7 +91,7 @@ Codex送出 substantive user-facing reply前，先執行 `REPORTING.md` → `Sha
 
 Codex-specific actor-extension check依 reply condition分開處理：
 
-- **Completion／final report**：確認 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 與 `Child profile override: NONE | USED` 已依上節完整呈現，並放在 task result／validation／remaining-gap之後、final reporting timestamp之前。
+- **Completion／final report**：確認 applicable revision continuity已用一條 compact `Execution revisions:` metadata傳回 consumer，再確認 `Child delegation: NONE | CONSIDERED_NOT_USED | USED` 與 `Child profile override: NONE | USED` 已依上節完整呈現。Revision metadata與child transparency都放在 task result／validation／remaining-gap之後、final reporting timestamp之前；正常一致不展開額外revision敘事。
 - **Root-escalation STOP report**：確認 final draft 已呈現 root cause／observability、completed validation、remaining blocker、recommended root model + reasoning、evidence handoff與 user relaunch decision boundary；不得只寫「建議升級模型」或只給 profile名稱而漏掉 blocker／evidence closure。
 
 
@@ -111,17 +111,24 @@ Codex 對一般 project repository 執行 Prompt 時，依任務需要引用 `RE
 8. execute scoped Stage
 9. Targeted Validation
 
-### Codex execution-start Playbook freshness gate
+### Codex execution-start revision continuity gate
 
 每一次新的 Prompt execution、Resume、Fork 或跨 session execution handoff，在真正解讀／執行 scoped Stage前都做一次；**不是每個 command、tool call或小步驟重跑**。
 
-- **Floating baseline**（例如 project governance採用 current/latest Playbook `main`）：對 declared Playbook ref做一次最低成本 revision identity probe。若目前 session已有同 revision、且 execution-relevant owner／section已被 current canonical evidence驗證，可直接 reuse；若 revision已改變，先做 bounded diff／dependency判斷，只 reload會 material影響本次 Codex execution的 owner／section，再重新確認受影響的 authority／execution／validation contract後才繼續。
-- **Fresh session / no verified Playbook Context**：先建立 current revision identity，再只載入本次 execution最低充分的 relevant owner／section；不得因沒有可 reuse Context就全文重載 Playbook。
-- **Pinned SHA／tag baseline**：該 pin仍是 project authority；確認使用同一 pin即可，看到 upstream較新 revision不得自行升級。
-- **Freshness unresolved**：若 project宣告 floating baseline但 execution surface無法確認其 current revision，freshness狀態保持 unresolved；可做最低充分 read-only recovery，但不得把舊 session／handoff中的 Playbook revision當成 current truth後直接進 mutation／Stage execution。
-- **Long-running same execution**：同一次連續 execution內不為形式反覆 probe；只有 Stage／task responsibility materially改變、跨新的 execution boundary，或出現 concrete evidence顯示 Playbook baseline可能已變時，才再做 bounded freshness reconciliation。
+1. 先完成 target repository safe remote-sync並重讀 current governance／Hot coordination，取得 current declared Playbook baseline與合法 execution scope。
+2. 讀取 Prompt中的 `Handoff revisions:` producer-observed metadata。對 floating Playbook ref，用 current authoritative surface取得 exact current revision；若Prompt同時帶有 material target remote revision，Codex必須在 `git fetch origin` 後以 fetched `origin/<branch>` 等同語義 remote revision與之比較，**不得拿 pre-fetch local HEAD直接比較**。
+3. Same／changed／unresolved與 material impact處置統一依 `AI_CONTEXT.md` → `Cross-boundary Revision Continuity`。Fresh session若沒有verified Playbook Context，只載入本次execution最低充分 owner／section；revision changed也只reload受material影響部分。
+4. 若 current authority仍可合法繼續，safe-sync後的 local HEAD才建立為本次 **target execution baseline**。Long-running same execution不為形式反覆probe；只有跨新execution boundary、Stage／responsibility materially改變或 concrete stale evidence出現時再reconcile。
 
-這個 gate確認的是 **shared Playbook execution contract**；它不取代上面的 target repository `fetch → FF-only sync → re-read governance`，也不把 Playbook freshness變成 target repository freshness的替代品。
+Completion／final report在continuity適用時用一條compact metadata把 producer-side evidence傳回 ChatGPT：
+
+- mutation Stage：`Execution revisions: playbook@<declared ref>=<execution revision>; target=<execution-baseline SHA>→<result SHA>`
+- validation/read-only Stage：`Execution revisions: playbook@<declared ref>=<execution revision>; target-tested=<exact tested SHA>`
+- legal no-op可用 `target=<SHA>→same`
+
+只transport實際觀察且consumer需要的revision；不得猜值、不得把local-only result冒充remote canonical state，也不得因格式需要新增大型metadata framework。
+
+這個 gate確認的是 shared Playbook與material target-state的跨 boundary continuity；它不取代 target repository `fetch → FF-only sync → re-read governance`、Git mutation evidence或 Completion Evidence Guard。
 
 若 runtime 已知必要 remote operation 需要 permission escalation，主動要求最小權限，不故意先執行已知會失敗的 command。
 

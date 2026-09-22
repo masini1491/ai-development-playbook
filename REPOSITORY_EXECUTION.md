@@ -103,6 +103,25 @@ Write-required work 若目前 workspace 為 read-only 或無法完成必要 file
 
 Commit/push 必須服從使用者當次 launch 或 repository policy 的明確授權；coordination item 本身不自動授權 Git mutation。
 
+### Git Revision Continuity Specialization
+
+當 `AI_CONTEXT.md` → `Cross-boundary Revision Continuity` 套用到 Git repository 時，exact revision identity預設使用 commit SHA，但必須同時保留它代表的 observation role；**裸 SHA 本身不證明 remote／local／baseline／result語義相同**。
+
+- **ChatGPT / GitHub Connect remote observation**：ChatGPT能以 current GitHub canonical evidence解析 `owner/repo + branch/ref → remote commit SHA`；這可以作為 handoff 的 `target@<branch>=<remote SHA>`，但不能宣稱 Codex local working-tree HEAD、dirty state、ahead/behind/diverged或 execution baseline。
+- **Codex pre-sync local state**：local `HEAD`、working tree與tracking ref只描述 execution environment當下狀態；在 safe fetch前不得拿 stale `origin/<branch>`或local HEAD當 remote canonical revision。
+- **Codex current remote observation**：完成合法 `git fetch origin` 後，以 fetched `origin/<expected branch>`／等價 exact remote ref作 consumer-current remote revision，才能與 ChatGPT handoff的 remote-observed SHA比較。
+- **Codex execution baseline**：只有 safe-sync prerequisites成立、必要FF-only sync完成、current governance／Stage重新確認後的 local HEAD，才可記為本次 Stage execution baseline。
+- **Execution result**：本次 mutation完成後的 local／pushed result SHA與remote canonical是否一致是不同 claim；若completion宣稱已push，仍需依 Remote Git／Completion Evidence規則證明remote state。
+- **ChatGPT reconciliation current state**：ChatGPT收到Codex result後，以 GitHub Connect重新解析 target remote ref取得 current remote revision，並把它與Codex report中的 execution result／tested SHA依 continuity與Completion Evidence分別判斷。
+
+因此典型 target repository lineage可表示為：
+
+`handoff remote X → execution baseline Y → execution result Z → reconciliation-current remote W`
+
+每個箭頭只在該 transition materially需要時判斷；`X != Y`或`Z != W`本身不是自動FAIL，依上位continuity contract與Completion Evidence判斷差異是否影響本次 execution／acceptance。
+
+核心原則：**Compare like with like: remote-observed revision with current remote revision; establish the local execution baseline only after safe sync.**
+
 ## 授權與能力分層（Authorization / Capability Layers）
 
 任何 Git、filesystem、toolchain、network 或 external-service operation，都應分開判斷：

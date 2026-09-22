@@ -130,6 +130,12 @@
       "kind": "contract"
     },
     {
+      "id": "context.cross-boundary-revision-continuity",
+      "owner": "AI_CONTEXT.md",
+      "section": "Cross-boundary Revision Continuity",
+      "kind": "contract"
+    },
+    {
       "id": "context.action-contract-closure",
       "owner": "AI_CONTEXT.md",
       "section": "Action Contract Closure",

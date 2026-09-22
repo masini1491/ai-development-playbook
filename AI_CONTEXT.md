@@ -188,6 +188,34 @@ Active campaign／Stage 若仍高度共享 mutable premise、blocker、validatio
 
 核心原則：**Reuse verified Context until something material invalidates it；freshness 應做 selective invalidation，不應預設 full reload。**
 
+### Cross-boundary Revision Continuity
+
+當一個 handoff、execution result、completion-driving artifact或其他跨 actor／session／execution boundary 的 artifact，會讓 consumer 依賴某個 **mutable revision-bearing object** 做後續 execution、acceptance或planning 時，producer 與 consumer 必須維持最低充分 revision continuity；不得只靠 conversation memory、自然語言 summary或「剛才應該沒變」推定 currentness。
+
+推薦語義：
+
+`producer observes exact revision → transport minimum identity → consumer resolves current revision → compare → bounded reconciliation → continue / repair / STOP only as required`
+
+一般原則：
+
+- **Only materially relied-upon objects participate.** 只有 producer 的 handoff／result correctness 實際依賴其 mutable state時才要求 transport revision identity；不得為形式讓所有 artifact 都攜帶所有可觀察 SHA／version。
+- **Minimum transport identity**：至少能唯一辨識 semantic object、declared ref／baseline，以及 producer 實際觀察到的 exact revision。Git object 可用 exact commit SHA；其他系統可使用其 authoritative immutable revision／digest／version identity。格式完整不得補猜未觀察值。
+- **Observed revision is provenance, not a pin.** Floating ref 在 producer觀察到某 SHA／revision後仍是 floating；該 observed revision只記錄 handoff／result形成時的 provenance，不會自行把 current project authority改成 pinned baseline。
+- **Acquisition mechanism may differ; semantic object must match.** 不同 actor／runtime可以用不同合法工具取得 revision evidence，但比較前必須確認兩邊解析的是同一 object／ref／authority role；不得把 remote canonical revision、stale local tracking ref、pre-fetch local HEAD或其他不同語義的 revision直接當成同一值比較。
+- **Same revision**：consumer確認 current revision與producer-observed revision一致時，可 reuse仍適用的 verified Context／contract，不為形式全文reload或重跑既有 evidence。
+- **Changed revision**：revision不同只代表觸發 reconciliation，**不自動等於 FAIL、rollback、舊execution無效或全部 evidence失效**。先 bounded比較 changed owners／paths／dependencies與本 boundary實際依賴：
+  - 差異與本次 authority／scope／procedure／validation／acceptance premise無 material關聯 → 保留既有結果並繼續；
+  - 差異有 material影響但可在 current authority內相容修復 → selective reload、repair／reconcile、最低充分 revalidation後繼續；
+  - 差異使原 actor／scope／Stage／permission／validation或 acceptance premise不再成立 → 只停止受影響 action，回 current authority做 revision／re-admission／revalidation；不得照舊 artifact慣性執行。
+- **Unresolved current revision**：applicable mutable object 的 current revision無法可靠建立時，affected execution／acceptance action保持 unresolved並 fail closed；可繼續最低充分 read-only recovery，不得把舊 observed revision冒充 current truth。
+- **Historical execution fact ≠ current acceptance.** Consumer使用較新 revision時，不得回頭改寫 producer在較舊 revision下實際已發生的 execution／observation。新版可以使 current acceptance、continuation或validation需要補充／失效，但 historical execution fact仍依其原 provenance保存。
+- **Transport is required; verbose presentation is conditional.** Applicable continuity metadata必須能讓consumer取得，但正常一致時應compact／quiet；只有 mismatch、unresolved或 material impact需要對使用者展開差異與處置。上位contract不要求每次輸出固定status taxonomy。
+- **Pinned authority**：current project authority明確是 immutable SHA／tag／version時，確認consumer仍使用同一pin即可；看到 upstream newer revision不構成 mismatch，也不得自行升級。
+
+這個 contract處理跨 boundary 的 revision continuity；各 domain owner仍負責「何時該 object materially applicable、如何取得 current revision、實際 transport shape、mutation／validation／completion evidence」。不得因本節建立新的 universal metadata framework或要求每個 command反覆 probe。
+
+核心原則：**Carry the revision that materially shaped the artifact, compare it with the consumer current authority/state, and reconcile only the affected assumptions. Revision mismatch is a reconciliation trigger, not an automatic failure.**
+
 ### Action Contract Closure
 
 Progressive Routing 可以省略與目前工作無關的 owner／section，但**不得在治理某個 action 的最低充分 canonical contract 尚未完成解析前，就跨越該 action boundary。** `Minimum-sufficient reading` 限制的是需要載入多少 Context，不是允許只遵守已讀到的部分規則。

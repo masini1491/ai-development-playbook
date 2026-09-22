@@ -273,7 +273,7 @@ Compaction 是 conversation-level state management，**不自動產生任何 dur
 
 Generic session-local verified-context reuse、material freshness trigger、cheap identity／bounded-diff probe、selective invalidation／reload 與 freshness evidence gap，統一由 `AI_CONTEXT.md` → `Session-local Verified Context Reuse` 擁有。本節只保存 **Playbook baseline-specific delta**。
 
-- **Floating declared baseline**（例如 project governance 明確採用 current/latest `main`）：一般 action仍依 `AI_CONTEXT.md` 的 material freshness trigger決定是否 probe；但**每一個新的 Codex handoff本身就是 mandatory freshness boundary**。在 handoff的 actor／Prompt contract定稿與 final Prompt交付前，至少對 declared Playbook ref做一次最低成本 revision identity probe。HEAD／revision未變時直接 reuse本 session已驗證的 relevant Context；revision已變時先做 bounded diff／dependency判斷，只 reload會 material影響本次 handoff的 owner／section，然後重新確認受影響的 actor admission／Prompt contract。不得把這條解讀成每次全文重載 Playbook。
+- **Floating declared baseline**（例如 project governance 明確採用 current/latest `main`）：一般 action仍依 `AI_CONTEXT.md` 的 material freshness trigger決定是否 probe；但**每一個新的 Codex handoff本身就是 mandatory freshness boundary**。在 handoff的 actor／Prompt contract定稿與 final Prompt交付前，至少對 declared Playbook ref做一次最低成本 revision identity probe，並依 `AI_CONTEXT.md` → `Cross-boundary Revision Continuity` 保存這次 producer-observed revision供 Codex execution-start reconciliation。Same／changed／unresolved的通用處置不在本節複製；不得把這條解讀成每次全文重載 Playbook。
 - **Pinned SHA／tag baseline**：該 pinned baseline本身是 project authority；看到 upstream newer HEAD、經過一段時間或另一 session已有新版，都不得自行升級。只有 current project governance／使用者合法改變 baseline時才切換。
 - **Playbook-specific material boundary**：Stage／task responsibility改變、repository mutation／completion acceptance，或其他 decision若 correctness materially依賴 Playbook current actor／authority／validation／reporting contract，可構成 generic freshness trigger；若不影響本次 decision，不為形式 probe。**Codex handoff是上條 floating-baseline規則的明確例外：每個新 handoff都必須做一次 cheap revision probe，不靠舊 session probe推定仍 current。**
 - Playbook identity probe只回答 declared baseline/ref identity；它不授權 repository write、execution、deployment、credential、external-service action，也不取代 target project自己的 current governance read-back。
@@ -484,6 +484,7 @@ Short-launch 的 Stage pointer 必須來自**最後一次 current canonical Hot 
 ```text
 Repository: <owner/repo>
 Branch: <expected branch, usually main>
+Handoff revisions: playbook@<declared ref>=<exact producer-observed revision>; target@<branch>=<remote revision only when this handoff materially relies on that target state>
 
 Before interpreting project execution state or reading current Hot coordination, complete the current safe remote-sync bootstrap:
 - verify repository / branch / HEAD and preserve unrelated work;
@@ -509,6 +510,7 @@ Launch-time material delta若尚未 canonicalize且確實會改變 execution，�
 ```text
 Repository: <owner/repo>
 Branch: <expected branch, usually main>
+Handoff revisions: playbook@<declared ref>=<exact producer-observed revision>; target@<branch>=<remote revision only when this handoff materially relies on that target state>
 
 Before interpreting mutable project execution state, complete the current safe remote-sync bootstrap:
 - verify repository / branch / HEAD and preserve unrelated work;
@@ -541,7 +543,7 @@ Do not expand beyond this task.
 
 送出前依序確認：
 
-1. **Playbook-baseline freshness closure**：先解析 current project宣告的 Playbook baseline。若是 floating ref／current `main`，本次**每一個新的 Codex handoff**都必須在 final Prompt交付前完成一次 handoff-scoped cheap revision identity probe；revision未變可 reuse已驗證 Context，revision已變則先 bounded reload會影響 actor／handoff／Prompt delivery的 relevant owner／section，並重做受影響的後續 gate。若 baseline是 pinned SHA／tag，確認仍使用該 pin，**不得**因看到 upstream較新 revision自行升級。這項檢查不是 full-Playbook reload要求。
+1. **Revision-continuity closure**：先解析 current project宣告的 Playbook baseline。每一個新的 Codex handoff若使用 floating Playbook ref，final Prompt交付前必須完成 handoff-scoped cheap revision identity probe，並在 `Handoff revisions:` transport exact producer-observed Playbook revision；pinned baseline則 transport該合法pin，不因 upstream新版自行升級。若本次 handoff materially依賴 ChatGPT剛觀察到的 target repository mutable state，再一併 transport `target@<branch>=<remote SHA>`；不適用時省略 target欄位，不輸出 placeholder。Same／changed／unresolved處置依 `AI_CONTEXT.md` → `Cross-boundary Revision Continuity`，這不是 full-Playbook reload要求。
 2. **Actor check**：current responsibility／authority仍需要 Codex handoff。若 premise 已改變，回到 `Actor Admission / Handoff Gate`；不得因 Prompt已寫好就照送。
 3. **Persistence closure**：若 current work 依本檔 admission rules 屬 durable／tracked Stage，且 ChatGPT 具有 current coordination write authority，先完成必要 Hot admission／revision與 canonical read-back；**不得把 Prompt 當 Stage persistence surface**。反之，一次性、低風險、低 tracking value work 不得為了本 gate 被強迫建立 Hot task。
 4. **Prompt-mode check**：若 current Hot coordination已有可執行 Stage且 Codex能取得該 Stage／authority，最終草稿必須是 `TASKS Short-launch`；沒有 Hot Stage且符合一次性 bounded條件時才使用 `Direct Short Prompt`；`Standalone Full Prompt` 必須能指出本檔已列出的至少一個 explicit exception。
@@ -584,9 +586,12 @@ ChatGPT-side deterministic workload execution、execution capability、artifact 
 
 ## Codex 結果 reconciliation
 
-收到 Codex execution result後，若宣稱 GitHub tracked-file mutation、commit/push、coordination bookkeeping、branch/HEAD或其他 remote state change，在接受 completion或產生下一 Stage前，依 `DEBUG_VALIDATION.md` Completion Evidence Guard取得最低充分 remote evidence。
+收到 Codex execution result後，先把 Codex report視為 producer artifact，不把其中的 revision／completion claim直接升格為 current authority。
 
-Codex report是 claim，不是 GitHub authority；local-only change不能被 remote read-back升格；mismatch時 STOP並依 canonical current state重建；remote evidence不可用時標記 `REMOTE COMPLETION EVIDENCE UNAVAILABLE`。
+- 若 report宣稱 GitHub tracked-file mutation、commit/push、coordination bookkeeping、branch/HEAD或其他 remote state change，在接受 completion或產生下一 Stage前，依 `DEBUG_VALIDATION.md` Completion Evidence Guard取得最低充分 remote evidence。
+- 若本次 result帶有 `Execution revisions:` continuity metadata，ChatGPT以 GitHub Connect／current canonical source解析相同 Playbook ref與 applicable target repository remote ref的 current revision，再依 `AI_CONTEXT.md` → `Cross-boundary Revision Continuity` 做 consumer-side reconciliation。正常一致時不為形式重印整組SHA；只有 mismatch／unresolved／material impact才展開對 acceptance或下一Stage的影響。
+- Codex report是 claim，不是 GitHub authority；local-only change不能被 remote read-back升格。Repository completion evidence mismatch時仍依 canonical current state重建；remote evidence不可用時標記 `REMOTE COMPLETION EVIDENCE UNAVAILABLE`。
+- 新版 Playbook／repository state可以改變**現在**的 acceptance、revalidation或continuation requirement，但不得抹掉 Codex在其 recorded execution revision下實際發生的 historical execution fact。
 
 完成 reconciliation 後，**不要直接因「Codex剛完成」就產生下一個 Codex Prompt**；先回到 `Actor Admission / Handoff Gate`，依下一項工作的 current responsibility重新選 actor。
 
