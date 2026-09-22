@@ -110,6 +110,18 @@ Playbook mapping:
 - C2C 的 control-plane／data-plane separation 與 read-only review surface 可作為 interoperability implementation reference；其特定 message size、iteration limit、ChatGPT Project／connector topology、browser automation、Cloudflare tunnel、OAuth／pairing、repair 流程與 command syntax 仍由 upstream current canonical documentation 擁有，不提升為 Playbook universal policy。
 - 若 project 實際採用 C2C，對 version-specific command、runtime、security、setup 或 compatibility claim 應重新讀 current upstream／installed revision；本 profile 只保存 Playbook-side semantic mapping，不鏡像 upstream implementation catalog。
 
+### Antigravity as coding-agent executor
+
+Antigravity可以在 current project governance明確 mapping 時，作為既有 `ChatGPT+Codex` collaboration profile下的 **alternate coding-agent executor implementation**；它不是第三種 Project AI mode。
+
+Playbook mapping：
+
+- `ANTIGRAVITY.md`、host availability或runtime可用性屬 **activation / compatibility surface**，不會自行建立Task／Stage、executor admission、repository write、credential、deployment或completion authority。
+- Project若把 coding-agent executor responsibility明確 map 給 Antigravity，實際可做的 mutation仍受 current Stage、repository actor/path authority、execution permission與credential capability交集限制；executor substitution不擴張scope。
+- Antigravity提供的 filesystem、shell、planning、browser、subagent、workspace isolation或其他能力（若current runtime實際存在）都是 **runtime capability**，不是 authority。Child／subagent delegation仍需依 applicable delegation contract重新 bounded admission，不因parent具備能力而自動取得transitive authority。
+- Antigravity產生的implementation plan、subagent report、test result與completion report依其semantic role分別是planning／evidence／execution claim；current canonical completion仍服從project validation contract、revision continuity與required repository read-back。
+- Antigravity的版本特定tool names、command syntax、workspace／branch semantics、model/provider identity與runtime behavior由 upstream current documentation或實際runtime evidence擁有；本 profile只保存穩定的Playbook-side authority mapping，不鏡像產品catalog。
+
 ### GSA-TTS Agentic Coding Playbook
 
 The GSA-TTS Agentic Coding Playbook uses a universal behavioral contract plus a project layer, with executable skills and deterministic enforcement mechanisms.

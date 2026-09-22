@@ -51,6 +51,16 @@ Host／agent-specific instruction surface（例如 `CLAUDE.md`、`GEMINI.md`、C
 
 核心原則：**Compatibility grants discoverability and routing, not execution admission. Adapter presence must never silently rewrite Project AI mode or repository authority.**
 
+### Antigravity host compatibility
+
+`ANTIGRAVITY.md` 是 Antigravity 的 thin bootstrap shim；它只讓 host 進入既有 project-native／Playbook routing，不建立新的 Project AI mode、executor admission或第二份 execution policy。
+
+- Project AI mode仍由 `PROJECT_MODES.md` 的既有兩值 contract決定；Antigravity availability或adapter存在本身不改 mode。
+- 在 `ChatGPT+Codex` collaboration profile下，current project governance可以把 **coding-agent executor responsibility** 明確 map 給 Antigravity；這是 lower-level actor mapping，不是第三種 mode。
+- Antigravity 被合法 admission後，仍使用相同 repository identity、Task／Stage、path/action authority、permission、credential、validation、completion與reporting owners；filesystem／shell／subagent或其他runtime capability不會自行擴張authority。
+- Antigravity 的版本特定工具、subagent、workspace、planning或host behavior由其 upstream／current runtime evidence擁有；本 Playbook不鏡像產品command catalog。
+- Playbook-side executor semantic mapping見 `INTEROPERABILITY.md` → `Antigravity as coding-agent executor`。
+
 Adapter 不應：
 
 - 複製完整 Playbook policy 到 tool-specific config；

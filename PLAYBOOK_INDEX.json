@@ -393,6 +393,7 @@
     "session_handoff": "SESSION_HANDOFF_TEMPLATE.md",
     "claude_code_bootstrap": "CLAUDE.md",
     "gemini_cli_bootstrap": "GEMINI.md",
+    "antigravity_bootstrap": "ANTIGRAVITY.md",
     "github_copilot_bootstrap": ".github/copilot-instructions.md"
   },
   "behavioral_regression": {

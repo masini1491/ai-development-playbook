@@ -185,6 +185,7 @@ If this file or the host's native behavior conflicts with current repository can
                 "activation": "ACTIVATION_ADAPTERS.md",
                 "claude_code_bootstrap": "CLAUDE.md",
                 "gemini_cli_bootstrap": "GEMINI.md",
+                "antigravity_bootstrap": "ANTIGRAVITY.md",
                 "github_copilot_bootstrap": ".github/copilot-instructions.md",
             },
             "behavioral_regression": {"matrix": "evals/regression_matrix.json", "runner": "tools/check.py"},
@@ -195,6 +196,7 @@ If this file or the host's native behavior conflicts with current repository can
             "ACTIVATION_ADAPTERS.md": "# Adapter\n",
             "CLAUDE.md": "# Claude Code\n",
             "GEMINI.md": "# Gemini CLI\n",
+            "ANTIGRAVITY.md": "# Antigravity\n",
             ".github/copilot-instructions.md": "# GitHub Copilot\n",
             "tools/check.py": "",
             "evals/regression_matrix.json": "{}",
@@ -218,12 +220,14 @@ If this file or the host's native behavior conflicts with current repository can
             "ACTIVATION_ADAPTERS.md": "# Adapter\n",
             "CLAUDE.md": "# Claude Code\n",
             "GEMINI.md": "# Gemini CLI\n",
+            "ANTIGRAVITY.md": "# Antigravity\n",
             ".github/copilot-instructions.md": "# GitHub Copilot\n",
         })
         diagnostics = playbook_check._check_machine_index(root)
-        self.assertEqual(3, sum(item.code == "MANIFEST_ADAPTER" for item in diagnostics))
+        self.assertEqual(4, sum(item.code == "MANIFEST_ADAPTER" for item in diagnostics))
         self.assertTrue(any("claude_code_bootstrap" in item.message for item in diagnostics))
         self.assertTrue(any("gemini_cli_bootstrap" in item.message for item in diagnostics))
+        self.assertTrue(any("antigravity_bootstrap" in item.message for item in diagnostics))
         self.assertTrue(any("github_copilot_bootstrap" in item.message for item in diagnostics))
 
     def test_machine_index_missing_target_fails(self) -> None:

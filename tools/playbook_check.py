@@ -30,6 +30,7 @@ CHATGPT_CUSTOM_INSTRUCTIONS_MAX_CHARS = 1500
 CROSS_AGENT_ADAPTERS = {
     "CLAUDE.md": "Claude Code",
     "GEMINI.md": "Gemini CLI",
+    "ANTIGRAVITY.md": "Antigravity",
     ".github/copilot-instructions.md": "GitHub Copilot",
 }
 CROSS_AGENT_REQUIRED_POINTERS = ("`CHAT_INIT.md`", "`AGENTS.md`", "`PLAYBOOK_INDEX.json`")
@@ -44,6 +45,7 @@ CROSS_AGENT_MAX_LINES = 32
 CROSS_AGENT_MACHINE_INDEX_POINTERS = {
     "claude_code_bootstrap": "CLAUDE.md",
     "gemini_cli_bootstrap": "GEMINI.md",
+    "antigravity_bootstrap": "ANTIGRAVITY.md",
     "github_copilot_bootstrap": ".github/copilot-instructions.md",
 }
 
