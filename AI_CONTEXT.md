@@ -14,6 +14,7 @@ Git／permission、Conversation-scoped Repository Write Lock、ChatGPT 實際可
 - new surface admission／cohesion／progressive direct-leaf routing → `Independent Retrieval Intent Gate`、`Context Cohesion Gate`、`Progressive Routing／Direct-leaf Bypass`
 - cross-actor／session／execution handoff-result revision continuity → `Cross-boundary Revision Continuity`
 - pre-action contract closure／required-artifact closure／absence claim／fail-fast ordering → `Action Contract Closure`、`Absence Claim Coverage Gate`、`Fail-fast Context Ordering`
+- broad／multi-domain synthesis material-evidence coverage → `Material Evidence Coverage Closure`
 - routing metadata／routing closure／AI-facing route regression → `Thin Routing Metadata`、`Routing Integrity Contract`、`Generated Routing Metadata／Drift Check`
 - Hot／Cold coordination、dossier、evidence、history、freshness與 canonicalization → `Hot / Cold Coordination Semantics`、`Hot Task Dossier`、`Evidence Staging Surface`、`Historical / Search-noise Isolation`、`Current Snapshot Freshness`、`Canonicalization → Surface Slimming`
 - derived metadata write closure／retention／retrieval cost／hot-path growth → `Derived Metadata Write-Closure Gate`、`Retention / Reconstruction Integration`、`AI Readability / Retrieval Cost Change Gate`
@@ -274,6 +275,25 @@ Progressive Reading 的 STOP 條件取決於本次要支持的 **decision／clai
 
 核心原則：**Presence 可由充分 positive evidence成立；absence必須有與 claim scope相稱的 bounded coverage。省 Context不是提早下結論，而是在足以支持結論時停止。**
 
+### Material Evidence Coverage Closure
+
+當 current project／domain canonical contract 已把一個 **broad／multi-domain synthesis** 定義為需要考慮多個 evidence domain 時，final synthesis、decision或recommendation形成前，對每個 **materially applicable domain** 都必須完成最低充分 coverage disposition；不得因模型沒有主動想到某 domain，就讓 material evidence silent skip。
+
+推薦語義：
+
+`project-defined material domain set → applicability → minimum evidence / freshness check → coverage disposition → synthesis`
+
+一般原則：
+
+- **Material domain set由 project／domain owner定義。** 本 Playbook不自行發明股票、資安、硬體、研究或其他domain清單；若current authority沒有定義material domain set，本節不把常識或模型偏好升格成新的domain policy。
+- **Coverage disposition需要語意閉環，但不要求固定status enum。** 每個material domain至少應能判定為：已取得且對本次synthesis有material contribution；已檢查但沒有material signal；evidence unavailable／stale／partial並保留限制；或依current contract判定不適用。Project可以用自己的欄位／狀態表示，不必採用這些文字。
+- **Silent omission不是coverage。** 最終輸出不必逐domain建立獨立章節，也不必列出所有「無訊號」項目；但在形成synthesis前，material domain不得因沒有被模型想到就直接消失。若其evidence gap可能materially改變結論，應縮窄claim、揭露uncertainty，或停止受影響的recommendation／decision。
+- **Progressive reading仍成立。** 只載入current project routing／applicability判定後真正material的owner／evidence；本節不要求broad task全文掃描所有leaf，也不把optional／irrelevant domain升格為required。
+- **Coverage closure不改變evidence authority。** Router／matrix／checklist只負責指出應處理的domain；實際facts、freshness、quality與interpretation仍由各domain canonical owner／source負責。
+- **Existing verified evidence可在適用時重用。** 若currentness／scope沒有material trigger，可依既有verified-context reuse規則沿用；本節不要求為形式重抓相同evidence。
+
+核心原則：**Broad synthesis must close coverage over the project-defined material evidence set before concluding. Capability existence and owner discovery are necessary, but they do not by themselves prove synthesis coverage.**
+
 ### Fail-fast Context Ordering
 
 當本次 task 有多個 prerequisite artifact / authority 可能需要讀取時，除了「讀得少」，也應優先安排**最能以低成本否決後續 work / Context 的資訊**。
@@ -366,6 +386,7 @@ Budget／trigger 可依 repository 規模與使用型態定義，例如：
 - routing surface 宣告的 file／owner／section／router／stable ID destination 真實存在且語意適用；「file exists」不足以證明其宣告的 nested router／section也存在；
 - 新 target 可由預期 entry path 命中，不需要依賴模型猜 path／舊聊天室／全 repo 搜尋；
 - 若 mutation涉及 first-order routing decision，human／machine／project-native discovery surface至少有一條符合實際 consumer 的 bounded route；不要求所有 leaf rule都被全域索引；
+- 若新增／擴充的 canonical capability 會 materially改變既有 **high-frequency ordinary intent** 的 evidence／reasoning coverage，除了證明新leaf本身可達，也要 bounded確認受影響的 parent ordinary-intent route仍能自然 discover／activate該capability；不得讓新能力只有在模型先猜到其存在時才會被使用，也不因此要求把所有leaf升格為global index；
 - 只更新必要 router／index，不因單一 leaf mutation製造全域 derived churn；
 - current authority 沒有被 historical／cold／superseded route 重新暴露或混合加權；
 - parent／child、dependency、conditional pointer 等會改變 task identity／scope 的關係仍完整；

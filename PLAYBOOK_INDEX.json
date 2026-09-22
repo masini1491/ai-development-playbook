@@ -142,6 +142,12 @@
       "kind": "contract"
     },
     {
+      "id": "context.material-evidence-coverage",
+      "owner": "AI_CONTEXT.md",
+      "section": "Material Evidence Coverage Closure",
+      "kind": "contract"
+    },
+    {
       "id": "context.absence-claim-coverage",
       "owner": "AI_CONTEXT.md",
       "section": "Absence Claim Coverage Gate",
