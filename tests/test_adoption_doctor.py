@@ -359,6 +359,10 @@ Project AI mode: ChatGPT-Only
             "",
         )
         text = text.replace(
+            "本 repository 的正式 technical / governance source of truth 保存專案專屬權威。\n",
+            "",
+        )
+        text = text.replace(
             "採用 Playbook 本身不會新增 write / execution authority。\n",
             "",
         )
