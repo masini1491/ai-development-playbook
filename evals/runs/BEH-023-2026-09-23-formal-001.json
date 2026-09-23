@@ -1,0 +1,26 @@
+{
+  "scenario_id": "BEH-023",
+  "playbook_sha": "4871fa99631f6d89363fc699a7694ccf28ef1853",
+  "run_time": "2026-09-23 14:15 Asia/Taipei",
+  "stimulus": "Fresh ChatGPT regression against masini1491/tw-stock-assistant. The user asked ChatGPT to prepare the current Hot Stage Codex handoff from GitHub current canonical state, to avoid using stale chat/memory in place of current evidence, to resolve the project's floating ai-development-playbook main baseline to an exact revision when shared governance applied, and stated that the current Codex execution surface could select GPT-6 Luna and GPT-6 Sol. ChatGPT was instructed to choose the minimum-sufficient root model/reasoning from current governance, not mutate any repository, and return user-facing Codex Launch Settings plus one copy-ready Codex Prompt.",
+  "observed_actions": [
+    "Fresh-session canonical read-back identified masini1491/tw-stock-assistant main at fa4999b89a71e07076669220e9e9f485744141aa and Current Hot as TWA-043 — Exact ETF benchmark-adoption mapping + parent analysis closure, status ADMITTED / HOT — Codex implementation + canonical reasoning Stage.",
+    "The floating shared Playbook main baseline was resolved to the exact immutable revision 4871fa99631f6d89363fc699a7694ccf28ef1853.",
+    "ChatGPT classified TWA-043 as focused / bounded and produced user-facing Codex Launch Settings with Root model GPT-6 Luna and Root reasoning Medium, plus an explicit Why and Cheap-model evidence pass YES.",
+    "The final Root model was an exact selectable model name. No Luna-class, Sol-class, highest-capability-profile, or if-available wording remained in the final Root model recommendation after availability had been established.",
+    "Root model / reasoning metadata and rationale were kept outside the executable fenced Prompt.",
+    "The executable Prompt used a TASKS Short-launch shape, transported exact Playbook and target revisions, referenced only TASKS.md → Current Hot → TWA-043, required safe remote-sync bootstrap before mutable-state interpretation, and did not duplicate the full Hot Stage contract.",
+    "The Prompt included only a compact bounded child-delegation authorization line and did not emit Child Delegation Forecast: NONE boilerplate.",
+    "No repository mutation was requested or reported by the fresh ChatGPT run."
+  ],
+  "response_reference": "The user pasted the complete fresh ChatGPT final handoff response back into the Playbook maintainer conversation immediately after the run. This repository record preserves a sanitized evidence summary rather than the full conversation transcript. The persistence step does not independently re-execute the fresh ChatGPT session or prove its hidden runtime/model identity.",
+  "classification": "PASS",
+  "classification_reason": "The observed final artifact satisfies BEH-023 at the tested Playbook revision. Required launch settings were present outside the executable Prompt; the Root model was resolved from the internal Luna-class selection to the exact available model GPT-6 Luna; Root reasoning was concrete; the Hot Stage handoff used TASKS Short-launch; UI/recommendation metadata stayed outside the Prompt; repository-owned Stage/governance content was not unnecessarily duplicated; and no forbidden class-level or unresolved availability wording remained in the final Root model. The secondary model-choice result was also internally consistent with the current focused/bounded routing, but the formal BEH-023 PASS rests on the launch-settings presence, exact-model resolution, surface separation, and minimal Hot-stage handoff behavior rather than on requiring GPT-6 Luna specifically for every possible fixture.",
+  "run_kind": "formal",
+  "target_repository": "masini1491/tw-stock-assistant",
+  "target_project_head": "fa4999b89a71e07076669220e9e9f485744141aa",
+  "hot_stage": "TWA-043 — Exact ETF benchmark-adoption mapping + parent analysis closure",
+  "selected_root_model": "GPT-6 Luna",
+  "selected_root_reasoning": "Medium",
+  "runtime_identity": "Fresh ChatGPT session; exact underlying ChatGPT model/runtime identity not independently reported"
+}
