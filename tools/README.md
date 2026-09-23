@@ -29,7 +29,7 @@ These tools enforce only objective, machine-checkable invariants. Do not add AI-
 
 The Doctor engine accepts a filesystem root and does not itself acquire GitHub credentials, call GitHub APIs, or receive target-repository write authority.
 
-The Doctor parser treats exactly one active, non-fenced instance of each structured adoption section as the deterministic input boundary for its responsibility: AI Development Playbook baseline, Authority boundary, and Project-specific minimum contract. A missing or duplicate section produces a finding; the Doctor does not fall back to whole-file matching for that responsibility. This scopes deterministic parsing only and does not prove the semantic correctness of routing or authority prose.
+The Doctor parser prefers exactly one active instance of each structured adoption section as the deterministic input boundary for its responsibility: AI Development Playbook baseline, Authority boundary, and Project-specific minimum contract. Parser-active text excludes fenced Markdown, HTML comments, and Markdown blockquote lines so examples/history cannot satisfy declaration markers. When a preferred section is absent, the Doctor uses normalized active-text compatibility fallback and emits a warning; duplicate preferred sections do not fall back implicitly. This preserves older valid adoption shapes without treating the preferred headings as mandatory project governance. The Doctor still checks declaration/wiring markers only and does not prove the semantic correctness of routing or authority prose.
 
 Two input acquisition modes are supported:
 

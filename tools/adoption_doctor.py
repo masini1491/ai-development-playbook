@@ -22,6 +22,8 @@ SHA_TOKEN_RE = re.compile(r"(?<![0-9a-f])[0-9a-f]{40}(?![0-9a-f])")
 PROJECT_AI_MODE_RE = re.compile(r"(?im)^\s*(?:[-*]\s*)?Project AI mode\s*[:：]\s*(.+?)\s*$")
 LEGACY_CHATGPT_PROJECT_MODE_RE = re.compile(r"(?im)^\s*(?:[-*]\s*)?ChatGPT Project Mode\s*[:：]\s*(.+?)\s*$")
 MARKDOWN_FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})")
+MARKDOWN_BLOCKQUOTE_RE = re.compile(r"^\s*>")
+HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
 FIELD_RE_TEMPLATE = r"(?im)^\s*[-*]\s*{label}\s*:\s*(.+?)\s*$"
 PLACEHOLDER_MARKERS = (
     "<ChatGPT-Only | ChatGPT+Codex>",
@@ -92,10 +94,29 @@ def _without_fenced_markdown(text: str) -> str:
     return "".join(rendered)
 
 
+def _blank_preserving_newlines(value: str) -> str:
+    return "".join("\n" if char == "\n" else " " for char in value)
+
+
+def _active_markdown_text(text: str) -> str:
+    """Return deterministic declaration text, excluding inactive Markdown/example surfaces."""
+    active_text = _without_fenced_markdown(text)
+    active_text = HTML_COMMENT_RE.sub(
+        lambda match: _blank_preserving_newlines(match.group(0)),
+        active_text,
+    )
+    rendered: list[str] = []
+    for line in active_text.splitlines(keepends=True):
+        if MARKDOWN_BLOCKQUOTE_RE.match(line):
+            rendered.append("\n" if line.endswith("\n") else "")
+        else:
+            rendered.append(line)
+    return "".join(rendered)
+
+
 def _named_markdown_sections(text: str, heading: str) -> list[str]:
     """Return active Markdown sections whose heading exactly matches the requested heading."""
-    active_text = _without_fenced_markdown(text)
-    lines = active_text.splitlines(keepends=True)
+    lines = text.splitlines(keepends=True)
     sections: list[str] = []
 
     for index, line in enumerate(lines):
@@ -119,24 +140,24 @@ def _section_scope(
     text: str,
     heading: str,
     code_prefix: str,
-    severity: str,
+    duplicate_severity: str,
 ) -> tuple[str, list[Finding]]:
     sections = _named_markdown_sections(text, heading)
     if len(sections) == 1:
         return sections[0], []
     if not sections:
-        return "", [
+        return text, [
             _finding(
-                severity,
-                f"{code_prefix}_SECTION_MISSING",
-                f"Required adoption section {heading!r} is missing; Doctor will not fall back to whole-file matching for this responsibility.",
+                "WARN",
+                f"{code_prefix}_SECTION_LEGACY_FALLBACK",
+                f"Preferred adoption section {heading!r} is missing; Doctor is using normalized active-text compatibility fallback for this responsibility.",
             )
         ]
     return "", [
         _finding(
-            severity,
+            duplicate_severity,
             f"{code_prefix}_SECTION_AMBIGUOUS",
-            f"Required adoption section {heading!r} appears {len(sections)} times; Doctor will not choose one implicitly.",
+            f"Preferred adoption section {heading!r} appears {len(sections)} times; Doctor will not choose one or use legacy fallback implicitly.",
         )
     ]
 
@@ -286,24 +307,25 @@ def check_project(root: Path) -> list[Finding]:
         return [_finding("FAIL", "AGENTS_MISSING", "AGENTS.md is required for repository-declared Playbook adoption.")]
 
     text = agents.read_text(encoding="utf-8")
+    active_text = _active_markdown_text(text)
     findings: list[Finding] = [_finding("PASS", "AGENTS_PRESENT", "AGENTS.md exists.")]
 
     baseline_text, section_findings = _section_scope(
-        text,
+        active_text,
         ADOPTION_BASELINE_SECTION,
         "ADOPTION_BASELINE",
         "FAIL",
     )
     findings.extend(section_findings)
     authority_text, section_findings = _section_scope(
-        text,
+        active_text,
         AUTHORITY_SECTION,
         "AUTHORITY_BOUNDARY",
         "WARN",
     )
     findings.extend(section_findings)
     minimum_contract_text, section_findings = _section_scope(
-        text,
+        active_text,
         MINIMUM_CONTRACT_SECTION,
         "MINIMUM_CONTRACT",
         "WARN",
@@ -316,9 +338,9 @@ def check_project(root: Path) -> list[Finding]:
         findings.append(_finding("FAIL", "PLAYBOOK_DECLARATION_MISSING", f"The {ADOPTION_BASELINE_SECTION!r} section does not reference {PLAYBOOK_REPO}."))
 
     if "CHAT_INIT.md" in baseline_text:
-        findings.append(_finding("PASS", "BOOTSTRAP_ROUTED", "The adoption baseline section contains a CHAT_INIT.md bootstrap route marker for shared Playbook activation."))
+        findings.append(_finding("PASS", "BOOTSTRAP_ROUTED", "The active adoption scope contains a CHAT_INIT.md bootstrap route marker for shared Playbook activation."))
     else:
-        findings.append(_finding("FAIL", "BOOTSTRAP_ROUTING_MISSING", "The adoption baseline section has no CHAT_INIT.md bootstrap route marker for cases where shared Playbook activation is required."))
+        findings.append(_finding("FAIL", "BOOTSTRAP_ROUTING_MISSING", "The active adoption scope has no CHAT_INIT.md bootstrap route marker for cases where shared Playbook activation is required."))
 
     findings.extend(_baseline_findings(baseline_text))
     findings.extend(_project_ai_mode_findings(baseline_text))

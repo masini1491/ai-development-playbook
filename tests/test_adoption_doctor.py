@@ -300,15 +300,115 @@ project-specific authority 與 common Playbook 衝突，以 project-specific aut
         codes = [item.code for item in adoption_doctor.check_project(root)]
         self.assertIn("BOOTSTRAP_ROUTING_MISSING", codes)
 
-    def test_minimum_contract_fields_outside_named_section_are_ignored(self) -> None:
+    def test_minimum_contract_fields_use_legacy_fallback_when_section_is_missing(self) -> None:
         text = self.healthy_agents().replace(
             "## Project-specific minimum contract",
             "## Project notes",
         )
         root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
         codes = [item.code for item in adoption_doctor.check_project(root)]
-        self.assertIn("MINIMUM_CONTRACT_SECTION_MISSING", codes)
+        self.assertIn("MINIMUM_CONTRACT_SECTION_LEGACY_FALLBACK", codes)
+        self.assertIn("CANONICAL_SOURCES_DECLARED", codes)
+
+    def test_legacy_adopter_shape_uses_fallback_without_false_fail(self) -> None:
+        text = """# AGENTS.md
+## Baseline
+Shared AI Development Playbook: `masini1491/ai-development-playbook`
+Playbook baseline: `main`
+Project AI mode: ChatGPT-Only
+
+## Project authority
+
+- `CHAT_INIT.md` is the fresh-session bootstrap owner.
+"""
+        root = self.make_repo({"AGENTS.md": text})
+        findings = adoption_doctor.check_project(root)
+        codes = [item.code for item in findings]
+        self.assertIn("ADOPTION_BASELINE_SECTION_LEGACY_FALLBACK", codes)
+        self.assertIn("PLAYBOOK_DECLARED", codes)
+        self.assertIn("BOOTSTRAP_ROUTED", codes)
+        self.assertIn("BASELINE_EXPLICIT", codes)
+        self.assertIn("PROJECT_AI_MODE_DECLARED", codes)
+        self.assertFalse([item for item in findings if item.severity == "FAIL"], findings)
+
+    def test_html_comment_playbook_and_bootstrap_markers_are_ignored(self) -> None:
+        text = self.healthy_agents()
+        text = text.replace(
+            "本專案採用 `masini1491/ai-development-playbook` 作為共通 AI 開發基準。\n",
+            "",
+        )
+        text = text.replace(
+            "需要 shared Playbook activation 時，進入 `CHAT_INIT.md`。\n",
+            "",
+        )
+        text = text.replace(
+            "Playbook baseline: `main`",
+            "Playbook baseline: `main`\n<!-- masini1491/ai-development-playbook\nCHAT_INIT.md -->",
+        )
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("PLAYBOOK_DECLARATION_MISSING", codes)
+        self.assertIn("BOOTSTRAP_ROUTING_MISSING", codes)
+
+    def test_html_comment_baseline_mode_and_authority_markers_are_ignored(self) -> None:
+        text = self.healthy_agents()
+        text = text.replace("Playbook baseline: `main`\n", "")
+        text = text.replace("Project AI mode: `ChatGPT+Codex`\n", "")
+        text = text.replace(
+            "project-specific authority 與 common Playbook 衝突，以 project-specific authority 為準。\n",
+            "",
+        )
+        text = text.replace(
+            "採用 Playbook 本身不會新增 write / execution authority。\n",
+            "",
+        )
+        text = text.replace(
+            "## Authority boundary\n",
+            "## Authority boundary\n<!--\n"
+            "Playbook baseline: `main`\n"
+            "Project AI mode: `ChatGPT+Codex`\n"
+            "project-specific authority\n"
+            "adoption does not grant write authority\n"
+            "-->\n",
+        )
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("BASELINE_MISSING", codes)
+        self.assertIn("PROJECT_AI_MODE_UNDECLARED", codes)
+        self.assertIn("PROJECT_AUTHORITY_UNCLEAR", codes)
+        self.assertIn("NO_AUTHORITY_EXPANSION_UNCLEAR", codes)
+
+    def test_html_comment_minimum_contract_fields_do_not_satisfy_fallback(self) -> None:
+        text = self.healthy_agents()
+        text = text.replace("## Project-specific minimum contract\n\n", "")
+        text = text.replace(
+            "- Canonical technical source(s): `docs/ARCHITECTURE.md`\n"
+            "- Current coordination surface: `TASKS.md`\n"
+            "- Required validation: `python -m unittest`\n"
+            "- Project-specific exceptions or restrictions: `none`\n",
+            "<!--\n"
+            "- Canonical technical source(s): `docs/ARCHITECTURE.md`\n"
+            "- Current coordination surface: `TASKS.md`\n"
+            "- Required validation: `python -m unittest`\n"
+            "- Project-specific exceptions or restrictions: `none`\n"
+            "-->\n",
+        )
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("MINIMUM_CONTRACT_SECTION_LEGACY_FALLBACK", codes)
         self.assertIn("CANONICAL_SOURCES_UNDECLARED", codes)
+        self.assertIn("COORDINATION_UNDECLARED", codes)
+        self.assertIn("VALIDATION_UNDECLARED", codes)
+        self.assertIn("PROJECT_EXCEPTIONS_UNDECLARED", codes)
+
+    def test_blockquote_bootstrap_example_is_ignored(self) -> None:
+        text = self.healthy_agents().replace(
+            "需要 shared Playbook activation 時，進入 `CHAT_INIT.md`。\n",
+            "> Historical example: enter `CHAT_INIT.md`.\n",
+        )
+        root = self.make_repo({"AGENTS.md": text, "TASKS.md": "# Tasks\n"})
+        codes = [item.code for item in adoption_doctor.check_project(root)]
+        self.assertIn("BOOTSTRAP_ROUTING_MISSING", codes)
 
     def test_unrelated_does_not_grant_wording_does_not_satisfy_authority_marker(self) -> None:
         text = self.healthy_agents().replace(
