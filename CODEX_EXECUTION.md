@@ -136,46 +136,80 @@ Completion／final report在continuity適用時用一條compact metadata把 prod
 
 ## 模型分工
 
-### Luna
-適合：
-- Git / docs / search / 整理
-- mechanical patch
-- 已知 root cause 的小修
-- behavior-preserving refactor
-- targeted tests / verifier
-- deterministic、contract 已 freeze 的 implementation
+模型選擇的 stable objective 是：
 
-### Terra
-適合：
-- 一般程式開發
-- runtime / state ownership
-- persistence
-- integration / debugging
-- hardware-facing logic
-- 多個直接相關模組的 bounded reasoning
+`先滿足 minimum-sufficient quality / correctness / evidence / validation / risk threshold → 再從合格候選中選 end-to-end cost 最低的 execution profile`
 
-### Sol
-只考慮：
-- 高風險跨模組 architecture
-- security / authentication / crypto
-- 複雜 protocol/state machine
-- concurrency / distributed consistency
-- 錯誤設計會造成大範圍後果的決策
+不得把「最低成本」解讀成永遠先跑最便宜模型，也不得因工作重要、repository 很大或較強模型可用就直接升級。模型名稱、availability、rate card、credits 與 provider positioning 都屬 current product facts；selection policy 保存判斷方法，不把當下產品排序寫成永久 hierarchy。
 
-### Astra
-只在**目前 execution surface 已實際提供**，且 evidence 顯示 Sol 對該高難度 end-to-end task 很可能需要昂貴 retry／返工，或 Astra 的較高成功率／較少 iteration 有合理機會降低整體 task cost 時考慮。
+### Current official positioning = selection prior, not permanent ladder
 
-Astra 不作一般 development、repository discovery、grep/find、mechanical patch 或例行 validation 的預設模型。
+每次 material model selection 先確認目前 execution surface 的：
 
-模型選擇比較的是 **end-to-end task cost / correctness / completion probability**，不是只比較單位 token rate；也不得因 Astra 是最新或最強模型就跳過 Luna → Terra → Sol 的最低充分原則。
+- 可用 root profiles / models；
+- 最新官方 capability positioning；
+- 適用於目前產品／workspace／metering mode 的 pricing / credits authority；
+- 已有 project-specific eval、retry、rework 或 validation evidence。
 
-Model 與 Reasoning 應視為同一個 **joint execution profile** 做 end-to-end 校準，而不是兩條只能各自或同步向上升級的獨立階梯。較強 model 搭配較低 reasoning 可能比較弱 model 搭配較高 reasoning 更符合 correctness／cost／retry 目標；因此每次 material model change 都應重新評估該 model 的最低充分 reasoning，不預設繼承前一 model 的 effort。
+官方 capability positioning 用來建立 **current selection prior**，不是 immutable model ladder。若 lineup、generation 或官方定位改變，重新 resolve current prior；不要讓舊的 Luna／Terra／Sol／Astra 排序本身取得永久 authority。
 
-Astra 的 availability、credit/token rate、Fast multiplier、Context 與 promotional terms 屬 volatile product facts，每次依當下官方 authority 判斷，不寫死進 Playbook。
+對新工作，優先使用 current-generation profile。Legacy-generation profile（目前包含 GPT-5.6）只有在有具體理由時才進候選，例如 compatibility、regression、reproducibility、availability 或 task-specific evidence；不得只因舊 routing 習慣而保留 normal-path seat。
 
-因此模型階梯是 **Luna → Terra → Sol → Astra（條件式最高階）**；新增 Astra 不代表把原本適合 Sol 的工作全部上移。模型階梯用來界定候選能力層級，不取代 model × reasoning pair 的聯合校準。
+### Default model routing
 
-Repository 很大不是使用 Sol／Astra 或 High 的理由。
+依 current official positioning，把 task 先分成兩個主要 work class：
+
+**Focused / bounded work**
+- Git / docs / search / 整理；
+- mechanical patch；
+- 已知 root cause 的小修；
+- behavior-preserving refactor；
+- targeted tests / verifier；
+- deterministic、contract 已 freeze 的 implementation；
+- scope 清楚、validation 快、失敗容易回復的 focused coding。
+
+→ 優先從 current **Luna-class / efficiency profile** 中找最低充分候選；目前若 execution surface 提供 GPT-6 Luna，視為這一類工作的 current-generation default candidate。
+
+**Complex / integrated work**
+- 一般到複雜的程式開發；
+- runtime / state ownership；
+- persistence；
+- integration / ambiguous debugging；
+- hardware-facing logic；
+- 多模組 reasoning；
+- security / authentication / crypto；
+- 複雜 protocol / state machine；
+- concurrency / distributed consistency；
+- 錯誤設計會造成 material rework、validation burden 或大範圍後果的決策。
+
+→ 優先從 current **Sol-class / complex-work profile** 中找最低充分候選；目前若 execution surface 提供 GPT-6 Sol，視為這一類工作的 current-generation default candidate。
+
+**Highest-capability profile（目前例如 Astra）**
+只在 current execution surface 實際提供，且有 concrete evidence 顯示 Sol-class profile 對該 end-to-end task 很可能不足，或其 retry／返工／validation cost 已高到使用更高能力 profile 有合理機會降低整體 task cost時考慮。
+
+最高能力 profile 不作一般 development、repository discovery、grep/find、mechanical patch 或例行 validation 的預設模型。
+
+### Luna / Sol boundary tie-breaker
+
+若一項工作同時具有 focused 與 complex 特徵、無法只靠 task class乾淨裁決，使用**單一 failure-cost tie-breaker**：
+
+- failure / retry **便宜、可逆、可快速 validation** → 選較低成本的 plausible candidate；
+- failure / retry **昂貴、難以回復、會造成大範圍 rework 或 validation burden** → 選較強、但仍最低充分的 candidate。
+
+這是 selection-time judgment，不要求先實際燒一次便宜模型才允許升級；也不得把「也許會失敗」當成沒有 evidence 的升級理由。
+
+### Selection evidence / anti-rationalization guard
+
+選定 root model 前，至少能回答：
+
+1. **Why not cheaper?** 若拒絕較低成本的 credible candidate，具體 insufficiency / failure-cost evidence 是什麼？
+2. **Why not stronger?** 若不使用更高成本 profile，為什麼目前 candidate 已足以滿足 quality / evidence / validation contract？
+
+若無法提出具體 evidence，不得虛構精確 completion probability、成功率或 cost advantage 來合理化偏好的模型。Evidence 不足時，回到 current official prior + 上述 failure-cost tie-breaker，並保留 uncertainty。
+
+Model 與 Reasoning 仍是 joint execution profile；model selection依本節縮小候選後，再由下節 `Reasoning Calibration` 選該 model 的最低充分 reasoning。不得把更高 reasoning 當成 missing instructions、Context、files、permissions、tools、credentials 或 capability gap 的替代品。
+
+Repository 很大本身不是使用更高模型或 High reasoning 的理由。
 
 ## 推理強度校準（Reasoning Calibration）
 
