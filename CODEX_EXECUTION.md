@@ -155,6 +155,8 @@ Completion／final report在continuity適用時用一條compact metadata把 prod
 
 **Availability-resolution closure：** generic execution-surface availability guard 是 selection input condition，不是應原封不動持久化或輸出的 recommendation text。把 model recommendation 寫入 user-facing output、handoff、Hot／durable project contract 或其他可被後續 execution 消費的 state 前，先用目前可取得的官方／account／workspace evidence resolve applicable availability。若 selected current-generation profile 已確認可用，直接寫 exact model name，移除 class-only／`if available` 條件字樣；只有 availability 真正 unresolved 時才保留 class-level 或 conditional wording。已知 condition 已成立後，不得把未解析 generic guard 繼續帶入下游 project state。
 
+`Luna-class`、`Sol-class`、`highest-capability profile` 等名稱只屬 **internal selection class**，不是在 exact selectable model 已知時可交付的 final `Root model` 值。Class selection 完成後必須在 handoff／user-facing recommendation 前 resolve 成 exact model（例如 `GPT-6 Luna`、`GPT-6 Sol`）；只有 exact availability 真正 unresolved 時，final output 才可保留 class-level value，並明確標示 unresolved boundary。
+
 對新工作，優先使用 current-generation profile。Legacy-generation profile（目前包含 GPT-5.6）只有在有具體理由時才進候選，例如 compatibility、regression、reproducibility、availability 或 task-specific evidence；不得只因舊 routing 習慣而保留 normal-path seat。
 
 ### Default model routing

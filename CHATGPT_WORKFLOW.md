@@ -349,6 +349,8 @@ Codex model / reasoning / Context / Agent / execution-mode成本規則由 `CODEX
 - `Why`
 - `Cheap-model evidence pass`
 
+`Root model` 是 **final launch value**：若 `CODEX_EXECUTION.md` 已依 current availability resolve 出 exact selectable model，這個欄位 MUST 寫 exact model name，不得停在 `Luna-class`／`Sol-class`／`highest-capability profile` 等 internal selection class。只有 exact model availability genuinely unresolved 時才可使用 class-level wording，並保留該 unresolved boundary。
+
 `Context / execution mode` 只有在 materially 影響 launch 時才需要。
 
 Explicit exemptions 只有：
