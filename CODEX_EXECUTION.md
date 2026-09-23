@@ -153,6 +153,8 @@ Completion／final report在continuity適用時用一條compact metadata把 prod
 
 官方 capability positioning 用來建立 **current selection prior**，不是 immutable model ladder。若 lineup、generation 或官方定位改變，重新 resolve current prior；不要讓舊的 Luna／Terra／Sol／Astra 排序本身取得永久 authority。
 
+**Availability-resolution closure：** generic execution-surface availability guard 是 selection input condition，不是應原封不動持久化或輸出的 recommendation text。把 model recommendation 寫入 user-facing output、handoff、Hot／durable project contract 或其他可被後續 execution 消費的 state 前，先用目前可取得的官方／account／workspace evidence resolve applicable availability。若 selected current-generation profile 已確認可用，直接寫 exact model name，移除 class-only／`if available` 條件字樣；只有 availability 真正 unresolved 時才保留 class-level 或 conditional wording。已知 condition 已成立後，不得把未解析 generic guard 繼續帶入下游 project state。
+
 對新工作，優先使用 current-generation profile。Legacy-generation profile（目前包含 GPT-5.6）只有在有具體理由時才進候選，例如 compatibility、regression、reproducibility、availability 或 task-specific evidence；不得只因舊 routing 習慣而保留 normal-path seat。
 
 ### Default model routing
