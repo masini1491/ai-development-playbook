@@ -315,6 +315,12 @@
       "kind": "contract"
     },
     {
+      "id": "github.sensitive-data-history-remediation",
+      "owner": "GITHUB_OPERATIONS.md",
+      "section": "Sensitive Data / Secret Exposure Remediation",
+      "kind": "contract"
+    },
+    {
       "id": "github.remote-deterministic-execution",
       "owner": "GITHUB_OPERATIONS.md",
       "section": "Remote Deterministic Execution",

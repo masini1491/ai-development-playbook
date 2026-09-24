@@ -20,6 +20,7 @@
 - Read current repository content / enumerate paths → `Repository Acquisition`
 - GitHub → ChatGPT/runtime exact bytes → `Inbound Verified Transport`
 - ChatGPT/runtime → GitHub normal mutation → `Outbound Repository Mutation`
+- Sensitive/private data or secret already published to GitHub → `Sensitive Data / Secret Exposure Remediation`
 - Direct mutation transport insufficient → `Remote Deterministic Mutation Bridge`
 - Actions compile/test/check → `Remote Deterministic Execution`
 - Actions artifact / Release asset / large binary route → `Artifact Lifecycle`
@@ -171,7 +172,9 @@ fresh target repository/ref/base
 
 ### Promoted bad-commit repair
 
-若錯誤 mutation 已經 promotion 到 current canonical branch，不要為了「把歷史變乾淨」而 force-update、reset-hard 或 rewrite history。優先建立新的 bounded revert／repair commit保留 audit trail：
+若錯誤 mutation 已經 promotion 到 current canonical branch，不要為了「把歷史變乾淨」而 force-update、reset-hard 或 rewrite history。優先建立新的 bounded revert／repair commit保留 audit trail。**唯一不同類型是已公開 sensitive/private data 或 secret，且 authorized remediation goal 明確包含 history redaction；該情況改走 `Sensitive Data / Secret Exposure Remediation`，不得把 ordinary repair commit誤報成歷史清除。**
+
+一般 bad-commit repair：
 
 - 先 fresh-read current branch與錯誤 commit的實際 scope，確認哪些內容需要撤銷／修復，以及是否已有 newer／independent work不能被覆蓋；
 - entire promoted commit都錯且沒有後續依賴時，可用等價 revert-style repair；若 commit混有應保留內容或 branch已有後續變更，使用 bounded repair patch，不盲目整體回退；
@@ -181,6 +184,102 @@ fresh target repository/ref/base
 核心原則：**A bad promoted commit is repaired by a new auditable commit, not by rewriting history. Preserve newer valid work and re-close canonical evidence after repair.**
 
 Generic write authority、conversation write lock與 promotion authority仍由 `REPOSITORY_EXECUTION.md` 決定。
+
+## Sensitive Data / Secret Exposure Remediation
+
+當 personal／private／customer／regulated data、API key、token、password、private key 或其他 secret 已被 commit／push／publish 到 GitHub 時，這不是 ordinary docs repair；先依 target project governance／`INFORMATION_INTEGRITY.md` 確認資料分類與 publication boundary，再由本節處理 GitHub-specific containment、history/ref remediation 與 evidence closure。
+
+### Immediate containment
+
+先停止擴散，不要在 commit message、issue、PR、Release notes、workflow log、support note 或後續範例中重貼原敏感 literal；需要追蹤 incident identity 時，使用 redacted label、path／commit identity、hash／fingerprint 或其他不重新揭露內容的 locator。
+
+若暴露的是 **secret／credential**：
+
+```text
+revoke / rotate / invalidate credential
+→ confirm replacement / old-secret invalidity when applicable
+→ then clean GitHub current state / history / refs
+```
+
+History redaction **不是** credential remediation 的替代品；即使 commit 已刪除，也不得假設已外洩 key/token仍安全。
+
+若暴露的是 personal／private data，先把 current public artifact 改成 synthetic／sanitized內容或移除不必要資料；但：
+
+> **Current tree clean ≠ Git history clean ≠ all GitHub refs/caches clean ≠ external copies erased.**
+
+### Incident identity / exposure inventory
+
+在 destructive remediation 前建立最低充分 snapshot：
+
+- repository + default／protected branch identity；
+- affected path(s)／artifact(s)；
+- known sensitive commit(s) 與最後一個 confirmed pre-sensitive base；
+- current canonical branch HEAD；
+- relevant topic／staging branches；
+- tags、Release targets／assets（若相關）；
+- open／closed／merged PRs 與其 head/base/merge identities；
+- platform-managed PR refs／cached diffs／artifact caches 等目前能否直接 mutation 的 capability boundary；
+- forks／clones／mirrors／external caches 是否在目前 authority 範圍內。
+
+不要因 search 沒命中就宣稱 history／refs absence；需要完整性 claim 時使用能建立足夠 coverage 的 ref／history enumeration，並保留 unresolved platform-managed surfaces。
+
+### Current-state repair vs history redaction
+
+只需要停止目前頁面繼續公開時，可用 ordinary bounded repair commit關閉 current-state exposure。
+
+若 data **已進入 Git history**，而 authorized remediation goal 包含 history redaction，ordinary repair commit 不充分。可採 clean-replacement pattern：
+
+```text
+pin exact pre-sensitive base
+→ isolated clean replacement branch
+→ replay / reconstruct only intended safe changes
+→ omit sensitive commit(s) and sensitive literals
+→ verify replacement tree + ancestry + intended diff
+→ fresh branch/ruleset/permission preflight
+→ authorized destructive promotion only if explicitly allowed
+→ canonical branch/history read-back
+→ reconcile remaining refs / PRs / Releases / caches
+→ dispose temporary cleanup branch
+```
+
+Clean replacement commit 的 parent／ancestry 必須實際排除 intended sensitive commit range；只把 current file 改乾淨、但 parent仍指向 sensitive history，不算 history redaction。
+
+### Destructive-history authority / protected branch boundary
+
+History rewrite、non-fast-forward ref replacement、force update、tag retarget/delete等都屬 destructive Git operation，**不因「內容敏感」就自動取得 authority**。它是 ordinary bad-commit repair 的窄化例外，只在 current project／repository governance 明確授權 sensitive-data history remediation，且實際 credential／ruleset capability足夠時才可執行。
+
+- protected/default branch拒絕 non-fast-forward／force update → 保留 clean candidate與 current evidence，標記 canonical-history remediation blocked；不得偷偷關閉 branch protection、繞過 required review/check或使用更廣 admin token；
+- 若 governance另行明確授權 ruleset/admin-level變更，該 capability仍需獨立 preflight與 read-back；不得把一次 emergency bypass變成永久較弱保護；
+- destination ref在 destructive promotion前漂移 → 重新 reconcile，不覆蓋 newer valid work；
+- rewrite後仍需確認 intended non-sensitive newer work沒有被遺失。
+
+### Ref / PR / Release / cache reconciliation
+
+改寫 default branch **不代表**其他 GitHub surfaces 已清除同一 object/content：
+
+- topic/staging branches仍可能指向 sensitive commit；
+- tag／Release target可能固定在 sensitive ancestry；
+- merged／closed PR是 audit record，其 PR head／merge ref、patch/diff cache或平台內部 object retention不等同於普通 branch residue；
+- workflow artifact、Release asset、Pages／generated artifact若曾包含敏感內容，需要各自依 lifecycle處理；
+- connector／API沒有合法 mutation surface的 platform-managed PR ref／cached diff，不得假裝已刪除；需要平台層協助時，明確標記 support／platform remediation pending。
+
+Fork、clone、mirror、搜尋引擎或第三方 cache若不在 current repository authority內，只能標記 external-copy scope未知／不受控；不得宣稱 repository rewrite已把所有副本從世界上刪除。
+
+### Verification / completion boundary
+
+至少分開驗證並回報：
+
+- current canonical tree 是否已無敏感內容；
+- canonical branch ancestry 是否已排除 intended sensitive commit range；
+- known mutable branches／tags／Release targets是否已 reconcile；
+- PR／platform-managed ref／cached-diff／artifact surface是否 clean、unresolved或需要 platform support；
+- secret／credential若曾暴露，是否已 revoke／rotate／invalidate；
+- temporary remediation branch／workflow是否已處置；
+- external copies是否仍 unknown／outside authority。
+
+只有 material scopes 都有相稱 evidence時，才可宣稱相應範圍的 redaction完成。**不要用「README已改掉」「main現在看不到」「branch已刪」推導 full-history／all-ref／all-cache purge。**
+
+核心原則：**Contain first, rotate secrets first, distinguish current-state repair from history redaction, and prove each reachable exposure surface separately. Sensitive-data cleanup may justify an explicitly authorized history rewrite; it never justifies silent force, weakened protection, or overclaiming global erasure.**
 
 ## Remote Deterministic Mutation Bridge
 
@@ -445,6 +544,7 @@ canonical result / merge / publication read-back
 | Repository acquisition | repo/ref/path + resolved current identity + completeness state when relevant |
 | Inbound exact transport | source identity + transport/reassembly evidence + final materialized identity |
 | Outbound mutation | prewrite base + candidate object identity + commit/ref update + post-write diff/read-back |
+| Sensitive-data / secret remediation | exposure inventory + current-tree repair + credential revoke/rotate when applicable + history/ref disposition + unresolved PR/cache/external-copy boundary + final scoped read-back |
 | Remote mutation bridge | exact base + workflow/script identity + permission scope + validation + self-cleanup + final diff |
 | Actions validation | tested SHA + run/job/command scope + result + artifact identity when material |
 | Release publication | tag/target + publication state + metadata/assets + final read-back |
