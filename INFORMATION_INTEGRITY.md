@@ -175,6 +175,10 @@ AI／agent 若需要「目前時間」作 user-facing reporting timestamp、acqu
 
 Private／internal／customer／project-specific evidence 可以協助形成通用方法，但**不會因被摘要或去掉名稱就自動變成可公開 provenance**。當 durable artifact 要從 private evidence 進入 public／broader-distribution surface 時，應在第一次公開 durable write 前完成抽象化與 mosaic-risk review。
 
+**Public example / sample-data minimization：** README、docs、examples、fixtures、evals、screenshots、sample data 或其他 public／broader-distribution artifact 若目的只是示範，真實 user-specific private data 不因已存在於 conversation、memory、uploaded files、connector／tool result 或 private repository 就成為合法 sample input。預設使用 synthetic 或 sufficiently sanitized values。非 exhaustive examples 包括可對應特定個人的出生日期／時間／地點、住址／聯絡資訊、健康／關係／私人活動紀錄、帳號／客戶／專案 identifier，以及其他可與公開資訊組合後回推出特定人的值。
+
+只有 artifact 的目的 **materially requires real values**，且 target project governance／applicable policy 已明確允許該 publication 時，才可使用最低必要 real values；classification 或 publication authority unresolved 時，改用 synthetic／redact，否則在第一次 public write 前 STOP。Synthetic／sanitized data 仍須通過 mosaic-risk review，不得只替換姓名卻保留可回推出真實 person／source 的 unique value combination。本 guard **不放寬任何較強的 secret／credential prohibition**；API key、token、password、private key 或其他 secrets 不因作為 example／fixture 就取得 publication authority。
+
 一般原則：
 
 - 優先萃取 general principle／method，而不是複製 private solution；移除名稱、帳號、位置、精確 identifier、專屬 revision、unique geometry／value combination、raw screenshot、private filename／metadata 與其他可回推 source identity 的資訊；

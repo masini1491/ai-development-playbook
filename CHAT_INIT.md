@@ -133,7 +133,7 @@ Tier 4 — Completion Evidence Closure
   → `CAPABILITY_INDEX.md`；需要 machine discovery 才用 `PLAYBOOK_INDEX.json`，negative-claim semantics回 `AI_CONTEXT.md`
 - External spec／change workflow／skills runtime／agent-governance interoperability
   → `INTEROPERABILITY.md`
-- Semantic identity／derived authority／instruction-vs-data／provenance／lineage／temporal semantics／unknown／scope-qualified status／snapshot consistency／search-hit authority
+- Semantic identity／derived authority／instruction-vs-data／provenance／lineage／temporal semantics／unknown／scope-qualified status／private-to-public generalization／public README-docs-example sample-data sanitization／snapshot consistency／search-hit authority
   → `INFORMATION_INTEGRITY.md`
 - Codex execution／model／Reasoning／Context／tool scheduling／delegation／cost／actor-specific reporting metadata
   → `CODEX_EXECUTION.md` → Section Router
