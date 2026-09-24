@@ -131,6 +131,8 @@ Git／permission、Conversation-scoped Repository Write Lock、ChatGPT 實際可
 
 - 能自然更新既有 canonical owner，就不要為形式新建檔案。
 - 若某一小段只有特定 task 才需要，而且留在 always-on / hot index 會迫使大量無關 task 載入，獨立 dossier 可能合理，即使它不大。
+- **同一 semantic class 可以有多個 peer／domain-scoped surfaces**，前提是各自具有可獨立詢問／載入的 retrieval intent、清楚且不重疊的 ownership，並能降低無關 Context 載入。這種情況不要求再建立 global/root aggregator；若需要跨 domain discovery，優先使用 thin routing metadata／index 指向各 owner，而不是複製其 queue／state。
+- 若多個 peer surface 仍需高頻共享 mutable premise、status 或 next action，代表 ownership／cohesion 尚未真正分離；先保留共同 owner或用 pointer 引用，不要只為減少單次 Context 而拆成會互相漂移的平行 queue。
 - 若大型文件仍高度 cohesive，且能用 Section Router / heading / symbol 精準 bounded-read，可保持聚合。
 - 不以固定 KB、行數、段落數作 universal split threshold。
 - Input artifact count ≠ canonical artifact count；十份來源／log 不代表要建立十份 canonical conclusion files。
