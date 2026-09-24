@@ -348,6 +348,8 @@ Project governance 可明確 opt-in 一個或多個額外 surface，例如：
 
 Opt-in 不要求使用上述固定名稱；語意與 AI loading responsibility依 `AI_CONTEXT.md`，path 由 project決定。
 
+同一 coordination semantic class 也可以由**多個 peer／domain-scoped path**實作，例如不同 domain／method 各有自己的 Cold Registry，前提是 project governance分別建立其 path/write authority，且它們通過 `AI_CONTEXT.md` 的 Independent Retrieval Intent / Context Cohesion gates。**不要求另外建立 root `/BACKLOG.md` 或其他 aggregate queue。** 若跨 domain需要可發現性，優先用 routing-only index／pointer；不要為結構對稱建立會複製 mutable queue/status 的總表。跨 surface 的 shared item 應指定一個 canonical coordination owner，其他 surface只引用 pointer，避免形成 divergent work state。
+
 ### 不得自我擴權
 
 - ChatGPT **不得直接修改 project `AGENTS.md`／governance 來把新 path 或 responsibility 加進自己的 authority**，除非 selected mode與該 repository現有 governance已明確授予 ChatGPT對該 governance surface的 maintenance authority，且本次變更本身已獲使用者／Task授權。
