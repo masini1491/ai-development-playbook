@@ -269,6 +269,8 @@ Condition-triggered 原則：
 
 `primary root resource exhausted → preserve current Stage / evidence / workspace state → user selects or relaunches an admitted alternate root profile → re-check minimum-sufficient capability + any changed inference data-egress boundary → resume same authorized Stage | STOP`
 
+若 current Codex／product surface 的**官方 rate-limit flow 明確推薦某個 alternate profile**，可把該推薦作為當下 model selection prior；它不自動建立 root-switch authority，也不證明該 profile 在目前 plan／workspace／metering mode具有固定 credits multiplier、固定節省比例或與 API pricing相同的換算。實際切換仍服從本節的 user／launch authority、minimum-sufficient capability與 Product / Billing Authority Separation。
+
 - Codex／coding agent 不得因 primary quota耗盡自行靜默切換 root model／provider；root choice仍服從 `Root Profile Authority / Child Profile Override` 的 user／launch authority。Project/runtime若另有明確 higher-authority automatic-routing contract，仍不得跳過 Task／Stage、data-egress、permission、credential或validation boundary。
 - Resource fallback 預設延續**同一個已授權 Stage**與已取得的可信 evidence；它不建立新的 Task／Stage、write scope、credential、deployment、external-service authority或 durable obligation。
 - 若 alternate root 改變 inference destination，送出 project Context 前先依 `REPOSITORY_EXECUTION.md` → `External inference / data-egress boundary` 重新判斷 disclosure；舊 provider可讀不代表新 provider也可讀。
