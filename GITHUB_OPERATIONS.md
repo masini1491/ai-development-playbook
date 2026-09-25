@@ -21,7 +21,7 @@
 - GitHub → ChatGPT/runtime exact bytes → `Inbound Verified Transport`
 - ChatGPT/runtime → GitHub normal mutation → `Outbound Repository Mutation`
 - Sensitive/private data or secret already published to GitHub → `Sensitive Data / Secret Exposure Remediation`
-- Direct mutation transport insufficient → `Remote Deterministic Mutation Bridge`
+- Direct mutation transport insufficient — including guarded multi-target destructive mutation where correctness requires a fresh current-identity preflight + mutation + attributable per-target result in one bounded execution chain → `Remote Deterministic Mutation Bridge`
 - Actions compile/test/check → `Remote Deterministic Execution`
 - Actions artifact / Release asset / large binary route → `Artifact Lifecycle`
 - Tag / GitHub Release publication → `Tag / Release Publication`
