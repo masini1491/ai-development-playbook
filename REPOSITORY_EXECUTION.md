@@ -406,6 +406,8 @@ AI-originated改善若 evidence尚不足而使用者只希望「先記著」，p
 
 **Persistence does not increase recommendation authority。**
 
+Project-local incident、pattern、learned behavior 或 workaround 的 persistence、重複出現、confidence score，或在多個 repository 出現，**不會自行建立 shared Playbook authority**。只有 current evidence 足以支持 project-agnostic applicability、能抽離 local path／tool／schema／implementation detail而不失真，且可由既有 shared canonical owner自然表達時，才適合上收成 shared rule；否則保持 local／Candidate。多 project recurrence只有在 scope／independence／authority已 reconcile後才增加支持，不以出現次數、簡單共識或固定 confidence threshold自動升格。上收後 generic semantics歸 shared owner；project-specific mapping仍留在 project/local owner。
+
 ### Candidate / Committed / Hot promotion
 
 `CANDIDATE`、`COMMITTED` 與 Hot 的 semantic distinction由 `AI_CONTEXT.md` 擁有。本節只規定 promotion／execution action：
