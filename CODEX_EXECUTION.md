@@ -332,7 +332,7 @@ Decision needed: <user decides whether to relaunch>
 
 - **Root 能安全完成整體 Task／Stage，不構成跳過這個 scan 的充分理由。** `root can finish` 只回答 root capability，不回答 delegation economics／quality。
 - Scan 只辨識 plausible candidate；真正是否 spawn 仍必須逐一通過下方 `Subagent / Delegation Gate`。**Actively look ≠ must delegate.**
-- 常見值得掃描的 surface 包括 bounded source／evidence gathering、static audit、independent review、deterministic verifier／validation、已 freeze contract 的 mechanical implementation；但這些只是候選類型，不建立自動 delegation。
+- 常見值得掃描的 surface 包括 bounded source／evidence gathering、static audit、independent review、deterministic verifier／validation、已 freeze contract 的 mechanical implementation。此處 `freeze contract` 只表示**既有 canonical interface／schema／invariant 已穩定到可作為 bounded child 的 read-only input**；若 contract 仍需 child 共同設計、頻繁改動或高頻 reconciliation，就不屬於這類 candidate，也不得為了製造 delegation candidate 而另建平行 contract artifact。這些仍只是候選類型，不建立 automatic delegation；後續仍須通過 `Subagent / Delegation Gate`，若要同時執行多個 child／workstream，再另外通過 `Parallel Multi-Agent Gate`。
 - 若目前仍是 tightly-coupled root-cause construction、共享 mutable state、單一 transaction boundary 或需要高頻 reconciliation，可直接判斷目前沒有合理 candidate；不要為形式硬拆 child。
 - 同一 topology／economics 沒有 material 改變時，不在每個 command、poll、compile 或 micro-step 重複 scan；implementation → validation／independent review／completion reconciliation 等 material phase change 才重新看一次。
 - 不得為了降低單價、換 model、增加 token budget、滿足 reporting 欄位或「讓 Child Routing 看起來有用」而製造 artificial work。
