@@ -417,6 +417,9 @@ identify exact product/API behavior needed
 
 常見 failure 應停在真正失敗層：
 
+- **Specific surface failure ≠ operation unavailable。** 某個 GitHub Connect／repository-native connector／API／file-aware operation 失敗，而該 failure 本身尚未證明 repository identity、Task／Stage authority、permission、credential、canonical target或整體 semantic operation 不成立時，不得直接把它升格成 task-level impossibility。先 bounded 回到本檔 `GitHub Operation Routing` **重新解析一次同一 semantic operation**，只選一條仍符合 current project restrictions、authority role與 required evidence semantics 的最低充分 alternate route；同一 failed call不做無界重試。若候選 route會改變 operation 本質、target、authority role或 evidence／completion contract，它就不是 fallback，必須依新的 action contract另行 admission，而不能靠 recovery自動成立。
+- **Alternate-route provenance stays separate。** Recovery 選中的 alternate route 是新的 execution route，必須自行滿足適用的 identity／integrity／validation／read-back requirements；其成功不得回填成原 failed surface 已成功，也不得拼接彼此不相容的 partial results來製造 completion。
+
 - repository/ref/path identity unresolved → 不進 mutation；
 - listing/search incomplete → 不宣稱 completeness/absence；
 - chunk/hash/final identity mismatch → 重取最低必要 unit；仍 mismatch 則 transport fail closed；
@@ -426,7 +429,7 @@ identify exact product/API behavior needed
 - workflow/toolchain/environment failure → 依 `DEBUG_VALIDATION.md` failure taxonomy判讀，不直接改 production source；
 - required follow-up workflow 未實際執行 → 不把 expected trigger當 PASS；
 - Release asset／tag／published state read-back不符 → publication未完成；
-- current GitHub platform capability不足 → 切換已授權 alternate route，或明確 `GITHUB OPERATION UNAVAILABLE`；不要求 human本機介入作為 autonomous completion 的默認條件。
+- current GitHub platform capability不足，且依上方 bounded same-semantic re-routing 後沒有仍合法、最低充分的 alternate route → 明確 `GITHUB OPERATION UNAVAILABLE`；不要求 human本機介入作為 autonomous completion 的默認條件。
 
 核心原則：**Fail at the layer that failed; do not repair transport gaps by inventing content, widening authority, forcing refs, or downgrading validation.**
 
