@@ -275,7 +275,7 @@ Condition-triggered 原則：
 - Resource fallback 預設延續**同一個已授權 Stage**與已取得的可信 evidence；它不建立新的 Task／Stage、write scope、credential、deployment、external-service authority或 durable obligation。
 - 若 alternate root 改變 inference destination，送出 project Context 前先依 `REPOSITORY_EXECUTION.md` → `External inference / data-egress boundary` 重新判斷 disclosure；舊 provider可讀不代表新 provider也可讀。
 - Alternate profile仍必須滿足 remaining work 的最低充分 model／reasoning／tool capability。若不足以安全完成，STOP、等待 primary resource恢復或由使用者選擇更適合的 admitted profile；不得為了繼續工作降低 security、correctness、validation或completion evidence標準。
-- 換 root 後沿用既有 trustworthy evidence，先以 current repository／workspace state做 bounded reconciliation，再從必要下一步繼續；不得只因 profile改變就重新 repo-wide exploration、重做已完成 validation或改寫已成立的 root cause。
+- 換 root 後沿用既有 trustworthy evidence，先以 current repository／workspace state做 bounded reconciliation，再從必要下一步繼續；不得只因 profile改變就重新 repo-wide exploration、重做已完成 validation或改寫已成立的 root cause。只有 stale evidence、repository／workspace drift、validation invalidation 或 handoff inconsistency 對 correctness materially有影響時，才 bounded reopen對應已完成 surface；不得把這個例外擴成全案 rediscovery。
 - 不得為了繞過 root quota／availability而創造 child delegation。真正 bounded child仍必須獨立通過 `Subagent / Delegation Gate`；resource exhaustion本身不是 delegation authority。
 
 核心原則：**Resource fallback preserves work, not privilege. Alternate root profile ≠ new authority ≠ automatic data-egress permission ≠ validation downgrade.**
@@ -298,12 +298,14 @@ STOP — root escalation required
 Root cause / observability: <established cause or bounded observability state>
 Completed validation: <minimum sufficient completed evidence>
 Remaining blocker: <what the current root profile cannot safely finish>
+Continuation scope: <remaining work only + next authorized action / STOP boundary>
 Recommended root profile: <model> / <reasoning>
+Why sufficient: <why this profile is minimum-sufficient for the remaining work>
 Evidence handoff: <current Git/worktree/test/log/evidence pointer or bounded summary>
 Decision needed: <user decides whether to relaunch>
 ```
 
-這是 condition-triggered rendering，不是所有 Codex completion／progress 的固定模板；等價 wording 可以使用，但不得漏掉 applicable required elements。若同一則訊息同時符合 completion／final report，仍在 timestamp 前依 `Child Profile Override 回報（Completion / Final）` 補 actor-specific transparency。
+這是 condition-triggered rendering，不是所有 Codex completion／progress 的固定模板；等價 wording 可以使用，但不得漏掉 applicable required elements。對 resource-exhaustion relaunch，`Continuation scope` 與 `Evidence handoff` 共同形成 receiving root 的最低充分 continuation payload：新 root先 reconciliation current Git／workspace identity與這些 pointers，再只執行 remaining work；不得因換 model／thread而把已完成 reasoning、validation或root cause重新當成未做。若同一則訊息同時符合 completion／final report，仍在 timestamp 前依 `Child Profile Override 回報（Completion / Final）` 補 actor-specific transparency。
 
 已明確授權且通過 delegation gate 的 child profile override 不等同 root escalation；它只服務該 bounded child subtask。換 root model 後沿用既有 evidence，不得只因換模型就重新 repo-wide exploration。
 
