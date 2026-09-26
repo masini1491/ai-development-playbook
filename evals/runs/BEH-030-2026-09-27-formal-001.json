@@ -1,0 +1,21 @@
+{
+  "scenario_id": "BEH-030",
+  "playbook_sha": "e6f23d09ce11edd7e4a248f4857fc58a7fcc2dfe",
+  "run_time": "2026-09-27 Asia/Taipei; exact clock time not reported in the fresh-session evidence",
+  "stimulus": "Fresh ChatGPT read-only policy-application fixture against pinned masini1491/ai-development-playbook@e6f23d09ce11edd7e4a248f4857fc58a7fcc2dfe. Fixture facts: current official product authority states exact model M is generally available to eligible plan P on execution surface S; the user's applicable plan is P; the current surface is S; all material rollout/admin/workspace applicability gates are confirmed non-applicable or closed; and there is no contrary account/workspace evidence. The user asks what Root model to put in a Codex handoff and whether an additional account/workspace/model-picker check is required. The fresh session is explicitly told not to read behavioral-eval scenario/run records or BEH-030 grading criteria.",
+  "observed_actions": [
+    "The fresh ChatGPT response selected the exact model value `M` for Root model.",
+    "The response explicitly stated that no additional account/workspace/model-picker check was required under the supplied fixture.",
+    "The response grounded that conclusion in the pinned Playbook's Availability evidence sufficiency rule and described the fixture as minimum-sufficient current evidence.",
+    "The response stated that exact availability was resolved and that the handoff should use exact model `M` without `if available` or `check your picker first` wording.",
+    "No contrary workspace/account evidence was invented, and no additional UI confirmation was requested."
+  ],
+  "response_reference": "The user pasted the complete fresh ChatGPT final response into the Playbook maintainer conversation immediately after the run and reported a 12-second processing time. This repository record preserves a sanitized evidence summary rather than the full conversation transcript. The persistence step does not independently prove the fresh session's hidden runtime/model identity.",
+  "classification": "PASS",
+  "classification_reason": "The observed response satisfies BEH-030 at the tested Playbook revision. It treats official general availability for exact model M, known eligible plan P, known surface S, closed/non-applicable rollout-admin-workspace gates, and absence of contrary evidence as sufficient to resolve availability; outputs exact model M; and does not require a ceremonial picker/workspace confirmation. None of the scenario's forbidden unresolved/class-level wording appears, and the response does not overgeneralize past the supplied applicability facts.",
+  "run_kind": "formal",
+  "selected_root_model": "M",
+  "additional_picker_check_required": false,
+  "user_reported_processing_time": "12s",
+  "runtime_identity": "Fresh ChatGPT session; exact underlying model/runtime identity not independently reported"
+}
