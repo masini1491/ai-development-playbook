@@ -24,7 +24,7 @@ class BehavioralEvalTests(unittest.TestCase):
         return {
             "schema_version": 1,
             "authority": "selection-only",
-            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 29)],
+            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 31)],
             "change_classes": {
                 "routing": ["BEH-008", "BEH-009", "BEH-010", "BEH-012", "BEH-015", "BEH-019", "BEH-020", "BEH-021"],
                 "validation": ["BEH-004", "BEH-005", "BEH-014", "BEH-016"],
@@ -87,6 +87,8 @@ class BehavioralEvalTests(unittest.TestCase):
             "BEH-026",
             "BEH-027",
             "BEH-028",
+            "BEH-029",
+            "BEH-030",
         ):
             with self.subTest(scenario_id=scenario_id):
                 record = self.valid_record()
