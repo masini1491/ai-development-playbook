@@ -155,6 +155,23 @@ Completion／final report在continuity適用時用一條compact metadata把 prod
 
 **Availability-resolution closure：** generic execution-surface availability guard 是 selection input condition，不是應原封不動持久化或輸出的 recommendation text。把 model recommendation 寫入 user-facing output、handoff、Hot／durable project contract 或其他可被後續 execution 消費的 state 前，先用目前可取得的官方／account／workspace evidence resolve applicable availability。若 selected current-generation profile 已確認可用，直接寫 exact model name，移除 class-only／`if available` 條件字樣；只有 availability 真正 unresolved 時才保留 class-level 或 conditional wording。已知 condition 已成立後，不得把未解析 generic guard 繼續帶入下游 project state。
 
+#### Availability evidence sufficiency
+
+Availability 用 **minimum-sufficient current evidence** resolve；account／workspace UI 不是形式上的 mandatory second confirmation。Official entitlement 能關閉到哪一層，只以 official authority 實際保證的 applicability 為限。
+
+若 current official product authority 已明確表示 **exact model** 對某 eligible plan／account class 在已知 execution surface generally available，且：
+
+- 使用者的 applicable plan／entitlement class 已知且符合；
+- current product／execution surface 已知且符合；
+- official wording 中任何 material rollout window、region／seat／metering restriction、workspace／admin enablement 或其他 applicability gate 已確認不適用或已關閉；
+- 沒有 current account／workspace evidence 顯示 model missing、disabled、policy-blocked 或其他 material contrary state；
+
+則 plan-level official evidence **可以**足以 resolve exact availability，不應只為 ceremony 再要求使用者查看 picker／workspace UI。
+
+只有 current applicability 仍可能被 account／workspace-specific state materially 改變時，才需要更細 evidence，例如：official availability仍在 rollout、明確受 admin enablement／workspace policy控制、plan／surface未解析、current picker顯示缺少／disabled、或存在 concrete workspace／account contrary evidence。這些情況下保持 availability unresolved 到最低充分 account／workspace evidence成立；不得把「官方一般可用」過度推成「此 workspace 一定可用」。
+
+一旦 availability 已 resolve，downstream 直接使用 exact selectable model name，移除 `class if available`／`check your picker first`／無根據的 workspace-unresolved wording；若後續出現新的 contrary evidence，再依 current evidence重新 resolve。
+
 `Luna-class`、`Sol-class`、`highest-capability profile` 等名稱只屬 **internal selection class**，不是在 exact selectable model 已知時可交付的 final `Root model` 值。Class selection 完成後必須在 handoff／user-facing recommendation 前 resolve 成 exact model（例如 `GPT-6 Luna`、`GPT-6 Sol`）；只有 exact availability 真正 unresolved 時，final output 才可保留 class-level value，並明確標示 unresolved boundary。
 
 對新工作，優先使用 current-generation profile。Legacy-generation profile（目前包含 GPT-5.6）只有在有具體理由時才進候選，例如 compatibility、regression、reproducibility、availability 或 task-specific evidence；不得只因舊 routing 習慣而保留 normal-path seat。

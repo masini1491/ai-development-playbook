@@ -129,6 +129,9 @@ exact repository acquisition
 
 若 connector／repository surface 能把完整 artifact 以 byte-preserving 或可 deterministic 驗證的 file payload 直接交給 execution runtime，優先使用 direct bridge；不要為形式切 chunk。
 
+- 若 GitHub artifact／download surface 回傳可被後續 **authorized byte-preserving materialization surface** 直接消費的 reusable connector-backed file reference／handle，可把它視為 `direct byte/file-aware handoff` 的 **candidate route**。Handle／reference 存在只建立 transport candidate；materialization、integrity、execution 仍須各自取得 evidence。
+- 若 GitHub surface 同時提供 artifact digest，而本次 correctness 依賴 exact bytes，materialize 後應優先用該 digest 驗證它實際涵蓋的 archive／file bytes，再信任或解析內部 payload。Platform digest PASS 只證明其所涵蓋的 bytes；不自行證明 manifest semantics、source revision 或 inner payload identity。
+
 ### Verified opaque fallback
 
 Direct bridge unavailable，但 current Task 確實需要 exact bytes時，可在 current governance允許下使用 bounded opaque transport。Generic contract：
@@ -349,6 +352,26 @@ Validation placement與 PASS semantics仍由 `DEBUG_VALIDATION.md` 決定。Acti
 - **Git-tracked source / Git LFS / other object storage**：依 repository architecture、binary size、versioning與 distribution responsibility選擇；不要只因 connector transport不方便就扭曲 source ownership。
 
 當 current GitHub surface提供 artifact digest／size／attestation／provenance metadata且本次 correctness需要時，保留它；若沒有，明確停在可觀察 evidence boundary。
+
+### Optional exact-revision runtime handoff artifact
+
+若 recurring ChatGPT／runtime cold-start 需要 exact bytes、direct repository → runtime bridge unavailable 或代價 materially 偏高，而且 current host 已實際證明支援 connector-backed workflow artifact handoff，repository **MAY** 由 trusted CI 對 project-declared authoritative baseline 的 exact revision 發布 bounded handoff artifact。這是 transport optimization，不是新的 source／admission／calculation／release authority。
+
+最低充分 contract：
+
+- artifact 唯一綁定 source repository + exact revision；不得只靠 mutable branch name／filename 推定身份；
+- payload 只包含 handoff 所需的最低 assets；machine-readable provenance 至少保留 source repository、exact revision、payload paths，以及 correctness 需要時的 byte sizes／cryptographic hashes；
+- publication 只在相關 producer-side validation 已成立後進行；producer validation scope 不得被 artifact publication 放大；
+- artifact **不是** canonical source authority、work admission authority、calculation authority 或 durable release authority；candidate／PR-origin artifact 與由 current declared baseline 產生的 artifact 必須可區分，兩者都不因可下載而取得較高 authority；
+- artifact missing／expired／unavailable／identity mismatch 只表示這條 handoff route unavailable。回到既有合法 acquisition／transport fallback；不得推導 canonical source unavailable 或 runtime universally unavailable。
+
+### Consumer closure for handoff claims
+
+Producer workflow／upload PASS 只建立 producer-side publication evidence。若 completion claim 是「這個 GitHub Actions artifact 實際提供可用的 connector → filesystem／runtime handoff」，在實務可行時 Tier-4 closure 應包含代表性的 consumer-side smoke，經過 intended surfaces 建立最低充分 evidence：
+
+`artifact download → reusable file reference／handle → byte materialization → platform digest／artifact identity → manifest／source revision／payload integrity → downstream canonical verifier → representative bounded runtime smoke`
+
+每一層只證明自己的 scope；某一步 unavailable／mismatch 時停在該 evidence boundary。這個 specialization 不重寫 generic cross-surface framework；materialization／execution semantics仍由 `CHATGPT_RUNTIME_EXECUTION.md` 擁有。
 
 Large binary／artifact storage route若受平台 current size/quota/product limits影響，先走 `Platform Capability / Limit Freshness`，不要把過期數字寫成永久治理規則。
 

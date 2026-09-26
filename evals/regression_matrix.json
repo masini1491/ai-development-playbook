@@ -29,7 +29,9 @@
     "BEH-025",
     "BEH-026",
     "BEH-027",
-    "BEH-028"
+    "BEH-028",
+    "BEH-029",
+    "BEH-030"
   ],
   "change_classes": {
     "repository-authority": [
@@ -57,7 +59,8 @@
       "BEH-004",
       "BEH-005",
       "BEH-014",
-      "BEH-016"
+      "BEH-016",
+      "BEH-029"
     ],
     "capability-discovery": [
       "BEH-008",
@@ -81,7 +84,8 @@
       "BEH-020",
       "BEH-021",
       "BEH-023",
-      "BEH-025"
+      "BEH-025",
+      "BEH-030"
     ],
     "delegation-and-child-routing": [
       "BEH-017",
@@ -112,7 +116,9 @@
       "BEH-014",
       "BEH-018",
       "BEH-022",
-      "BEH-024"
+      "BEH-024",
+      "BEH-029",
+      "BEH-030"
     ],
     "external-workflow-interoperability": [
       "BEH-013",
@@ -142,6 +148,10 @@
     ],
     "synthesis-evidence-coverage": [
       "BEH-028"
+    ],
+    "model-selection-and-availability": [
+      "BEH-023",
+      "BEH-030"
     ]
   }
 }
