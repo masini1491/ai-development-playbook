@@ -30,6 +30,7 @@
 - Hash mismatch / ref drift / partial operation / workflow failure → `Failure / Recovery Routing`
 - Merged/closed PR、task branch、staging ref 或其他 terminal GitHub residue → `Post-Operation Ref / PR Cleanup Gate`
 - Completion evidence checklist → `Operational Evidence Summary`
+- Material GitHub operation closure in a project that has adopted durable session continuity → after canonical operation read-back, route to `CHATGPT_WORKFLOW.md` → `Repository-native Continuity Checkpoint Events`
 
 ## GitHub Operation Routing
 
@@ -577,3 +578,5 @@ canonical result / merge / publication read-back
 | Terminal cleanup / ref disposition | fresh preflight target inventory/identity + per-target mutation/disposition evidence + terminal PR/publication state + retain/delete rationale + cleanup read-back when mutated |
 
 自然語言「已完成」「已上傳」「CI過了」「Release發了」都不是獨立 completion authority；只有與本次 operation scope相稱的 GitHub object/run/publication read-back 才能關閉對應 claim。
+
+若 project 已明確採用 durable continuity checkpoint，而且本次已關閉的 GitHub logical action materially 改變 fresh-session continuation state，**在本 operation 的 canonical evidence closure 之後**，依 `CHATGPT_WORKFLOW.md` → `Repository-native Continuity Checkpoint Events` 評估是否追加一筆 checkpoint event。這只是 closure-routing pointer：不新增 per-tool-call logging、額外 completion evidence 或新的 repository authority。
