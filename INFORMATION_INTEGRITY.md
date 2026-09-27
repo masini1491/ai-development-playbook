@@ -28,6 +28,8 @@ Physical container 不等於 semantic identity。
 - synthesis 若需要跨來源比較，應保留足以回到各 source identity 的 provenance／pointer；
 - 若 synthesis 與 source authority 衝突，先回 canonical source reconciliation，不得讓較方便閱讀的 aggregate view 靜默覆蓋 source truth；
 - derived mirror／showcase／generated repository 若 freshness 會影響使用，可記錄它代表的 source revision／baseline；但 baseline pointer 只說明 derivation scope，不會把 derived artifact 升格成 source authority，也不會擴張原 source 的 publication／privacy boundary。
+- deterministic normalization／canonicalization／conversion 可以產生 downstream 可用的 derived representation，但在 source identity、ambiguity 或 reproducibility 會 materially 影響 correctness 時，必須保留最低充分的 source value／identity 與 transformation profile／version／provenance；normalized value 不得靜默抹掉原始 identity，也不會讓 normalizer／transformer 自動取得 consumer-specific semantic authority。
+- source-backed evidence／rule 若只對明確 subset、combination 或 applicability scope 成立，其 authority 也只到該 scope；不得只因部分組合已有 evidence 就 Cartesian 補全未觀察組合或由模型記憶生成新規則。Specialized coverage 缺失時，只能回到已存在且合法的 lower-specificity／default contract；若連該 fallback 也不足，保留 omission／unresolved，而不是補造 coverage。
 
 核心原則：**Derived synthesis may add interpretation; it does not inherit or manufacture source authority.**
 
