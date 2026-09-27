@@ -510,6 +510,22 @@ Cold registry 可依 project 需要區分：
 - dossier 不因存在而取得 execution authority，必須由 current Hot coordination 明確引用；
 - task 完成後不把 completed dossier永久留在 normal active search surface，依 project retention / Git history處理。
 
+## Continuity Checkpoint Event Surface
+
+Project 可以在 session／聊天室 recovery 成本具有 material value時，opt-in 一個 repository-native **append-only continuity checkpoint event surface**。它屬於 coordination / retrieval aid，目的只是讓 fresh session 取得最低充分 current-working pointer；不是 canonical technical truth、完整 project memory、work queue、Reading／execution record或 authority owner。
+
+Information responsibility：
+
+- 每個 event只 snapshot「該次 material logical action closure後」的最低充分 continuation state；不追求 self-contained transcript。
+- 優先保存 active work identity／pointer、current canonical result/evidence pointer、material blocker／validation boundary與 next authorized action／STOP；source repository/ref + producer-observed exact revision只作 provenance／reconciliation identity。
+- **Pointer over copy；current event over history。** 可由 canonical owner、Git diff、validation artifact或 backlog重取的內容不複製；舊 event保留為 append-only audit history，但不是 ordinary default-load。
+- Event append 不得複製整份 Hot／Cold queue，也不得因「怕忘記」吸收 future ideas、long evidence、debug history或 superseded narrative。
+- Latest event ≠ current truth。Fresh session必須依 Cross-boundary Revision Continuity / current canonical authority做 bounded reconciliation；stale或out-of-order event只表示 recovery evidence需要reconcile。
+- Event persistence不改變 Hot／Cold admission、execution authority、canonical owner或 completion semantics；同一 work item的 commitment/status仍由原 coordination/canonical owner決定。
+
+這個 surface是 **optional semantic role**，不是固定 GitHub feature或固定 path。Project可以將它映射到已授權、可 append 且可 bounded-read 的 repository-native coordination mechanism；physical mutation authority由 `REPOSITORY_EXECUTION.md` 擁有。
+
+核心原則：**Continuity events preserve a tiny current-working pointer across sessions; they do not become a second project database.**
 ## Evidence Staging Surface
 
 **Long-form evidence is not task specification。** 硬體實測、現場觀察、長 log／command-response、外部測試 evidence 不應因 ChatGPT write boundary 被迫塞進 executable queue 當 relay。

@@ -269,6 +269,35 @@ Compaction 是 conversation-level state management，**不自動產生任何 dur
 
 核心原則：**Compaction 的目的是刪掉不再需要的 Context，同時保存足以安全重建 current task state 的最小 checkpoint；它不是把整個聊天永久化，也不是建立新的 authority。長期聊天室在 responsibility transition仍需 bounded rehydrate current actor routing，不能靠舊分工慣性決定下一個 executor。**
 
+### Repository-native Continuity Checkpoint Events
+
+當長期 ChatGPT project conversation 經常跨 session／聊天室維護，而「任何 material GitHub action 完成後都能從 repository state 快速接續」具有實際 recovery value時，project 可以明確 opt-in 一個 **append-only continuity checkpoint event surface**。這是既有 Session Compaction / Rehydration 的 durable coordination adapter，不是新的 canonical technical authority。
+
+只有在以下條件同時成立時才寫一筆 checkpoint event：
+
+- current project governance 已明確採用該 continuity surface，且 current actor 對該 repository-native coordination mutation具有 write authority；
+- 一個 logical repository action 已完成必要 canonical read-back；
+- 該 action materially 改變 fresh session 的 continuation state，例如 active work identity、current canonical result／pointer、unresolved blocker／validation boundary，或 next authorized action／STOP condition。
+
+**不要 per-tool-call logging。** HEAD probe、read/search、沒有 material state change 的 diff review、同一 logical action內的中間 commit／validation step，都不因存在就各自產生 checkpoint。通常一個 material logical action closure至多追加一筆 current checkpoint event。
+
+最低充分 event 只攜帶：
+
+`source repository/ref + producer-observed exact revision → active work identity/pointer → current canonical result/evidence pointer → material unresolved blocker/validation boundary → next authorized action or STOP`
+
+其中不適用的欄位可省略。不要放完整聊天摘要、長 diff/log、整份 backlog、future roadmap、模型推理或可由 canonical source重新取得的大段內容；repository privacy／publication contract仍完整適用。
+
+Fresh session 使用 durable checkpoint 時：
+
+`resolve current repository/ref → bounded-read latest relevant checkpoint events → compare event source revision/work identity with current authority → bounded reconcile material delta → read only referenced current canonical owners/evidence → continue authorized action or STOP`
+
+- Event 的 source revision是 provenance，不是 pin；revision mismatch是 reconciliation trigger，不是自動 FAIL，也不得 blind-accept last posted event。
+- Append-only history只提供 audit/recovery chronology；ordinary rehydration只讀最新的 bounded relevant events，不為形式載入整串歷史。
+- 若最新 event stale、out-of-order或與 current canonical state衝突，以 current canonical state為準；必要時看更早的最低充分 event做 lineage reconciliation，但不得用 event history覆蓋 source truth。
+- Durable continuity event不建立新 work admission、completion acceptance、write authority或 execution authority。
+- Project沒有 opt-in合法 durable surface時，維持本節既有 transient checkpoint / handoff；不得為了 continuity 自行建立 Issue、Discussion、path或擴大 permission。
+
+核心原則：**Material repository work should close in a state that a fresh session can rehydrate from; persist only a compact append-only checkpoint when the project has explicitly adopted an authorized continuity surface.**
 ### Playbook Freshness Probe
 
 Generic session-local verified-context reuse、material freshness trigger、cheap identity／bounded-diff probe、selective invalidation／reload 與 freshness evidence gap，統一由 `AI_CONTEXT.md` → `Session-local Verified Context Reuse` 擁有。本節只保存 **Playbook baseline-specific delta**。

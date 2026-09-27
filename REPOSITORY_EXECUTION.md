@@ -342,9 +342,10 @@ Project governance 可明確 opt-in 一個或多個額外 surface，例如：
 
 - `/BACKLOG.md` — Cold Registry；
 - `/tasks/active/*.md` 或 project-defined equivalent — Hot task dossier；
-- `/evidence/inbox/*.md` 或 project-defined equivalent — sanitized evidence staging。
+- `/evidence/inbox/*.md` 或 project-defined equivalent — sanitized evidence staging；
+- repository-native append-only thread（例如 project 明確指定的 Issue／Discussion／comment thread）— continuity checkpoint events 或其他 project-defined coordination-only用途。
 
-實際 path / glob 必須由 project governance 明確列入 `ChatGPT Coordination Write Allowlist` 或等價 contract；未列出的 path 一律 read-only，**除非 selected mode + 更高層 project authority 已明確授予 ChatGPT 該 maintenance mutation**。
+實際 tracked path / glob 或 repository-native thread identity／scope 必須由 project governance 明確列入 `ChatGPT Coordination Write Allowlist` 或等價 contract；未列出的 tracked path與未採用的 Issue／Discussion／comment surface一律不得因 connector可寫就自行 mutation，**除非 selected mode + 更高層 project authority 已明確授予 ChatGPT 該 maintenance mutation**。Repository-native thread capability只是 execution capability，不建立 coordination write authority；公開 repository仍需先滿足 privacy／publication boundary。
 
 Opt-in 不要求使用上述固定名稱；語意與 AI loading responsibility依 `AI_CONTEXT.md`，path 由 project決定。
 
