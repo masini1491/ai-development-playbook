@@ -174,6 +174,31 @@ fresh target repository/ref/base
 - Ref promotion 使用 non-force update；完成後重新取得最低充分 diff/stat/read-back，證明 current branch實際包含 intended changes且無 unintended deletion/truncation。
 - 如果 chosen API surface 會對每個 file call 立即建立 commit，而本次 correctness需要 atomic multi-file candidate，切換到 object/tree route 或 isolated staging route；不要用 API convenience 改寫 architecture/completion requirement。
 
+### Promotion Route Selection｜Direct promotion vs Pull Request
+
+Pull Request 是 repository-native review／validation／promotion surface之一，不是一般 GitHub mutation 的固定品質等級，也不是所有 `merge`／`integration` wording 的必然實作。先服從 current project governance／ruleset／Task evidence contract，再選最低充分 promotion route。
+
+**Direct non-force promotion** 可以是充分路徑，當以下條件同時成立：
+
+- current actor 已被授權執行本次 target-path / Git mutation；
+- destination ref 允許合法 direct fast-forward／non-force update；
+- 本次 completion 不要求獨立 reviewer approval、merge queue、PR-specific discussion/audit boundary，或只能在 PR／merge-ref／merge-group context取得的 required check／evidence；
+- candidate 已依 current validation contract取得必要 evidence，fresh destination-ref check PASS，且 promotion後可以完成 canonical compare/read-back。
+
+下列任一 material need 成立時，使用 **PR / isolated branch promotion route**，而不是為了省 call／省步驟改走 direct promotion：
+
+- repository governance、branch/ruleset protection或明確使用者指示要求 PR／review；
+- correctness／acceptance 需要 independent human／agent review，或需要保留 review/discussion boundary；
+- required validation只在 `pull_request`、merge-ref、merge queue／merge-group或其他 PR-specific execution context成立；
+- 多 actor／多 session／較高 blast-radius change 需要隔離 candidate，避免直接碰 current canonical ref；
+- current Task／Stage／admission／release evidence contract 明確把 PR identity、review、merge-ref或 PR run列為 completion evidence。
+
+反之，**historical PR usage、附近文件寫著 `merge`／`merged`、過去 completion evidence 常引用 PR number，或「開 PR 看起來比較正式」都不會自行建立新的 PR requirement。** 若 direct route 已滿足相同 current authority、validation、freshness與canonical read-back contract，不為 ceremony 增加 branch／PR／merge round trip。
+
+Route selection 不得降低證據：PR 不會因形式較重就自動提供較高 correctness；direct promotion 也不能拿來繞過原本 required review／CI／ruleset／approval。兩條路最後都必須回到同一 current completion/evidence authority。
+
+核心原則：**Use PR when PR-specific isolation, review, enforcement or evidence is materially required; otherwise prefer the lowest-sufficient authorized non-force promotion route. Historical workflow convention is not promotion authority.**
+
 ### Promoted bad-commit repair
 
 若錯誤 mutation 已經 promotion 到 current canonical branch，不要為了「把歷史變乾淨」而 force-update、reset-hard 或 rewrite history。優先建立新的 bounded revert／repair commit保留 audit trail。**唯一不同類型是已公開 sensitive/private data 或 secret，且 authorized remediation goal 明確包含 history redaction；該情況改走 `Sensitive Data / Secret Exposure Remediation`，不得把 ordinary repair commit誤報成歷史清除。**
