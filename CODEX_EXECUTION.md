@@ -151,7 +151,7 @@ Completion／final report在continuity適用時用一條compact metadata把 prod
 - 適用於目前產品／workspace／metering mode 的 pricing / credits authority；
 - 已有 project-specific eval、retry、rework 或 validation evidence。
 
-官方 capability positioning 用來建立 **current selection prior**，不是 immutable model ladder。若 lineup、generation 或官方定位改變，重新 resolve current prior；不要讓舊的 Luna／Terra／Sol／Astra 排序本身取得永久 authority。
+官方 capability positioning 用來建立 **current selection prior**，不是 immutable model ladder。若 lineup、generation 或官方定位改變，重新 resolve current prior；不要讓舊的 Luna／Terra／Sol／Astra 排序本身取得永久 authority。同一 selection class／model family 出現新的 product revision 時，若 current official positioning 仍承擔同一 execution role，只更新該 class 的 current exact candidate，不為版本號新增永久 tier；只有 capability role／cost-quality boundary materially 改變時才重開 class boundary。
 
 **Availability-resolution closure：** generic execution-surface availability guard 是 selection input condition，不是應原封不動持久化或輸出的 recommendation text。把 model recommendation 寫入 user-facing output、handoff、Hot／durable project contract 或其他可被後續 execution 消費的 state 前，先用目前可取得的官方／account／workspace evidence resolve applicable availability。若 selected current-generation profile 已確認可用，直接寫 exact model name，移除 class-only／`if available` 條件字樣；只有 availability 真正 unresolved 時才保留 class-level 或 conditional wording。已知 condition 已成立後，不得把未解析 generic guard 繼續帶入下游 project state。
 
@@ -172,9 +172,9 @@ Availability 用 **minimum-sufficient current evidence** resolve；account／wor
 
 一旦 availability 已 resolve，downstream 直接使用 exact selectable model name，移除 `class if available`／`check your picker first`／無根據的 workspace-unresolved wording；若後續出現新的 contrary evidence，再依 current evidence重新 resolve。
 
-`Luna-class`、`Sol-class`、`highest-capability profile` 等名稱只屬 **internal selection class**，不是在 exact selectable model 已知時可交付的 final `Root model` 值。Class selection 完成後必須在 handoff／user-facing recommendation 前 resolve 成 exact model（例如 `GPT-6 Luna`、`GPT-6 Sol`）；只有 exact availability 真正 unresolved 時，final output 才可保留 class-level value，並明確標示 unresolved boundary。
+`Luna-class`、`Sol-class`、`highest-capability profile` 等名稱只屬 **internal selection class**，不是在 exact selectable model 已知時可交付的 final `Root model` 值。Class selection 完成後必須在 handoff／user-facing recommendation 前，依 current official／account／workspace evidence resolve 成 execution surface 當下實際可選的 exact model name；只有 exact availability 真正 unresolved 時，final output 才可保留 class-level value，並明確標示 unresolved boundary。
 
-對新工作，優先使用 current-generation profile。Legacy-generation profile（目前包含 GPT-5.6）只有在有具體理由時才進候選，例如 compatibility、regression、reproducibility、availability 或 task-specific evidence；不得只因舊 routing 習慣而保留 normal-path seat。
+對新工作，優先使用 current-generation profile。Legacy-generation profile只有在有具體理由時才進候選，例如 compatibility、regression、reproducibility、availability 或 task-specific evidence；不得只因舊 routing 習慣而保留 normal-path seat。
 
 ### Default model routing
 
@@ -189,7 +189,7 @@ Availability 用 **minimum-sufficient current evidence** resolve；account／wor
 - deterministic、contract 已 freeze 的 implementation；
 - scope 清楚、validation 快、失敗容易回復的 focused coding。
 
-→ 優先從 current **Luna-class / efficiency profile** 中找最低充分候選；目前若 execution surface 提供 GPT-6 Luna，視為這一類工作的 current-generation default candidate。
+→ 優先從 current **Luna-class / efficiency profile** 中找最低充分候選；exact current-generation model 依前述 current positioning + availability-resolution closure 在 selection time解析，不在本節固定 generation／revision。
 
 **Complex / integrated work**
 - 一般到複雜的程式開發；
@@ -203,9 +203,9 @@ Availability 用 **minimum-sufficient current evidence** resolve；account／wor
 - concurrency / distributed consistency；
 - 錯誤設計會造成 material rework、validation burden 或大範圍後果的決策。
 
-→ 優先從 current **Sol-class / complex-work profile** 中找最低充分候選；目前若 execution surface 提供 GPT-6 Sol，視為這一類工作的 current-generation default candidate。
+→ 優先從 current **Sol-class / complex-work profile** 中找最低充分候選；exact current-generation model 依前述 current positioning + availability-resolution closure 在 selection time解析，不在本節固定 generation／revision。
 
-**Highest-capability profile（目前例如 Astra）**
+**Highest-capability profile**
 只在 current execution surface 實際提供，且有 concrete evidence 顯示 Sol-class profile 對該 end-to-end task 很可能不足，或其 retry／返工／validation cost 已高到使用更高能力 profile 有合理機會降低整體 task cost時考慮。
 
 最高能力 profile 不作一般 development、repository discovery、grep/find、mechanical patch 或例行 validation 的預設模型。
