@@ -20,6 +20,8 @@ Retain a host-specific adapter only when it still provides a distinct routing, a
 
 這個 conditional-activation exception 必須來自**目前可驗證的 project governance／bootstrap**，不得由 host instruction、舊聊天、memory、repository shape 或模型自己推測。Project 沒有明確 conditional gate、該 gate 無法 current-read，或本次 task 本身就是 project governance／adoption／mode／repository-maintenance 判斷時，維持 generic `AGENTS.md`-first route。
 
+Conditional gate 也必須 **bootstrap-complete**：若 project-native route 在 shared Playbook 尚未 activation 前 materially 依賴某 capability，而該 capability 的存在／可嘗試性只有被 bypass 的 shared owner 才能被發現，project 或 host 必須保留最低充分的 capability discovery／routing pointer，讓 runtime 能先辨識／嘗試該 prerequisite 而不必為此載入完整 shared baseline。只下放 survival-level discovery；詳細 operation／permission／validation mechanics 仍由既有 shared canonical owner 擁有，capability discovery 不建立 write／execution／completion authority。若該 capability 只在 shared activation 成立後才 applicable，則不得為預防而複製到 project-native bootstrap。
+
 **Shared reporting 是窄化的 adoption-level exception。** 若 current project governance採用 shared `REPORTING.md` contract，substantive user-facing engineering reply即使在 project-native route中仍遵守該 contract；需要完整規則時只 direct-leaf 到 declared baseline 的 `REPORTING.md`，不因此進入 `CHAT_INIT.md` 或 activate其他 shared owners。Reporting applicability不建立 Task／write／execution／permission／validation authority。
 
 ### Bootstrap identity / baseline boundary
