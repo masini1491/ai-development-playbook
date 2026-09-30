@@ -530,6 +530,8 @@ Verifier / static checker / test harness 本身也是會隨 production architect
 
 > Failing verifier ≠ source bug；Passing verifier ≠ coverage complete。
 
+若 verifier／regression test 會消費 current canonical machine-readable registry、matrix、manifest 或等價 input，current-state conformance check 應直接讀取該 canonical input，或由它 deterministic derive；人工維護 fixture 可用於 synthetic／negative verifier-behavior test，但不得成為唯一的 current-state oracle／shadow copy。Verifier implementation test 與 current-instance validation 是不同 evidence：前者證明 verifier 對 controlled fixtures 的行為，後者證明 current canonical inputs 滿足該 verifier contract；completion claim 若同時依賴兩者，兩者都必須各自成立，不得互相代替。
+
 Verifier 更新後仍應執行直接相關交叉檢查，避免修正一支 stale verifier 時破壞其他正式 validation contract。
 
 ## Evidence 等級（Evidence tiers）
