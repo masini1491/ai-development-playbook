@@ -20,37 +20,9 @@ class BehavioralEvalTests(unittest.TestCase):
             "run_kind": "formal",
         }
 
-    def valid_matrix(self) -> dict[str, object]:
-        return {
-            "schema_version": 1,
-            "authority": "selection-only",
-            "full_baseline": [f"BEH-{index:03d}" for index in range(1, 31)],
-            "change_classes": {
-                "routing": ["BEH-008", "BEH-009", "BEH-010", "BEH-012", "BEH-015", "BEH-019", "BEH-020", "BEH-021"],
-                "validation": ["BEH-004", "BEH-005", "BEH-014", "BEH-016"],
-                "permission-recovery": ["BEH-004", "BEH-016"],
-                "session-compaction-rehydration": ["BEH-009", "BEH-010", "BEH-015"],
-                "actor-admission-and-handoff": ["BEH-010", "BEH-013", "BEH-019", "BEH-020", "BEH-021", "BEH-027"],
-                "prompt-delivery": ["BEH-020", "BEH-021", "BEH-023", "BEH-025"],
-                "information-integrity": ["BEH-008", "BEH-011", "BEH-012", "BEH-014", "BEH-018", "BEH-022"],
-                "delegation-and-child-routing": ["BEH-017", "BEH-026"],
-                "action-contract-closure": ["BEH-025", "BEH-026"],
-                "synthesis-evidence-coverage": ["BEH-028"],
-                "phase3-cold-start-core": [
-                    "BEH-002",
-                    "BEH-006",
-                    "BEH-008",
-                    "BEH-010",
-                    "BEH-011",
-                    "BEH-012",
-                    "BEH-013",
-                    "BEH-014",
-                    "BEH-019",
-                    "BEH-020",
-                    "BEH-021",
-                ],
-            },
-        }
+    def current_matrix(self) -> dict[str, object]:
+        matrix_path = Path(__file__).resolve().parents[1] / "evals" / "regression_matrix.json"
+        return behavioral_eval.load_regression_matrix(matrix_path)
 
     def test_valid_formal_record_passes(self) -> None:
         self.assertEqual([], behavioral_eval.validate_record(self.valid_record()))
@@ -144,16 +116,14 @@ class BehavioralEvalTests(unittest.TestCase):
         )
 
     def test_valid_regression_matrix_passes(self) -> None:
-        self.assertEqual([], behavioral_eval.validate_regression_matrix(self.valid_matrix()))
+        self.assertEqual([], behavioral_eval.validate_regression_matrix(self.current_matrix()))
 
     def test_current_regression_matrix_passes(self) -> None:
-        matrix_path = Path(__file__).resolve().parents[1] / "evals" / "regression_matrix.json"
-        matrix = behavioral_eval.load_regression_matrix(matrix_path)
-        self.assertEqual([], behavioral_eval.validate_regression_matrix(matrix))
+        self.assertEqual([], behavioral_eval.validate_regression_matrix(self.current_matrix()))
 
     def test_regression_matrix_rejects_unknown_scenario(self) -> None:
-        matrix = self.valid_matrix()
-        matrix["change_classes"]["routing"].append("BEH-999")  # type: ignore[index]
+        matrix = self.current_matrix()
+        matrix["change_classes"]["repository-authority"].append("BEH-999")  # type: ignore[index]
         errors = behavioral_eval.validate_regression_matrix(matrix)
         self.assertTrue(any("unknown scenario IDs" in item for item in errors))
 
@@ -172,14 +142,14 @@ class BehavioralEvalTests(unittest.TestCase):
                 "BEH-020",
                 "BEH-021",
             ],
-            behavioral_eval.select_regression_scenarios(self.valid_matrix(), "phase3-cold-start-core"),
+            behavioral_eval.select_regression_scenarios(self.current_matrix(), "phase3-cold-start-core"),
         )
 
     def test_select_session_compaction_regression_includes_proactive_handoff(self) -> None:
         self.assertEqual(
             ["BEH-009", "BEH-010", "BEH-015"],
             behavioral_eval.select_regression_scenarios(
-                self.valid_matrix(), "session-compaction-rehydration"
+                self.current_matrix(), "session-compaction-rehydration"
             ),
         )
 
@@ -187,7 +157,7 @@ class BehavioralEvalTests(unittest.TestCase):
         self.assertEqual(
             ["BEH-004", "BEH-016"],
             behavioral_eval.select_regression_scenarios(
-                self.valid_matrix(), "permission-recovery"
+                self.current_matrix(), "permission-recovery"
             ),
         )
 
@@ -195,15 +165,15 @@ class BehavioralEvalTests(unittest.TestCase):
         self.assertEqual(
             ["BEH-010", "BEH-013", "BEH-019", "BEH-020", "BEH-021", "BEH-027"],
             behavioral_eval.select_regression_scenarios(
-                self.valid_matrix(), "actor-admission-and-handoff"
+                self.current_matrix(), "actor-admission-and-handoff"
             ),
         )
 
     def test_select_prompt_delivery_regression_set(self) -> None:
         self.assertEqual(
-            ["BEH-020", "BEH-021", "BEH-023", "BEH-025"],
+            ["BEH-020", "BEH-021", "BEH-023", "BEH-025", "BEH-030"],
             behavioral_eval.select_regression_scenarios(
-                self.valid_matrix(), "prompt-delivery"
+                self.current_matrix(), "prompt-delivery"
             ),
         )
 
@@ -211,7 +181,7 @@ class BehavioralEvalTests(unittest.TestCase):
         self.assertEqual(
             ["BEH-017", "BEH-026"],
             behavioral_eval.select_regression_scenarios(
-                self.valid_matrix(), "delegation-and-child-routing"
+                self.current_matrix(), "delegation-and-child-routing"
             ),
         )
 
@@ -219,22 +189,30 @@ class BehavioralEvalTests(unittest.TestCase):
         self.assertEqual(
             ["BEH-025", "BEH-026"],
             behavioral_eval.select_regression_scenarios(
-                self.valid_matrix(), "action-contract-closure"
+                self.current_matrix(), "action-contract-closure"
             ),
         )
 
     def test_select_information_integrity_regression_includes_beh_022(self) -> None:
         self.assertEqual(
-            ["BEH-008", "BEH-011", "BEH-012", "BEH-014", "BEH-018", "BEH-022"],
+            ["BEH-008", "BEH-011", "BEH-012", "BEH-014", "BEH-018", "BEH-022", "BEH-024", "BEH-029", "BEH-030"],
             behavioral_eval.select_regression_scenarios(
-                self.valid_matrix(), "information-integrity"
+                self.current_matrix(), "information-integrity"
             ),
         )
     def test_select_synthesis_evidence_coverage_regression(self) -> None:
         self.assertEqual(
             ["BEH-028"],
             behavioral_eval.select_regression_scenarios(
-                self.valid_matrix(), "synthesis-evidence-coverage"
+                self.current_matrix(), "synthesis-evidence-coverage"
+            ),
+        )
+
+    def test_select_model_selection_and_availability_regression(self) -> None:
+        self.assertEqual(
+            ["BEH-023", "BEH-030"],
+            behavioral_eval.select_regression_scenarios(
+                self.current_matrix(), "model-selection-and-availability"
             ),
         )
 

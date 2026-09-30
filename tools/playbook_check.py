@@ -21,6 +21,8 @@ FENCE_RE = re.compile(r"^\s{0,3}(`{3,}|~{3,})(.*)$")
 WINDOWS_DRIVE_RE = re.compile(r"^[A-Za-z]:[\\/]")
 URL_SCHEME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
 HTML_ANCHOR_RE = re.compile(r"<(?:a|[^>]+)\b(?:id|name)=[\"']([^\"']+)[\"']", re.IGNORECASE)
+HTML_HREF_RE = re.compile(r"\bhref=[\"']([^\"']+)[\"']", re.IGNORECASE)
+SAME_REPOSITORY_GITHUB_ROOT = "https://github.com/masini1491/ai-development-playbook"
 CHAT_INIT_ROUTER_HEADING = "最低必要路由"
 MACHINE_INDEX_NAME = "PLAYBOOK_INDEX.json"
 MACHINE_INDEX_SCHEMA_VERSION = 1
@@ -178,6 +180,37 @@ def _check_local_links(path: Path, root: Path, text: str) -> list[Diagnostic]:
     return diagnostics
 
 
+def _same_repository_root_fragment(target: str) -> str | None:
+    decoded = unquote(target.strip())
+    for prefix in (SAME_REPOSITORY_GITHUB_ROOT, SAME_REPOSITORY_GITHUB_ROOT + "/"):
+        marker = prefix + "#"
+        if decoded.startswith(marker):
+            fragment = decoded[len(marker):]
+            return fragment or None
+    return None
+
+
+def _check_same_repository_absolute_anchors(root: Path) -> list[Diagnostic]:
+    readme = root / "README.md"
+    if not readme.is_file():
+        return []
+    anchors = _markdown_anchor_ids(readme.read_text(encoding="utf-8"))
+    diagnostics: list[Diagnostic] = []
+    candidates = [*_markdown_files(root)]
+    candidates.extend(sorted(root.rglob("*.html"), key=lambda p: p.relative_to(root).as_posix()))
+    for path in candidates:
+        text = path.read_text(encoding="utf-8")
+        for line_no, line in _outside_fence_lines(text):
+            raw_targets = [match.group(1) for match in MARKDOWN_LINK_RE.finditer(line)]
+            raw_targets.extend(match.group(1) for match in HTML_HREF_RE.finditer(line))
+            for raw_target in raw_targets:
+                target = _strip_link_destination(raw_target)
+                fragment = _same_repository_root_fragment(target)
+                if fragment and fragment != "readme" and fragment not in anchors:
+                    diagnostics.append(Diagnostic(_relative_display(path, root), line_no, "SAME_REPO_ANCHOR", f"Missing README heading anchor in same-repository GitHub URL: {target}"))
+    return diagnostics
+
+
 def _heading_aliases(heading: str) -> set[str]:
     aliases = {heading}
     for separator in ("（", " (", "／"):
@@ -228,24 +261,34 @@ def _section_ranges(lines: list[str], heading_name: str) -> list[tuple[int, int]
 
 def _check_section_router(path: Path, root: Path, text: str) -> list[Diagnostic]:
     lines = text.splitlines()
-    headings = _heading_map(lines)
+    local_headings = _heading_map(lines)
+    owner_heading_cache: dict[Path, dict[str, list[int]]] = {}
     diagnostics: list[Diagnostic] = []
     for start, end in _section_ranges(lines, "Section Router"):
         for index in range(start, end):
             line = lines[index]
             if "→" not in line:
                 continue
-            for target in CODE_SPAN_RE.findall(line):
-                target = target.strip()
-                if target.lower().endswith(".md"):
-                    if any(ch in target for ch in "*?[]"):
+            for clause in re.split(r"[；;]", line):
+                active_headings = local_headings
+                for target in CODE_SPAN_RE.findall(clause):
+                    target = target.strip()
+                    if target.lower().endswith(".md"):
+                        if any(ch in target for ch in "*?[]"):
+                            continue
+                        resolved = (root / target).resolve()
+                        if not resolved.exists():
+                            diagnostics.append(Diagnostic(_relative_display(path, root), index + 1, "ROUTER_OWNER", f"Missing canonical owner target: {target}"))
+                            active_headings = {}
+                            continue
+                        owner_headings = owner_heading_cache.get(resolved)
+                        if owner_headings is None:
+                            owner_headings = _heading_map(resolved.read_text(encoding="utf-8").splitlines())
+                            owner_heading_cache[resolved] = owner_headings
+                        active_headings = owner_headings
                         continue
-                    resolved = (root / target).resolve()
-                    if not resolved.exists():
-                        diagnostics.append(Diagnostic(_relative_display(path, root), index + 1, "ROUTER_OWNER", f"Missing canonical owner target: {target}"))
-                    continue
-                if target not in headings:
-                    diagnostics.append(Diagnostic(_relative_display(path, root), index + 1, "ROUTER_SECTION", f"Missing heading target: {target}"))
+                    if target not in active_headings:
+                        diagnostics.append(Diagnostic(_relative_display(path, root), index + 1, "ROUTER_SECTION", f"Missing heading target: {target}"))
     return diagnostics
 
 
@@ -493,6 +536,7 @@ def check_repository(root: Path) -> list[Diagnostic]:
         diagnostics.extend(_check_section_router(path, root, text))
         diagnostics.extend(_check_chat_init_router(path, root, text))
         diagnostics.extend(_check_fences(path, root, text))
+    diagnostics.extend(_check_same_repository_absolute_anchors(root))
     diagnostics.extend(_check_chatgpt_custom_instructions(root))
     diagnostics.extend(_check_cross_agent_adapters(root))
     diagnostics.extend(_check_machine_index(root))

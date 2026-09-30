@@ -61,6 +61,19 @@ If this file or the host's native behavior conflicts with current repository can
         diagnostics = playbook_check.check_repository(root)
         self.assertEqual(["LOCAL_ANCHOR"], [item.code for item in diagnostics])
 
+    def test_same_repository_absolute_github_anchor_passes(self) -> None:
+        root = self.make_repo({"README.md": "# Demo\n\n## 5-minute adoption / 5 分鐘導入\n", "docs/index.html": '<a href="https://github.com/masini1491/ai-development-playbook#5-minute-adoption--5-%E5%88%86%E9%90%98%E5%B0%8E%E5%85%A5">Start</a>\n'})
+        self.assertEqual([], playbook_check.check_repository(root))
+
+    def test_same_repository_absolute_github_anchor_fails_when_stale(self) -> None:
+        root = self.make_repo({"README.md": "# Demo\n\n## Current heading\n", "docs/index.html": '<a href="https://github.com/masini1491/ai-development-playbook#old-heading">Start</a>\n'})
+        diagnostics = playbook_check.check_repository(root)
+        self.assertEqual(["SAME_REPO_ANCHOR"], [item.code for item in diagnostics])
+
+    def test_same_repository_github_readme_pseudo_anchor_passes(self) -> None:
+        root = self.make_repo({"README.md": "# Demo\n", "docs/index.html": '<a href="https://github.com/masini1491/ai-development-playbook#readme">README</a>\n'})
+        self.assertEqual([], playbook_check.check_repository(root))
+
     def test_external_link_is_ignored(self) -> None:
         root = self.make_repo({"README.md": "[GitHub](https://github.com/example/repo)\n"})
         self.assertEqual([], playbook_check.check_repository(root))
@@ -82,6 +95,29 @@ If this file or the host's native behavior conflicts with current repository can
         diagnostics = playbook_check.check_repository(root)
         self.assertEqual(["ROUTER_SECTION"], [item.code for item in diagnostics])
         self.assertIn("Missing Section", diagnostics[0].message)
+
+    def test_section_router_cross_file_heading_passes(self) -> None:
+        root = self.make_repo({
+            "GITHUB_OPERATIONS.md": "# GitHub\n\n## Section Router\n\n- closure → `CHATGPT_WORKFLOW.md` → `Repository-native Continuity Checkpoint Events`\n",
+            "CHATGPT_WORKFLOW.md": "# Workflow\n\n### Repository-native Continuity Checkpoint Events\n",
+        })
+        self.assertEqual([], playbook_check.check_repository(root))
+
+    def test_section_router_cross_file_heading_requires_target_heading(self) -> None:
+        root = self.make_repo({
+            "GITHUB_OPERATIONS.md": "# GitHub\n\n## Section Router\n\n- closure → `CHATGPT_WORKFLOW.md` → `Missing Section`\n",
+            "CHATGPT_WORKFLOW.md": "# Workflow\n\n### Existing Section\n",
+        })
+        diagnostics = playbook_check.check_repository(root)
+        self.assertEqual(["ROUTER_SECTION"], [item.code for item in diagnostics])
+        self.assertIn("Missing Section", diagnostics[0].message)
+
+    def test_section_router_resets_owner_after_semicolon_clause(self) -> None:
+        root = self.make_repo({
+            "CHATGPT_WORKFLOW.md": "# Workflow\n\n## Section Router\n\n- shared → `REPORTING.md`；local → `ChatGPT Reporting Delta`\n\n## ChatGPT Reporting Delta\n",
+            "REPORTING.md": "# Reporting\n",
+        })
+        self.assertEqual([], playbook_check.check_repository(root))
 
     def test_section_router_requires_owner_file(self) -> None:
         root = self.make_repo({"REPOSITORY_EXECUTION.md": "# Repo\n\n## Section Router\n\n- context → `AI_CONTEXT.md`\n"})
