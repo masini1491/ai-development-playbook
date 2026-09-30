@@ -335,7 +335,7 @@ Persistent host instructions are **optional activation adapters**, not the core 
 
 - [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) is a copy-ready ChatGPT host adapter for product surfaces where the current instruction field can accept it.
 - [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) is the copy-ready Codex global host adapter for Codex's documented global `AGENTS.md` instruction chain; version-sensitive install and precedence details stay in [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md).
-- [`CLAUDE.md`](CLAUDE.md), [`GEMINI.md`](GEMINI.md), and [`.github/copilot-instructions.md`](.github/copilot-instructions.md) are thin project-level compatibility shims for Claude Code, Gemini CLI, and GitHub Copilot. They hand off to the repository's canonical bootstrap/routing surfaces rather than becoming additional policy owners.
+- [`CLAUDE.md`](CLAUDE.md), [`GEMINI.md`](GEMINI.md), [`ANTIGRAVITY.md`](ANTIGRAVITY.md), and [`.github/copilot-instructions.md`](.github/copilot-instructions.md) are examples of thin project-level compatibility shims for Claude Code, Gemini CLI, Antigravity, and GitHub Copilot. They hand off to the repository's canonical bootstrap/routing surfaces rather than becoming additional policy owners; the current shim set and host-specific semantics remain owned by [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md).
 - [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) owns the current activation, loading, health-check, and product-surface caveats.
 
 Product UI names, field limits, and available persistent-instruction surfaces can change independently of Playbook policy. Do not treat README wording or an older screenshot as product authority. A host adapter or compatibility shim being present also does not change Project AI mode, prove that a project adopts the Playbook, or grant repository write/execution authority.
@@ -346,7 +346,7 @@ Product UI names, field limits, and available persistent-instruction surfaces ca
 
 - [`CHATGPT_CUSTOM_INSTRUCTIONS.txt`](CHATGPT_CUSTOM_INSTRUCTIONS.txt) 是可直接複製使用的 ChatGPT host adapter，適用於目前產品介面可容納該 payload 的情況。
 - [`CODEX_DESKTOP_INSTRUCTIONS.txt`](CODEX_DESKTOP_INSTRUCTIONS.txt) 是可直接複製的 Codex global host adapter，對應 Codex 文件化的全域 `AGENTS.md` 指令鏈；會隨版本改變的安裝位置與 precedence 細節留在 [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md)。
-- [`CLAUDE.md`](CLAUDE.md)、[`GEMINI.md`](GEMINI.md) 與 [`.github/copilot-instructions.md`](.github/copilot-instructions.md) 是 Claude Code、Gemini CLI 與 GitHub Copilot 的精簡專案層級相容轉接層（compatibility shim）；它們只把 host 導向儲存庫的 canonical bootstrap／routing surface，不成為額外的政策權威來源。
+- [`CLAUDE.md`](CLAUDE.md)、[`GEMINI.md`](GEMINI.md)、[`ANTIGRAVITY.md`](ANTIGRAVITY.md) 與 [`.github/copilot-instructions.md`](.github/copilot-instructions.md) 是 Claude Code、Gemini CLI、Antigravity 與 GitHub Copilot 的精簡專案層級相容轉接層（compatibility shim）範例；它們只把 host 導向儲存庫的 canonical bootstrap／routing surface，不成為額外的政策權威來源；目前的 shim 集合與 host-specific semantics 仍由 [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) 擁有。
 - [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) 負責目前的啟用、載入、health-check 與產品介面注意事項。
 
 產品 UI 名稱、欄位限制與可用的持久指令介面，都可能獨立於 Playbook policy 改變。不要把 README 舊文字或舊截圖當成產品權威；host adapter／compatibility shim 的存在也不會改變 Project AI mode、證明某專案已採用 Playbook，或授予儲存庫寫入／執行權限。
@@ -457,7 +457,7 @@ Humans normally do not need to read these files in order. This map shows the mai
 | [`CHAT_INIT.md`](CHAT_INIT.md) | Minimum Playbook bootstrap/task router after activation; repository-read recovery |
 | [`PROJECT_MODES.md`](PROJECT_MODES.md) | `ChatGPT-Only` / `ChatGPT+Codex`; mode-is-not-tier semantics; minimum-sufficient ChatGPT capability floor |
 | [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) | Thin host/runtime activation adapters, conditional activation, ChatGPT cold-start compatibility target, loading contract, health checks |
-| [`CLAUDE.md`](CLAUDE.md) / [`GEMINI.md`](GEMINI.md) / [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Thin project-level host compatibility shims; bootstrap handoff only, not policy or execution authority |
+| [`CLAUDE.md`](CLAUDE.md) / [`GEMINI.md`](GEMINI.md) / [`ANTIGRAVITY.md`](ANTIGRAVITY.md) / [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Examples of thin project-level host compatibility shims; bootstrap handoff only, not policy or execution authority; current set/semantics owned by [`ACTIVATION_ADAPTERS.md`](ACTIVATION_ADAPTERS.md) |
 | [`AI_CONTEXT.md`](AI_CONTEXT.md) | Context/information architecture, progressive routing, routing integrity/discovery closure, retrieval cost, Always-on/Hot/Cold/Evidence/Historical lifecycle |
 | [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | Identity, provenance, source-vs-derived authority, snapshot/search-hit/evidence guards |
 | [`REPORTING.md`](REPORTING.md) | Cross-actor, cross-workflow, activation-independent user-facing reporting, timestamp, progress-integrity and pre-send contract |
