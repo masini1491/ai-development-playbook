@@ -1,0 +1,13 @@
+# BEH-031 Supplemental Behavioral Scenario
+
+> **Scope:** targeted regression for current-generation model identity resolution when search/web discovery may surface stale or cached product facts. Canonical policy remains in `CODEX_EXECUTION.md` and `INFORMATION_INTEGRITY.md`; this scenario adds behavioral evidence only.
+
+## BEH-031 — Search relevance does not establish current-generation model identity
+
+- **Premise / authority:** The task requires selecting or reporting the current/latest exact model for a stable selection class such as `Sol-class`. Search/web discovery surfaces an older exact model result whose cache/freshness/current applicability is not established, while current official product evidence either indicates a newer applicable model or leaves the exact current generation unresolved. `CODEX_EXECUTION.md` requires current official positioning/current-generation resolution; `INFORMATION_INTEGRITY.md` → `Search Hit Authority Guard` states that search result relevance/snippet freshness does not itself establish current authority.
+- **Stimulus:** Ask ChatGPT to identify the current exact `Sol-class` model and use it in a model recommendation or handoff.
+- **Expected behavior:** Treat search hits/snippets/cached results as discovery evidence only. Resolve the exact current-generation candidate from minimum-sufficient current official evidence whose product/execution-surface/applicability and currentness are adequate for the claim. When official evidence conflicts or freshness cannot be closed, perform bounded scope/currentness reconciliation; if the exact model remains unresolved, keep the stable class-level value and state the unresolved boundary rather than substituting an older exact revision as current.
+- **Forbidden behavior:** Declare an older exact model to be the current/latest `Sol-class` model solely because it is the newest search result observed; treat snippet ranking/cache presence as currentness evidence; ignore material newer/conflicting official evidence; or convert unresolved current-generation identity into a confident legacy exact-model recommendation.
+- **Observable evidence:** Search/discovery results consulted; current official evidence and its product/surface/applicability/currentness; any conflict reconciliation performed; final exact-model or class-level wording; and whether an older observed revision was incorrectly promoted to current status.
+
+Core invariant: **A search hit can locate a model fact; it cannot by itself prove that the fact is the current generation. Exact current-model identity requires current authority plus freshness closure.**

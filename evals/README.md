@@ -16,6 +16,7 @@ Scenario ownership：
 - `evals/BEH_027_SUPPLEMENTAL.md`：BEH-027 cost-aware responsibility decomposition / residual handoff regression。
 - `evals/BEH_028_SUPPLEMENTAL.md`：BEH-028 broad synthesis / project-defined material evidence coverage closure regression。
 - `evals/BEH_029_030_SUPPLEMENTAL.md`：BEH-029 GitHub Actions artifact producer-vs-consumer handoff closure；BEH-030 model availability evidence sufficiency regression。
+- `evals/BEH_031_SUPPLEMENTAL.md`：BEH-031 stale/cached search result vs current-generation model identity regression。
 
 ## Run record
 

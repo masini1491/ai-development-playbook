@@ -61,6 +61,7 @@ class BehavioralEvalTests(unittest.TestCase):
             "BEH-028",
             "BEH-029",
             "BEH-030",
+            "BEH-031",
         ):
             with self.subTest(scenario_id=scenario_id):
                 record = self.valid_record()
@@ -195,7 +196,7 @@ class BehavioralEvalTests(unittest.TestCase):
 
     def test_select_information_integrity_regression_includes_beh_022(self) -> None:
         self.assertEqual(
-            ["BEH-008", "BEH-011", "BEH-012", "BEH-014", "BEH-018", "BEH-022", "BEH-024", "BEH-029", "BEH-030"],
+            ["BEH-008", "BEH-011", "BEH-012", "BEH-014", "BEH-018", "BEH-022", "BEH-024", "BEH-029", "BEH-030", "BEH-031"],
             behavioral_eval.select_regression_scenarios(
                 self.current_matrix(), "information-integrity"
             ),
@@ -210,7 +211,7 @@ class BehavioralEvalTests(unittest.TestCase):
 
     def test_select_model_selection_and_availability_regression(self) -> None:
         self.assertEqual(
-            ["BEH-023", "BEH-030"],
+            ["BEH-023", "BEH-030", "BEH-031"],
             behavioral_eval.select_regression_scenarios(
                 self.current_matrix(), "model-selection-and-availability"
             ),
