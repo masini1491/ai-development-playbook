@@ -136,6 +136,8 @@ Commit/push 必須服從使用者當次 launch 或 repository policy 的明確�
 
 較大的 execution permission 或 credential capability 都不代表 scope expansion；任一層不足時，只處理該層缺口。
 
+Capability evidence 也必須綁定實際 execution surface／session。Human terminal、IDE、agent sandbox、CI runner 或其他 runtime 即使面向同一 repository／account，也不能互相外推 credential、network、filesystem 或 repository-metadata capability；另一 surface 的 login／auth PASS 只證明該 surface。對 remote／service operation 應在實際執行該 operation 的 environment 做最低充分 probe。Local repository ownership／trust／metadata failure 不是 remote authentication evidence；除非同一 executing surface 另有獨立 evidence 證明 authentication 失敗，否則不得據此要求 login／credential remediation，應維持在目前可證明的 permission／environment／trust boundary。
+
 ## 權限關卡操作（Permission-Gated Operation）
 
 本規則適用於目前已授權 Task / Stage 所必要的 Git、build、test、toolchain、filesystem、remote network、external API / CLI / HTTPS、package registry 或其他外部 operation。

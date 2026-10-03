@@ -497,6 +497,10 @@ exact canonical artifact / generator / input identities
 
 Local PASS 不等於 remote CI PASS；舊 commit PASS 不等於目前 HEAD PASS。
 
+若 validation discovery／command semantics 依賴 repository root、worktree 或 current working directory，執行前必須在同一 execution context 建立 target identity；Git semantics 適用時可用能確認 top-level worktree 的最低充分 probe。若因 wrong root／parent directory 而掃入 sibling worktree 或其他非 target scope，先分類為 ENVIRONMENT／validation-scope mismatch，不得直接當成 SOURCE／test failure。
+
+Fixture／snapshot 是否必須保留 Git metadata 取決於 validator contract：只有 command／test 會呼叫 Git，或 correctness 依賴 worktree／ref／index 等 Git semantics 時，才要求 execution input 保留相應 metadata／behavior；不依賴 Git semantics 的 archive／snapshot 仍可作合法 validation input，不因不是完整 worktree而失效。
+
 ## 真實 Runtime／Backend Contract 驗證（Real-runtime / backend contract validation）
 
 Static、mock、stub 或 host-only harness 只能證明其實際涵蓋的邏輯；若 production correctness 依賴特定 runtime/backend/framework 的 superclass、binding、registration、loader、proxy、lifecycle、serialization、database engine、browser/device API 或其他 runtime contract，mock/static PASS 不得冒充該 runtime contract 已驗證。
