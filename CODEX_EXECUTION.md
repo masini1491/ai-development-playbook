@@ -99,13 +99,13 @@ Codex-specific actor-extension check依 reply condition分開處理：
 
 ## Prompt execution gates
 
-Codex 對一般 project repository 執行 Prompt 時，依任務需要引用 `REPOSITORY_EXECUTION.md` 的共通 gates，並在 target repository 已安全同步、current governance 已重讀後，關閉 applicable shared Playbook／target-state revision continuity：
+Codex 對一般 project repository 執行 Prompt 時，依任務需要引用 `REPOSITORY_EXECUTION.md` 的共通 gates，並在 target repository 已完成 current applicable repository freshness bootstrap、current governance 已重讀後，關閉 applicable shared Playbook／target-state revision continuity：
 
 1. Repository Identity Gate
 2. mutation Stage 的 Workspace Write Capability Gate
 3. Git state / unfinished-operation preflight
-4. Remote Git Permission Gate / Permission-Gated Operation
-5. safe `git fetch origin` + fast-forward-only sync
+4. applicable Permission-Gated Operation / Remote Git Permission Gate（只有 current bootstrap 實際需要 remote Git 時）
+5. 依 `REPOSITORY_EXECUTION.md` 完成 current applicable repository freshness bootstrap
 6. re-read latest `AGENTS.md` / `TASKS.md`，並從 current project governance解析 declared Playbook baseline
 7. **Codex execution-start revision continuity gate**
 8. execute scoped Stage
@@ -115,10 +115,10 @@ Codex 對一般 project repository 執行 Prompt 時，依任務需要引用 `RE
 
 每一次新的 Prompt execution、Resume、Fork 或跨 session execution handoff，在真正解讀／執行 scoped Stage前都做一次；**不是每個 command、tool call或小步驟重跑**。
 
-1. 先完成 target repository safe remote-sync並重讀 current governance／Hot coordination，取得 current declared Playbook baseline與合法 execution scope。
-2. **Step 1 是 hard prerequisite。** 在 safe remote-sync、current governance／Hot reread、declared Playbook baseline與合法 execution scope尚未完成前，不得 consume／compare `Handoff revisions:`，也不得把 target continuity comparison插進 fetch 與 permitted FF-only sync之間。Step 1完整成立後，再讀取 Prompt中的 producer-observed metadata：對 floating Playbook ref，用 current authoritative surface取得 exact current revision；對 pinned SHA／tag，保留 declared pin/ref，並解析同一 pin/ref的 exact immutable revision identity後與handoff metadata核對，tag文字相同不能取代exact revision比較，也不得自行升級到upstream新版。若Prompt同時帶有 material target remote revision，使用 Step 1 已取得的 fetched current `origin/<branch>`／等同語義 remote revision做 like-for-like comparison；**不得拿 pre-fetch local HEAD直接比較**。
+1. 先依 `REPOSITORY_EXECUTION.md` 完成 target repository current applicable repository freshness bootstrap，再重讀 current governance／Hot coordination，取得 current declared Playbook baseline與合法 execution scope。
+2. **Step 1 是 hard prerequisite。** 在 applicable bootstrap、current governance／Hot reread、declared Playbook baseline與合法 execution scope尚未完成前，不得 consume／compare `Handoff revisions:`，也不得把 target continuity comparison插進 bootstrap 尚未 closure 的中間。Step 1完整成立後，再讀取 Prompt中的 producer-observed metadata：對 floating Playbook ref，用 current authoritative surface取得 exact current revision；對 pinned SHA／tag，保留 declared pin/ref，並解析同一 pin/ref的 exact immutable revision identity後與handoff metadata核對，tag文字相同不能取代exact revision比較，也不得自行升級到upstream新版。若 Prompt 同時帶有 material target remote revision，使用 Step 1 已建立的 consumer-current exact revision evidence 做 like-for-like comparison；**不得拿 pre-bootstrap local HEAD、stale tracking ref或未驗證 local state直接比較。**
 3. Same／changed／unresolved與 material impact處置統一依 `AI_CONTEXT.md` → `Cross-boundary Revision Continuity`。Fresh session若沒有verified Playbook Context，只載入本次execution最低充分 owner／section；revision changed也只reload受material影響部分。
-4. 若 current authority仍可合法繼續，safe-sync後的 local HEAD才建立為本次 **target execution baseline**。Long-running same execution不為形式反覆probe；只有跨新execution boundary、Stage／responsibility materially改變或 concrete stale evidence出現時再reconcile。
+4. 若 current authority仍可合法繼續，只有 applicable bootstrap closure成立、current governance／Stage重新確認後的 local HEAD，才可建立為本次 **target execution baseline**。Long-running same execution不為形式反覆probe；只有跨新execution boundary、Stage／responsibility materially改變或 concrete stale evidence出現時再reconcile。
 
 Completion／final report在continuity適用時用一條compact metadata把 producer-side evidence傳回 ChatGPT：
 
@@ -128,7 +128,7 @@ Completion／final report在continuity適用時用一條compact metadata把 prod
 
 只transport實際觀察且consumer需要的revision；target metadata必須保留足以讓獨立貼回的result唯一辨識 repository + ref/branch + exact revision lineage，不假設consumer仍保有原Prompt上下文。不得猜值、不得把local-only result冒充remote canonical state，也不得因格式需要新增大型metadata framework。
 
-這個 gate確認的是 shared Playbook與material target-state的跨 boundary continuity；它不取代 target repository `fetch → FF-only sync → re-read governance`、Git mutation evidence或 Completion Evidence Guard。
+這個 gate確認的是 shared Playbook與material target-state的跨 boundary continuity；它不取代 `REPOSITORY_EXECUTION.md` 所要求的 current applicable repository freshness bootstrap、Git mutation evidence或 Completion Evidence Guard。
 
 若 runtime 已知必要 remote operation 需要 permission escalation，主動要求最小權限，不故意先執行已知會失敗的 command。
 
