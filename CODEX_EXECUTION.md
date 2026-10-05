@@ -153,6 +153,19 @@ Completion／final report在continuity適用時用一條compact metadata把 prod
 
 官方 capability positioning 用來建立 **current selection prior**，不是 immutable model ladder。若 lineup、generation 或官方定位改變，重新 resolve current prior；不要讓舊的 Luna／Terra／Sol／Astra 排序本身取得永久 authority。同一 selection class／model family 出現新的 product revision 時，若 current official positioning 仍承擔同一 execution role，只更新該 class 的 current exact candidate，不為版本號新增永久 tier；只有 capability role／cost-quality boundary materially 改變時才重開 class boundary。
 
+#### Dated model freshness canary
+
+準備輸出 exact Work／Codex model recommendation 時，先 bounded-read [`MODEL_FRESHNESS_CANARY.json`](MODEL_FRESHNESS_CANARY.json)。它只保存截至 `as_of` 由官方來源最後確認過的 Work／Codex model facts，作用是 **freshness canary／anti-stale baseline**，不是 live product authority、model ladder或 account entitlement authority。
+
+- canary 的 `anti_stale_classes` 只用來偵測 Sol／Luna exact candidate 的 unexplained mismatch；proposed exact candidate若與同 class的 `last_confirmed_exact` 不同，而目前沒有更 current的 official／account／workspace evidence足以解釋差異，視為 freshness conflict：在交付 exact model name前先 fresh-resolve current official evidence；
+- **difference ≠ failure**：較新的 model若有 current official evidence可直接採用；較舊 model若因 current availability、compatibility、reproducibility或其他具體理由成立，也可採用，但不得誤稱為 current/latest candidate；
+- `additional_last_confirmed_options` 只提供目前已知的其他可考慮 profile（例如最高能力選項）；它不參與 mismatch gate，也不建立 class binding、availability或推薦順位；
+- canary不得證明 `as_of` 之後仍是最新，也不得證明目前 account／workspace實際可選、模型品質排序、pricing或usage rate；
+- canary unavailable／stale只代表 anti-stale baseline不足；回到本節既有 current official／account／workspace resolution，不得把它翻成 model unavailable；
+- 只有 Playbook maintenance取得新的官方 lineup／positioning evidence，或使用者明確要求 current-model refresh時才更新 canary；不建立固定 refresh cadence或自動化義務。
+
+核心原則：**The canary can expose an unexplained stale-model mismatch; it cannot choose the model, prove availability, or freeze the future.**
+
 **Availability-resolution closure：** generic execution-surface availability guard 是 selection input condition，不是應原封不動持久化或輸出的 recommendation text。把 model recommendation 寫入 user-facing output、handoff、Hot／durable project contract 或其他可被後續 execution 消費的 state 前，先用目前可取得的官方／account／workspace evidence resolve applicable availability。若 selected current-generation profile 已確認可用，直接寫 exact model name，移除 class-only／`if available` 條件字樣；只有 availability 真正 unresolved 時才保留 class-level 或 conditional wording。已知 condition 已成立後，不得把未解析 generic guard 繼續帶入下游 project state。
 
 #### Availability evidence sufficiency

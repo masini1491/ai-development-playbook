@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "authority": "freshness-canary-only",
+  "scope": "ChatGPT Work and Codex root-model recommendation",
+  "provider": "OpenAI",
+  "as_of": "2026-10-05",
+  "anti_stale_classes": {
+    "Sol-class": {
+      "last_confirmed_exact": "GPT-6.1 Sol",
+      "evidence_note": "Official current guidance identifies GPT-6.1 Sol as the newer Sol model; Work/Codex availability remains rollout/plan/workspace dependent."
+    },
+    "Luna-class": {
+      "last_confirmed_exact": "GPT-6 Luna",
+      "evidence_note": "Official current guidance lists GPT-6 Luna for Work/Codex."
+    }
+  },
+  "additional_last_confirmed_options": [
+    {
+      "name": "GPT-6 Astra",
+      "role": "highest-capability option",
+      "informational_only": true,
+      "availability_note": "Plan/usage/workspace dependent; this entry does not participate in the freshness mismatch gate."
+    }
+  ],
+  "official_sources": [
+    {
+      "url": "https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex",
+      "supports": "Work/Codex model listing, GPT-6.1 Sol rollout/account/workspace caveat, and Astra usage/plan context."
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/models/gpt-6-sol",
+      "supports": "GPT-6.1 Sol is the newer Sol model."
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/changelog",
+      "supports": "GPT-6.1 Sol release recorded on 2026-09-29."
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/models",
+      "supports": "Current GPT-6 Astra, GPT-6.1 Sol, and GPT-6 Luna product positioning."
+    }
+  ],
+  "semantics": {
+    "mismatch_action": "fresh-official-resolution-before-exact-output-unless-current-official/account/workspace-evidence-explains-the-difference",
+    "mismatch_is_not_failure": true,
+    "newer_candidate_with_current_evidence": "allowed",
+    "older_candidate_with_explicit_current_reason": "allowed-but-not-current/latest-by-default",
+    "additional_options_participate_in_mismatch_gate": false,
+    "cannot_establish": [
+      "post_as_of_latestness",
+      "account_or_workspace_availability",
+      "model_quality_ordering",
+      "pricing_or_usage_rates"
+    ]
+  },
+  "refresh_trigger": "Playbook maintenance obtains newer official model-lineup/positioning evidence, or the user explicitly requests a current-model refresh."
+}
