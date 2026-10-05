@@ -77,6 +77,8 @@ Write-required work 若目前 workspace 為 read-only 或無法完成必要 file
 
 ## 安全 Remote Sync 啟動（Safe Remote-Sync Bootstrap）
 
+下列 6–8 是 receiving execution surface 直接使用 remote Git 取得 current remote state 的預設路徑。若本節下方 `Git Revision Continuity Specialization` 的 **Cross-surface exact materialization** 條件成立，receiving surface 可改用該 specialization 完成 current revision bootstrap；不得為形式強迫已由 current evidence 證明 blocked 的 direct transport。其餘 identity、workspace、working-state 與 history-operation prerequisites 仍適用。
+
 執行已授權 Task/Stage 前：
 
 1. Repository Identity Gate。
@@ -110,7 +112,8 @@ Commit/push 必須服從使用者當次 launch 或 repository policy 的明確�
 - **ChatGPT / GitHub Connect remote observation**：ChatGPT能以 current GitHub canonical evidence解析 `owner/repo + branch/ref → remote commit SHA`；這可以作為 handoff 的 `target@<branch>=<remote SHA>`，但不能宣稱 Codex local working-tree HEAD、dirty state、ahead/behind/diverged或 execution baseline。
 - **Codex pre-sync local state**：local `HEAD`、working tree與tracking ref只描述 execution environment當下狀態；在 safe fetch前不得拿 stale `origin/<branch>`或local HEAD當 remote canonical revision。
 - **Codex current remote observation**：完成合法 `git fetch origin` 後，以 fetched `origin/<expected branch>`／等價 exact remote ref作 consumer-current remote revision，才能與 ChatGPT handoff的 remote-observed SHA比較。
-- **Codex execution baseline**：只有 safe-sync prerequisites成立、必要FF-only sync完成、current governance／Stage重新確認後的 local HEAD，才可記為本次 Stage execution baseline。
+- **Cross-surface exact materialization**：若 current project governance／current execution evidence 已建立 receiving execution surface 無法使用本 Stage 所需 remote Git acquisition，而另一個已授權 execution surface 在同一 handoff boundary 內已 fresh-resolve 同一 `owner/repo + branch/ref` 的 remote canonical revision並 materialize／synchronize 對應 exact Git state，receiving actor 可在自己不重做 remote transport 的情況下建立 consumer-current revision，但必須在 receiving surface 驗證 repository／origin identity、expected branch/ref role、applicable local ref/object/HEAD identity與 producer-observed exact SHA 的一致性，並保留可回查的 handoff provenance。既有 stale tracking ref、未驗證 local HEAD 或只有自然語言聲稱「已同步」都不成立；currentness／provenance 任一無法建立則保持 unresolved。這個 specialization 不擴張 Task/Stage、permission 或 credential authority；除非 capability／permission／source identity 等 material premise 改變，不要求 receiving surface 為形式重試同一已知 blocked transport。
+- **Codex execution baseline**：只有 applicable direct safe-sync prerequisites 或 `Cross-surface exact materialization` closure成立、必要 sync／materialization verification完成、current governance／Stage重新確認後的 local HEAD，才可記為本次 Stage execution baseline。
 - **Execution result**：本次 mutation完成後的 local／pushed result SHA與remote canonical是否一致是不同 claim；若completion宣稱已push，仍需依 Remote Git／Completion Evidence規則證明remote state。
 - **ChatGPT reconciliation current state**：ChatGPT收到Codex result後，以 GitHub Connect重新解析 target remote ref取得 current remote revision，並把它與Codex report中的 execution result／tested SHA依 continuity與Completion Evidence分別判斷。
 
@@ -120,7 +123,7 @@ Commit/push 必須服從使用者當次 launch 或 repository policy 的明確�
 
 每個箭頭只在該 transition materially需要時判斷；`X != Y`或`Z != W`本身不是自動FAIL，依上位continuity contract與Completion Evidence判斷差異是否影響本次 execution／acceptance。
 
-核心原則：**Compare like with like: remote-observed revision with current remote revision; establish the local execution baseline only after safe sync.**
+核心原則：**Compare like with like: remote-observed revision with current remote revision; establish the local execution baseline only after the applicable direct safe-sync or exact-materialization closure.**
 
 ## 授權與能力分層（Authorization / Capability Layers）
 

@@ -519,8 +519,7 @@ Handoff revisions: playbook@<declared ref>=<exact producer-observed revision>; t
 
 Before interpreting project execution state or reading current Hot coordination, complete the current safe remote-sync bootstrap:
 - verify repository / branch / HEAD and preserve unrelated work;
-- safely `git fetch origin`;
-- perform only the permitted fast-forward-only sync of the expected branch;
+- establish current target state through the applicable `REPOSITORY_EXECUTION.md` bootstrap: direct safe fetch / permitted fast-forward-only sync by default, or `Cross-surface exact materialization` when that specialization applies;
 - then re-read the latest project governance and current Hot coordination.
 
 After that, execute only:
@@ -547,8 +546,7 @@ Handoff revisions: playbook@<declared ref>=<exact producer-observed revision>; t
 
 Before interpreting mutable project execution state, complete the current safe remote-sync bootstrap:
 - verify repository / branch / HEAD and preserve unrelated work;
-- safely `git fetch origin`;
-- perform only the permitted fast-forward-only sync of the expected branch;
+- establish current target state through the applicable `REPOSITORY_EXECUTION.md` bootstrap: direct safe fetch / permitted fast-forward-only sync by default, or `Cross-surface exact materialization` when that specialization applies;
 - then re-read the latest project governance.
 
 Task:
@@ -581,7 +579,7 @@ Do not expand beyond this task.
 3. **Persistence closure**：若 current work 依本檔 admission rules 屬 durable／tracked Stage，且 ChatGPT 具有 current coordination write authority，先完成必要 Hot admission／revision與 canonical read-back；**不得把 Prompt 當 Stage persistence surface**。反之，一次性、低風險、低 tracking value work 不得為了本 gate 被強迫建立 Hot task。
 4. **Prompt-mode check**：若 current Hot coordination已有可執行 Stage且 Codex能取得該 Stage／authority，最終草稿必須是 `TASKS Short-launch`；沒有 Hot Stage且符合一次性 bounded條件時才使用 `Direct Short Prompt`；`Standalone Full Prompt` 必須能指出本檔已列出的至少一個 explicit exception。
 5. **Repository-identity presence check**：每一份 executable Codex Prompt 都必須明確包含 `Repository: <owner/repo>` 與 `Branch: <expected branch>`，且值來自 current repository／task authority；不得省略 branch、保留 placeholder、或用模糊的 base intent 取代 expected branch。這是 `REPOSITORY_EXECUTION.md` → `Repository Identity Gate` 的 artifact-level closure。
-6. **Remote-freshness ordering check**：當 execution 依賴 floating／current repository state、governance、`TASKS.md` 或其他 mutable coordination truth時，final Prompt 必須先要求完成 current safe remote-sync bootstrap（identity/worktree → safe fetch → permitted fast-forward-only sync），**再** re-read latest governance／Hot state並解讀 Stage。不得把 pre-fetch local `origin/main`、stale working tree或舊 `TASKS.md` 當 remote canonical truth。
+6. **Repository-freshness ordering check**：當 execution 依賴 floating／current repository state、governance、`TASKS.md` 或其他 mutable coordination truth時，final Prompt 必須先要求完成 current applicable `REPOSITORY_EXECUTION.md` bootstrap，**再** re-read latest governance／Hot state並解讀 Stage。Receiving surface可直接使用 remote Git時，預設仍是 safe fetch + permitted fast-forward-only sync；若 `Git Revision Continuity Specialization` 的 `Cross-surface exact materialization` 已成立，final Prompt應使用該 verified handoff，而不是為形式強迫已知 blocked 的 direct transport。無論哪條 path，都必須先建立 consumer-current exact revision並完成 handoff continuity reconciliation；不得把 pre-bootstrap local `origin/main`、stale working tree或舊 `TASKS.md` 當 remote canonical truth。
 7. **Exact-pointer check（Short-launch）**：Stage pointer來自最後一次 current canonical Hot read-back，且 path + Stage identity可直接回查；不得自行 paraphrase／縮寫／猜測 Stage名稱。若剛做 Hot revision卻尚未 read-back，先完成 read-back再產 Prompt。
 8. **Launch-settings presence check**：若 final response 正在交付 user-facing Codex handoff，且 `Prompt 建議設定與固定資訊` 沒有 explicit exemption，確認 final draft 已在 executable Prompt 外提供 `Root model`、`Root reasoning`、`Why`、`Cheap-model evidence pass`；`Context / execution mode` 仍只在 material 時 required。**沒有產生 launch settings 不能因「沒有放錯位置」而通過下一項 separation check。**
 9. **Artifact-separation check**：root model／reasoning、推薦理由、cheap-model evidence-pass與其他 user launch settings在 fenced Prompt外；planning-only `Child Delegation Forecast: NONE` 不得進 executable body。POSSIBLE／STRONG_CANDIDATE forecast與 child-routing authorization只有 materially需要且 repository authority未已提供等價資訊時才用最低充分文字 transport。
