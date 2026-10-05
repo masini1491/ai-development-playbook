@@ -151,7 +151,7 @@ Capability evidence 也必須綁定實際 execution surface／session。Human te
 2. 事前已知需要額外 permission 時，先要求最小 capability；不得故意先製造一次可預期 failure。
 3. 事前未知時可正常執行一次；第一次明確 permission denial 後立即轉 permission flow。
 4. Permission request 盡量說明 exact operation、為何必要、resource/path、service host/port（可限定時）與最低 permission scope。
-5. 使用者批准後只重試原本被 gate 阻擋的必要 operation；approval 不授權 scope expansion、下一 Stage、額外 mutation 或其他 Git workflow。
+5. 使用者批准後只重試原本被 gate 阻擋的必要 operation；approval 不授權 scope expansion、下一 Stage、額外 mutation 或其他 Git workflow。 若 runtime 的 approval path 會讓同一個已授權 operation 改在另一個較高權限 execution account／sandbox context 執行，仍屬本 permission-recovery flow，不是 alternate acquisition；capability evidence 只歸屬實際批准後的 context，不回填原受限 context。只有此 applicable approval path 不可用、被拒絕，或批准後原 operation 仍真正失敗，才可把該 operation 視為未恢復並進入後續 failure／alternate-route 判斷。
 6. `permission denial → request → approval → retry original operation` 不計 operational retry cap。
 7. 使用者拒絕、runtime 無法取得 permission，或取得後仍真正失敗，才依 `DEBUG_VALIDATION.md` 分類。
 8. 不得以 permission 問題自行使用 `sudo`、廣泛 chmod、刪 Git lock/state、重新 clone 覆蓋 working tree、stash/delete unknown work、reset-hard、force push、auto merge/rebase/cherry-pick 等 workaround。
