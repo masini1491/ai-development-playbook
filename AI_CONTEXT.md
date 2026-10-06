@@ -462,6 +462,8 @@ Hot surface 只保存 current executable / current critical-path coordination。
 
 Hot index 應保持可快速建立 current mental model。若單一 Hot task contract 本身很長，可在 project opt-in 後把詳細 body 放入 **Hot task dossier**，Hot index 只保存 identity、current status、pointer、最低必要 critical-path delta。
 
+Hot surface 中保存的 operational blocker diagnosis／failure classification 只是一個 **freshness-bound coordination claim**；它不因被寫入 `TASKS.md`／active dossier 就升格成不可推翻的 factual authority。若 fresh、applicable 的 direct execution evidence materially 衝突，dependent action 前必須回到該 claim 的 current canonical owner重新分類，並更新／supersede Hot coordination；**stale coordination diagnosis 本身不得阻止原 Stage 已授權的最低充分 diagnostic／permission-recovery probe，也不得擴張 scope、permission 或 write authority。** 若衝突仍無法解決，保持 `UNRESOLVED`／blocked，只停止依賴該 claim 的 action，不猜測哪一版 diagnosis 為真。
+
 ### Cold registry
 
 Cold surface 保存值得長期記得、但目前不應進 executable Context 的 future memory，例如：
