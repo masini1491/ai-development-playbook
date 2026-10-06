@@ -117,6 +117,10 @@ Current project identity / bootstrap
 ![AI Development Playbook quick workflow](assets/readme-workflow.svg)
 
 > **Illustrative workflow / 流程概覽**：The diagram summarizes the stable human-facing flow only. Canonical rules remain in the linked owner documents, and product UI/version details are intentionally excluded.／本圖只摘要穩定的人類閱讀流程；正式規則仍以對應 canonical owner 為準，並刻意不放產品 UI／版本細節。
+>
+> **Coordination and continuity:** Coordination surfaces serve different time horizons. Hot coordination points to current executable / critical-path work; Cold registry preserves future / dormant / trigger-based work; session handoff / continuity checkpoints preserve the smallest pointer needed for a fresh chat to rehydrate current state, including the next authorized action or STOP. Projects choose the physical mapping—files, domain-scoped registries, or an authorized append-only repository-native thread. A checkpoint never becomes task admission, canonical truth, or execution authority. See [`AI_CONTEXT.md`](AI_CONTEXT.md), [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md), and [`SESSION_HANDOFF_TEMPLATE.md`](SESSION_HANDOFF_TEMPLATE.md).
+>
+> **協調與接續：** 協調介面對應不同時間尺度。Hot coordination 指向目前可執行／critical-path work；Cold registry 保存 future／dormant／trigger-based work；session handoff／continuity checkpoint 保存 fresh chat 重新建立 current state 所需的最小 pointer，包括 next authorized action 或 STOP。專案可自行把這些 semantic roles 映射到檔案、domain-scoped registry，或已授權的 append-only repository-native thread。Checkpoint 不會因此成為 task admission、canonical truth 或 execution authority。詳見 [`AI_CONTEXT.md`](AI_CONTEXT.md)、[`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) 與 [`SESSION_HANDOFF_TEMPLATE.md`](SESSION_HANDOFF_TEMPLATE.md)。
 
 ## Example: cloud deterministic loop / 範例：雲端確定性開發閉環
 
