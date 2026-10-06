@@ -49,6 +49,21 @@ UI 結構應先服務使用者／operator 的實際任務，而不是直接映�
 - Success / failure feedback 的持續時間與位置應符合重要性。關鍵設定、security、destructive 或 recovery outcome 不應只靠瞬間消失的 toast 作唯一 evidence。
 - Error message 優先回答三件事：**發生什麼、目前可相信的狀態是什麼、使用者下一步能做什麼**。不要把 raw exception/code 當作唯一 operator explanation；工程 diagnostics 可以另層提供。
 
+## Accessibility Baseline／User Preference Adaptation（無障礙基線／使用者偏好適配）
+
+Accessibility 應和 task flow、operation semantics、design token 與 validation 一起設計，不是最後再補的視覺 polish。Web surface 若 project 沒有宣告更嚴格或不同的正式 contract，本 Playbook 以 **WCAG 2.2 AA** 作為預設 design / validation baseline；只有實際完成對應 scope 的 validation 才能宣稱 conformance。後續仍處於 draft／working-draft 狀態的 successor specification 可作 research/reference，但不得因「較新」就自動取代已宣告的 stable baseline。
+
+一般原則：
+
+- **WCAG 2.2 新增互動要求要納入 current design review。** 依 surface 實際功能檢查 focus 不被 author-created sticky/floating content 遮蔽、dragging operation 是否有非拖曳替代、pointer target size／spacing、same-process redundant entry、accessible authentication，以及跨頁 help mechanism 一致性；不適用的 criterion 不為形式建立假功能。
+- **Keyboard／focus 必須可觀察且不中斷。** Focus order、visible focus 與 focus-not-obscured 要和 sticky header/footer、dialog、drawer、popover、virtualized content 等真實 layout 一起驗證；只在靜態 component preview 看到 focus ring 不等於實際 task flow 可用。
+- **Theme precedence 先尊重明確選擇。** 若 project 提供 light/dark 或其他 appearance 選擇，推薦 `explicit user choice → persisted user/client preference → platform/user-agent preference → product default`。Web 可用 `prefers-color-scheme`／`color-scheme` 作最低充分實作，但 system preference 不得覆蓋使用者已明確保存的選擇。
+- **不要只處理 reduced motion。** 在 target platform 支援且對產品有意義時，同時考慮 `prefers-reduced-motion`、`prefers-contrast`、`forced-colors` 或等價 OS／native accessibility preference；forced-colors／high-contrast 模式下不得依賴作者固定 palette 維持可讀性，也不得因 theme styling 使核心 control、focus 或 status 消失。
+- **Automated accessibility audit 只證明可機械判定的部分。** Semantic markup／role、label association、contrast/token、missing accessible name 等可用工具檢查；keyboard task flow、focus visibility、screen-reader comprehension、cognitive burden 與實際 operator usability 仍需要 bounded human／assistive-technology review。Audit PASS 不得冒稱完整 WCAG conformance。
+- **Native／embedded surface 保留平台語意。** WCAG 2.2 是 web baseline，不要求 native/MCU UI 機械套用 CSS criterion；native 或 constrained UI 應採平台／產品等價 accessibility contract，同時保留本節的可操作、可感知、非純色彩、偏好尊重與 honest-state 原則。
+
+核心原則：**Accessibility baseline 要可驗證、可被使用者偏好覆蓋的部分要尊重偏好、draft successor 不自動取代 stable contract。**
+
 ## Internationalization／Localization Readiness（國際化／在地化準備）
 
 Human-facing wording 應能在**不改變 machine contract、operation semantics、安全語意與底層 authority** 的前提下切換 locale。實際支援哪些語言仍可由各 project authority 覆蓋，但若專案沒有另外定義 locale policy，本 Playbook 推薦以 `zh-TW + en` 作為 baseline locales。
@@ -60,7 +75,7 @@ Human-facing wording 應能在**不改變 machine contract、operation semantics
 一般原則：
 
 - **Baseline locales：`zh-TW` + `en`。** 若 project 沒有其他明確需求，繁體中文環境使用 `zh-TW`，其餘未支援 locale fallback 至 `en`；這是推薦 baseline，不是不可覆蓋的產品硬規格。
-- **繁中 locale normalization。** `zh-TW`、`zh-HK`、`zh-MO`、`zh-Hant` 可依產品需求映射至 `zh-TW`；`zh-CN`、`zh-SG`、`zh-Hans` 不得因同屬中文就自動視為繁體中文，若未提供對應翻譯則依 baseline fallback 至 `en`。
+- **BCP 47 locale identity／繁中 fallback。** Language、script 與 region 是不同語意；`zh-TW`、`zh-HK`、`zh-MO`、`zh-Hant` 不應只因都使用繁體字就被 canonicalize 成同一 locale。Locale matching／fallback 應保留原 requested locale identity，並依 project 支援的 resource set 做 BCP 47-compatible lookup／等價最小 matching；若產品目前只提供 `zh-TW` resource，可明確讓未支援的 Traditional-Chinese locale fallback 到 `zh-TW` 顯示資源，但不要因此抹除 region/script identity 或把 formatting／product semantics 一律當成 Taiwan。若 `zh-CN`、`zh-SG`、`zh-Hans` 未有對應資源，也不得因同屬中文就 silent map 到繁體中文；依 declared fallback（baseline 為 `en`）處理。
 - **自動偵測只決定初始值。** 使用者明確切換語言後，其選擇具有較高優先權，不應再被 browser/client locale 無條件覆蓋；可持久保存時，優先保存為 user/client preference，而不是沒有必要就變成整台設備的 global machine setting。
 - **Wording 與 machine identifier 分離。** API field、protocol value、identifier、topic/schema key、raw log/error、file/path 與其他 machine contract 不因 locale 切換而翻譯；UI 顯示文字、helper text、status label、confirmation copy 等 human-facing wording 才由 locale resource 控制。
 - **避免散落 hard-coded human-facing string。** 若同一產品預期支援多 locale，優先以 semantic text key / resource table / locale bundle 或目前 stack 的等價最小機制管理翻譯；不要求為此導入大型 i18n framework。
@@ -72,7 +87,7 @@ Human-facing wording 應能在**不改變 machine contract、operation semantics
 - **能 deterministic audit 就機械檢查。** 若多語 surface 已具有維護成本，可用 lightweight verifier 檢查 missing/duplicate key、未預期 hard-coded human-facing string、fallback coverage、locale bundle parity 或其他可機械判斷 invariant；audit PASS 不代表翻譯自然度或文化適切性已由人類驗證。
 - **Resource-sensitive implementation 採最低充分方案。** Embedded/local-first UI 可依 flash/RAM/build profile 決定同時內建 `zh-TW + en`、compile-time locale bundle、host-delivered locale resource 或其他 project-owned方案；i18n-ready 不代表必須導入外部 runtime、CDN 或大型 framework。
 
-核心原則：**預設讓 `zh-TW + en` 可用，繁中環境選 `zh-TW`、其他環境回退 `en`；自動偵測服務首次體驗，使用者明確選擇才是之後的最高 human-facing locale authority。**
+核心原則：**預設讓 `zh-TW + en` 可用，同時保留 BCP 47 locale identity；未支援 locale 依 declared matching／fallback 選擇可用資源，不把 resource fallback 誤寫成 locale 等同。自動偵測服務首次體驗，使用者明確選擇才是之後的最高 human-facing locale authority。**
 
 ## 外部 UI／Design System Reference 適配（External UI / Design-system Reference Adaptation）
 
