@@ -101,10 +101,10 @@ Codex-specific actor-extension check依 reply condition分開處理：
 
 Codex 對一般 project repository 執行 Prompt 時，依任務需要引用 `REPOSITORY_EXECUTION.md` 的共通 gates，並在 target repository 已完成 current applicable repository freshness bootstrap、current governance 已重讀後，關閉 applicable shared Playbook／target-state revision continuity：
 
-1. Repository Identity Gate
-2. mutation Stage 的 Workspace Write Capability Gate
-3. Git state / unfinished-operation preflight
-4. applicable Permission-Gated Operation / Remote Git Permission Gate（只有 current bootstrap 實際需要 remote Git 時）
+1. Resolve provisional target repository / execution context from the authorized Prompt; before any Git-dependent identity or status probe, apply the **known-restricted context** ordering in `REPOSITORY_EXECUTION.md` → `Repository Identity Gate` / `Safe Remote-Sync Bootstrap` when supported by current applicable evidence.
+2. Complete Repository Identity Gate in the actual authorized execution context; provisional Prompt target is not verified identity.
+3. mutation Stage 的 Workspace Write Capability Gate
+4. Git state / unfinished-operation preflight；若未知的 permission denial 首次出現，依 `REPOSITORY_EXECUTION.md` 的既有 Permission-Gated Operation / Remote Git Permission Gate 恢復同一已授權操作。
 5. 依 `REPOSITORY_EXECUTION.md` 完成 current applicable repository freshness bootstrap
 6. re-read latest `AGENTS.md` / `TASKS.md`，並從 current project governance解析 declared Playbook baseline
 7. **Codex execution-start revision continuity gate**
