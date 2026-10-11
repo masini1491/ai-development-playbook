@@ -37,6 +37,8 @@ AI-facing information surface 的 Hot / Cold / Evidence / Historical 語意、de
 
 若 identity mismatch：立即 STOP，回報 expected/detected repository、branch、HEAD；不得修改任何檔案、不得自行切換 repository、不得自行 clone、不得將 Prompt 套用到相似專案。
 
+**Git-dependent identity probe 前的 execution-context gate**：若 fresh、applicable evidence 已知目前受限 context 無法執行確認 identity 所需的 local Git metadata／status operation，先依下方 `Permission-Gated Operation` 取得原操作的最低必要執行權限；**不要為形式先在已知 blocked context 執行一次 Git 來製造可預期的失敗**。申請 permission 時可以使用 Prompt 指定的 `owner/repo`、branch、working directory 作 provisional target，但這不等於已驗證的 repository identity；獲准後須在實際執行 Git 的 approved context 完整確認 root、origin、branch、HEAD，才可進入 source read／mutation／Stage。若不具備適用的 known-blocked evidence，仍正常完成 identity preflight；不得把某一次 sandbox 失敗外推成所有 session／account 的 Git 不可用。
+
 ## 聊天室級 Repository 寫入鎖（Conversation-scoped Repository Write Lock）
 
 對遵循本手冊的 ChatGPT／planning conversation，**同一聊天室同一時間只能有一個明確的 `Current Write Target Repository`**。本聊天室直接發起的任何 repository mutation，必須先通過這個 gate；其他 repository 一律 read-only。
@@ -78,6 +80,8 @@ Write-required work 若目前 workspace 為 read-only 或無法完成必要 file
 ## 安全 Remote Sync 啟動（Safe Remote-Sync Bootstrap）
 
 下列 6–8 是 receiving execution surface 直接使用 remote Git 取得 current remote state 的預設路徑。若本節下方 `Git Revision Continuity Specialization` 的 **Cross-surface exact materialization** 條件成立，receiving surface 可改用該 specialization 完成 current revision bootstrap；不得為形式強迫已由 current evidence 證明 blocked 的 direct transport。其餘 identity、workspace、working-state 與 history-operation prerequisites 仍適用。
+
+**Pre-Git permission ordering**：下列 1–5 的 identity／working-state steps 可能本身就需要存取 `.git` metadata／index。開始這些 Git-dependent checks **之前**，先判斷 actual executing context 是否有 current、applicable 的 known-restricted capability evidence。若已知該 context 會在 `git status`、metadata 或同一必要 Git operation 被 sandbox／execution permission 阻擋，應先走既有 `Permission-Gated Operation` 的 minimum approval path，再於正式獲准的 context 完整執行 identity、status、unfinished-operation 與 remote-sync preflight；不得把同一受限 context 的重複 exit 128／trace probe 當成必要啟動步驟。若沒有可適用的已知限制，正常先行最低充分 probe，首次明確 permission denial 後按既有 recovery flow 申請權限。這個 ordering 只解除被證明的 execution gate，不豁免 Git safety checks、不證明 remote authentication／push capability，也不准以 sibling clone／credential replacement／cross-surface materialization 迴避可取得的合法 approval path。
 
 執行已授權 Task/Stage 前：
 
