@@ -366,6 +366,16 @@ canonical source commit
 - PASS/FAIL只對實際覆蓋 scope成立；
 - 若 downstream consumption依賴 build artifact，保存平台提供的 digest／size／artifact identity（可用時），不要只靠 filename。
 
+### Shared GitHub Actions usage budget（條件式 CI 成本控制）
+
+GitHub-hosted Actions 使用量可能按 account／organization 的共同額度或計費池跨 repository 累計，並非每個 repository 都有獨立額度。只有 current usage／billing budget、重複 CI 消耗或 runner contention 對決策產生實質影響時，才啟用下列 bounded review；先依官方 Billing／Usage UI 或適用的 current platform authority 確認 metering owner、shared pool、已用／剩餘額度與適用計費方式，不把單一 repository 的 job 時間、gross usage amount 或歷史 rate 當成整個帳號的精確淨帳單。
+
+- **Reduce waste before reducing evidence.** 在已確認 change impact、dependency、required checks 與正式 merge／release gate 後，優先評估 local／targeted tests、適當的 path/job selection、對同一 PR 過時 run 的安全 cancellation、合法 cache 或重用仍有效的 scope-qualified evidence；未知或 shared-sensitive dependency 不得只靠檔名推論無關而省略驗證。不要無條件取消仍需保留的正式整合／發布驗證。
+- **Preserve independent enforcement.** Actions trigger／job placement／matrix 的調整不得默默降低 `DEBUG_VALIDATION.md` → `Validation Execution Placement Gate` 宣告的必要獨立驗證；project-defined required status check 必須仍有合法且可到達的成功執行路徑。Skipped／cancelled／NOT_RUN 不得標為 PASS；舊 commit 的結果僅在 tested tree／material inputs／toolchain／validation scope 可核對且正式 evidence contract 容許時重用。
+- **Quota failure is not source failure.** 額度／billing cap 阻擋 required CI 時，明確回報 resource／billing blocker，保留未完成的 merge／release gate，依現有授權流程要求必要的 budget／paid-usage 或 validation-contract 變更；不得自行付費、擴張授權或以 local-only PASS 假冒 required remote PASS。
+
+本節只專門化 Actions 的共享額度與選路考量；validation semantics／placement 仍由 `DEBUG_VALIDATION.md` 擁有，平台數字、runner 計費與 event behavior 依下方 `Platform Capability / Limit Freshness` 做 fresh-check。不把固定月分鐘數、百分比門檻、特定 CI matrix 或 universal three-tier CI 寫成共通規則。
+
 Validation placement與 PASS semantics仍由 `DEBUG_VALIDATION.md` 決定。Actions availability 也不會把已分派給另一 actor 的 implementation authority自動轉給 ChatGPT。
 
 ## Artifact Lifecycle
