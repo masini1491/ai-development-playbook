@@ -466,8 +466,11 @@ Humans normally do not need to read these files in order. This map shows the mai
 | [`INFORMATION_INTEGRITY.md`](INFORMATION_INTEGRITY.md) | Identity, provenance, source-vs-derived authority, snapshot/search-hit/evidence guards |
 | [`REPORTING.md`](REPORTING.md) | Cross-actor, cross-workflow, activation-independent user-facing reporting, timestamp, progress-integrity and pre-send contract |
 | [`CHATGPT_WORKFLOW.md`](CHATGPT_WORKFLOW.md) | ChatGPT planning/coordination, work and actor admission, Codex launch settings / Prompt handoff, session compaction/rehydration, result reconciliation, ChatGPT-specific delivery delta |
+| [`SESSION_HANDOFF_TEMPLATE.md`](SESSION_HANDOFF_TEMPLATE.md) | Thin session handoff / rehydration payload template; recovery pointer, not task admission or repository authority |
+| [`CHATGPT_RUNTIME_EXECUTION.md`](CHATGPT_RUNTIME_EXECUTION.md) | ChatGPT-side runtime capability, deterministic execution, materialization, asset reuse, and evidence boundaries |
 | [`CODEX_EXECUTION.md`](CODEX_EXECUTION.md) | Codex execution profile, bounded child delegation/profile override, reasoning/context/tool scheduling, and Codex-specific reporting metadata |
 | [`REPOSITORY_EXECUTION.md`](REPOSITORY_EXECUTION.md) | Repository identity, lower-level actor/path-action authority, permissions, write/read-back boundaries |
+| [`GITHUB_OPERATIONS.md`](GITHUB_OPERATIONS.md) | GitHub-specific repository acquisition, verified transport, mutation, Actions/artifacts, release, and cleanup mechanics |
 | [`DEBUG_VALIDATION.md`](DEBUG_VALIDATION.md) | Debugging, retry, validation, evidence lifecycle, completion, behavioral evaluation |
 | [`PROJECT_BOOTSTRAP.md`](PROJECT_BOOTSTRAP.md) | Research/bootstrap lifecycle and bounded research-write/actor-transition contracts |
 | [`RESEARCH_ARCHITECTURE.md`](RESEARCH_ARCHITECTURE.md) | Research, requirements, architecture, lifecycle, ownership |
