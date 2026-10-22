@@ -242,6 +242,7 @@ Session checkpoint 只保留後續工作真正需要的 current state：
 一般原則：
 
 - **Pointer over copy**：能由 GitHub／canonical source重新取得的長文件、diff、log、spec不全文複製；保存 exact repo/path/SHA/section/command或其他最低充分 pointer。
+- **Execution-route continuity（條件式）**：若後續已授權 work materially 依賴特定 workspace／worktree、Git executable、effective execution identity／permission／trust boundary或已知會重複失敗的替代路徑，且接收者無法從 current project governance／Hot／可授權讀取的 evidence pointer可靠恢復，ChatGPT在 compaction／Codex handoff（含 `TASKS` Short-launch）前，應先確認有最低充分的 current route pointer；若缺失，只有在既有 coordination write authority內才可先補 canonical Hot／coordination，否則於 handoff 最小攜帶 path／executable locator、已觀察成功／失敗的 context與provenance、freshness status及必要 STOP boundary。不要把 host-specific locator 固定成跨專案預設，也不要為每次 handoff 重複可由 current authority取回的內容。歷史 known-good route 只是 candidate，**不等於**當次 Git trust、repository identity、permission、clean status或同步 PASS；接收者仍須在實際 execution context 依 `REPOSITORY_EXECUTION.md` 完成適用的 fresh gates，不得憑此擅改 `safe.directory`／ownership／ACL、另選／建立 worktree或擴張 Stage authority。
 - **Current over historical**：已被新 evidence取代的細節預設不保留；只有忘掉會導致重犯已否決方案時，才保存一句 supersession reason。
 - **Evidence status 要保真**：confirmed、inferred、pending、unavailable不可在 compaction時互相升格；沒有實際執行的 validation不得被摘要成 PASS。
 - **Authorization 不可被摘要擴張**：Current Write Target、Task/Stage scope、permission、execution owner與 STOP boundary 在 compact後不得因語句變短而放寬。
