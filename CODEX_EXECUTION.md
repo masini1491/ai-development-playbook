@@ -223,6 +223,16 @@ Availability 用 **minimum-sufficient current evidence** resolve；account／wor
 
 最高能力 profile 不作一般 development、repository discovery、grep/find、mechanical patch 或例行 validation 的預設模型。
 
+### Terra candidate admission（條件式）
+
+在 current official positioning 與 execution-surface availability 支持 Terra-profile，且任務需要實質但非高度整合的程式判斷時，**主動將 current Terra-profile 納入 credible candidates**；這是既有 focused／complex work classes 之間的 condition-triggered candidate admission，不新增永久第三階級或固定 model revision。
+
+- 對 scoped code fixes、非純機械式的小型 implementation、明確邊界的程式修補，以及視覺／GUI／computer-use 工作，優先評估 Terra-profile 的 minimum-sufficient fit。
+- 單純搜尋、文件格式整理、固定規格替換及低風險 mechanical patch，仍可直接優先 Luna-class；不要為形式增加 Terra 評估成本。
+- Ambiguous root cause、跨模組 state ownership、concurrency、security 或其他 material integration risk，仍優先 Sol-class；不要只因 Terra 可用而降低所需能力。
+- 不得僅因任務涉及程式碼就直接歸入 Sol-class，而跳過本節已符合條件的 Terra candidate；也不得把「主動評估」改寫成強制使用。
+- 最終仍依 minimum-sufficient quality／evidence／validation、failure／retry／rework cost 與 current applicability 裁決。正常 task validation 仍必須執行；不要求每次模型選擇事先做 A/B 測試。
+
 ### Luna / Sol boundary tie-breaker
 
 若一項工作同時具有 focused 與 complex 特徵、無法只靠 task class乾淨裁決，使用**單一 failure-cost tie-breaker**：

@@ -3,7 +3,7 @@
   "authority": "freshness-canary-only",
   "scope": "ChatGPT Work and Codex root-model recommendation",
   "provider": "OpenAI",
-  "as_of": "2026-10-05",
+  "as_of": "2026-10-30",
   "anti_stale_classes": {
     "Sol-class": {
       "last_confirmed_exact": "GPT-6.1 Sol",
@@ -15,6 +15,12 @@
     }
   },
   "additional_last_confirmed_options": [
+    {
+      "name": "GPT-6.1 Terra",
+      "role": "focused coding and computer-use candidate (conditional admission; not a permanent tier)",
+      "informational_only": true,
+      "availability_note": "Officially introduced for Work/Codex on 2026-10-26; actual account/workspace availability must be resolved separately. User-observed picker evidence is account-specific, not general entitlement."
+    },
     {
       "name": "GPT-6 Astra",
       "role": "highest-capability option",
@@ -38,6 +44,14 @@
     {
       "url": "https://developers.openai.com/api/docs/models",
       "supports": "Current GPT-6 Astra, GPT-6.1 Sol, and GPT-6 Luna product positioning."
+    },
+    {
+      "url": "https://openai.com/index/introducing-gpt-6-1-terra/",
+      "supports": "Terra launch, Work/Codex release and official positioning for scoped coding and computer use."
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/guides/model-selection",
+      "supports": "Current model-selection guidance; quality/fit first and cost-efficiency for qualified candidates."
     }
   ],
   "semantics": {
