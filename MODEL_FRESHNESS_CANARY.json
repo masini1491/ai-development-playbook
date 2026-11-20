@@ -3,11 +3,11 @@
   "authority": "freshness-canary-only",
   "scope": "ChatGPT Work and Codex root-model recommendation",
   "provider": "OpenAI",
-  "as_of": "2026-10-30",
+  "as_of": "2026-11-20",
   "anti_stale_classes": {
     "Sol-class": {
-      "last_confirmed_exact": "GPT-6.1 Sol",
-      "evidence_note": "Official current guidance identifies GPT-6.1 Sol as the newer Sol model; Work/Codex availability remains rollout/plan/workspace dependent."
+      "last_confirmed_exact": "GPT-6.2 Sol",
+      "evidence_note": "Official 2026-11-17 release and current Work/Codex guidance identify GPT-6.2 Sol for everyday coding and agent workflows; exact availability remains plan/seat/workspace dependent."
     },
     "Luna-class": {
       "last_confirmed_exact": "GPT-6 Luna",
@@ -22,28 +22,28 @@
       "availability_note": "Officially introduced for Work/Codex on 2026-10-26; actual account/workspace availability must be resolved separately. User-observed picker evidence is account-specific, not general entitlement."
     },
     {
-      "name": "GPT-6 Astra",
+      "name": "GPT-6.2 Astra",
       "role": "highest-capability option",
       "informational_only": true,
-      "availability_note": "Plan/usage/workspace dependent; this entry does not participate in the freshness mismatch gate."
+      "availability_note": "Official current guidance lists GPT-6.2 Astra for complex coding and professional work; plan/seat/workspace and usage conditions apply. Informational only; no freshness mismatch gate."
     }
   ],
   "official_sources": [
     {
       "url": "https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex",
-      "supports": "Work/Codex model listing, GPT-6.1 Sol rollout/account/workspace caveat, and Astra usage/plan context."
+      "supports": "Current Work/Codex GPT-6.2 Sol/Astra options; retained GPT-6.1 Terra and GPT-6 Luna options; plan/seat/workspace applicability."
     },
     {
       "url": "https://developers.openai.com/api/docs/models/gpt-6-sol",
-      "supports": "GPT-6.1 Sol is the newer Sol model."
+      "supports": "Historical Sol model-family positioning; not evidence that GPT-6.1 Sol is latest as of this snapshot."
     },
     {
       "url": "https://developers.openai.com/api/docs/changelog",
-      "supports": "GPT-6.1 Sol release recorded on 2026-09-29."
+      "supports": "Dated official release history for Sol and Terra revisions; historical entries do not establish current latestness."
     },
     {
       "url": "https://developers.openai.com/api/docs/models",
-      "supports": "Current GPT-6 Astra, GPT-6.1 Sol, and GPT-6 Luna product positioning."
+      "supports": "Current product positioning for GPT-6.2 Astra, GPT-6.2 Sol, GPT-6.1 Terra and GPT-6 Luna."
     },
     {
       "url": "https://openai.com/index/introducing-gpt-6-1-terra/",
@@ -52,6 +52,10 @@
     {
       "url": "https://developers.openai.com/api/docs/guides/model-selection",
       "supports": "Current model-selection guidance; quality/fit first and cost-efficiency for qualified candidates."
+    },
+    {
+      "url": "https://openai.com/index/introducing-gpt-6-2-astra-sol/",
+      "supports": "Official 2026-11-17 GPT-6.2 Astra/Sol launch and Work/Codex availability and positioning."
     }
   ],
   "semantics": {
